@@ -40,6 +40,7 @@ const (
 const (
 	DefaultCSVFile       = "gitmap.csv"
 	DefaultJSONFile      = "gitmap.json"
+	DefaultTextFile      = "gitmap.txt"
 	DefaultStructureFile = "folder-structure.md"
 	DefaultCloneScript          = "clone.ps1"
 	DefaultDirectCloneScript    = "direct-clone.ps1"
