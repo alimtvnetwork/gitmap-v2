@@ -33,7 +33,7 @@ Define a minimal, flat JSON structure:
 {
   "defaultMode": "https",
   "defaultOutput": "terminal",
-  "outputDir": "./gitmap-output",
+  "outputDir": "./toolname-output",
   "excludeDirs": [".cache", "node_modules", "vendor", ".venv"],
   "notes": ""
 }
@@ -83,7 +83,7 @@ The same pattern applies to build scripts with a separate JSON file:
 {
   "deployPath": "E:\\bin-run",
   "buildOutput": "./bin",
-  "binaryName": "gitmap.exe",
+  "binaryName": "toolname.exe",
   "copyData": true
 }
 ```
