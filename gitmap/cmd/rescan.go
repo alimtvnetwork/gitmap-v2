@@ -76,6 +76,9 @@ func buildScanArgs(c model.ScanCache) []string {
 	if c.OpenFolder {
 		args = append(args, "--open")
 	}
+	if c.Quiet {
+		args = append(args, "--quiet")
+	}
 	if len(c.Dir) > 0 && c.Dir != constants.DefaultDir {
 		args = append(args, c.Dir)
 	}
