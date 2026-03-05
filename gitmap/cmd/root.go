@@ -21,11 +21,11 @@ func Run() {
 
 // dispatch routes to the correct subcommand handler.
 func dispatch(command string) {
-	if command == constants.CmdScan {
+	if command == constants.CmdScan || command == constants.CmdScanAlias {
 		runScan(os.Args[2:])
 		return
 	}
-	if command == constants.CmdClone {
+	if command == constants.CmdClone || command == constants.CmdCloneAlias {
 		runClone(os.Args[2:])
 		return
 	}
@@ -33,11 +33,11 @@ func dispatch(command string) {
 		runUpdate()
 		return
 	}
-	if command == constants.CmdVersion {
+	if command == constants.CmdVersion || command == constants.CmdVersionAlias {
 		fmt.Printf("gitmap v%s\n", constants.Version)
 		return
 	}
-	if command == constants.CmdDesktopSync {
+	if command == constants.CmdDesktopSync || command == constants.CmdDesktopSyncAlias {
 		runDesktopSync()
 		return
 	}
