@@ -186,6 +186,8 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `release`        | `r`   |
 | `release-branch` | `rb`  |
 | `version`        | `v`   |
+| `update`         | —     |
+| `update-cleanup` | —     |
 
 ---
 
