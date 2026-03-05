@@ -7,17 +7,22 @@
 ### Build
 
 ```powershell
-# From the gitmap/ directory:
-.\build.ps1
+# From the repo root:
+.\run.ps1
 
 # Skip git pull:
-.\build.ps1 -NoPull
+.\run.ps1 -NoPull
 
 # Build only, no deploy:
-.\build.ps1 -NoPull -NoDeploy
+.\run.ps1 -NoPull -NoDeploy
 
 # Deploy to custom path:
-.\build.ps1 -DeployPath "D:\tools"
+.\run.ps1 -DeployPath "D:\tools"
+
+# Build and run immediately:
+.\run.ps1 -Run
+.\run.ps1 -Run -RunPath "D:\projects"
+.\run.ps1 -Run -RunArgs "--mode ssh"
 ```
 
 The binary and `data/` config folder are output to `./bin/`. By default, the binary is also copied to the deploy path in `powershell.json` (default: `E:\bin-run`).
@@ -35,41 +40,67 @@ go build -o ../bin/gitmap.exe .
 
 ### Scan a directory
 
+Every scan **always produces all outputs** — terminal, CSV, JSON, and a folder structure Markdown file. They are written to a `gitmap-output/` folder at the root of the scanned directory.
+
 ```bash
-# Scan current directory, print to terminal (HTTPS mode)
+# Scan current directory (outputs everything to ./gitmap-output/)
 gitmap scan
 
 # Scan a specific folder with SSH URLs
 gitmap scan ./projects --mode ssh
 
-# Output CSV
-gitmap scan ./projects --output csv
+# Scan and add repos to GitHub Desktop
+gitmap scan ./projects --github-desktop
 
-# Output JSON to a specific folder
-gitmap scan ./projects --output json --output-path ./my-exports
+# Custom output directory
+gitmap scan ./projects --output-path ./my-exports
+```
 
-# Combine: scan, output both CSV and JSON to default gitmap-output/
-gitmap scan ./projects --output csv
-gitmap scan ./projects --output json
+### Output files
+
+When you run `gitmap scan ./projects`, the following is created:
+
+```
+projects/
+└── gitmap-output/
+    ├── gitmap.csv              # All repos in CSV format
+    ├── gitmap.json             # All repos in JSON format
+    └── folder-structure.md     # Tree view of repo hierarchy
+```
+
+The **folder-structure.md** shows a visual tree of all discovered repos:
+
+```
+# Folder Structure
+
+Git repositories discovered by gitmap.
+
+├── 📦 **my-app** (`main`) — https://github.com/user/my-app.git
+├── libs/
+│   ├── 📦 **core-lib** (`develop`) — https://github.com/user/core-lib.git
+│   └── 📦 **utils** (`main`) — https://github.com/user/utils.git
+└── 📦 **docs** (`main`) — https://github.com/user/docs.git
 ```
 
 ### Output path behavior
 
 | Flag | Behavior |
 |------|----------|
-| No `--output-path` | Creates `gitmap-output/` in current directory |
+| No flags | Creates `gitmap-output/` inside the scanned directory |
 | `--output-path ./exports` | Writes to `./exports/` |
-| `--out-file report.csv` | Writes to exact file path |
+| `--out-file report.csv` | Overrides CSV file path only |
 
 ### Clone from a previous scan
 
 ```bash
+# Clone from JSON (preserves original folder structure)
+gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
+
 # Clone from CSV
 gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored
-
-# Clone from JSON
-gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 ```
+
+The clone command recreates the exact folder hierarchy from the `relativePath` field in each record.
 
 ---
 
@@ -81,7 +112,7 @@ gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 {
   "defaultMode": "https",
   "defaultOutput": "terminal",
-  "outputDir": "./output",
+  "outputDir": "./gitmap-output",
   "excludeDirs": [".cache", "node_modules", "vendor", ".venv"],
   "notes": ""
 }
@@ -96,7 +127,6 @@ CLI flags override config values.
   "deployPath": "E:\\bin-run",
   "buildOutput": "./bin",
   "binaryName": "gitmap.exe",
-  "goSource": "./gitmap",
   "copyData": true
 }
 ```
@@ -111,9 +141,9 @@ CLI flags override config values.
 |------|-------------|---------|
 | `--config <path>` | Config file path | `./data/config.json` |
 | `--mode ssh\|https` | Clone URL style | `https` |
-| `--output csv\|json\|terminal` | Output format | `terminal` |
-| `--output-path <dir>` | Output directory | `./gitmap-output` |
-| `--out-file <path>` | Exact output file path | — |
+| `--output-path <dir>` | Output directory | `gitmap-output/` in scan dir |
+| `--out-file <path>` | Exact CSV output file path | — |
+| `--github-desktop` | Add discovered repos to GitHub Desktop | `false` |
 
 ### `gitmap clone <source>`
 
@@ -139,15 +169,20 @@ gitmap/
 │   ├── scan.go           # Scan command
 │   └── clone.go          # Clone command
 ├── config/               # Config loading
+├── constants/            # All shared string literals
 ├── scanner/              # Directory walking
 ├── gitutil/              # Git command wrappers
 ├── mapper/               # Record building
-├── formatter/            # Output (terminal, CSV, JSON)
+├── formatter/            # Output (terminal, CSV, JSON, folder structure)
+│   ├── terminal.go
+│   ├── csv.go
+│   ├── json.go
+│   └── structure.go      # Folder tree Markdown
+├── desktop/              # GitHub Desktop integration
 ├── cloner/               # Re-clone logic
 ├── model/                # Data structures
 ├── data/                 # Default config
 │   └── config.json
-├── build.ps1             # PowerShell build script
 ├── powershell.json       # Build/deploy config
 └── go.mod
 ```
