@@ -219,7 +219,14 @@ function Test-SourceFiles {
         "setup/setup.go",
         "cmd/setup.go",
         "cmd/status.go",
-        "cmd/exec.go"
+        "cmd/exec.go",
+        "cmd/release.go",
+        "cmd/releasebranch.go",
+        "release/semver.go",
+        "release/metadata.go",
+        "release/gitops.go",
+        "release/github.go",
+        "release/workflow.go"
     )
 
     $missing = @()
