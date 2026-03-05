@@ -24,6 +24,11 @@ func GitHubRelease(tag, body string, assets []string, draft bool) error {
 
 	fmt.Fprint(os.Stderr, constants.ErrReleaseGHNotFound)
 
+	if tryInstallGH() {
+		fmt.Print(constants.MsgReleaseGHInstalled)
+		return ghRelease(tag, body, assets, draft)
+	}
+
 	token := os.Getenv("GITHUB_TOKEN")
 	if len(token) == 0 {
 		return fmt.Errorf(constants.ErrReleaseGHTokenMissing)
