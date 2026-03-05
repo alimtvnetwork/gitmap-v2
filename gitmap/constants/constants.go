@@ -263,6 +263,23 @@ const (
 	ErrStatusLoadFailed = "Error: could not load gitmap.json for status: %v\nRun 'gitmap scan' first.\n"
 	ErrExecUsage        = "Usage: gitmap exec <git-args...>\nExample: gitmap exec fetch --prune"
 	ErrExecLoadFailed   = "Error: could not load gitmap.json: %v\nRun 'gitmap scan' first.\n"
+	ErrReleaseVersionRequired = "Error: version is required.\nProvide a version argument, use --bump, or create a version.json file."
+	ErrReleaseUsage           = "Usage: gitmap release [version] [--assets <path>] [--commit <sha>] [--branch <name>] [--bump major|minor|patch] [--draft] [--dry-run]"
+	ErrReleaseBranchUsage     = "Usage: gitmap release-branch <release/vX.Y.Z> [--assets <path>] [--draft]"
+	ErrReleaseAlreadyExists   = "Error: version %s is already released. See .release/%s.json for details.\n"
+	ErrReleaseTagExists       = "Error: tag %s already exists.\n"
+	ErrReleaseBranchNotFound  = "Error: branch %s does not exist.\n"
+	ErrReleaseCommitNotFound  = "Error: commit %s not found.\n"
+	ErrReleaseInvalidVersion  = "Error: '%s' is not a valid version.\n"
+	ErrReleaseBumpNoLatest    = "Error: no previous release found. Create an initial release before using --bump.\n"
+	ErrReleaseBumpConflict    = "Error: --bump cannot be used with an explicit version argument.\n"
+	ErrReleaseCommitBranch    = "Error: --commit and --branch are mutually exclusive.\n"
+	ErrReleaseGHNotFound      = "Warning: 'gh' CLI not found. Attempting GitHub API fallback.\n"
+	ErrReleaseGHTokenMissing  = "Error: no GITHUB_TOKEN found. Set GITHUB_TOKEN env var or install 'gh' CLI.\n"
+	ErrReleasePushFailed      = "Error: failed to push to remote: %v\n"
+	ErrReleaseGHFailed        = "Error: failed to create GitHub release: %v\n"
+	ErrReleaseVersionLoad     = "Error: could not read version.json: %v\n"
+	ErrReleaseMetaWrite       = "Error: could not write release metadata: %v\n"
 )
 
 // CLI help text.
