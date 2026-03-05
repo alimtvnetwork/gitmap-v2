@@ -61,6 +61,14 @@ func dispatch(command string) {
 		runExec(os.Args[2:])
 		return
 	}
+	if command == constants.CmdRelease || command == constants.CmdReleaseAlias {
+		runRelease(os.Args[2:])
+		return
+	}
+	if command == constants.CmdReleaseBranch || command == constants.CmdReleaseBranchAlias {
+		runReleaseBranch(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
