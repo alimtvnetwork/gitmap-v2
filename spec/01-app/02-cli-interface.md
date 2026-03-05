@@ -41,7 +41,7 @@ without encountering a "file in use" lock.
 
 ### `gitmap version`
 
-Prints the current version number (e.g., `gitmap v1.1.2`) and exits.
+Prints the current version number (e.g., `gitmap v1.2.0`) and exits.
 
 ### `gitmap desktop-sync`
 
