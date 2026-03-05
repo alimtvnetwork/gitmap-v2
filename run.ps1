@@ -25,7 +25,6 @@ param(
     [switch]$NoPull,
     [switch]$NoDeploy,
     [string]$DeployPath,
-    [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$R
 )
 
@@ -231,17 +230,18 @@ function Invoke-Run {
     Write-Step "RUN" "Executing gitmap"
 
     $resolvedArgs = Resolve-RunArgs -CliArgs $CliArgs
-    Write-Info "Command: gitmap $($resolvedArgs -join ' ')"
+    $argString = $resolvedArgs -join ' '
+    Write-Info "Command: gitmap $argString"
     Write-Host "  $('─' * 50)" -ForegroundColor DarkGray
     Write-Host ""
 
-    & $BinaryPath @resolvedArgs
+    $proc = Start-Process -FilePath $BinaryPath -ArgumentList $resolvedArgs -NoNewWindow -Wait -PassThru
 
     Write-Host ""
-    if ($LASTEXITCODE -eq 0) {
+    if ($proc.ExitCode -eq 0) {
         Write-Success "Run complete"
     } else {
-        Write-Fail "gitmap exited with code $LASTEXITCODE"
+        Write-Fail "gitmap exited with code $($proc.ExitCode)"
     }
 }
 
