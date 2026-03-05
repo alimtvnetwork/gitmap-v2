@@ -202,6 +202,7 @@ const (
 const (
 	ShorthandJSON = "json"
 	ShorthandCSV  = "csv"
+	ShorthandText = "text"
 )
 
 // CLI error messages.
