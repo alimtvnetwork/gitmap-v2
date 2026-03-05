@@ -386,10 +386,7 @@ const (
 	MsgReleaseBranchStart  = "\n  Completing release from %s...\n"
 	MsgReleaseVersionRead  = "  → Version from %s: %s\n"
 	MsgReleaseBumpResult   = "  → Bumped %s → %s\n"
-	MsgReleaseGHInstalling = "  → Attempting to install GitHub CLI via winget...\n"
-	MsgReleaseGHInstalled  = "  ✓ GitHub CLI installed successfully\n"
 	ReleaseBranchPrefix    = "release/"
 	ChangelogFile          = "CHANGELOG.md"
 	ReadmeFile             = "README.md"
-	GHBin                  = "gh"
 )
