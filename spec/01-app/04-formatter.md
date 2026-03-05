@@ -13,7 +13,9 @@ Every scan **always produces all outputs simultaneously**:
 3. **JSON** — `gitmap.json` written to the output directory.
 4. **Folder Structure** — `folder-structure.md` written to the output directory.
 5. **Clone Script** — `clone.ps1` — self-contained PowerShell script that clones all repos.
-6. **Desktop Script** — `register-desktop.ps1` — registers cloned repos with GitHub Desktop.
+6. **Direct Clone** — `direct-clone.ps1` — plain HTTPS git clone commands, one per line.
+7. **Direct Clone SSH** — `direct-clone-ssh.ps1` — plain SSH git clone commands, one per line.
+8. **Desktop Script** — `register-desktop.ps1` — registers cloned repos with GitHub Desktop.
 
 The output directory defaults to `gitmap-output/` inside the scanned directory.
 
@@ -112,6 +114,8 @@ gitmap-output/
 ├── gitmap.json
 ├── folder-structure.md
 ├── clone.ps1
+├── direct-clone.ps1
+├── direct-clone-ssh.ps1
 └── register-desktop.ps1
 ```
 
@@ -120,9 +124,13 @@ gitmap-output/
 ```
 formatter/
 ├── templates/
-│   ├── clone.ps1.tmpl       # PowerShell clone script template
-│   └── desktop.ps1.tmpl     # GitHub Desktop registration template
+│   ├── clone.ps1.tmpl             # PowerShell clone script template
+│   ├── direct-clone.ps1.tmpl      # Plain HTTPS clone commands template
+│   ├── direct-clone-ssh.ps1.tmpl  # Plain SSH clone commands template
+│   └── desktop.ps1.tmpl           # GitHub Desktop registration template
 ├── template.go              # go:embed loader + shared types
 ├── clonescript.go            # WriteCloneScript (uses clone.ps1.tmpl)
-└── desktopscript.go          # WriteDesktopScript (uses desktop.ps1.tmpl)
+├── directclone.go            # WriteDirectCloneScript + WriteDirectCloneSSHScript
+├── desktopscript.go          # WriteDesktopScript (uses desktop.ps1.tmpl)
+└── terminal.go               # Terminal output with version banner
 ```

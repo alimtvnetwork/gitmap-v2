@@ -19,15 +19,23 @@ Re-clone repositories from a CSV, JSON, or text file.
 ### `gitmap update`
 
 Self-update gitmap by pulling latest source and rebuilding. The binary
-embeds the repo path at build time (via `-ldflags`). When invoked, it
-spawns a temporary PowerShell script that:
+embeds the repo path at build time (via `-ldflags`). When invoked:
 
-1. Changes to the embedded source repo directory.
-2. Runs `run.ps1` (pull → build → deploy).
-3. Prints the new version on completion.
+1. Copies itself to a temporary file (`gitmap-update-<pid>.exe`).
+2. Launches the copy with `update --from-copy`.
+3. The original process **exits immediately**, releasing the file lock.
+4. The copy spawns a temporary PowerShell script that:
+   - Changes to the embedded source repo directory.
+   - Waits briefly for the parent to fully exit.
+   - Runs `run.ps1` (pull → build → deploy).
+   - Prints the new version on completion.
 
-This works because the PowerShell process replaces the binary on disk
-while the Go process exits cleanly.
+This two-step handoff ensures the deploy step can overwrite `gitmap.exe`
+without encountering a "file in use" lock.
+
+### `gitmap version`
+
+Prints the current version number (e.g., `gitmap v1.1.2`) and exits.
 
 ### `gitmap help`
 
@@ -73,4 +81,7 @@ gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored --github-desktop
 
 # Self-update from source repo
 gitmap update
+
+# Print version number
+gitmap version
 ```

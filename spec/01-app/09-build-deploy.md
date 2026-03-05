@@ -13,7 +13,8 @@ Build configuration lives in `gitmap/powershell.json`.
 | 1. Git Pull | Pulls latest changes from remote |
 | 2. Resolve Deps | Runs `go mod tidy` in `gitmap/` |
 | 3. Build | Compiles binary to `./bin/gitmap.exe` |
-| 4. Deploy | Copies binary + `data/` to deploy target |
+| 3b. Version | Runs the built binary with `version` and prints result |
+| 4. Deploy | Copies binary + `data/` to deploy target (with retry on lock) |
 
 ### Flags
 
@@ -158,7 +159,37 @@ without specifying the full path.
 The script uses colored, step-numbered output:
 
 - **Magenta** — step headers (`[1/4]`, `[2/4]`, etc.)
-- **Green** — success messages (✓)
-- **Cyan** — informational messages (→)
-- **Yellow** — warnings (⚠)
-- **Red** — errors (✗)
+- **Green** — success messages (OK)
+- **Cyan** — informational messages (->)
+- **Yellow** — warnings (!!)
+- **Red** — errors (XX)
+
+## Version Display
+
+After a successful build, the script immediately runs the new binary
+with `version` and prints the result:
+
+```
+  -> Version: gitmap v1.1.2
+```
+
+This provides immediate confirmation that the build produced the
+expected version.
+
+## Deploy Retry
+
+The deploy step retries the `Copy-Item` up to 20 times with a 500ms
+delay between attempts if the target binary is locked by another process.
+This handles the case where `gitmap update` may still be releasing its
+file handle when deploy starts.
+
+## Self-Update Flow (`gitmap update`)
+
+1. `gitmap update` copies itself to `%TEMP%\gitmap-update-<pid>.exe`.
+2. Launches the copy with `update --from-copy`.
+3. **Exits immediately** to release the file lock on `gitmap.exe`.
+4. The copy writes a temporary PowerShell script that:
+   - Waits 1.2 seconds for the parent to fully exit.
+   - Runs `run.ps1` (pull → build → deploy).
+   - Prints the updated version.
+5. The copy cleans up the temp script after completion.

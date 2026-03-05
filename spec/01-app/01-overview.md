@@ -18,8 +18,9 @@ The CLI version is defined in `constants/constants.go` as `Version`.
 It follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 
 - **Bump on every code change** that alters behavior or output.
-- Displayed in the terminal banner (`gitmap v1.0.0`) and `gitmap help`.
-- Current version: `1.0.0`
+- Displayed in the terminal banner (`gitmap v1.1.2`), `gitmap help`, and `gitmap version`.
+- The `version` command prints just the version string and exits.
+- The build script (`run.ps1`) prints the version after each successful build.
 
 ## Code Style Constraints
 

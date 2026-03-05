@@ -12,7 +12,7 @@
 - **Given** any scan,
   **then** a `gitmap-output/` folder is created inside the scanned directory
   containing `gitmap.csv`, `gitmap.json`, `folder-structure.md`, `clone.ps1`,
-  and `register-desktop.ps1`.
+  `direct-clone.ps1`, `direct-clone-ssh.ps1`, and `register-desktop.ps1`.
 
 - **Given** a folder with no `.git`,
   **then** it is skipped silently.
@@ -40,11 +40,21 @@
 ## Update Feature
 
 - **Given** `gitmap update` on a binary built with `run.ps1`,
-  **then** it spawns a PowerShell script that pulls, rebuilds, and deploys,
-  and prints the new version at the end.
+  **then** it copies itself to a temp file, exits the parent process,
+  and the copy spawns a PowerShell script that pulls, rebuilds, and deploys,
+  printing the new version at the end.
 
 - **Given** `gitmap update` on a binary built without ldflags,
   **then** it prints an error: "repo path not embedded."
+
+## Version Feature
+
+- **Given** `gitmap version`,
+  **then** it prints `gitmap v<X.Y.Z>` and exits.
+
+- **Given** a successful build via `run.ps1`,
+  **then** the build output displays `Version: gitmap v<X.Y.Z>` after
+  the binary is compiled.
 
 ## Config Feature
 
@@ -56,8 +66,9 @@
 
 ## Terminal Output
 
-- Terminal banner displays the current version (`gitmap v1.0.0`).
+- Terminal banner displays the current version (`gitmap v1.1.2`).
 - `gitmap help` prints the version before usage text.
+- `gitmap version` prints just the version string.
 - Terminal output shows a colored banner, repo list (name + path + clone instruction),
   folder tree, and clone help instructions for another machine.
 
