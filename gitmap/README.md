@@ -98,9 +98,12 @@ gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 
 # Clone from CSV
 gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored
+
+# Clone and add all repos to GitHub Desktop
+gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored --github-desktop
 ```
 
-The clone command recreates the exact folder hierarchy from the `relativePath` field in each record.
+The clone command recreates the exact folder hierarchy from the `relativePath` field in each record. With `--github-desktop`, successfully cloned repos are automatically registered in GitHub Desktop.
 
 ---
 
@@ -150,6 +153,7 @@ CLI flags override config values.
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--target-dir <path>` | Base clone directory | `.` |
+| `--github-desktop` | Add cloned repos to GitHub Desktop | `false` |
 
 ---
 
