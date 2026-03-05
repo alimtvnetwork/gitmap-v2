@@ -45,12 +45,16 @@ Every scan **always produces all outputs** — terminal, CSV, JSON, and a folder
 ```bash
 # Scan current directory (outputs everything to ./gitmap-output/)
 gitmap scan
+gitmap s                    # shorthand
 
 # Scan a specific folder with SSH URLs
 gitmap scan ./projects --mode ssh
 
 # Scan and add repos to GitHub Desktop
 gitmap scan ./projects --github-desktop
+
+# Scan and auto-open output folder
+gitmap scan ./projects --open
 
 # Custom output directory
 gitmap scan ./projects --output-path ./my-exports
