@@ -41,6 +41,10 @@ func dispatch(command string) {
 		runDesktopSync()
 		return
 	}
+	if command == constants.CmdPull || command == constants.CmdPullAlias {
+		runPull(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
@@ -61,6 +65,7 @@ func printUsage() {
 	fmt.Println(constants.HelpUpdate)
 	fmt.Println(constants.HelpVersion)
 	fmt.Println(constants.HelpDesktopSync)
+	fmt.Println(constants.HelpPull)
 	fmt.Println(constants.HelpHelp)
 	fmt.Println()
 	fmt.Println(constants.HelpScanFlags)

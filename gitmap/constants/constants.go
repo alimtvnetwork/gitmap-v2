@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "1.4.2"
+const Version = "1.5.0"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -95,6 +95,8 @@ const (
 	CmdHelp             = "help"
 	CmdDesktopSync      = "desktop-sync"
 	CmdDesktopSyncAlias = "ds"
+	CmdPull             = "pull"
+	CmdPullAlias        = "p"
 )
 
 // GitHub Desktop.
@@ -185,6 +187,10 @@ const (
 	MsgNoJSONFile         = "Error: %s not found.\nRun 'gitmap scan' first to generate the JSON output."
 	MsgFailedClones     = "\nFailed clones:"
 	MsgFailedEntry      = "  - %s (%s): %s\n"
+	MsgPullStarting     = "\n  Pulling %s (%s)...\n"
+	MsgPullSuccess      = "  ✓ %s is up to date.\n"
+	MsgPullFailed       = "  ✗ Pull failed for %s: %s\n"
+	MsgPullAvailable    = "\nAvailable repos:"
 	MsgUpdateStarting   = "\n  Updating gitmap from source repo...\n"
 	MsgUpdateRepoPath   = "  → Repo path: %s\n"
 	MsgUpdateVersion    = "\n  ✓ Updated to gitmap v%s\n"
@@ -219,8 +225,13 @@ const (
 	ErrOutputFailed   = "Output error: %v\n"
 	ErrCreateDir      = "Cannot create directory: %v\n"
 	ErrCreateFile     = "Cannot create file: %v\n"
-	ErrNoRepoPath     = "Error: repo path not embedded. Binary was not built with run.ps1."
-	ErrUpdateFailed   = "Update error: %v\n"
+	ErrNoRepoPath       = "Error: repo path not embedded. Binary was not built with run.ps1."
+	ErrUpdateFailed     = "Update error: %v\n"
+	ErrPullSlugRequired = "Error: repo name is required"
+	ErrPullUsage        = "Usage: gitmap pull <repo-name> [--verbose]"
+	ErrPullLoadFailed   = "Error: could not load gitmap.json: %v\n"
+	ErrPullNotFound     = "Error: no repo found matching '%s'\n"
+	ErrPullNotRepo      = "Error: %s is not a git repository\n"
 )
 
 // CLI help text.
@@ -232,7 +243,8 @@ const (
 	HelpUpdate     = "  update              Self-update from source repo"
 	HelpVersion    = "  version (v)         Show version number"
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
-	HelpHelp       = "  help                Show this help message"
+	HelpPull        = "  pull (p) <name>     Pull a specific repo by its name"
+	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
 	HelpMode       = "  --mode ssh|https    Clone URL style (default: https)"

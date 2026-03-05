@@ -31,9 +31,19 @@ func cloneOrPullOne(rec model.ScanRecord, targetDir string, safePull bool) model
 }
 
 func isGitRepo(path string) bool {
+	return IsGitRepo(path)
+}
+
+// IsGitRepo checks whether the given path contains a .git directory.
+func IsGitRepo(path string) bool {
 	_, err := os.Stat(filepath.Join(path, ".git"))
 
 	return err == nil
+}
+
+// SafePullOne runs safe-pull on a single repo. Exported for use by the pull command.
+func SafePullOne(rec model.ScanRecord, repoDir string) model.CloneResult {
+	return safePullRepo(rec, repoDir)
 }
 
 func safePullRepo(rec model.ScanRecord, repoDir string) model.CloneResult {
