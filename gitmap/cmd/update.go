@@ -11,9 +11,9 @@ import (
 )
 
 // runUpdate handles the "update" subcommand.
-// It copies the current binary to a temp file (gitmap-update.exe) and
-// re-launches the update from that copy, so the original exe is not locked
-// when run.ps1 tries to overwrite it during deploy.
+// It copies the current binary to a temp file and re-launches update from
+// that copy. The parent exits immediately so the original binary lock is
+// released before deploy overwrites gitmap.exe.
 func runUpdate() {
 	repoPath := constants.RepoPath
 	if len(repoPath) == 0 {
@@ -29,28 +29,28 @@ func runUpdate() {
 		return
 	}
 
-	// Otherwise, copy ourselves and re-launch from the copy.
 	selfPath, err := os.Executable()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error finding executable: %v\n", err)
 		os.Exit(1)
 	}
 
-	copyPath := filepath.Join(os.TempDir(), "gitmap-update.exe")
+	copyPath := filepath.Join(os.TempDir(), fmt.Sprintf("gitmap-update-%d.exe", os.Getpid()))
 	if err := copyFile(selfPath, copyPath); err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating update copy: %v\n", err)
 		os.Exit(1)
 	}
-	defer os.Remove(copyPath)
 
-	// Re-launch: gitmap-update.exe update --from-copy
+	// Re-launch from the copy and immediately exit parent to release lock.
 	cmd := exec.Command(copyPath, "update", "--from-copy")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
+	cmd.Stdin = os.Stdin
+	if err := cmd.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrUpdateFailed, err)
 		os.Exit(1)
 	}
+	os.Exit(0)
 }
 
 // copyFile copies src to dst.
