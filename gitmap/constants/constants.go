@@ -165,6 +165,7 @@ const (
 	MsgFoundRepos       = "Found %d repositories.\n"
 	MsgCSVWritten       = "CSV written to %s\n"
 	MsgJSONWritten      = "JSON written to %s\n"
+	MsgTextWritten      = "Text clone list written to %s\n"
 	MsgStructureWritten = "Folder structure written to %s\n"
 	MsgCloneScript      = "Clone script written to %s\n"
 	MsgDirectClone      = "Direct clone script written to %s\n"
