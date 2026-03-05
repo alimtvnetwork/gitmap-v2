@@ -169,11 +169,20 @@ function Build-Binary {
     try {
         $absRepoRoot = (Resolve-Path $RepoRoot).Path
         $ldflags = "-X 'github.com/user/gitmap/constants.RepoPath=$absRepoRoot'"
+
+        $prevPref = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
         $buildOutput = go build -ldflags $ldflags -o $outPath . 2>&1
-        if ($LASTEXITCODE -ne 0) {
+        $buildExit = $LASTEXITCODE
+        $ErrorActionPreference = $prevPref
+
+        if ($buildExit -ne 0) {
             Write-Fail "Go build failed"
             foreach ($line in $buildOutput) {
-                Write-Host "  $line" -ForegroundColor Red
+                $text = "$line".Trim()
+                if ($text.Length -gt 0) {
+                    Write-Host "  $text" -ForegroundColor Red
+                }
             }
             exit 1
         }
