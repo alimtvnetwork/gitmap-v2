@@ -79,9 +79,10 @@ func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outp
 }
 
 // parseCloneFlags parses flags for the clone command.
-func parseCloneFlags(args []string) (source, targetDir string) {
+func parseCloneFlags(args []string) (source, targetDir string, ghDesktop bool) {
 	fs := flag.NewFlagSet(constants.CmdClone, flag.ExitOnError)
 	targetFlag := fs.String("target-dir", constants.DefaultDir, constants.FlagDescTargetDir)
+	ghDesktopFlag := fs.Bool("github-desktop", false, constants.FlagDescGHDesktop)
 	fs.Parse(args)
 
 	source = ""
@@ -89,5 +90,5 @@ func parseCloneFlags(args []string) (source, targetDir string) {
 		source = fs.Arg(0)
 	}
 
-	return source, *targetFlag
+	return source, *targetFlag, *ghDesktopFlag
 }

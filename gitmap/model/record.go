@@ -48,5 +48,6 @@ type CloneResult struct {
 type CloneSummary struct {
 	Succeeded int
 	Failed    int
+	Cloned    []CloneResult
 	Errors    []CloneResult
 }

@@ -124,10 +124,11 @@ func pickURL(rec model.ScanRecord) string {
 	return rec.SSHUrl
 }
 
-// updateSummary increments counters and collects errors.
+// updateSummary increments counters and collects results.
 func updateSummary(s model.CloneSummary, r model.CloneResult) model.CloneSummary {
 	if r.Success {
 		s.Succeeded++
+		s.Cloned = append(s.Cloned, r)
 
 		return s
 	}
