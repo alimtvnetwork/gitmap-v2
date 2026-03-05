@@ -62,4 +62,5 @@ type ScanCache struct {
 	OutputPath    string `json:"outputPath"`
 	GithubDesktop bool   `json:"githubDesktop"`
 	OpenFolder    bool   `json:"openFolder"`
+	Quiet         bool   `json:"quiet"`
 }

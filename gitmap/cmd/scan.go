@@ -18,7 +18,7 @@ import (
 
 // runScan handles the "scan" subcommand.
 func runScan(args []string) {
-	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder := parseScanFlags(args)
+	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder, quiet := parseScanFlags(args)
 	cfg, err := config.LoadFromFile(cfgPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrConfigLoad, err)
@@ -28,13 +28,13 @@ func runScan(args []string) {
 	cache := model.ScanCache{
 		Dir: dir, ConfigPath: cfgPath, Mode: mode, Output: output,
 		OutFile: outFile, OutputPath: outputPath,
-		GithubDesktop: ghDesktop, OpenFolder: openFolder,
+		GithubDesktop: ghDesktop, OpenFolder: openFolder, Quiet: quiet,
 	}
-	executeScan(dir, cfg, outFile, ghDesktop, openFolder, cache)
+	executeScan(dir, cfg, outFile, ghDesktop, openFolder, quiet, cache)
 }
 
 // executeScan performs the directory scan and outputs results.
-func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFolder bool, cache model.ScanCache) {
+func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFolder, quiet bool, cache model.ScanCache) {
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
@@ -47,7 +47,7 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	}
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
-	writeAllOutputs(records, outputDir, outFile)
+	writeAllOutputs(records, outputDir, outFile, quiet)
 	saveScanCache(outputDir, cache)
 	addToDesktop(records, ghDesktop)
 	openOutputFolder(outputDir, openFolder)
@@ -90,8 +90,8 @@ func resolveOutputDir(cfgDir, scanDir string) string {
 }
 
 // writeAllOutputs writes terminal, CSV, JSON, text, folder structure, and clone scripts.
-func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string) {
-	writeTerminalOutput(records, outputDir)
+func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string, quiet bool) {
+	writeTerminalOutput(records, outputDir, quiet)
 	writeCSVOutput(records, outputDir, outFile)
 	writeJSONOutput(records, outputDir)
 	writeTextOutput(records, outputDir)
@@ -115,8 +115,8 @@ func writeTextOutput(records []model.ScanRecord, outputDir string) {
 }
 
 // writeTerminalOutput renders records to stdout.
-func writeTerminalOutput(records []model.ScanRecord, outputDir string) {
-	err := formatter.Terminal(os.Stdout, records, outputDir)
+func writeTerminalOutput(records []model.ScanRecord, outputDir string, quiet bool) {
+	err := formatter.Terminal(os.Stdout, records, outputDir, quiet)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrOutputFailed, err)
 	}

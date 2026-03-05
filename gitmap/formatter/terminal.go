@@ -13,12 +13,15 @@ import (
 )
 
 // Terminal writes a professional colored output to the given writer.
-func Terminal(w io.Writer, records []model.ScanRecord, outputDir string) error {
+// When quiet is true, the clone help section is suppressed (useful for CI/scripts).
+func Terminal(w io.Writer, records []model.ScanRecord, outputDir string, quiet bool) error {
 	printBanner(w, len(records))
 	printRepoList(w, records)
 	printFolderTree(w, records)
 	printOutputFiles(w, outputDir)
-	printCloneHelp(w)
+	if !quiet {
+		printCloneHelp(w)
+	}
 
 	return nil
 }

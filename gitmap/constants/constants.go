@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "1.6.0"
+const Version = "1.6.1"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -260,6 +260,7 @@ const (
 	HelpOutFile        = "  --out-file <path>   Exact output file path"
 	HelpGitHubDesktop  = "  --github-desktop    Add repos to GitHub Desktop"
 	HelpOpen           = "  --open              Open output folder after scan"
+	HelpQuiet          = "  --quiet             Suppress clone help section (for CI/scripted use)"
 	HelpCloneFlags    = "Clone flags:"
 	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
 	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics (auto-enabled)"
@@ -277,6 +278,7 @@ const (
 	FlagDescSafePull   = "If repo exists, run safe git pull with retries and unlock diagnostics"
 	FlagDescGHDesktop  = "Add discovered repos to GitHub Desktop"
 	FlagDescOpen       = "Open output folder after scan completes"
+	FlagDescQuiet      = "Suppress terminal clone help section"
 	FlagDescVerbose    = "Write detailed stdout/stderr debug log to a timestamped file"
 )
 

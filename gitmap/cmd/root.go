@@ -81,6 +81,7 @@ func printUsage() {
 	fmt.Println(constants.HelpOutFile)
 	fmt.Println(constants.HelpGitHubDesktop)
 	fmt.Println(constants.HelpOpen)
+	fmt.Println(constants.HelpQuiet)
 	fmt.Println()
 	fmt.Println(constants.HelpCloneFlags)
 	fmt.Println(constants.HelpTargetDir)
@@ -89,7 +90,7 @@ func printUsage() {
 }
 
 // parseScanFlags parses flags for the scan command.
-func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outputPath string, ghDesktop, openFolder bool) {
+func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outputPath string, ghDesktop, openFolder, quiet bool) {
 	fs := flag.NewFlagSet(constants.CmdScan, flag.ExitOnError)
 	cfgFlag := fs.String("config", constants.DefaultConfigPath, constants.FlagDescConfig)
 	modeFlag := fs.String("mode", "", constants.FlagDescMode)
@@ -98,6 +99,7 @@ func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outp
 	outputPathFlag := fs.String("output-path", "", constants.FlagDescOutputPath)
 	ghDesktopFlag := fs.Bool("github-desktop", false, constants.FlagDescGHDesktop)
 	openFlag := fs.Bool("open", false, constants.FlagDescOpen)
+	quietFlag := fs.Bool("quiet", false, constants.FlagDescQuiet)
 	fs.Parse(args)
 
 	dir = constants.DefaultDir
@@ -105,7 +107,7 @@ func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outp
 		dir = fs.Arg(0)
 	}
 
-	return dir, *cfgFlag, *modeFlag, *outputFlag, *outFileFlag, *outputPathFlag, *ghDesktopFlag, *openFlag
+	return dir, *cfgFlag, *modeFlag, *outputFlag, *outFileFlag, *outputPathFlag, *ghDesktopFlag, *openFlag, *quietFlag
 }
 
 // parseCloneFlags parses flags for the clone command.
