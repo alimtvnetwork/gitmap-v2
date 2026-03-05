@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/user/gitmap/config"
+	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/formatter"
 	"github.com/user/gitmap/mapper"
 	"github.com/user/gitmap/model"
@@ -38,11 +39,11 @@ func executeScan(dir string, cfg model.Config, outFile string) {
 
 // outputRecords routes records to the correct formatter.
 func outputRecords(records []model.ScanRecord, cfg model.Config, outFile string) {
-	if cfg.DefaultOutput == "csv" {
+	if cfg.DefaultOutput == constants.OutputCSV {
 		writeCSVOutput(records, cfg, outFile)
 		return
 	}
-	if cfg.DefaultOutput == "json" {
+	if cfg.DefaultOutput == constants.OutputJSON {
 		writeJSONOutput(records, cfg, outFile)
 		return
 	}
@@ -59,7 +60,7 @@ func writeTerminalOutput(records []model.ScanRecord) {
 
 // writeCSVOutput writes records to a CSV file.
 func writeCSVOutput(records []model.ScanRecord, cfg model.Config, outFile string) {
-	path := resolveOutFile(outFile, cfg.OutputDir, "gitmap.csv")
+	path := resolveOutFile(outFile, cfg.OutputDir, constants.DefaultCSVFile)
 	file, err := createOutputFile(path)
 	if err != nil {
 		return
@@ -71,7 +72,7 @@ func writeCSVOutput(records []model.ScanRecord, cfg model.Config, outFile string
 
 // writeJSONOutput writes records to a JSON file.
 func writeJSONOutput(records []model.ScanRecord, cfg model.Config, outFile string) {
-	path := resolveOutFile(outFile, cfg.OutputDir, "gitmap.json")
+	path := resolveOutFile(outFile, cfg.OutputDir, constants.DefaultJSONFile)
 	file, err := createOutputFile(path)
 	if err != nil {
 		return
@@ -86,20 +87,24 @@ func resolveOutFile(outFile, outputDir, defaultName string) string {
 	if len(outFile) > 0 {
 		return outFile
 	}
+
 	return filepath.Join(outputDir, defaultName)
 }
 
 // createOutputFile ensures the directory exists and creates the file.
 func createOutputFile(path string) (*os.File, error) {
-	err := os.MkdirAll(filepath.Dir(path), 0o755)
+	err := os.MkdirAll(filepath.Dir(path), constants.DirPermission)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Cannot create directory: %v\n", err)
+
 		return nil, err
 	}
 	file, err := os.Create(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Cannot create file: %v\n", err)
+
 		return nil, err
 	}
+
 	return file, nil
 }

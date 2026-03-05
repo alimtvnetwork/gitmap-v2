@@ -16,6 +16,7 @@ func Terminal(w io.Writer, records []model.ScanRecord) error {
 	if err != nil {
 		return err
 	}
+
 	return writeTerminalRows(tw, records)
 }
 
@@ -28,6 +29,7 @@ func writeTerminalHeader(tw *tabwriter.Writer) error {
 	}
 	_, err = fmt.Fprintln(tw,
 		"----\t------\t----\t-----------------")
+
 	return err
 }
 
@@ -39,6 +41,7 @@ func writeTerminalRows(tw *tabwriter.Writer, records []model.ScanRecord) error {
 			return err
 		}
 	}
+
 	return tw.Flush()
 }
 
@@ -46,5 +49,6 @@ func writeTerminalRows(tw *tabwriter.Writer, records []model.ScanRecord) error {
 func writeOneRow(tw *tabwriter.Writer, r model.ScanRecord) error {
 	_, err := fmt.Fprintf(tw, "%s\t%s\t%s\t%s\n",
 		r.RepoName, r.Branch, r.RelativePath, r.CloneInstruction)
+
 	return err
 }

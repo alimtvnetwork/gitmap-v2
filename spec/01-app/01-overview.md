@@ -13,20 +13,23 @@ structured data, preserving the original folder hierarchy.
 
 ## Code Style Constraints
 
-| Constraint          | Rule                              |
-|---------------------|-----------------------------------|
-| `if` conditions     | Always positive — no `!`, no `!=` |
-| Function length     | 8–15 lines                        |
-| File length         | 100–200 lines max                 |
-| Package granularity | One responsibility per package    |
+| Constraint            | Rule                                                                 |
+|-----------------------|----------------------------------------------------------------------|
+| `if` conditions       | Always positive — no `!`, no `!=`                                    |
+| Function length       | 8–15 lines                                                           |
+| File length           | 100–200 lines max                                                    |
+| Package granularity   | One responsibility per package                                       |
+| Newline before return | Always add a blank line before `return`, unless the `return` is the only line inside an `if` block |
+| No magic strings      | All string literals used for comparison, format templates, default values, and file extensions must be defined as constants in a dedicated `constants` package |
 
 ## High-Level Components
 
-1. **Config loader** — reads JSON config, merges with CLI flags.
-2. **Scanner** — walks directories, detects `.git` folders.
-3. **Mapper** — converts raw Git data into output records.
-4. **Formatter** — renders records to terminal, CSV, or JSON.
-5. **Cloner** — re-clones repos from a previously generated file.
+1. **Constants** — all shared string literals, formats, and default values.
+2. **Config loader** — reads JSON config, merges with CLI flags.
+3. **Scanner** — walks directories, detects `.git` folders.
+4. **Mapper** — converts raw Git data into output records.
+5. **Formatter** — renders records to terminal, CSV, or JSON.
+6. **Cloner** — re-clones repos from a previously generated file.
 
 ## Assumptions
 

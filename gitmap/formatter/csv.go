@@ -20,6 +20,7 @@ func WriteCSV(w io.Writer, records []model.ScanRecord) error {
 	if err != nil {
 		return err
 	}
+
 	return writeCSVRows(cw, records)
 }
 
@@ -32,6 +33,7 @@ func writeCSVRows(cw *csv.Writer, records []model.ScanRecord) error {
 		}
 	}
 	cw.Flush()
+
 	return cw.Error()
 }
 
@@ -41,6 +43,7 @@ func writeCSVRow(cw *csv.Writer, r model.ScanRecord) error {
 		r.RepoName, r.HTTPSUrl, r.SSHUrl, r.Branch,
 		r.RelativePath, r.AbsolutePath, r.CloneInstruction, r.Notes,
 	}
+
 	return cw.Write(row)
 }
 
@@ -51,6 +54,7 @@ func ParseCSV(reader io.Reader) ([]model.ScanRecord, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return parseCSVRows(rows), nil
 }
 
@@ -65,6 +69,7 @@ func parseCSVRows(rows [][]string) []model.ScanRecord {
 			records = append(records, rowToRecord(row))
 		}
 	}
+
 	return records
 }
 
@@ -74,6 +79,7 @@ func rowToRecord(row []string) model.ScanRecord {
 	if len(row) > 7 {
 		notes = row[7]
 	}
+
 	return model.ScanRecord{
 		RepoName: row[0], HTTPSUrl: row[1], SSHUrl: row[2],
 		Branch: row[3], RelativePath: row[4], AbsolutePath: row[5],

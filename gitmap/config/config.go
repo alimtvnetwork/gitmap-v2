@@ -14,8 +14,10 @@ func LoadFromFile(path string) (model.Config, error) {
 	cfg := model.DefaultConfig()
 	data, err := os.ReadFile(path)
 	if err != nil {
+
 		return cfg, handleMissingFile(err)
 	}
+
 	return parseConfig(data, cfg)
 }
 
@@ -24,6 +26,7 @@ func handleMissingFile(err error) error {
 	if os.IsNotExist(err) {
 		return nil
 	}
+
 	return err
 }
 
@@ -33,6 +36,7 @@ func parseConfig(data []byte, cfg model.Config) (model.Config, error) {
 	if err != nil {
 		return cfg, err
 	}
+
 	return cfg, nil
 }
 
@@ -42,6 +46,7 @@ func MergeWithFlags(cfg model.Config, mode, output, outputDir string) model.Conf
 	cfg = applyMode(cfg, mode)
 	cfg = applyOutput(cfg, output)
 	cfg = applyOutputDir(cfg, outputDir)
+
 	return cfg
 }
 
@@ -50,6 +55,7 @@ func applyMode(cfg model.Config, mode string) model.Config {
 	if len(mode) > 0 {
 		cfg.DefaultMode = mode
 	}
+
 	return cfg
 }
 
@@ -58,6 +64,7 @@ func applyOutput(cfg model.Config, output string) model.Config {
 	if len(output) > 0 {
 		cfg.DefaultOutput = output
 	}
+
 	return cfg
 }
 
@@ -66,5 +73,6 @@ func applyOutputDir(cfg model.Config, outputDir string) model.Config {
 	if len(outputDir) > 0 {
 		cfg.OutputDir = outputDir
 	}
+
 	return cfg
 }

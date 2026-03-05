@@ -1,6 +1,8 @@
 // Package model defines the core data structures for gitmap.
 package model
 
+import "github.com/user/gitmap/constants"
+
 // ScanRecord holds all information about a discovered Git repository.
 type ScanRecord struct {
 	ID               string `json:"id"               csv:"id"`
@@ -25,10 +27,11 @@ type Config struct {
 
 // DefaultConfig returns a Config with sensible built-in defaults.
 func DefaultConfig() Config {
+
 	return Config{
-		DefaultMode:   "https",
-		DefaultOutput: "terminal",
-		OutputDir:     "./gitmap-output",
+		DefaultMode:   constants.ModeHTTPS,
+		DefaultOutput: constants.OutputTerminal,
+		OutputDir:     constants.DefaultOutputDir,
 		ExcludeDirs:   []string{},
 		Notes:         "",
 	}

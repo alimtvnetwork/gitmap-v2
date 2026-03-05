@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/gitutil"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/scanner"
@@ -19,6 +20,7 @@ func BuildRecords(repos []scanner.RepoInfo, mode, defaultNote string) []model.Sc
 		rec := buildOneRecord(repo, mode, defaultNote)
 		records = append(records, rec)
 	}
+
 	return records
 }
 
@@ -43,63 +45,70 @@ func buildOneRecord(repo scanner.RepoInfo, mode, note string) model.ScanRecord {
 
 // toHTTPS converts a remote URL to HTTPS format.
 func toHTTPS(raw string) string {
-	if strings.HasPrefix(raw, "https://") {
+	if strings.HasPrefix(raw, constants.PrefixHTTPS) {
 		return raw
 	}
-	if strings.HasPrefix(raw, "git@") {
+	if strings.HasPrefix(raw, constants.PrefixSSH) {
 		host, path := splitSSH(raw)
-		return fmt.Sprintf("https://%s/%s", host, path)
+
+		return fmt.Sprintf(constants.HTTPSFromSSHFmt, host, path)
 	}
+
 	return raw
 }
 
 // toSSH converts a remote URL to SSH format.
 func toSSH(raw string) string {
-	if strings.HasPrefix(raw, "git@") {
+	if strings.HasPrefix(raw, constants.PrefixSSH) {
 		return raw
 	}
-	if strings.HasPrefix(raw, "https://") {
-		trimmed := strings.TrimPrefix(raw, "https://")
+	if strings.HasPrefix(raw, constants.PrefixHTTPS) {
+		trimmed := strings.TrimPrefix(raw, constants.PrefixHTTPS)
 		parts := strings.SplitN(trimmed, "/", 2)
 		if len(parts) == 2 {
-			return fmt.Sprintf("git@%s:%s", parts[0], parts[1])
+			return fmt.Sprintf(constants.SSHFromHTTPSFmt, parts[0], parts[1])
 		}
 	}
+
 	return raw
 }
 
 // splitSSH splits a git@host:path URL into host and path.
 func splitSSH(raw string) (string, string) {
-	trimmed := strings.TrimPrefix(raw, "git@")
+	trimmed := strings.TrimPrefix(raw, constants.PrefixSSH)
 	parts := strings.SplitN(trimmed, ":", 2)
 	if len(parts) == 2 {
 		return parts[0], parts[1]
 	}
+
 	return trimmed, ""
 }
 
 // selectCloneURL picks HTTPS or SSH URL based on mode.
 func selectCloneURL(httpsURL, sshURL, mode string) string {
-	if mode == "ssh" {
+	if mode == constants.ModeSSH {
 		return sshURL
 	}
+
 	return httpsURL
 }
 
 // extractRepoName derives the repository name from a remote URL.
 func extractRepoName(raw string) string {
 	if len(raw) == 0 {
-		return "unknown"
+		return constants.UnknownRepoName
 	}
 	base := filepath.Base(raw)
-	return strings.TrimSuffix(base, ".git")
+
+	return strings.TrimSuffix(base, constants.ExtGit)
 }
 
 // buildNote generates the notes field for a record.
 func buildNote(remoteURL, defaultNote string) string {
 	if len(remoteURL) == 0 {
-		return "no remote configured"
+		return constants.NoteNoRemote
 	}
+
 	return defaultNote
 }
 
@@ -108,5 +117,6 @@ func buildInstruction(url, branch, relPath string) string {
 	if len(url) == 0 {
 		return ""
 	}
-	return fmt.Sprintf("git clone -b %s %s %s", branch, url, relPath)
+
+	return fmt.Sprintf(constants.CloneInstructionFmt, branch, url, relPath)
 }

@@ -4,6 +4,8 @@ package scanner
 import (
 	"os"
 	"path/filepath"
+
+	"github.com/user/gitmap/constants"
 )
 
 // RepoInfo holds raw data extracted from a discovered Git repo.
@@ -18,6 +20,7 @@ func ScanDir(root string, excludeDirs []string) ([]RepoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return walkTree(absRoot, absRoot, buildExcludeSet(excludeDirs))
 }
 
@@ -27,6 +30,7 @@ func buildExcludeSet(dirs []string) map[string]bool {
 	for _, d := range dirs {
 		set[d] = true
 	}
+
 	return set
 }
 
@@ -37,6 +41,7 @@ func walkTree(root, current string, exclude map[string]bool) ([]RepoInfo, error)
 	if err != nil {
 		return repos, err
 	}
+
 	return processEntries(root, current, entries, exclude, repos)
 }
 
@@ -56,6 +61,7 @@ func processEntries(
 			repos = append(repos, found...)
 		}
 	}
+
 	return repos, nil
 }
 
@@ -71,9 +77,10 @@ func handleDir(
 	if exclude[name] {
 		return nil, nil
 	}
-	if name == ".git" {
+	if name == constants.ExtGit {
 		return foundRepo(root, current)
 	}
+
 	return walkTree(root, fullPath, exclude)
 }
 
@@ -87,5 +94,6 @@ func foundRepo(root, repoPath string) ([]RepoInfo, error) {
 		AbsolutePath: repoPath,
 		RelativePath: rel,
 	}
+
 	return []RepoInfo{info}, nil
 }

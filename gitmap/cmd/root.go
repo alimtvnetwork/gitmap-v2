@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/user/gitmap/constants"
 )
 
 // Run is the main entry point for the CLI.
@@ -19,15 +21,15 @@ func Run() {
 
 // dispatch routes to the correct subcommand handler.
 func dispatch(command string) {
-	if command == "scan" {
+	if command == constants.CmdScan {
 		runScan(os.Args[2:])
 		return
 	}
-	if command == "clone" {
+	if command == constants.CmdClone {
 		runClone(os.Args[2:])
 		return
 	}
-	if command == "help" {
+	if command == constants.CmdHelp {
 		printUsage()
 		return
 	}
@@ -58,30 +60,32 @@ func printUsage() {
 
 // parseScanFlags parses flags for the scan command.
 func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outputPath string) {
-	fs := flag.NewFlagSet("scan", flag.ExitOnError)
-	cfgFlag := fs.String("config", "./data/config.json", "Path to config file")
+	fs := flag.NewFlagSet(constants.CmdScan, flag.ExitOnError)
+	cfgFlag := fs.String("config", constants.DefaultConfigPath, "Path to config file")
 	modeFlag := fs.String("mode", "", "Clone URL style: https or ssh")
 	outputFlag := fs.String("output", "", "Output format: terminal, csv, json")
 	outFileFlag := fs.String("out-file", "", "Exact output file path")
 	outputPathFlag := fs.String("output-path", "", "Output directory for CSV/JSON")
 	fs.Parse(args)
 
-	dir = "."
+	dir = constants.DefaultDir
 	if fs.NArg() > 0 {
 		dir = fs.Arg(0)
 	}
+
 	return dir, *cfgFlag, *modeFlag, *outputFlag, *outFileFlag, *outputPathFlag
 }
 
 // parseCloneFlags parses flags for the clone command.
 func parseCloneFlags(args []string) (source, targetDir string) {
-	fs := flag.NewFlagSet("clone", flag.ExitOnError)
-	targetFlag := fs.String("target-dir", ".", "Base directory for cloned repos")
+	fs := flag.NewFlagSet(constants.CmdClone, flag.ExitOnError)
+	targetFlag := fs.String("target-dir", constants.DefaultDir, "Base directory for cloned repos")
 	fs.Parse(args)
 
 	source = ""
 	if fs.NArg() > 0 {
 		source = fs.Arg(0)
 	}
+
 	return source, *targetFlag
 }

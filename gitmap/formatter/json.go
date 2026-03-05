@@ -11,6 +11,7 @@ import (
 func WriteJSON(w io.Writer, records []model.ScanRecord) error {
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
+
 	return enc.Encode(records)
 }
 
@@ -22,5 +23,6 @@ func ParseJSON(reader io.Reader) ([]model.ScanRecord, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return records, nil
 }
