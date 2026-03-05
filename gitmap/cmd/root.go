@@ -75,6 +75,7 @@ func printUsage() {
 	fmt.Println(constants.HelpCloneFlags)
 	fmt.Println(constants.HelpTargetDir)
 	fmt.Println(constants.HelpSafePull)
+	fmt.Println(constants.HelpVerbose)
 }
 
 // parseScanFlags parses flags for the scan command.
