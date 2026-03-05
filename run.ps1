@@ -102,28 +102,26 @@ function Invoke-GitPull {
     Write-Step "1/4" "Pulling latest changes"
     Push-Location $RepoRoot
     try {
-        $stdoutFile = [System.IO.Path]::GetTempFileName()
-        $stderrFile = [System.IO.Path]::GetTempFileName()
-        try {
-            $proc = Start-Process -FilePath "git" -ArgumentList @("pull") -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdoutFile -RedirectStandardError $stderrFile
+        # Temporarily allow stderr output from git without throwing NativeCommandError.
+        $prevPref = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $output = git pull 2>&1
+        $pullExit = $LASTEXITCODE
+        $ErrorActionPreference = $prevPref
 
-            $stdoutLines = if (Test-Path $stdoutFile) { Get-Content $stdoutFile } else { @() }
-            $stderrLines = if (Test-Path $stderrFile) { Get-Content $stderrFile } else { @() }
-            $output = @($stdoutLines + $stderrLines) | Where-Object { $_ -and $_.Trim().Length -gt 0 }
-
-            foreach ($line in $output) {
-                Write-Info $line
+        foreach ($line in $output) {
+            $text = "$line".Trim()
+            if ($text.Length -gt 0) {
+                Write-Info $text
             }
-
-            if ($proc.ExitCode -ne 0) {
-                Write-Fail "Git pull failed (exit code $($proc.ExitCode))"
-                exit 1
-            }
-
-            Write-Success "Pull complete"
-        } finally {
-            Remove-Item $stdoutFile, $stderrFile -ErrorAction SilentlyContinue
         }
+
+        if ($pullExit -ne 0) {
+            Write-Fail "Git pull failed (exit code $pullExit)"
+            exit 1
+        }
+
+        Write-Success "Pull complete"
     } finally {
         Pop-Location
     }
