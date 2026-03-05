@@ -114,7 +114,7 @@ gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored --safe-pull
 gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored --github-desktop
 ```
 
-The clone command recreates the exact folder hierarchy from the `relativePath` field in each record. With `--safe-pull`, existing repos are updated using retry/unlock diagnostics for Windows unlink failures. With `--github-desktop`, successfully cloned repos are automatically registered in GitHub Desktop.
+The clone command recreates the exact folder hierarchy from the `relativePath` field in each record. **Safe-pull is automatically enabled** when existing repos are detected in the target directory — it retries failed pulls, clears read-only attributes, and diagnoses Windows unlink issues. The `--safe-pull` flag can also be set explicitly. With `--github-desktop`, successfully cloned repos are automatically registered in GitHub Desktop.
 
 ---
 
