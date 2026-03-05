@@ -376,8 +376,6 @@ const (
 	MsgReleaseBranch      = "  ✓ Created branch %s\n"
 	MsgReleaseTag         = "  ✓ Created tag %s\n"
 	MsgReleasePushed      = "  ✓ Pushed branch and tag to origin\n"
-	MsgReleaseGH          = "  ✓ GitHub release created\n"
-	MsgReleaseGHDraft     = "  ✓ GitHub draft release created\n"
 	MsgReleaseMeta        = "  ✓ Release metadata written to %s\n"
 	MsgReleaseLatest      = "  ✓ Marked %s as latest release\n"
 	MsgReleaseAttach      = "  ✓ Attached %s\n"
