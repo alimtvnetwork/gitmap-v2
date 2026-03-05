@@ -12,6 +12,15 @@ hierarchy, and optionally register repos with GitHub Desktop.
 
 `gitmap`
 
+## Versioning
+
+The CLI version is defined in `constants/constants.go` as `Version`.
+It follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
+
+- **Bump on every code change** that alters behavior or output.
+- Displayed in the terminal banner (`gitmap v1.0.0`) and `gitmap help`.
+- Current version: `1.0.0`
+
 ## Code Style Constraints
 
 | Constraint            | Rule                                                                 |

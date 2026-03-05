@@ -47,6 +47,8 @@
 
 ## Terminal Output
 
+- Terminal banner displays the current version (`gitmap v1.0.0`).
+- `gitmap help` prints the version before usage text.
 - Terminal output shows a colored banner, repo list (name + path + clone instruction),
   folder tree, and clone help instructions for another machine.
 
