@@ -296,6 +296,8 @@ const (
 	HelpSetup       = "  setup               Configure Git diff/merge tool, aliases & core settings"
 	HelpStatus      = "  status (st)         Show dirty/clean, ahead/behind, stash for all repos"
 	HelpExec        = "  exec (x) <args...>  Run any git command across all repos"
+	HelpRelease     = "  release (r) [ver]   Create release branch, tag, and GitHub release"
+	HelpReleaseBr   = "  release-branch (rb) Complete release from existing release branch"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
