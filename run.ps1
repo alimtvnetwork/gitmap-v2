@@ -24,7 +24,7 @@
 param(
     [switch]$NoPull,
     [switch]$NoDeploy,
-    [Parameter(Mandatory=$false)]
+    [Parameter(Position=99)]
     [string]$DeployPath = "",
     [switch]$R,
     [Parameter(ValueFromRemainingArguments=$true)]
