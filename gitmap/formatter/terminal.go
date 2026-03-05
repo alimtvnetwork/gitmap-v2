@@ -27,7 +27,7 @@ func Terminal(w io.Writer, records []model.ScanRecord, outputDir string) error {
 func printBanner(w io.Writer, count int) {
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, constants.ColorCyan+constants.TermBannerTop+constants.ColorReset+"\n")
-	fmt.Fprintf(w, constants.ColorCyan+constants.TermBannerTitle+constants.ColorReset+"\n")
+	fmt.Fprintf(w, constants.ColorCyan+constants.TermBannerTitle+constants.ColorReset+"\n", constants.Version)
 	fmt.Fprintf(w, constants.ColorCyan+constants.TermBannerBottom+constants.ColorReset+"\n")
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, constants.ColorGreen+constants.TermFoundFmt+constants.ColorReset+"\n", count)
@@ -72,6 +72,7 @@ func printOutputFiles(w io.Writer, outputDir string) {
 	printOutputFile(w, outputDir, constants.DefaultJSONFile, "Repo data in JSON")
 	printOutputFile(w, outputDir, constants.DefaultStructureFile, "Folder tree")
 	printOutputFile(w, outputDir, constants.DefaultCloneScript, "PowerShell clone script")
+	printOutputFile(w, outputDir, constants.DefaultDesktopScript, "GitHub Desktop registration")
 	fmt.Fprintln(w)
 }
 
