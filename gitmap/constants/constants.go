@@ -238,3 +238,10 @@ const (
 
 // Directory permissions.
 const DirPermission = 0o755
+
+// Safe-pull defaults.
+const (
+	SafePullRetryAttempts   = 4
+	SafePullRetryDelayMS    = 600
+	WindowsPathWarnThreshold = 240
+)
