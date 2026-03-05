@@ -167,8 +167,10 @@ CLI flags override config values.
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--target-dir <path>` | Base clone directory | `.` |
-| `--safe-pull` | Pull existing repos with retries, read-only clear, and diagnosis | `false` |
+| `--safe-pull` | Pull existing repos with retries, read-only clear, and diagnosis (auto-enabled) | `false` |
 | `--github-desktop` | Add cloned repos to GitHub Desktop | `false` |
+
+**Note:** `--safe-pull` is automatically enabled when existing repos are detected in the target directory.
 
 ---
 

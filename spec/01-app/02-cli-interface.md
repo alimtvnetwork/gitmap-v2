@@ -66,6 +66,7 @@ Display usage information for all commands and flags.
 | `--output-path <dir>`  | Output directory                     | `gitmap-output/` in scan dir |
 | `--out-file <path>`    | Exact CSV output file path           | auto                 |
 | `--github-desktop`     | Add discovered repos to GitHub Desktop | `false`            |
+| `--open`               | Open output folder after scan completes | `false`           |
 
 ## Clone Flags
 
