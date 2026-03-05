@@ -21,10 +21,10 @@
     If -R is used with no arguments, it defaults to: scan <parent folder>
 #>
 
+[CmdletBinding(PositionalBinding=$false)]
 param(
     [switch]$NoPull,
     [switch]$NoDeploy,
-    [Parameter(Position=99)]
     [string]$DeployPath = "",
     [switch]$R,
     [Parameter(ValueFromRemainingArguments=$true)]
