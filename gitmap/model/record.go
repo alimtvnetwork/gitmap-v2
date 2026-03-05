@@ -51,3 +51,15 @@ type CloneSummary struct {
 	Cloned    []CloneResult
 	Errors    []CloneResult
 }
+
+// ScanCache stores the flags used for the last scan so rescan can replay them.
+type ScanCache struct {
+	Dir           string `json:"dir"`
+	ConfigPath    string `json:"configPath"`
+	Mode          string `json:"mode"`
+	Output        string `json:"output"`
+	OutFile       string `json:"outFile"`
+	OutputPath    string `json:"outputPath"`
+	GithubDesktop bool   `json:"githubDesktop"`
+	OpenFolder    bool   `json:"openFolder"`
+}
