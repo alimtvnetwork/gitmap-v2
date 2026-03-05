@@ -54,6 +54,9 @@ const (
 	DefaultOutputFolder  = "gitmap-output"
 	DefaultBranch        = "main"
 	DefaultDir           = "."
+	DefaultVersionFile   = "version.json"
+	DefaultReleaseDir    = ".release"
+	DefaultLatestFile    = "latest.json"
 )
 
 // Git commands and arguments.
