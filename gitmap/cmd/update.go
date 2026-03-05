@@ -145,25 +145,66 @@ func writeUpdateScript(repoPath string) string {
 }
 
 // buildUpdateScript generates the PowerShell script content.
+// Captures current version before update, checks if git pull brings changes,
+// and compares versions after update to confirm it applied.
 func buildUpdateScript(repoPath, runPS1 string) string {
 	return fmt.Sprintf(`# gitmap self-update script (auto-generated)
 Set-Location "%s"
+
+# Capture current version before update
+$deployedBinary = $null
+$oldVersion = "unknown"
+$configPath = Join-Path "%s" "gitmap\powershell.json"
+if (Test-Path $configPath) {
+    $cfg = Get-Content $configPath | ConvertFrom-Json
+    if ($cfg.deployPath) {
+        $deployedBinary = Join-Path $cfg.deployPath "gitmap\gitmap.exe"
+        if (Test-Path $deployedBinary) {
+            $oldVersion = & $deployedBinary version 2>&1
+        }
+    }
+}
+
 Write-Host ""
-Write-Host "  Pulling and rebuilding gitmap..." -ForegroundColor Cyan
+Write-Host "  Current version: $oldVersion" -ForegroundColor DarkGray
+
+# Check if there are changes to pull
+$prevPref = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+$pullOutput = git pull 2>&1
+$ErrorActionPreference = $prevPref
+$pullText = ($pullOutput | Out-String).Trim()
+
+if ($pullText -match "Already up to date") {
+    Write-Host "  Source is already up to date." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  No update needed — you are running the latest version." -ForegroundColor Green
+    Write-Host ""
+    exit 0
+}
+
+Write-Host "  Changes detected, rebuilding..." -ForegroundColor Cyan
 Write-Host ""
 Start-Sleep -Milliseconds 1200
-& "%s"
+& "%s" -NoPull
 Write-Host ""
+
+# Compare versions
 $newBinary = Join-Path "%s" "bin\gitmap.exe"
 if (Test-Path $newBinary) {
-    $version = & $newBinary help 2>&1 | Select-String -Pattern "v\d+\.\d+\.\d+" | ForEach-Object { $_.Matches[0].Value }
-    Write-Host "  [OK] Updated to gitmap $version" -ForegroundColor Green
+    $newVersion = & $newBinary version 2>&1
+    if ($oldVersion -eq $newVersion) {
+        Write-Host "  [WARN] Version unchanged after update ($newVersion)" -ForegroundColor Yellow
+        Write-Host "  The source changed but the version constant was not bumped." -ForegroundColor Yellow
+    } else {
+        Write-Host "  [OK] Updated: $oldVersion -> $newVersion" -ForegroundColor Green
+    }
 } else {
     Write-Host "  [OK] Update complete" -ForegroundColor Green
 }
 Write-Host ""
 exit 0
-`, repoPath, runPS1, repoPath)
+`, repoPath, repoPath, runPS1, repoPath)
 }
 
 // runUpdateScript executes the PowerShell script with output piped to terminal.

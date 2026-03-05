@@ -341,20 +341,50 @@ function Deploy-Binary {
 
     $destFile = Join-Path $appDir $Config.binaryName
 
+    # Rollback safety: backup existing binary before overwriting
+    $backupFile = "$destFile.bak"
+    $hasBackup = $false
+    if (Test-Path $destFile) {
+        try {
+            Copy-Item $destFile $backupFile -Force -ErrorAction Stop
+            $hasBackup = $true
+            Write-Info "Backed up existing binary to $($Config.binaryName).bak"
+        } catch {
+            Write-Warn "Could not create backup: $_"
+        }
+    }
+
     $maxAttempts = 20
     $attempt = 1
+    $deploySuccess = $false
     while ($true) {
         try {
             Copy-Item $BinaryPath $destFile -Force -ErrorAction Stop
+            $deploySuccess = $true
             break
         } catch {
             if ($attempt -ge $maxAttempts) {
+                # Restore backup on failure
+                if ($hasBackup -and (Test-Path $backupFile)) {
+                    Write-Warn "Deploy failed — restoring previous binary from backup"
+                    try {
+                        Copy-Item $backupFile $destFile -Force -ErrorAction Stop
+                        Write-Success "Rollback complete — previous version restored"
+                    } catch {
+                        Write-Fail "Rollback also failed: $_"
+                    }
+                }
                 throw
             }
             Write-Warn "Target binary is in use; retrying ($attempt/$maxAttempts)..."
             Start-Sleep -Milliseconds 500
             $attempt++
         }
+    }
+
+    # Clean up backup after successful deploy
+    if ($hasBackup -and $deploySuccess -and (Test-Path $backupFile)) {
+        Remove-Item $backupFile -Force -ErrorAction SilentlyContinue
     }
 
     $binDir   = Split-Path $BinaryPath -Parent
