@@ -260,6 +260,7 @@ const (
 	HelpOutFile        = "  --out-file <path>   Exact output file path"
 	HelpGitHubDesktop  = "  --github-desktop    Add repos to GitHub Desktop"
 	HelpOpen           = "  --open              Open output folder after scan"
+	HelpQuiet          = "  --quiet             Suppress clone help section (for CI/scripted use)"
 	HelpCloneFlags    = "Clone flags:"
 	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
 	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics (auto-enabled)"
