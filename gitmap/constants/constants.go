@@ -55,7 +55,10 @@ const (
 const (
 	GitBin          = "git"
 	GitClone        = "clone"
+	GitPull         = "pull"
 	GitBranchFlag   = "-b"
+	GitDirFlag      = "-C"
+	GitFFOnlyFlag   = "--ff-only"
 	GitConfigCmd    = "config"
 	GitGetFlag      = "--get"
 	GitRemoteOrigin = "remote.origin.url"

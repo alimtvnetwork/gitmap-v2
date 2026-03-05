@@ -73,7 +73,7 @@ func printUsage() {
 	fmt.Println()
 	fmt.Println(constants.HelpCloneFlags)
 	fmt.Println(constants.HelpTargetDir)
-}
+	fmt.Println(constants.HelpSafePull)
 
 // parseScanFlags parses flags for the scan command.
 func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outputPath string, ghDesktop bool) {

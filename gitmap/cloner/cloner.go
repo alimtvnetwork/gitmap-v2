@@ -16,13 +16,13 @@ import (
 )
 
 // CloneFromFile reads a source file and clones all repos under targetDir.
-func CloneFromFile(sourcePath, targetDir string) (model.CloneSummary, error) {
+func CloneFromFile(sourcePath, targetDir string, safePull bool) (model.CloneSummary, error) {
 	records, err := loadRecords(sourcePath)
 	if err != nil {
 		return model.CloneSummary{}, err
 	}
 
-	return cloneAll(records, targetDir), nil
+	return cloneAll(records, targetDir, safePull), nil
 }
 
 // loadRecords detects file format and parses records.
