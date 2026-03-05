@@ -24,8 +24,10 @@
 param(
     [switch]$NoPull,
     [switch]$NoDeploy,
-    [string]$DeployPath,
-    [string[]]$R
+    [string]$DeployPath = "",
+    [switch]$R,
+    [Parameter(ValueFromRemainingArguments=$true)]
+    [string[]]$RunArgs
 )
 
 $ErrorActionPreference = "Stop"
@@ -231,11 +233,17 @@ function Invoke-Run {
 
     $resolvedArgs = Resolve-RunArgs -CliArgs $CliArgs
     $argString = $resolvedArgs -join ' '
+    $currentDir = (Get-Location).Path
+    Write-Info "Runner CWD: $currentDir"
+    Write-Info "Repo root: $RepoRoot"
     Write-Info "Command: gitmap $argString"
+    if ($resolvedArgs.Count -ge 2 -and $resolvedArgs[0] -eq "scan") {
+        Write-Info "Scan target: $($resolvedArgs[1])"
+    }
     Write-Host "  $('─' * 50)" -ForegroundColor DarkGray
     Write-Host ""
 
-    $proc = Start-Process -FilePath $BinaryPath -ArgumentList $resolvedArgs -NoNewWindow -Wait -PassThru
+    $proc = Start-Process -FilePath $BinaryPath -ArgumentList $resolvedArgs -WorkingDirectory $currentDir -NoNewWindow -Wait -PassThru
 
     Write-Host ""
     if ($proc.ExitCode -eq 0) {
@@ -256,15 +264,16 @@ function Resolve-RunArgs {
         return @("scan", $parentDir)
     }
 
-    # Resolve relative paths to absolute so Start-Process works correctly
+    # Resolve relative paths to absolute so Start-Process always receives correct targets
+    $baseDir = (Get-Location).Path
     $resolved = @()
     foreach ($arg in $CliArgs) {
         if ($arg -match '^(\.\.[\\/]|\.[\\/]|\.\.?$)' -and -not $arg.StartsWith('-')) {
-            $absPath = (Resolve-Path $arg -ErrorAction SilentlyContinue).Path
-            if ($absPath) {
-                $resolved += $absPath
+            $path = Resolve-Path -LiteralPath $arg -ErrorAction SilentlyContinue
+            if ($path) {
+                $resolved += $path.Path
             } else {
-                $resolved += (Join-Path (Get-Location) $arg)
+                $resolved += [System.IO.Path]::GetFullPath((Join-Path $baseDir $arg))
             }
         } else {
             $resolved += $arg
@@ -293,8 +302,8 @@ if (-not $NoDeploy) {
     Write-Info "Skipping deploy (--NoDeploy)"
 }
 
-if ($R.Count -gt 0) {
-    Invoke-Run -Config $config -BinaryPath $binaryPath -CliArgs $R
+if ($R) {
+    Invoke-Run -Config $config -BinaryPath $binaryPath -CliArgs $RunArgs
 }
 
 Write-Host ""
