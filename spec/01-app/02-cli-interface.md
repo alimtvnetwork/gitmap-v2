@@ -238,6 +238,25 @@ activates whenever existing repos are detected during a clone operation.
 | `--config <path>`      | Path to git-setup.json config file   | `./data/git-setup.json`    |
 | `--dry-run`            | Preview changes without applying     | `false`                    |
 
+## Release Flags
+
+| Flag                          | Description                                      | Default |
+|-------------------------------|--------------------------------------------------|---------|
+| `--assets <path>`             | Directory or file to attach to the release       | (none)  |
+| `--commit <sha>`              | Create release from a specific commit            | (none)  |
+| `--branch <name>`             | Create release from latest commit of a branch    | (none)  |
+| `--bump major\|minor\|patch`  | Auto-increment from latest released version      | (none)  |
+| `--draft`                     | Create an unpublished draft release              | `false` |
+| `--verbose`                   | Write detailed debug log                         | `false` |
+
+## Release-Branch Flags
+
+| Flag              | Description                         | Default |
+|-------------------|-------------------------------------|---------|
+| `--assets <path>` | Directory or file to attach         | (none)  |
+| `--draft`         | Create an unpublished draft release | `false` |
+| `--verbose`       | Write detailed debug log            | `false` |
+
 ## Examples
 
 ```bash
