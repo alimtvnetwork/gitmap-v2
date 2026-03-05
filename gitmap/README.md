@@ -158,6 +158,7 @@ CLI flags override config values.
 | `--output-path <dir>` | Output directory | `gitmap-output/` in scan dir |
 | `--out-file <path>` | Exact CSV output file path | — |
 | `--github-desktop` | Add discovered repos to GitHub Desktop | `false` |
+| `--open` | Open output folder after scan | `false` |
 
 ### `gitmap clone <source|json|csv>`
 
