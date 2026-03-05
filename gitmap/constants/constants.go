@@ -266,6 +266,7 @@ const (
 	HelpRescan      = "  rescan (rs)         Re-run last scan with cached flags"
 	HelpSetup       = "  setup               Configure Git diff/merge tool, aliases & core settings"
 	HelpStatus      = "  status (st)         Show dirty/clean, ahead/behind, stash for all repos"
+	HelpExec        = "  exec (x) <args...>  Run any git command across all repos"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
