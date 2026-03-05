@@ -244,7 +244,12 @@ const (
 	HelpCloneFlags    = "Clone flags:"
 	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
 	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics (auto-enabled)"
+	HelpVerbose       = "  --verbose           Write detailed debug log to a timestamped file"
 )
+
+// Global flags help.
+const (
+	HelpGlobalFlags  = "Global flags (clone, update):"
 
 // Flag descriptions.
 const (
