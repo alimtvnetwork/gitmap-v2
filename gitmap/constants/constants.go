@@ -336,6 +336,11 @@ const (
 	FlagDescVerbose    = "Write detailed stdout/stderr debug log to a timestamped file"
 	FlagDescSetupConfig = "Path to git-setup.json config file"
 	FlagDescDryRun     = "Preview changes without applying them"
+	FlagDescAssets     = "Directory or file to attach to the release"
+	FlagDescCommit     = "Create release from a specific commit"
+	FlagDescRelBranch  = "Create release from latest commit of a branch"
+	FlagDescBump       = "Auto-increment version: major, minor, or patch"
+	FlagDescDraft      = "Create an unpublished draft release"
 )
 
 // Clone and Desktop scripts are now generated from Go templates
