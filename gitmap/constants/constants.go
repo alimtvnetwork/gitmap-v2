@@ -306,3 +306,12 @@ const (
 
 // Verbose log file.
 const VerboseLogFileFmt = "gitmap-verbose-%s.log"
+
+// Setup section headers.
+const (
+	SetupSectionDiff  = "Diff Tool"
+	SetupSectionMerge = "Merge Tool"
+	SetupSectionAlias = "Aliases"
+	SetupSectionCred  = "Credential Helper"
+	SetupSectionCore  = "Core Settings"
+)
