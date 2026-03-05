@@ -194,6 +194,8 @@ const (
 	MsgPullSuccess      = "  ✓ %s is up to date.\n"
 	MsgPullFailed       = "  ✗ Pull failed for %s: %s\n"
 	MsgPullAvailable    = "\nAvailable repos:"
+	MsgRescanReplay     = "\n  Rescanning with cached flags (dir: %s)...\n"
+	MsgScanCacheSaved   = "Scan cache written to %s\n"
 	MsgUpdateStarting   = "\n  Updating gitmap from source repo...\n"
 	MsgUpdateRepoPath   = "  → Repo path: %s\n"
 	MsgUpdateVersion    = "\n  ✓ Updated to gitmap v%s\n"
