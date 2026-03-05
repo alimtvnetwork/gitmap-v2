@@ -184,7 +184,8 @@ function Test-SourceFiles {
         "desktop/desktop.go",
         "verbose/verbose.go",
         "setup/setup.go",
-        "cmd/setup.go"
+        "cmd/setup.go",
+        "cmd/status.go"
     )
 
     $missing = @()
