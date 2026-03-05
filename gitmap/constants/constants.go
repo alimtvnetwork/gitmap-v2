@@ -216,8 +216,9 @@ const (
 	HelpOutputPath = "  --output-path <dir> Output directory (default: ./gitmap-output)"
 	HelpOutFile        = "  --out-file <path>   Exact output file path"
 	HelpGitHubDesktop  = "  --github-desktop    Add repos to GitHub Desktop"
-	HelpCloneFlags = "Clone flags:"
-	HelpTargetDir  = "  --target-dir <dir>  Base directory for clones (default: .)"
+	HelpCloneFlags    = "Clone flags:"
+	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
+	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics"
 )
 
 // Flag descriptions.
@@ -228,6 +229,7 @@ const (
 	FlagDescOutFile    = "Exact output file path"
 	FlagDescOutputPath = "Output directory for CSV/JSON"
 	FlagDescTargetDir  = "Base directory for cloned repos"
+	FlagDescSafePull   = "If repo exists, run safe git pull with retries and unlock diagnostics"
 	FlagDescGHDesktop  = "Add discovered repos to GitHub Desktop"
 )
 

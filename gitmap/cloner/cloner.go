@@ -79,10 +79,10 @@ func parseCloneLine(line string) model.ScanRecord {
 }
 
 // cloneAll iterates records and clones each one.
-func cloneAll(records []model.ScanRecord, targetDir string) model.CloneSummary {
+func cloneAll(records []model.ScanRecord, targetDir string, safePull bool) model.CloneSummary {
 	summary := model.CloneSummary{}
 	for _, rec := range records {
-		result := cloneOne(rec, targetDir)
+		result := cloneOrPullOne(rec, targetDir, safePull)
 		summary = updateSummary(summary, result)
 	}
 
