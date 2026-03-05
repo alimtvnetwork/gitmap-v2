@@ -20,7 +20,8 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 | Directory | Purpose |
 |-----------|---------|
 | `gitmap/` | Go source code for the CLI |
-| `spec/01-app/` | Specification documents |
+| `spec/01-app/` | App-specific specification documents |
+| `spec/02-general/` | Reusable design patterns & guidelines (AI-trainable) |
 | `src/` | React frontend (documentation site) |
 | `.lovable/memory/` | AI memory and tracking |
 
