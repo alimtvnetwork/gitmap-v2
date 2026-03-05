@@ -102,16 +102,28 @@ function Invoke-GitPull {
     Write-Step "1/4" "Pulling latest changes"
     Push-Location $RepoRoot
     try {
-        $output = git pull 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-Fail "Git pull failed"
-            Write-Host "  $output" -ForegroundColor Red
-            exit 1
+        $stdoutFile = [System.IO.Path]::GetTempFileName()
+        $stderrFile = [System.IO.Path]::GetTempFileName()
+        try {
+            $proc = Start-Process -FilePath "git" -ArgumentList @("pull") -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdoutFile -RedirectStandardError $stderrFile
+
+            $stdoutLines = if (Test-Path $stdoutFile) { Get-Content $stdoutFile } else { @() }
+            $stderrLines = if (Test-Path $stderrFile) { Get-Content $stderrFile } else { @() }
+            $output = @($stdoutLines + $stderrLines) | Where-Object { $_ -and $_.Trim().Length -gt 0 }
+
+            foreach ($line in $output) {
+                Write-Info $line
+            }
+
+            if ($proc.ExitCode -ne 0) {
+                Write-Fail "Git pull failed (exit code $($proc.ExitCode))"
+                exit 1
+            }
+
+            Write-Success "Pull complete"
+        } finally {
+            Remove-Item $stdoutFile, $stderrFile -ErrorAction SilentlyContinue
         }
-        foreach ($line in $output) {
-            Write-Info $line
-        }
-        Write-Success "Pull complete"
     } finally {
         Pop-Location
     }
