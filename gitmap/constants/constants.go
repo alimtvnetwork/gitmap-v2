@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "1.1.0"
+const Version = "1.1.1"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -40,9 +40,10 @@ const (
 	DefaultCSVFile       = "gitmap.csv"
 	DefaultJSONFile      = "gitmap.json"
 	DefaultStructureFile = "folder-structure.md"
-	DefaultCloneScript       = "clone.ps1"
-	DefaultDirectCloneScript = "direct-clone.ps1"
-	DefaultDesktopScript = "register-desktop.ps1"
+	DefaultCloneScript          = "clone.ps1"
+	DefaultDirectCloneScript    = "direct-clone.ps1"
+	DefaultDirectCloneSSHScript = "direct-clone-ssh.ps1"
+	DefaultDesktopScript        = "register-desktop.ps1"
 	DefaultConfigPath    = "./data/config.json"
 	DefaultOutputDir     = "./gitmap-output"
 	DefaultOutputFolder  = "gitmap-output"
@@ -145,6 +146,7 @@ const (
 	MsgStructureWritten = "Folder structure written to %s\n"
 	MsgCloneScript      = "Clone script written to %s\n"
 	MsgDirectClone      = "Direct clone script written to %s\n"
+	MsgDirectCloneSSH   = "Direct SSH clone script written to %s\n"
 	MsgDesktopScript    = "Desktop registration script written to %s\n"
 	MsgCloneComplete    = "\nClone complete: %d succeeded, %d failed\n"
 	MsgFailedClones     = "\nFailed clones:"
