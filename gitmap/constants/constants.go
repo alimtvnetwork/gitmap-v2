@@ -128,12 +128,19 @@ const (
 
 // Terminal clone help text.
 const (
-	TermCloneStep1 = "  1. Copy the output files to the target machine:"
-	TermCloneCmd1  = "     gitmap-output/gitmap.json  (or gitmap.csv)"
-	TermCloneStep2 = "  2. Run the clone command:"
-	TermCloneCmd2  = "     gitmap clone ./gitmap-output/gitmap.json --target-dir ./projects"
-	TermCloneStep3 = "  3. Or clone from CSV:"
-	TermCloneCmd3  = "     gitmap clone ./gitmap-output/gitmap.csv --target-dir ./projects"
+	TermCloneStep1    = "  1. Copy the output files to the target machine:"
+	TermCloneCmd1     = "     gitmap-output/gitmap.json  (or gitmap.csv)"
+	TermCloneStep2    = "  2. Clone via JSON (HTTPS):"
+	TermCloneCmd2     = "     gitmap clone ./gitmap-output/gitmap.json --target-dir ./projects"
+	TermCloneStep3    = "  3. Clone via CSV:"
+	TermCloneCmd3     = "     gitmap clone ./gitmap-output/gitmap.csv --target-dir ./projects"
+	TermCloneStep4    = "  4. Or run the PowerShell script directly:"
+	TermCloneCmd4HTTPS = "     .\\direct-clone.ps1       # HTTPS clone commands"
+	TermCloneCmd4SSH   = "     .\\direct-clone-ssh.ps1   # SSH clone commands"
+	TermCloneStep5    = "  5. Full clone script with progress & error handling:"
+	TermCloneCmd5     = "     .\\clone.ps1 -TargetDir .\\projects"
+	TermCloneStep6    = "  6. Sync repos to GitHub Desktop:"
+	TermCloneCmd6     = "     gitmap desktop-sync"
 )
 
 // JSON formatting.
