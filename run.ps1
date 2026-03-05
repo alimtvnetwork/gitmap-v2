@@ -24,6 +24,7 @@
 param(
     [switch]$NoPull,
     [switch]$NoDeploy,
+    [Parameter(Mandatory=$false)]
     [string]$DeployPath = "",
     [switch]$R,
     [Parameter(ValueFromRemainingArguments=$true)]
@@ -231,11 +232,15 @@ function Invoke-Run {
     Write-Host ""
     Write-Step "RUN" "Executing gitmap"
 
+    # Always run from the local bin build, never from the deploy target
+    $binDir = Split-Path $BinaryPath -Parent
+    $dataDir = Join-Path $binDir "data"
+
     $resolvedArgs = Resolve-RunArgs -CliArgs $CliArgs
     $argString = $resolvedArgs -join ' '
     $currentDir = (Get-Location).Path
+    Write-Info "Binary: $BinaryPath"
     Write-Info "Runner CWD: $currentDir"
-    Write-Info "Repo root: $RepoRoot"
     Write-Info "Command: gitmap $argString"
     if ($resolvedArgs.Count -ge 2 -and $resolvedArgs[0] -eq "scan") {
         Write-Info "Scan target: $($resolvedArgs[1])"
@@ -243,7 +248,7 @@ function Invoke-Run {
     Write-Host "  $('─' * 50)" -ForegroundColor DarkGray
     Write-Host ""
 
-    $proc = Start-Process -FilePath $BinaryPath -ArgumentList $resolvedArgs -WorkingDirectory $currentDir -NoNewWindow -Wait -PassThru
+    $proc = Start-Process -FilePath $BinaryPath -ArgumentList $resolvedArgs -WorkingDirectory $binDir -NoNewWindow -Wait -PassThru
 
     Write-Host ""
     if ($proc.ExitCode -eq 0) {
