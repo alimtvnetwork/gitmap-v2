@@ -2,7 +2,7 @@
 
 ## File Location
 
-Default: `./data/config.json`  
+Default: `./data/config.json`
 Override: `--config <path>` flag.
 
 ## Schema
@@ -11,21 +11,21 @@ Override: `--config <path>` flag.
 {
   "defaultMode": "https",
   "defaultOutput": "terminal",
-  "outputDir": "./output",
-  "excludeDirs": [".cache", "node_modules"],
+  "outputDir": "./gitmap-output",
+  "excludeDirs": [".cache", "node_modules", "vendor", ".venv"],
   "notes": ""
 }
 ```
 
 ## Fields
 
-| Field         | Type     | Default      | Description                    |
-|---------------|----------|--------------|--------------------------------|
-| defaultMode   | string   | "https"      | "https" or "ssh"               |
-| defaultOutput | string   | "terminal"   | "terminal", "csv", or "json"   |
-| outputDir     | string   | "./output"   | Where output files are written |
-| excludeDirs   | []string | []           | Directory names to skip        |
-| notes         | string   | ""           | Default note for all records   |
+| Field         | Type     | Default            | Description                    |
+|---------------|----------|--------------------|--------------------------------|
+| defaultMode   | string   | "https"            | "https" or "ssh"               |
+| defaultOutput | string   | "terminal"         | "terminal", "csv", or "json"   |
+| outputDir     | string   | "./gitmap-output"  | Where output files are written |
+| excludeDirs   | []string | []                 | Directory names to skip        |
+| notes         | string   | ""                 | Default note for all records   |
 
 ## Merge Rules
 
