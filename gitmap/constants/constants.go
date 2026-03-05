@@ -104,6 +104,8 @@ const (
 	CmdSetup            = "setup"
 	CmdStatus           = "status"
 	CmdStatusAlias      = "st"
+	CmdExec             = "exec"
+	CmdExecAlias        = "x"
 )
 
 // GitHub Desktop.
