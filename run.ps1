@@ -182,7 +182,9 @@ function Test-SourceFiles {
         "cloner/safe_pull.go",
         "gitutil/gitutil.go",
         "desktop/desktop.go",
-        "verbose/verbose.go"
+        "verbose/verbose.go",
+        "setup/setup.go",
+        "cmd/setup.go"
     )
 
     $missing = @()

@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "1.6.1"
+const Version = "1.7.0"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -48,7 +48,8 @@ const (
 	DefaultDirectCloneSSHScript = "direct-clone-ssh.ps1"
 	DefaultDesktopScript        = "register-desktop.ps1"
 	DefaultScanCacheFile        = "last-scan.json"
-	DefaultConfigPath    = "./data/config.json"
+	DefaultConfigPath           = "./data/config.json"
+	DefaultSetupConfigPath      = "./data/git-setup.json"
 	DefaultOutputDir     = "./gitmap-output"
 	DefaultOutputFolder  = "gitmap-output"
 	DefaultBranch        = "main"
@@ -100,6 +101,7 @@ const (
 	CmdPullAlias        = "p"
 	CmdRescan           = "rescan"
 	CmdRescanAlias      = "rs"
+	CmdSetup            = "setup"
 )
 
 // GitHub Desktop.
@@ -241,6 +243,7 @@ const (
 	ErrPullNotFound     = "Error: no repo found matching '%s'\n"
 	ErrPullNotRepo      = "Error: %s is not a git repository\n"
 	ErrRescanNoCache    = "Error: no previous scan found. Run 'gitmap scan' first.\n%v\n"
+	ErrSetupLoadFailed  = "Error: could not load git-setup.json: %v\n"
 )
 
 // CLI help text.
@@ -254,6 +257,7 @@ const (
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
 	HelpPull        = "  pull (p) <name>     Pull a specific repo by its name"
 	HelpRescan      = "  rescan (rs)         Re-run last scan with cached flags"
+	HelpSetup       = "  setup               Configure Git diff/merge tool, aliases & core settings"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
@@ -283,6 +287,8 @@ const (
 	FlagDescOpen       = "Open output folder after scan completes"
 	FlagDescQuiet      = "Suppress terminal clone help section"
 	FlagDescVerbose    = "Write detailed stdout/stderr debug log to a timestamped file"
+	FlagDescSetupConfig = "Path to git-setup.json config file"
+	FlagDescDryRun     = "Preview changes without applying them"
 )
 
 // Clone and Desktop scripts are now generated from Go templates
@@ -300,3 +306,12 @@ const (
 
 // Verbose log file.
 const VerboseLogFileFmt = "gitmap-verbose-%s.log"
+
+// Setup section headers.
+const (
+	SetupSectionDiff  = "Diff Tool"
+	SetupSectionMerge = "Merge Tool"
+	SetupSectionAlias = "Aliases"
+	SetupSectionCred  = "Credential Helper"
+	SetupSectionCore  = "Core Settings"
+)
