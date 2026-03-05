@@ -303,6 +303,10 @@ if (-not $NoPull) {
 Resolve-Dependencies
 $binaryPath = Build-Binary -Config $config
 
+# Show built version
+$versionOutput = & $binaryPath version 2>&1
+Write-Info "Version: $versionOutput"
+
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 } else {

@@ -78,10 +78,11 @@ const (
 
 // CLI commands.
 const (
-	CmdScan   = "scan"
-	CmdClone  = "clone"
-	CmdUpdate = "update"
-	CmdHelp   = "help"
+	CmdScan    = "scan"
+	CmdClone   = "clone"
+	CmdUpdate  = "update"
+	CmdVersion = "version"
+	CmdHelp    = "help"
 )
 
 // GitHub Desktop.
@@ -185,6 +186,7 @@ const (
 	HelpScan       = "  scan [dir]          Scan directory for Git repos"
 	HelpClone      = "  clone <source>      Re-clone from CSV/JSON/text file"
 	HelpUpdate     = "  update              Self-update from source repo"
+	HelpVersion    = "  version             Show version number"
 	HelpHelp       = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
