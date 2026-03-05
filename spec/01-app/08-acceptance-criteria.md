@@ -11,7 +11,8 @@
 
 - **Given** any scan,
   **then** a `gitmap-output/` folder is created inside the scanned directory
-  containing `gitmap.csv`, `gitmap.json`, and `folder-structure.md`.
+  containing `gitmap.csv`, `gitmap.json`, `folder-structure.md`, `clone.ps1`,
+  and `register-desktop.ps1`.
 
 - **Given** a folder with no `.git`,
   **then** it is skipped silently.
@@ -55,7 +56,10 @@
   **then** it pulls, resolves deps, builds, and deploys the binary.
 
 - **Given** `.\run.ps1 -R scan ../projects`,
-  **then** it builds and immediately runs gitmap with the provided arguments.
+  **then** it builds, resolves the relative path to absolute, and runs gitmap.
+
+- **Given** `.\run.ps1 -R scan ../..`,
+  **then** `../..` is resolved to an absolute path before being passed to gitmap.
 
 ## Code Quality
 

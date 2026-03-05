@@ -29,7 +29,7 @@ hierarchy, and optionally register repos with GitHub Desktop.
 2. **Config loader** — reads JSON config, merges with CLI flags.
 3. **Scanner** — walks directories, detects `.git` folders.
 4. **Mapper** — converts raw Git data into output records.
-5. **Formatter** — renders records to terminal (colored), CSV, JSON, and folder-structure Markdown.
+5. **Formatter** — renders records to terminal (colored), CSV, JSON, folder-structure Markdown, clone script (PS1), and desktop registration script (PS1).
 6. **Cloner** — re-clones repos from a previously generated file.
 7. **Desktop** — registers repos with GitHub Desktop.
 

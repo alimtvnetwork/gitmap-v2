@@ -88,6 +88,21 @@ binary. It accepts any valid gitmap command and flags.
 - If `-R` is used with no arguments, it defaults to `scan <parent-folder>`.
 - `-R` runs after build and deploy steps complete.
 
+### Path Resolution
+
+Relative path arguments (e.g., `..`, `../..`, `./projects`) are
+automatically resolved to **absolute paths** before being passed to the
+gitmap binary. This ensures the binary receives correct paths regardless
+of the working directory used by `Start-Process`.
+
+```powershell
+# User runs:
+.\run.ps1 -R scan "../.."
+
+# Script resolves "../.." to absolute, e.g.:
+# gitmap scan D:\wp-work
+```
+
 ## Deploy Target
 
 The default deploy path (`E:\bin-run`) is assumed to be on the system

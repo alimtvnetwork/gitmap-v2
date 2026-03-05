@@ -7,9 +7,10 @@
 Scan `dir` recursively for Git repositories.
 Default: current working directory.
 
-Every scan **always produces all outputs** — terminal, CSV, JSON, and
-folder-structure Markdown — written to a `gitmap-output/` folder at
-the root of the scanned directory.
+Every scan **always produces all outputs** — terminal, CSV, JSON,
+folder-structure Markdown, clone script (`clone.ps1`), and desktop
+registration script (`register-desktop.ps1`) — written to a
+`gitmap-output/` folder at the root of the scanned directory.
 
 ### `gitmap clone <source-file>`
 
