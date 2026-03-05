@@ -70,6 +70,24 @@ func runUpdate() {
 	os.Exit(0)
 }
 
+// cleanupUpdateCopies removes leftover temp binaries from previous updates.
+func cleanupUpdateCopies() {
+	pattern := filepath.Join(os.TempDir(), "gitmap-update-*.exe")
+	matches, err := filepath.Glob(pattern)
+	if err != nil {
+		return
+	}
+
+	selfPath, _ := os.Executable()
+	for _, match := range matches {
+		// Don't delete ourselves if we're running as the update copy.
+		if selfPath != "" && filepath.Clean(match) == filepath.Clean(selfPath) {
+			continue
+		}
+		os.Remove(match)
+	}
+}
+
 // hasFlag checks if a flag is present in os.Args[2:].
 func hasFlag(name string) bool {
 	for _, arg := range os.Args[2:] {
