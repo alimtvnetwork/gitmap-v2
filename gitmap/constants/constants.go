@@ -31,12 +31,14 @@ const (
 
 // Default file names.
 const (
-	DefaultCSVFile    = "gitmap.csv"
-	DefaultJSONFile   = "gitmap.json"
-	DefaultConfigPath = "./data/config.json"
-	DefaultOutputDir  = "./gitmap-output"
-	DefaultBranch     = "main"
-	DefaultDir        = "."
+	DefaultCSVFile       = "gitmap.csv"
+	DefaultJSONFile      = "gitmap.json"
+	DefaultStructureFile = "folder-structure.md"
+	DefaultConfigPath    = "./data/config.json"
+	DefaultOutputDir     = "./gitmap-output"
+	DefaultOutputFolder  = "gitmap-output"
+	DefaultBranch        = "main"
+	DefaultDir           = "."
 )
 
 // Git commands and arguments.
@@ -84,12 +86,24 @@ const JSONIndent = "  "
 
 // CLI messages.
 const (
-	MsgFoundRepos    = "Found %d repositories.\n"
-	MsgCSVWritten    = "CSV written to %s\n"
-	MsgJSONWritten   = "JSON written to %s\n"
-	MsgCloneComplete = "\nClone complete: %d succeeded, %d failed\n"
-	MsgFailedClones  = "\nFailed clones:"
-	MsgFailedEntry   = "  - %s (%s): %s\n"
+	MsgFoundRepos       = "Found %d repositories.\n"
+	MsgCSVWritten       = "CSV written to %s\n"
+	MsgJSONWritten      = "JSON written to %s\n"
+	MsgStructureWritten = "Folder structure written to %s\n"
+	MsgCloneComplete    = "\nClone complete: %d succeeded, %d failed\n"
+	MsgFailedClones     = "\nFailed clones:"
+	MsgFailedEntry      = "  - %s (%s): %s\n"
+)
+
+// Folder structure Markdown.
+const (
+	StructureTitle       = "# Folder Structure"
+	StructureDescription = "Git repositories discovered by gitmap."
+	StructureRepoFmt     = "📦 **%s** (`%s`) — %s"
+	TreeBranch           = "├──"
+	TreeCorner           = "└──"
+	TreePipe             = "│   "
+	TreeSpace            = "    "
 )
 
 // CLI error messages.

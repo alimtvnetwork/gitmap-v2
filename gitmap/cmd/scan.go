@@ -27,27 +27,37 @@ func runScan(args []string) {
 
 // executeScan performs the directory scan and outputs results.
 func executeScan(dir string, cfg model.Config, outFile string) {
-	repos, err := scanner.ScanDir(dir, cfg.ExcludeDirs)
+	absDir, err := filepath.Abs(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
+		os.Exit(1)
+	}
+	repos, err := scanner.ScanDir(absDir, cfg.ExcludeDirs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
 		os.Exit(1)
 	}
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)
 	fmt.Printf(constants.MsgFoundRepos, len(records))
-	outputRecords(records, cfg, outFile)
+	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
+	writeAllOutputs(records, outputDir, outFile)
 }
 
-// outputRecords routes records to the correct formatter.
-func outputRecords(records []model.ScanRecord, cfg model.Config, outFile string) {
-	if cfg.DefaultOutput == constants.OutputCSV {
-		writeCSVOutput(records, cfg, outFile)
-		return
+// resolveOutputDir determines the output directory relative to scan root.
+func resolveOutputDir(cfgDir, scanDir string) string {
+	if filepath.IsAbs(cfgDir) {
+		return cfgDir
 	}
-	if cfg.DefaultOutput == constants.OutputJSON {
-		writeJSONOutput(records, cfg, outFile)
-		return
-	}
+
+	return filepath.Join(scanDir, constants.DefaultOutputFolder)
+}
+
+// writeAllOutputs writes terminal, CSV, JSON, and folder structure.
+func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string) {
 	writeTerminalOutput(records)
+	writeCSVOutput(records, outputDir, outFile)
+	writeJSONOutput(records, outputDir)
+	writeFolderStructure(records, outputDir)
 }
 
 // writeTerminalOutput renders records to stdout.
@@ -59,8 +69,8 @@ func writeTerminalOutput(records []model.ScanRecord) {
 }
 
 // writeCSVOutput writes records to a CSV file.
-func writeCSVOutput(records []model.ScanRecord, cfg model.Config, outFile string) {
-	path := resolveOutFile(outFile, cfg.OutputDir, constants.DefaultCSVFile)
+func writeCSVOutput(records []model.ScanRecord, outputDir, outFile string) {
+	path := resolveOutFile(outFile, outputDir, constants.DefaultCSVFile)
 	file, err := createOutputFile(path)
 	if err != nil {
 		return
@@ -71,8 +81,8 @@ func writeCSVOutput(records []model.ScanRecord, cfg model.Config, outFile string
 }
 
 // writeJSONOutput writes records to a JSON file.
-func writeJSONOutput(records []model.ScanRecord, cfg model.Config, outFile string) {
-	path := resolveOutFile(outFile, cfg.OutputDir, constants.DefaultJSONFile)
+func writeJSONOutput(records []model.ScanRecord, outputDir string) {
+	path := filepath.Join(outputDir, constants.DefaultJSONFile)
 	file, err := createOutputFile(path)
 	if err != nil {
 		return
@@ -80,6 +90,18 @@ func writeJSONOutput(records []model.ScanRecord, cfg model.Config, outFile strin
 	defer file.Close()
 	formatter.WriteJSON(file, records)
 	fmt.Printf(constants.MsgJSONWritten, path)
+}
+
+// writeFolderStructure writes a Markdown file showing the repo tree.
+func writeFolderStructure(records []model.ScanRecord, outputDir string) {
+	path := filepath.Join(outputDir, constants.DefaultStructureFile)
+	file, err := createOutputFile(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	formatter.WriteStructure(file, records)
+	fmt.Printf(constants.MsgStructureWritten, path)
 }
 
 // resolveOutFile determines the output file path.
