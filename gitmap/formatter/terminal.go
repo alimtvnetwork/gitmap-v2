@@ -4,6 +4,7 @@ package formatter
 import (
 	"fmt"
 	"io"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -12,10 +13,11 @@ import (
 )
 
 // Terminal writes a professional colored output to the given writer.
-func Terminal(w io.Writer, records []model.ScanRecord) error {
+func Terminal(w io.Writer, records []model.ScanRecord, outputDir string) error {
 	printBanner(w, len(records))
 	printRepoList(w, records)
 	printFolderTree(w, records)
+	printOutputFiles(w, outputDir)
 	printCloneHelp(w)
 
 	return nil
@@ -36,18 +38,19 @@ func printBanner(w io.Writer, count int) {
 func printRepoList(w io.Writer, records []model.ScanRecord) {
 	fmt.Fprintf(w, constants.ColorYellow+constants.TermReposHeader+constants.ColorReset+"\n")
 	fmt.Fprintf(w, constants.ColorDim+constants.TermSeparator+constants.ColorReset+"\n")
-	for _, r := range records {
-		printOneRepo(w, r)
+	for i, r := range records {
+		printOneRepo(w, r, i+1, len(records))
 	}
 	fmt.Fprintln(w)
 }
 
-// printOneRepo writes a single repo entry.
-func printOneRepo(w io.Writer, r model.ScanRecord) {
-	fmt.Fprintf(w, constants.ColorGreen+constants.TermRepoIcon+constants.ColorReset, r.RepoName)
-	fmt.Fprintf(w, constants.ColorDim+constants.TermPathLine+constants.ColorReset, r.RelativePath)
-	fmt.Fprintf(w, constants.ColorWhite+constants.TermCloneLine+constants.ColorReset, r.CloneInstruction)
-	fmt.Fprintln(w)
+// printOneRepo writes a single repo entry with index.
+func printOneRepo(w io.Writer, r model.ScanRecord, idx, total int) {
+	fmt.Fprintf(w, constants.ColorDim+"  %d/%d "+constants.ColorReset, idx, total)
+	fmt.Fprintf(w, constants.ColorGreen+"📦 %s"+constants.ColorReset, r.RepoName)
+	fmt.Fprintf(w, constants.ColorDim+" (%s)"+constants.ColorReset+"\n", r.Branch)
+	fmt.Fprintf(w, constants.ColorDim+"       └─ "+constants.ColorReset)
+	fmt.Fprintf(w, constants.ColorWhite+"%s"+constants.ColorReset+"\n", r.CloneInstruction)
 }
 
 // printFolderTree writes the folder structure to terminal.
@@ -56,8 +59,29 @@ func printFolderTree(w io.Writer, records []model.ScanRecord) {
 	fmt.Fprintf(w, constants.ColorDim+constants.TermSeparator+constants.ColorReset+"\n")
 	paths := collectTermPaths(records)
 	tree := buildTermTree(paths)
-	renderTermTree(w, tree, "")
+	renderTermTree(w, tree, "  ")
 	fmt.Fprintln(w)
+}
+
+// printOutputFiles shows the generated output files.
+func printOutputFiles(w io.Writer, outputDir string) {
+	fmt.Fprintf(w, constants.ColorYellow+"  ■ Output Files"+constants.ColorReset+"\n")
+	fmt.Fprintf(w, constants.ColorDim+constants.TermSeparator+constants.ColorReset+"\n")
+	fmt.Fprintf(w, constants.ColorDim+"  📁 %s/"+constants.ColorReset+"\n", outputDir)
+	printOutputFile(w, outputDir, constants.DefaultCSVFile, "Repo data in CSV")
+	printOutputFile(w, outputDir, constants.DefaultJSONFile, "Repo data in JSON")
+	printOutputFile(w, outputDir, constants.DefaultStructureFile, "Folder tree")
+	printOutputFile(w, outputDir, constants.DefaultCloneScript, "PowerShell clone script")
+	fmt.Fprintln(w)
+}
+
+// printOutputFile shows one output file entry.
+func printOutputFile(w io.Writer, dir, name, desc string) {
+	fullPath := filepath.Join(dir, name)
+	fmt.Fprintf(w, constants.ColorDim+"  ├── "+constants.ColorReset)
+	fmt.Fprintf(w, constants.ColorCyan+"📄 %s"+constants.ColorReset, name)
+	fmt.Fprintf(w, constants.ColorDim+"  %s"+constants.ColorReset+"\n", desc)
+	_ = fullPath
 }
 
 // printCloneHelp writes instructions for cloning on another machine.
@@ -72,6 +96,9 @@ func printCloneHelp(w io.Writer) {
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, constants.ColorWhite+constants.TermCloneStep3+constants.ColorReset+"\n")
 	fmt.Fprintf(w, constants.ColorCyan+constants.TermCloneCmd3+constants.ColorReset+"\n")
+	fmt.Fprintln(w)
+	fmt.Fprintf(w, constants.ColorWhite+"  4. Or just run the PowerShell script:"+constants.ColorReset+"\n")
+	fmt.Fprintf(w, constants.ColorCyan+"     .\\clone.ps1 -TargetDir .\\projects"+constants.ColorReset+"\n")
 	fmt.Fprintln(w)
 }
 
@@ -116,7 +143,8 @@ func buildTermTree(entries []termPathEntry) *termNode {
 
 // insertTermNode adds a path into the tree.
 func insertTermNode(root *termNode, entry termPathEntry) {
-	parts := strings.Split(entry.Path, "/")
+	normalized := strings.ReplaceAll(entry.Path, "\\", "/")
+	parts := strings.Split(normalized, "/")
 	current := root
 	for i, part := range parts {
 		child := findTermChild(current, part)
@@ -162,14 +190,14 @@ func renderTermTree(w io.Writer, node *termNode, prefix string) {
 // renderTermNode writes a single colored tree node.
 func renderTermNode(w io.Writer, node *termNode, prefix, connector string) {
 	if node.IsRepo {
-		fmt.Fprintf(w, "%s%s %s📦 %s%s %s(%s)%s\n",
+		fmt.Fprintf(w, "%s%s%s 📦 %s%s%s %s(%s)%s\n",
 			constants.ColorDim, prefix, connector,
-			constants.ColorGreen, node.Name,
+			constants.ColorGreen, node.Name, constants.ColorReset,
 			constants.ColorDim, node.Branch, constants.ColorReset)
 
 		return
 	}
-	fmt.Fprintf(w, "%s%s %s📁 %s%s%s\n",
+	fmt.Fprintf(w, "%s%s%s 📁 %s%s%s\n",
 		constants.ColorDim, prefix, connector,
 		constants.ColorYellow, node.Name, constants.ColorReset)
 }
