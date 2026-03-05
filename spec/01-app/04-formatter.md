@@ -56,7 +56,21 @@ Git repositories discovered by gitmap.
 
 ### Clone Script (`clone.ps1`)
 
-A self-contained PowerShell script that:
+Generated from `formatter/templates/clone.ps1.tmpl` using Go `text/template`
+with `go:embed`. The template receives an array of repo entries and produces
+a PowerShell script with a **data-driven loop** instead of repeating blocks:
+
+```powershell
+$repos = @(
+    @{ Name = "my-app"; Branch = "main"; URL = "https://..."; Path = "my-app" }
+    @{ Name = "utils";  Branch = "main"; URL = "https://..."; Path = "libs\utils" }
+)
+
+foreach ($repo in $repos) {
+    # mkdir, clone, report
+}
+```
+
 - Accepts a `-TargetDir` parameter (defaults to `.`)
 - Creates the folder structure under the target directory
 - Clones each repo with `git clone -b <branch> <url> <path>`
@@ -65,12 +79,24 @@ A self-contained PowerShell script that:
 
 ### Desktop Registration Script (`register-desktop.ps1`)
 
-A PowerShell script that:
+Generated from `formatter/templates/desktop.ps1.tmpl` using the same
+template engine. Uses the same array-loop pattern:
+
 - Accepts a `-BaseDir` parameter (defaults to `.`)
 - Checks if GitHub Desktop CLI (`github`) is available
 - Registers each cloned repo with GitHub Desktop
 - Shows progress with colored output
 - Prints a summary of registered/failed repos
+
+### Template Architecture
+
+Templates live in `formatter/templates/` and are embedded into the binary
+via `//go:embed templates/*` in `formatter/template.go`. This means:
+
+- **No external file dependencies** — templates are compiled into the binary
+- **Editable without Go knowledge** — PowerShell templates are standalone files
+- **Testable independently** — templates can be validated outside Go
+- Template data structs: `CloneData`, `DesktopData`, `RepoEntry`
 
 ## Output Location
 
@@ -87,4 +113,16 @@ gitmap-output/
 ├── folder-structure.md
 ├── clone.ps1
 └── register-desktop.ps1
+```
+
+## Template Files
+
+```
+formatter/
+├── templates/
+│   ├── clone.ps1.tmpl       # PowerShell clone script template
+│   └── desktop.ps1.tmpl     # GitHub Desktop registration template
+├── template.go              # go:embed loader + shared types
+├── clonescript.go            # WriteCloneScript (uses clone.ps1.tmpl)
+└── desktopscript.go          # WriteDesktopScript (uses desktop.ps1.tmpl)
 ```

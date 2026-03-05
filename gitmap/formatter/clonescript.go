@@ -2,50 +2,39 @@
 package formatter
 
 import (
-	"fmt"
 	"io"
-	"strings"
 
-	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
-// WriteCloneScript writes a self-contained PowerShell clone script.
+// WriteCloneScript writes a self-contained PowerShell clone script
+// using the embedded clone.ps1.tmpl template.
 func WriteCloneScript(w io.Writer, records []model.ScanRecord) error {
-	writeScriptHeader(w, len(records))
-	writeScriptBody(w, records)
-	writeScriptFooter(w)
-
-	return nil
-}
-
-// writeScriptHeader writes the PowerShell script preamble.
-func writeScriptHeader(w io.Writer, count int) {
-	fmt.Fprintln(w, constants.ScriptHeader)
-	fmt.Fprintf(w, constants.ScriptParamBlock)
-	fmt.Fprintln(w, constants.ScriptErrorPref)
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, constants.ScriptBanner, count)
-	fmt.Fprintln(w)
-}
-
-// writeScriptBody writes the clone commands for each repo.
-func writeScriptBody(w io.Writer, records []model.ScanRecord) {
-	fmt.Fprintln(w, constants.ScriptCounters)
-	fmt.Fprintln(w)
-	for i, r := range records {
-		writeScriptEntry(w, r, i+1, len(records))
+	tmpl, err := loadTemplate("clone.ps1.tmpl")
+	if err != nil {
+		return err
 	}
+
+	data := CloneData{
+		Repos: buildRepoEntries(records),
+	}
+
+	return tmpl.Execute(w, data)
 }
 
-// writeScriptEntry writes one repo clone block.
-func writeScriptEntry(w io.Writer, r model.ScanRecord, idx, total int) {
-	relPath := strings.ReplaceAll(r.RelativePath, "/", "\\")
-	fmt.Fprintf(w, constants.ScriptRepoHeader, idx, total, r.RepoName)
-	fmt.Fprintf(w, constants.ScriptMkdir, relPath)
-	fmt.Fprintf(w, constants.ScriptCloneCmd, r.Branch, cloneURL(r), relPath)
-	fmt.Fprintln(w, constants.ScriptCloneCheck)
-	fmt.Fprintln(w)
+// buildRepoEntries converts ScanRecords into template-friendly RepoEntry slices.
+func buildRepoEntries(records []model.ScanRecord) []RepoEntry {
+	entries := make([]RepoEntry, 0, len(records))
+	for _, r := range records {
+		entries = append(entries, RepoEntry{
+			Name:   r.RepoName,
+			Branch: r.Branch,
+			URL:    cloneURL(r),
+			Path:   backslashPath(r.RelativePath),
+		})
+	}
+
+	return entries
 }
 
 // cloneURL picks the best URL from a record.
@@ -55,9 +44,4 @@ func cloneURL(r model.ScanRecord) string {
 	}
 
 	return r.SSHUrl
-}
-
-// writeScriptFooter writes the summary section.
-func writeScriptFooter(w io.Writer) {
-	fmt.Fprintln(w, constants.ScriptSummary)
 }
