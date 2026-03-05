@@ -50,7 +50,7 @@ func dispatch(command string) {
 
 | Rule | Rationale |
 |------|-----------|
-| Each subcommand lives in its own file (`scan.go`, `clone.go`, `update.go`) | Single responsibility per file |
+| Each subcommand lives in its own file (`scan.go`, `clone.go`, etc.) | Single responsibility per file |
 | Handler functions are unexported (`runScan`, not `RunScan`) | Only `Run()` is the public API |
 | Unknown commands print a message and exit with code 1 | Fail fast, fail clearly |
 
@@ -79,8 +79,8 @@ func parseScanFlags(args []string) (dir, configPath, mode string) {
 | Pattern | Example | Why |
 |---------|---------|-----|
 | Lowercase with hyphens | `--target-dir` | Readable, standard |
-| Boolean flags as switches | `--github-desktop` | No value needed |
-| Positional args for primary input | `gitmap scan <dir>` | Natural CLI UX |
+| Boolean flags as switches | `--dry-run` | No value needed |
+| Positional args for primary input | `tool scan <dir>` | Natural CLI UX |
 
 ### Defaults
 
@@ -115,15 +115,15 @@ the source repo location without hardcoding paths.
 Usage: toolname <command> [flags]
 
 Commands:
-  scan [dir]          Scan directory for Git repos
-  clone <source>      Re-clone from CSV/JSON/text file
+  scan [dir]          Scan directory for items
+  clone <source>      Re-create from CSV/JSON/text file
   update              Self-update from source repo
   version             Show version number
   help                Show this help message
 
 Scan flags:
   --config <path>     Config file (default: ./data/config.json)
-  --mode ssh|https    Clone URL style (default: https)
+  --mode ssh|https    URL style (default: https)
 ```
 
 ### Rules
@@ -148,7 +148,7 @@ Scan flags:
 - All error format strings live in `constants` (`ErrSourceRequired`, `ErrConfigLoad`, etc.).
 - Errors print to stderr, not stdout.
 - After printing an error, exit immediately — don't continue.
-- For batch operations (clone N repos), log per-item failures
+- For batch operations (e.g., process N items), log per-item failures
   but continue; print summary at the end.
 
 ## Constants Package
@@ -157,10 +157,10 @@ Scan flags:
 
 | Category | Examples |
 |----------|---------|
-| Version string | `Version = "1.1.2"` |
+| Version string | `Version = "1.0.0"` |
 | CLI command names | `CmdScan`, `CmdClone`, `CmdHelp` |
 | Default values | `DefaultConfigPath`, `DefaultBranch` |
-| Format strings | `CloneInstructionFmt`, `TermBannerTitle` |
+| Format strings | `InstructionFmt`, `BannerTitle` |
 | Error messages | `ErrSourceRequired`, `ErrConfigLoad` |
 | ANSI color codes | `ColorGreen`, `ColorReset` |
 | File extensions | `ExtCSV`, `ExtJSON` |
@@ -177,11 +177,10 @@ Scan flags:
 cmd/         CLI entry point, subcommand routing, flag parsing
 config/      JSON config loading + flag merging
 constants/   All shared string literals and defaults
-scanner/     Directory walking + .git detection
-mapper/      Raw git data → output records
+scanner/     Directory walking + data detection
+mapper/      Raw data → output records
 formatter/   Rendering to terminal/CSV/JSON/scripts
 model/       Shared data structures
-desktop/     GitHub Desktop integration
 ```
 
 ### Rules

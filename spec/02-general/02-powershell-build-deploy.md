@@ -49,7 +49,7 @@ Store build/deploy settings in a JSON file alongside the source:
 {
   "deployPath": "E:\\bin-run",
   "buildOutput": "./bin",
-  "binaryName": "gitmap.exe",
+  "binaryName": "toolname.exe",
   "copyData": true
 }
 ```
@@ -58,7 +58,7 @@ Store build/deploy settings in a JSON file alongside the source:
 
 ```powershell
 function Load-Config {
-    $configPath = Join-Path $GitMapDir "powershell.json"
+    $configPath = Join-Path $ProjectDir "powershell.json"
     if (Test-Path $configPath) {
         return Get-Content $configPath | ConvertFrom-Json
     }
@@ -66,7 +66,7 @@ function Load-Config {
     return @{
         deployPath  = "E:\bin-run"
         buildOutput = "./bin"
-        binaryName  = "gitmap.exe"
+        binaryName  = "toolname.exe"
         copyData    = $true
     }
 }
@@ -161,10 +161,26 @@ while ($true) {
 }
 ```
 
+### Nested Deploy Structure
+
+Deploy the binary into a named subfolder within the target directory.
+This keeps the deploy target organized when multiple tools share the
+same parent directory:
+
+```
+deploy-target/
+└── toolname/
+    ├── toolname.exe
+    └── data/
+        └── config.json
+```
+
+The subfolder (not the parent) should be added to the system `PATH`.
+
 ### Deploy Target on PATH
 
-The default deploy directory should be on the system `PATH` so the
-tool can be run from any terminal without specifying the full path.
+The deploy directory should be on the system `PATH` so the tool can
+be run from any terminal without specifying the full path.
 
 ## Run Pattern (`-R` Flag)
 
@@ -199,7 +215,7 @@ foreach ($arg in $CliArgs) {
 ### Default Behavior
 
 If `-R` is used with no arguments, default to a sensible action
-(e.g., scan the parent folder of the repo).
+(e.g., process the parent folder of the repo).
 
 ### Context Logging
 

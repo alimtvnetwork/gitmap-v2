@@ -68,45 +68,34 @@ const (
 
 Structure terminal output as distinct sections:
 
-1. **Banner** — tool name + version + repo count
+1. **Banner** — tool name + version + item count
 2. **Item list** — each item with icon, path, and key data
 3. **Tree visualization** — hierarchical folder structure
-4. **Output file list** — what files were generated and where (with full file paths)
-5. **Clone instructions** — step-by-step how to restore on another machine
-6. **Script shortcuts** — direct commands for HTTPS and SSH clone scripts
+4. **Output file list** — what files were generated and where (with full paths)
+5. **Action instructions** — step-by-step how to use the outputs
+6. **Script shortcuts** — direct commands for automation scripts
 7. **Related commands** — other commands the user can run next
 
-### Clone Instructions Section
+### Action Instructions Section
 
-Always end terminal output with actionable clone/restore instructions.
-Show **both HTTPS and SSH** options so the user can pick. Include:
-
-- The JSON and CSV clone commands
-- The direct PowerShell script paths (HTTPS and SSH)
-- The full clone script with progress/error handling
-- Any related commands (e.g., `desktop-sync`)
+Always end terminal output with actionable next-step instructions.
+Show **multiple options** so the user can pick the best approach:
 
 ```
-■ How to Clone on Another Machine
+■ How to Use the Output
 ──────────────────────────────────────────
-  1. Copy the output files to the target machine:
-     gitmap-output/gitmap.json  (or gitmap.csv)
+  1. Copy the output files to another machine:
+     toolname-output/data.json  (or data.csv)
 
-  2. Clone via JSON (HTTPS):
-     gitmap clone ./gitmap-output/gitmap.json --target-dir ./projects
+  2. Restore via JSON:
+     toolname restore ./toolname-output/data.json --target-dir ./projects
 
-  3. Clone via CSV:
-     gitmap clone ./gitmap-output/gitmap.csv --target-dir ./projects
+  3. Restore via CSV:
+     toolname restore ./toolname-output/data.csv --target-dir ./projects
 
-  4. Or run the PowerShell script directly:
-     .\direct-clone.ps1       # HTTPS clone commands
-     .\direct-clone-ssh.ps1   # SSH clone commands
-
-  5. Full clone script with progress & error handling:
-     .\clone.ps1 -TargetDir .\projects
-
-  6. Sync repos to GitHub Desktop:
-     gitmap desktop-sync
+  4. Or run a generated script directly:
+     .\restore.ps1              # With progress & error handling
+     .\restore-quick.ps1        # Raw commands only
 ```
 
 ### Banner Pattern
@@ -126,11 +115,11 @@ For complex script outputs (PowerShell, Bash), use Go's embedded
 templates rather than string concatenation:
 
 ```go
-//go:embed templates/clone.ps1.tmpl
-var cloneTemplate string
+//go:embed templates/restore.ps1.tmpl
+var restoreTemplate string
 
-func WriteCloneScript(w io.Writer, data CloneData) error {
-    tmpl := template.Must(template.New("clone").Parse(cloneTemplate))
+func WriteRestoreScript(w io.Writer, data RestoreData) error {
+    tmpl := template.Must(template.New("restore").Parse(restoreTemplate))
     return tmpl.Execute(w, data)
 }
 ```
@@ -140,13 +129,13 @@ func WriteCloneScript(w io.Writer, data CloneData) error {
 Define clear data structures for template rendering:
 
 ```go
-type CloneData struct {
-    Repos     []RepoEntry
-    BaseDir   string
+type RestoreData struct {
+    Items      []ItemEntry
+    BaseDir    string
     TotalCount int
 }
 
-type RepoEntry struct {
+type ItemEntry struct {
     URL    string
     Branch string
     Path   string
@@ -160,19 +149,19 @@ type RepoEntry struct {
 |------|---------|----------|
 | Logic scripts | Progress bars, error handling, summaries | Interactive restoration |
 | Direct scripts | Raw commands, no logic | Quick copy-paste execution |
-| Registration scripts | Tool-specific integrations | GitHub Desktop, etc. |
+| Registration scripts | Tool-specific integrations | Third-party tool registration |
 
 ## CSV Output
 
 ### Conventions
 
 - Always include a header row.
-- Use consistent column ordering: name, URLs, branch, paths, metadata.
+- Use consistent column ordering: name, identifiers, metadata, paths.
 - Quote fields that may contain commas or special characters.
 - Use standard Go `encoding/csv` writer.
 
 ```
-repoName,httpsUrl,sshUrl,branch,relativePath,absolutePath,cloneInstruction,notes
+name,primaryUrl,altUrl,branch,relativePath,absolutePath,instruction,notes
 ```
 
 ## JSON Output
@@ -183,7 +172,7 @@ repoName,httpsUrl,sshUrl,branch,relativePath,absolutePath,cloneInstruction,notes
 - Output an array of record objects.
 - Field names match the Go struct's `json` tags.
 - The JSON output should be directly re-importable by the tool's
-  clone/restore command.
+  restore/import command.
 
 ```go
 encoder := json.NewEncoder(w)
@@ -199,10 +188,10 @@ Render a tree using Unicode box-drawing characters:
 
 ```
 ├── project-a/
-│   ├── 📦 **service** (`main`) — git@github.com:user/service.git
-│   └── 📦 **api** (`develop`) — git@github.com:user/api.git
+│   ├── 📦 **service** (`main`) — https://example.com/service.git
+│   └── 📦 **api** (`develop`) — https://example.com/api.git
 └── project-b/
-    └── 📦 **frontend** (`main`) — https://github.com/user/frontend.git
+    └── 📦 **frontend** (`main`) — https://example.com/frontend.git
 ```
 
 | Character | Constant | Usage |
@@ -220,15 +209,12 @@ formatter/
 ├── csv.go            CSV file output
 ├── json.go           JSON file output
 ├── structure.go      Markdown folder tree
-├── clonescript.go    Logic-based clone script
-├── directclone.go   Raw clone commands
-├── desktopscript.go GitHub Desktop registration
+├── logicscript.go    Logic-based restore script
+├── directscript.go   Raw command scripts
 ├── template.go       Shared template loading
 └── templates/        Embedded .tmpl files
-    ├── clone.ps1.tmpl
-    ├── direct-clone.ps1.tmpl
-    ├── direct-clone-ssh.ps1.tmpl
-    └── desktop.ps1.tmpl
+    ├── restore.ps1.tmpl
+    └── restore-quick.ps1.tmpl
 ```
 
 ### Rules
