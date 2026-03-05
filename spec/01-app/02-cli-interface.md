@@ -126,6 +126,27 @@ Arguments after `exec` are passed directly to `git` inside each repo directory.
 - Shows per-repo success/failure with captured output.
 - Prints a summary of succeeded/failed/missing counts.
 
+### `gitmap release [version]` (alias: `r`)
+
+Create a release branch, Git tag, and GitHub release. Version can be
+full (`v1.2.3`), partial (`v1`, `v1.2` — zero-padded), or omitted
+(reads from `version.json`). Supports pre-release suffixes (`-rc.1`,
+`-beta`) and draft mode.
+
+- Checks `.release/` and Git tags to prevent duplicate releases.
+- Auto-detects `CHANGELOG.md` (release body) and `README.md` (asset).
+- Uses `gh` CLI if available, falls back to GitHub REST API.
+- Writes release metadata to `.release/vX.Y.Z.json`.
+- Updates `.release/latest.json` for the highest stable version.
+
+See [12-release-command.md](./12-release-command.md) for full details.
+
+### `gitmap release-branch <branch>` (alias: `rb`)
+
+Complete a release from an existing `release/vX.Y.Z` branch. Creates
+the tag and GitHub release if not already done. Useful when the release
+branch was created manually or by a previous incomplete release.
+
 ### `gitmap version` (alias: `v`)
 
 Prints the current version number (e.g., `gitmap v1.9.0`) and exits.
@@ -149,6 +170,8 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `desktop-sync`   | `ds`  |
 | `status`         | `st`  |
 | `exec`           | `x`   |
+| `release`        | `r`   |
+| `release-branch` | `rb`  |
 | `version`        | `v`   |
 
 ---
@@ -215,6 +238,25 @@ activates whenever existing repos are detected during a clone operation.
 | `--config <path>`      | Path to git-setup.json config file   | `./data/git-setup.json`    |
 | `--dry-run`            | Preview changes without applying     | `false`                    |
 
+## Release Flags
+
+| Flag                          | Description                                      | Default |
+|-------------------------------|--------------------------------------------------|---------|
+| `--assets <path>`             | Directory or file to attach to the release       | (none)  |
+| `--commit <sha>`              | Create release from a specific commit            | (none)  |
+| `--branch <name>`             | Create release from latest commit of a branch    | (none)  |
+| `--bump major\|minor\|patch`  | Auto-increment from latest released version      | (none)  |
+| `--draft`                     | Create an unpublished draft release              | `false` |
+| `--verbose`                   | Write detailed debug log                         | `false` |
+
+## Release-Branch Flags
+
+| Flag              | Description                         | Default |
+|-------------------|-------------------------------------|---------|
+| `--assets <path>` | Directory or file to attach         | (none)  |
+| `--draft`         | Create an unpublished draft release | `false` |
+| `--verbose`       | Write detailed debug log            | `false` |
+
 ## Examples
 
 ```bash
@@ -273,6 +315,34 @@ gitmap x status -s   # alias
 
 # Self-update from source repo
 gitmap update
+
+# Create a release from HEAD
+gitmap release v1.2.3
+gitmap r v1.0.0      # alias
+
+# Partial version (padded to v1.0.0)
+gitmap release v1
+
+# Release with assets
+gitmap release v2.0.0 --assets ./dist
+
+# Release from specific commit or branch
+gitmap release v1.2.3 --commit abc123
+gitmap release v1.0.0 --branch develop
+
+# Auto-increment version
+gitmap release --bump patch
+gitmap release --bump minor --assets ./bin
+
+# Draft / pre-release
+gitmap release v3.0.0-rc.1 --draft
+
+# Read version from version.json
+gitmap release
+
+# Complete release from existing release branch
+gitmap release-branch release/v1.2.0
+gitmap rb release/v1.2.0
 
 # Print version number
 gitmap version
