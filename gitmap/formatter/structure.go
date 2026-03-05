@@ -66,7 +66,8 @@ func buildTree(entries []pathEntry) *treeNode {
 
 // insertPath adds a single path into the tree.
 func insertPath(root *treeNode, entry pathEntry) {
-	parts := strings.Split(entry.Path, "/")
+	normalized := strings.ReplaceAll(entry.Path, "\\", "/")
+	parts := strings.Split(normalized, "/")
 	current := root
 	for i, part := range parts {
 		child := findChild(current, part)

@@ -61,17 +61,18 @@ func resolveOutputDir(cfgDir, scanDir string) string {
 	return filepath.Join(scanDir, constants.DefaultOutputFolder)
 }
 
-// writeAllOutputs writes terminal, CSV, JSON, and folder structure.
+// writeAllOutputs writes terminal, CSV, JSON, folder structure, and clone script.
 func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string) {
-	writeTerminalOutput(records)
+	writeTerminalOutput(records, outputDir)
 	writeCSVOutput(records, outputDir, outFile)
 	writeJSONOutput(records, outputDir)
 	writeFolderStructure(records, outputDir)
+	writeCloneScript(records, outputDir)
 }
 
 // writeTerminalOutput renders records to stdout.
-func writeTerminalOutput(records []model.ScanRecord) {
-	err := formatter.Terminal(os.Stdout, records)
+func writeTerminalOutput(records []model.ScanRecord, outputDir string) {
+	err := formatter.Terminal(os.Stdout, records, outputDir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrOutputFailed, err)
 	}
@@ -111,6 +112,18 @@ func writeFolderStructure(records []model.ScanRecord, outputDir string) {
 	defer file.Close()
 	formatter.WriteStructure(file, records)
 	fmt.Printf(constants.MsgStructureWritten, path)
+}
+
+// writeCloneScript writes a PowerShell clone script.
+func writeCloneScript(records []model.ScanRecord, outputDir string) {
+	path := filepath.Join(outputDir, constants.DefaultCloneScript)
+	file, err := createOutputFile(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	formatter.WriteCloneScript(file, records)
+	fmt.Printf(constants.MsgCloneScript, path)
 }
 
 // resolveOutFile determines the output file path.
