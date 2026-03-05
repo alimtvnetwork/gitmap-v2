@@ -11,6 +11,11 @@
 - ✅ Create `spec/02-general/` with reusable AI-trainable design guidelines (6 files)
 - ✅ Add `desktop-sync` command to sync repos to GitHub Desktop from scan output
 - ✅ Enhanced terminal output with both HTTPS and SSH clone instructions
+- ✅ Remove GitHub Release integration (release command now Git-only + local metadata)
+- ✅ Nested deploy structure (`bin-run/gitmap/` subfolder)
+- ✅ Update enhancements: skip-if-current, version comparison, rollback safety (.old backups)
+- ✅ `update-cleanup` command with auto-run at end of update cycle
+- ✅ Made all `spec/02-general/` files fully generic (no gitmap-specific references)
 
 ## Pending Suggestions
 
@@ -18,7 +23,7 @@
 - ⬜ **Add missing details**: UTF-8 BOM in self-update, tree-building algorithm, chained if/return pattern
 - ⬜ **Add missing pattern files**: Batch operations, external tool integration, directory walking, testing conventions
 
-- ⬜ **Verify update flow**: Run `gitmap update` end-to-end, confirm no file-lock errors
+- ⬜ **Verify update flow**: Run `gitmap update` end-to-end, confirm skip-if-current + rollback + auto-cleanup
 - ⬜ **Verify SSH output**: Run scan, check `direct-clone-ssh.ps1` contains correct SSH URLs
 - ⬜ **Verify desktop-sync**: Run `gitmap desktop-sync` end-to-end
 - ⬜ **Build documentation site**: Replace placeholder React frontend with actual gitmap docs

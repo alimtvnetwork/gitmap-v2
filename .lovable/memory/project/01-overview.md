@@ -6,7 +6,7 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 
 ## Current Version
 
-**v1.1.3** (defined in `gitmap/constants/constants.go`)
+**v2.1.0** (defined in `gitmap/constants/constants.go`)
 
 ## Tech Stack
 
@@ -21,20 +21,28 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 |-----------|---------|
 | `gitmap/` | Go source code for the CLI |
 | `spec/01-app/` | App-specific specification documents |
-| `spec/02-general/` | Reusable design patterns & guidelines (AI-trainable) |
+| `spec/02-general/` | Reusable design patterns & guidelines (generic, shareable) |
 | `src/` | React frontend (documentation site) |
 | `.lovable/memory/` | AI memory and tracking |
 
 ## CLI Commands
 
-| Command | Description | Status |
-|---------|-------------|--------|
-| `scan [dir]` | Scan directory for Git repos, output all formats | ✅ Done |
-| `clone <source>` | Re-clone from CSV/JSON/text preserving hierarchy | ✅ Done |
-| `update` | Self-update via copy-and-handoff mechanism | ✅ Done |
-| `desktop-sync` | Sync repos to GitHub Desktop from scan output | ✅ Done |
-| `version` | Print version string and exit | ✅ Done |
-| `help` | Show usage information | ✅ Done |
+| Command | Alias | Description | Status |
+|---------|-------|-------------|--------|
+| `scan [dir]` | `s` | Scan directory for Git repos, output all formats | ✅ Done |
+| `clone <source>` | `c` | Re-clone from CSV/JSON/text preserving hierarchy | ✅ Done |
+| `pull <name>` | `p` | Pull a specific repo by name | ✅ Done |
+| `rescan` | `rs` | Re-run last scan with cached flags | ✅ Done |
+| `desktop-sync` | `ds` | Sync repos to GitHub Desktop from scan output | ✅ Done |
+| `setup` | — | Configure Git global settings from JSON | ✅ Done |
+| `status` | `st` | Show dirty/clean, ahead/behind for all repos | ✅ Done |
+| `exec <args>` | `x` | Run any git command across all repos | ✅ Done |
+| `release [ver]` | `r` | Create release branch, tag, push | ✅ Done |
+| `release-branch` | `rb` | Complete release from existing branch | ✅ Done |
+| `update` | — | Self-update via copy-and-handoff + auto-cleanup | ✅ Done |
+| `update-cleanup` | — | Remove update temp files and .old backups | ✅ Done |
+| `version` | `v` | Print version string and exit | ✅ Done |
+| `help` | — | Show usage information | ✅ Done |
 
 ## Output Files (per scan)
 
@@ -50,6 +58,16 @@ All written to `gitmap-output/` inside the scanned directory:
 | `direct-clone.ps1` | Plain `git clone` commands (HTTPS) |
 | `direct-clone-ssh.ps1` | Plain `git clone` commands (SSH) |
 | `register-desktop.ps1` | GitHub Desktop registration script |
+
+## Deploy Structure
+
+```
+bin-run/
+└── gitmap/
+    ├── gitmap.exe
+    └── data/
+        └── config.json
+```
 
 ## Code Style Rules
 

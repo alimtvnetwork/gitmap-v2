@@ -131,24 +131,44 @@ User runs: <tool> update
       ├─ If already up to date → exits early (no rebuild)
       ├─ Waits 1–2 seconds
       ├─ Runs: build pipeline (deps → build → deploy)
-      │    ├─ Backs up existing binary
+      │    ├─ Backs up existing binary as .old
       │    ├─ Deploys new binary (with retry)
-      │    └─ On failure: restores backup
+      │    └─ On failure: restores .old backup
       ├─ Compares old vs new version
+      ├─ Runs: <tool> update-cleanup (auto)
+      │    ├─ Removes %TEMP%\<tool>-update-*.exe
+      │    └─ Removes *.old from deploy directory
       └─ Cleans up temp script
 ```
 
 ## Cleanup Command
 
-Rather than silently deleting files on startup, provide an explicit
-cleanup subcommand (e.g. `tool update-cleanup`) that removes:
+Provide an explicit cleanup subcommand (e.g. `tool update-cleanup`)
+that removes update artifacts:
 
 1. **Temp update copies** — `%TEMP%\<tool>-update-*.exe` files left
    from previous update handoffs
 2. **Old backup binaries** — `*.old` files in the deploy directory
    from rollback backups
 
-This gives the user visibility and control over artifact removal.
+### Auto-Cleanup at End of Update
+
+The update process automatically invokes the cleanup command after
+a successful build and deploy. This means the user doesn't need to
+remember to clean up — it happens as part of the normal update cycle.
+
+```
+# At end of update script (after version comparison):
+if newBinaryExists:
+    run(newBinary, "update-cleanup")
+```
+
+### Manual Cleanup
+
+The command is also available for ad-hoc use. This is useful when:
+- A previous update was interrupted before cleanup ran
+- The user wants to verify what artifacts exist
+- Debugging update issues
 
 ```
 # Pseudocode — cleanup command
@@ -167,11 +187,11 @@ func runUpdateCleanup():
     print("Cleanup complete")
 ```
 
-### Why Not Auto-Cleanup on Startup?
+### Why a Separate Command (Not Auto-Cleanup on Startup)?
 
 - **Transparency** — the user sees exactly what's being deleted
 - **Safety** — `.old` files serve as manual rollback if the new
-  version has issues (user can rename `.old` back)
+  version has issues (user can rename `.old` back before cleanup runs)
 - **Performance** — no filesystem scanning on every startup
 - **Explicitness** — follows the principle of least surprise
 
