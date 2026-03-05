@@ -80,6 +80,10 @@ func parseCloneLine(line string) model.ScanRecord {
 
 // cloneAll iterates records and clones each one.
 func cloneAll(records []model.ScanRecord, targetDir string, safePull bool) model.CloneSummary {
+	if !safePull && hasExistingRepos(records, targetDir) {
+		safePull = true
+		fmt.Print(constants.MsgAutoSafePull)
+	}
 	summary := model.CloneSummary{}
 	for _, rec := range records {
 		result := cloneOrPullOne(rec, targetDir, safePull)
@@ -87,6 +91,18 @@ func cloneAll(records []model.ScanRecord, targetDir string, safePull bool) model
 	}
 
 	return summary
+}
+
+// hasExistingRepos checks if any target repo directories already exist.
+func hasExistingRepos(records []model.ScanRecord, targetDir string) bool {
+	for _, rec := range records {
+		dest := filepath.Join(targetDir, rec.RelativePath)
+		if isGitRepo(dest) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // cloneOne clones a single repository.
