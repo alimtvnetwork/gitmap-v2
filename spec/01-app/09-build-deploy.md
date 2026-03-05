@@ -22,7 +22,8 @@ Build configuration lives in `gitmap/powershell.json`.
 | `-NoPull` | Skip `git pull` | pull enabled |
 | `-NoDeploy` | Skip deploy step | deploy enabled |
 | `-DeployPath <dir>` | Override deploy directory | from `powershell.json` |
-| `-R <args...>` | Run gitmap after build with given CLI arguments | — |
+| `-R` | Switch — run gitmap after build | off |
+| *(trailing args)* | All args after `-R` are forwarded to gitmap | `scan <parent-folder>` |
 
 ### Examples
 
@@ -82,18 +83,27 @@ The same structure is replicated at the deploy target.
 
 ## `-R` Flag Behavior
 
-The `-R` flag passes **all remaining arguments** directly to the gitmap
-binary. It accepts any valid gitmap command and flags.
+`-R` is a **switch** parameter. All remaining positional arguments after it
+are captured via `[Parameter(ValueFromRemainingArguments)]` into `$RunArgs`
+and forwarded directly to the gitmap binary.
 
-- If `-R` is used with no arguments, it defaults to `scan <parent-folder>`.
+```powershell
+param(
+    [switch]$R,
+    [Parameter(ValueFromRemainingArguments=$true)]
+    [string[]]$RunArgs
+)
+```
+
+- If `-R` is used with no trailing arguments, it defaults to `scan <parent-folder>`.
 - `-R` runs after build and deploy steps complete.
 
 ### Path Resolution
 
 Relative path arguments (e.g., `..`, `../..`, `./projects`) are
 automatically resolved to **absolute paths** before being passed to the
-gitmap binary. This ensures the binary receives correct paths regardless
-of the working directory used by `Start-Process`.
+gitmap binary. Resolution uses `Resolve-Path` with a fallback to
+`[System.IO.Path]::GetFullPath()` for paths that don't yet exist.
 
 ```powershell
 # User runs:
@@ -102,6 +112,27 @@ of the working directory used by `Start-Process`.
 # Script resolves "../.." to absolute, e.g.:
 # gitmap scan D:\wp-work
 ```
+
+### RUN Context Logging
+
+Before executing gitmap, the script prints diagnostic context:
+
+```
+  [RUN] Executing gitmap
+  ──────────────────────────────────────────────────
+  → Runner CWD: D:\wp-work\riseup-asia\git-repo-navigator
+  → Repo root: D:\wp-work\riseup-asia\git-repo-navigator
+  → Command: gitmap scan D:\wp-work
+  → Scan target: D:\wp-work
+  ──────────────────────────────────────────────────
+```
+
+| Line | Description |
+|------|-------------|
+| Runner CWD | Current working directory of the PowerShell session |
+| Repo root | Root of the git-repo-navigator project |
+| Command | Full command being executed |
+| Scan target | Resolved absolute path passed to `scan` (shown only for scan commands) |
 
 ## Deploy Target
 
