@@ -40,6 +40,7 @@ func dispatch(command string) {
 
 // printUsage displays help text for all commands.
 func printUsage() {
+	fmt.Printf("gitmap v%s\n\n", constants.Version)
 	fmt.Println(constants.HelpUsage)
 	fmt.Println()
 	fmt.Println(constants.HelpCommands)

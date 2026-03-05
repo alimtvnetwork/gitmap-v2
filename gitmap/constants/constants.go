@@ -3,6 +3,9 @@
 // formats, and file extensions live here.
 package constants
 
+// Version.
+const Version = "1.0.0"
+
 // Clone modes.
 const (
 	ModeHTTPS = "https"
@@ -99,7 +102,7 @@ const (
 // Terminal output sections.
 const (
 	TermBannerTop    = "  ╔══════════════════════════════════════╗"
-	TermBannerTitle  = "  ║            gitmap scan               ║"
+	TermBannerTitle  = "  ║            gitmap v%s               ║"
 	TermBannerBottom = "  ╚══════════════════════════════════════╝"
 	TermFoundFmt     = "  ✓ Found %d repositories"
 	TermReposHeader  = "  ■ Repositories"
