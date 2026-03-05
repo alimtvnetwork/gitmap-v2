@@ -101,6 +101,7 @@ const (
 	CmdPullAlias        = "p"
 	CmdRescan           = "rescan"
 	CmdRescanAlias      = "rs"
+	CmdSetup            = "setup"
 )
 
 // GitHub Desktop.
