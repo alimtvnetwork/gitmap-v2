@@ -114,6 +114,10 @@ const (
 	CmdStatusAlias      = "st"
 	CmdExec             = "exec"
 	CmdExecAlias        = "x"
+	CmdRelease          = "release"
+	CmdReleaseAlias     = "r"
+	CmdReleaseBranch      = "release-branch"
+	CmdReleaseBranchAlias = "rb"
 )
 
 // GitHub Desktop.
