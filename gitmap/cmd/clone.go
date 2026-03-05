@@ -13,18 +13,18 @@ import (
 
 // runClone handles the "clone" subcommand.
 func runClone(args []string) {
-	source, targetDir, ghDesktop := parseCloneFlags(args)
+	source, targetDir, safePull, ghDesktop := parseCloneFlags(args)
 	if len(source) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrSourceRequired)
 		fmt.Fprintln(os.Stderr, constants.ErrCloneUsage)
 		os.Exit(1)
 	}
-	executeClone(source, targetDir, ghDesktop)
+	executeClone(source, targetDir, safePull, ghDesktop)
 }
 
 // executeClone runs the clone operation and prints the summary.
-func executeClone(source, targetDir string, ghDesktop bool) {
-	summary, err := cloner.CloneFromFile(source, targetDir)
+func executeClone(source, targetDir string, safePull, ghDesktop bool) {
+	summary, err := cloner.CloneFromFile(source, targetDir, safePull)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, err)
 		os.Exit(1)

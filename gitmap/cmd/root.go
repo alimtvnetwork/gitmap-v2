@@ -73,6 +73,7 @@ func printUsage() {
 	fmt.Println()
 	fmt.Println(constants.HelpCloneFlags)
 	fmt.Println(constants.HelpTargetDir)
+	fmt.Println(constants.HelpSafePull)
 }
 
 // parseScanFlags parses flags for the scan command.
@@ -95,9 +96,10 @@ func parseScanFlags(args []string) (dir, configPath, mode, output, outFile, outp
 }
 
 // parseCloneFlags parses flags for the clone command.
-func parseCloneFlags(args []string) (source, targetDir string, ghDesktop bool) {
+func parseCloneFlags(args []string) (source, targetDir string, safePull, ghDesktop bool) {
 	fs := flag.NewFlagSet(constants.CmdClone, flag.ExitOnError)
 	targetFlag := fs.String("target-dir", constants.DefaultDir, constants.FlagDescTargetDir)
+	safePullFlag := fs.Bool("safe-pull", false, constants.FlagDescSafePull)
 	ghDesktopFlag := fs.Bool("github-desktop", false, constants.FlagDescGHDesktop)
 	fs.Parse(args)
 
@@ -106,5 +108,5 @@ func parseCloneFlags(args []string) (source, targetDir string, ghDesktop bool) {
 		source = fs.Arg(0)
 	}
 
-	return source, *targetFlag, *ghDesktopFlag
+	return source, *targetFlag, *safePullFlag, *ghDesktopFlag
 }

@@ -55,7 +55,10 @@ const (
 const (
 	GitBin          = "git"
 	GitClone        = "clone"
+	GitPull         = "pull"
 	GitBranchFlag   = "-b"
+	GitDirFlag      = "-C"
+	GitFFOnlyFlag   = "--ff-only"
 	GitConfigCmd    = "config"
 	GitGetFlag      = "--get"
 	GitRemoteOrigin = "remote.origin.url"
@@ -185,7 +188,7 @@ const (
 // CLI error messages.
 const (
 	ErrSourceRequired = "Error: source file is required"
-	ErrCloneUsage     = "Usage: gitmap clone <source> [--target-dir <dir>]"
+	ErrCloneUsage     = "Usage: gitmap clone <source> [--target-dir <dir>] [--safe-pull]"
 	ErrConfigLoad     = "Error loading config: %v\n"
 	ErrScanFailed     = "Scan error: %v\n"
 	ErrCloneFailed    = "Clone error: %v\n"
@@ -213,8 +216,9 @@ const (
 	HelpOutputPath = "  --output-path <dir> Output directory (default: ./gitmap-output)"
 	HelpOutFile        = "  --out-file <path>   Exact output file path"
 	HelpGitHubDesktop  = "  --github-desktop    Add repos to GitHub Desktop"
-	HelpCloneFlags = "Clone flags:"
-	HelpTargetDir  = "  --target-dir <dir>  Base directory for clones (default: .)"
+	HelpCloneFlags    = "Clone flags:"
+	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
+	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics"
 )
 
 // Flag descriptions.
@@ -225,6 +229,7 @@ const (
 	FlagDescOutFile    = "Exact output file path"
 	FlagDescOutputPath = "Output directory for CSV/JSON"
 	FlagDescTargetDir  = "Base directory for cloned repos"
+	FlagDescSafePull   = "If repo exists, run safe git pull with retries and unlock diagnostics"
 	FlagDescGHDesktop  = "Add discovered repos to GitHub Desktop"
 )
 
@@ -233,3 +238,10 @@ const (
 
 // Directory permissions.
 const DirPermission = 0o755
+
+// Safe-pull defaults.
+const (
+	SafePullRetryAttempts   = 4
+	SafePullRetryDelayMS    = 600
+	WindowsPathWarnThreshold = 240
+)
