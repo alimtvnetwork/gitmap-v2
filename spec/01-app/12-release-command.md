@@ -5,7 +5,7 @@
 The `gitmap release` command automates Git release workflows: creating
 release branches, tags, GitHub releases with changelogs, and tracking
 release history. It supports full semver, partial versions (auto-padded),
-pre-release suffixes, draft mode, and auto-increment.
+pre-release suffixes, draft mode, dry-run preview, and auto-increment.
 
 ---
 
@@ -31,22 +31,35 @@ Creates the tag and GitHub release if not already done.
 
 ### Release Flags
 
-| Flag                      | Description                                      | Default     |
-|---------------------------|--------------------------------------------------|-------------|
-| `--assets <path>`         | Directory of files to attach to the release      | (none)      |
-| `--commit <sha>`          | Create release from a specific commit             | (none)      |
-| `--branch <name>`         | Create release from latest commit of a branch     | (none)      |
-| `--bump major\|minor\|patch` | Auto-increment from the latest released version | (none)      |
-| `--draft`                 | Create an unpublished draft release               | `false`     |
-| `--verbose`               | Write detailed debug log                          | `false`     |
+| Flag                         | Description                                      | Default     |
+|------------------------------|--------------------------------------------------|-------------|
+| `--assets <path>`            | Directory or file to attach to the release       | (none)      |
+| `--commit <sha>`             | Create release from a specific commit            | (none)      |
+| `--branch <name>`            | Create release from latest commit of a branch    | (none)      |
+| `--bump major\|minor\|patch` | Auto-increment from the latest released version  | (none)      |
+| `--draft`                    | Create an unpublished draft release              | `false`     |
+| `--dry-run`                  | Preview release steps without executing          | `false`     |
+| `--verbose`                  | Write detailed debug log                         | `false`     |
 
 ### Release-Branch Flags
 
-| Flag          | Description                         | Default |
-|---------------|-------------------------------------|---------|
-| `--assets <path>` | Directory of files to attach    | (none)  |
-| `--draft`     | Create an unpublished draft release | `false` |
-| `--verbose`   | Write detailed debug log            | `false` |
+| Flag               | Description                         | Default |
+|--------------------|-------------------------------------|---------|
+| `--assets <path>`  | Directory or file to attach         | (none)  |
+| `--draft`          | Create an unpublished draft release | `false` |
+| `--dry-run`        | Preview steps without executing     | `false` |
+| `--verbose`        | Write detailed debug log            | `false` |
+
+---
+
+## Mutual Exclusivity Rules
+
+The following flag combinations are invalid and cause an immediate error:
+
+| Conflict                         | Error Message                                              |
+|----------------------------------|------------------------------------------------------------|
+| `--bump` + version argument      | `--bump cannot be used with an explicit version argument.` |
+| `--commit` + `--branch`          | `--commit and --branch are mutually exclusive.`            |
 
 ---
 
@@ -91,6 +104,25 @@ The commit used as the release base is resolved in order:
 
 ---
 
+## Dry-Run Mode
+
+When `--dry-run` is passed, each step is printed with a `[dry-run]`
+prefix. No branches, tags, pushes, or GitHub releases are created.
+Metadata files are not written.
+
+```
+  [dry-run] Create branch release/v1.2.3 from main
+  [dry-run] Create tag v1.2.3
+  [dry-run] Push branch and tag to origin
+  [dry-run] Use CHANGELOG.md as release body
+  [dry-run] Attach README.md
+  [dry-run] Create GitHub release
+  [dry-run] Write metadata to .release/v1.2.3.json
+  [dry-run] Mark v1.2.3 as latest
+```
+
+---
+
 ## GitHub Release Creation
 
 The tool uses a two-tier strategy:
@@ -98,7 +130,13 @@ The tool uses a two-tier strategy:
 1. **Preferred**: GitHub CLI (`gh release create`) — requires `gh` to be
    installed and authenticated.
 2. **Fallback**: GitHub REST API via HTTP — requires a `GITHUB_TOKEN`
-   environment variable or Git credential.
+   environment variable.
+
+### Token Resolution
+
+For HTTP fallback, `GITHUB_TOKEN` is read from the environment.
+If neither `gh` nor `GITHUB_TOKEN` is available, the release aborts
+with a clear error message.
 
 ### Attachments
 
@@ -146,18 +184,56 @@ Version v1.2.3 is already released. See .release/v1.2.3.json for details.
 
 ---
 
+## Error Scenarios
+
+| Scenario                        | Behavior                                                    |
+|---------------------------------|-------------------------------------------------------------|
+| Invalid version string          | `'abc' is not a valid version.`                             |
+| `--commit` SHA not found        | `commit abc123 not found.`                                  |
+| `--branch` does not exist       | `branch develop does not exist.`                            |
+| Push to remote fails            | `failed to push to remote: <detail>`                        |
+| GitHub release creation fails   | `failed to create GitHub release: <detail>`                 |
+| `gh` not installed, no token    | `no GITHUB_TOKEN found. Set GITHUB_TOKEN or install 'gh'.`  |
+| Metadata write fails            | `could not write release metadata: <detail>`                |
+| `version.json` unreadable       | `could not read version.json: <detail>`                     |
+
+### Rollback Strategy
+
+If a step fails after partial execution:
+
+- **Branch/tag created but push fails**: error is reported; user must
+  manually delete the local branch and tag.
+- **Push succeeds but GitHub release fails**: branch and tag remain on
+  remote; metadata is not written; user can retry with
+  `gitmap release-branch release/vX.Y.Z`.
+- **Metadata write fails**: GitHub release exists but local tracking
+  is incomplete; user should manually create the `.release/` file.
+
+No automatic rollback is performed. The error message includes the
+failed step so the user knows exactly what to clean up.
+
+---
+
+## version.json Behavior
+
+- `version.json` is **read-only** from the tool's perspective.
+- The tool never auto-updates `version.json` after a release.
+- Users manage `version.json` manually or via their own CI scripts.
+
+---
+
 ## Workflow: Release from HEAD / Branch / Commit
 
 ```
-1. Resolve version (CLI → --bump → version.json → error)
-2. Pad partial version to full semver
-3. Check .release/ and git tags for duplicates → abort if exists
-4. Resolve source commit (--commit / --branch / HEAD)
-5. Create branch release/vX.Y.Z from source
-6. Create git tag vX.Y.Z
-7. Push branch + tag to origin
-8. Detect CHANGELOG.md → use as release body
-9. Detect README.md → attach as asset
+ 1. Resolve version (CLI → --bump → version.json → error)
+ 2. Pad partial version to full semver
+ 3. Check .release/ and git tags for duplicates → abort if exists
+ 4. Resolve source commit (--commit / --branch / HEAD)
+ 5. Create branch release/vX.Y.Z from source
+ 6. Create git tag vX.Y.Z
+ 7. Push branch + tag to origin
+ 8. Detect CHANGELOG.md → use as release body
+ 9. Detect README.md → attach as asset
 10. Collect --assets contents → attach as assets
 11. Create GitHub release (gh CLI → HTTP fallback)
 12. Write .release/vX.Y.Z.json
@@ -173,6 +249,22 @@ Version v1.2.3 is already released. See .release/v1.2.3.json for details.
 4. Checkout the release branch
 5. Create tag, push, create GitHub release (steps 6–13 above)
 ```
+
+---
+
+## Package Layout
+
+```
+release/
+├── semver.go       # Version parsing, padding, comparison, bumping
+├── metadata.go     # Read/write .release/*.json, latest.json, version.json
+├── gitops.go       # Branch, tag, push, checkout Git operations
+├── github.go       # GitHub release creation (gh CLI + HTTP fallback)
+└── workflow.go     # Orchestration: Execute(), ExecuteFromBranch()
+```
+
+Each file stays under 200 lines. `workflow.go` is the entry point;
+all other files are pure helpers with no cross-dependencies.
 
 ---
 
@@ -204,12 +296,18 @@ gitmap release --bump minor --assets ./bin
 # Draft release
 gitmap release v3.0.0-rc.1 --draft
 
+# Dry-run preview
+gitmap release v1.0.0 --dry-run
+
 # No version — reads version.json
 gitmap release
 
 # Complete release from existing release branch
 gitmap release-branch release/v1.2.0
 gitmap rb release/v1.2.0
+
+# Dry-run from branch
+gitmap release-branch release/v1.2.0 --dry-run
 ```
 
 ---
@@ -236,3 +334,13 @@ gitmap rb release/v1.2.0
 - **Given** pre-release version, **then** it is not marked as latest.
 - **Given** `v1`, **then** padded to `v1.0.0`.
 - **Given** `gh` is not installed, **then** falls back to GitHub HTTP API.
+- **Given** `--dry-run`, **then** all steps are printed but nothing is
+  executed; no branches, tags, or releases are created.
+- **Given** `--bump` with a version argument, **then** abort with conflict
+  error.
+- **Given** `--commit` with `--branch`, **then** abort with mutual
+  exclusivity error.
+- **Given** push fails after branch/tag creation, **then** error message
+  includes the failed step for manual cleanup.
+- **Given** GitHub release fails after push, **then** user can retry via
+  `gitmap release-branch`.

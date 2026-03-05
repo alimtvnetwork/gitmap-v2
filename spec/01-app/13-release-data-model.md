@@ -15,6 +15,13 @@ is provided to `gitmap release`.
 |---------|--------|----------|--------------------------|
 | version | string | yes      | Semver without `v` prefix |
 
+### Behavior
+
+- **Read-only**: the tool never modifies `version.json`.
+- Users update it manually or via CI scripts between releases.
+- If the file is missing or unreadable and no other version source
+  exists, the release command exits with an error.
+
 ---
 
 ## Release Metadata: `.release/vX.Y.Z.json`
@@ -95,6 +102,12 @@ Updated after each stable release.
   updated — only `latest.json` is the source of truth for which
   version is current.
 
+### Git Tracking
+
+The `.release/` directory **should** be committed to the repository.
+It provides a local audit trail of all releases independent of GitHub.
+Add it to `.gitignore` only if release history is not needed in the repo.
+
 ---
 
 ## Semver Parsing
@@ -120,3 +133,25 @@ Versions are compared using standard semver ordering:
    (`1.0.0-rc.1 < 1.0.0`)
 3. `latest.json` is updated only when the new version is strictly
    greater than the current latest stable version.
+
+---
+
+## Package Layout
+
+The release data model is implemented in `release/metadata.go`:
+
+| Function          | Responsibility                                    |
+|-------------------|---------------------------------------------------|
+| `ReadVersionFile` | Parse `version.json`, return raw version string   |
+| `ReadLatest`      | Parse `.release/latest.json`                      |
+| `WriteLatest`     | Update `.release/latest.json` for stable releases |
+| `WriteReleaseMeta`| Write `.release/vX.Y.Z.json`                      |
+| `ReleaseExists`   | Check if `.release/vX.Y.Z.json` already exists    |
+
+Version parsing lives in `release/semver.go`:
+
+| Function      | Responsibility                                  |
+|---------------|--------------------------------------------------|
+| `Parse`       | Parse and pad a version string to full semver    |
+| `Bump`        | Increment major, minor, or patch                 |
+| `GreaterThan` | Compare two versions for ordering                |
