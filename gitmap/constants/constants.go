@@ -47,6 +47,7 @@ const (
 	DefaultDirectCloneScript    = "direct-clone.ps1"
 	DefaultDirectCloneSSHScript = "direct-clone-ssh.ps1"
 	DefaultDesktopScript        = "register-desktop.ps1"
+	DefaultScanCacheFile        = "last-scan.json"
 	DefaultConfigPath    = "./data/config.json"
 	DefaultOutputDir     = "./gitmap-output"
 	DefaultOutputFolder  = "gitmap-output"
