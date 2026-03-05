@@ -1,0 +1,131 @@
+// Package release handles version parsing, release workflows,
+// GitHub integration, and release metadata management.
+package release
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/user/gitmap/constants"
+)
+
+// ReleaseMeta holds metadata for a single release.
+type ReleaseMeta struct {
+	Version      string   `json:"version"`
+	Branch       string   `json:"branch"`
+	SourceBranch string   `json:"sourceBranch"`
+	Commit       string   `json:"commit"`
+	Tag          string   `json:"tag"`
+	Assets       []string `json:"assets"`
+	Draft        bool     `json:"draft"`
+	PreRelease   bool     `json:"preRelease"`
+	CreatedAt    string   `json:"createdAt"`
+	IsLatest     bool     `json:"isLatest"`
+}
+
+// LatestMeta holds the pointer to the latest stable release.
+type LatestMeta struct {
+	Version string `json:"version"`
+	Tag     string `json:"tag"`
+	Branch  string `json:"branch"`
+}
+
+// VersionFile represents the version.json file format.
+type VersionFile struct {
+	Version string `json:"version"`
+}
+
+// ReleaseExists checks if a release metadata file already exists.
+func ReleaseExists(version Version) bool {
+	path := metaFilePath(version)
+	_, err := os.Stat(path)
+
+	return err == nil
+}
+
+// metaFilePath returns the path for a release metadata file.
+func metaFilePath(v Version) string {
+	filename := v.String() + constants.ExtJSON
+
+	return filepath.Join(constants.DefaultReleaseDir, filename)
+}
+
+// WriteReleaseMeta writes release metadata to .release/vX.Y.Z.json.
+func WriteReleaseMeta(meta ReleaseMeta) error {
+	err := os.MkdirAll(constants.DefaultReleaseDir, constants.DirPermission)
+	if err != nil {
+		return fmt.Errorf("create release dir: %w", err)
+	}
+
+	v, err := Parse(meta.Tag)
+	if err != nil {
+		return fmt.Errorf("parse tag for path: %w", err)
+	}
+
+	return writeJSON(metaFilePath(v), meta)
+}
+
+// WriteLatest updates .release/latest.json if the version is the highest stable.
+func WriteLatest(v Version) error {
+	current, err := ReadLatest()
+	if err == nil {
+		currentVer, parseErr := Parse(current.Tag)
+		if parseErr == nil && v.GreaterThan(currentVer) == false {
+			return nil
+		}
+	}
+
+	latest := LatestMeta{
+		Version: v.CoreString(),
+		Tag:     v.String(),
+		Branch:  constants.ReleaseBranchPrefix + v.String(),
+	}
+
+	return writeJSON(latestFilePath(), latest)
+}
+
+// ReadLatest reads .release/latest.json.
+func ReadLatest() (LatestMeta, error) {
+	data, err := os.ReadFile(latestFilePath())
+	if err != nil {
+		return LatestMeta{}, err
+	}
+
+	var latest LatestMeta
+	err = json.Unmarshal(data, &latest)
+
+	return latest, err
+}
+
+// ReadVersionFile reads version.json from the project root.
+func ReadVersionFile() (string, error) {
+	data, err := os.ReadFile(constants.DefaultVersionFile)
+	if err != nil {
+		return "", err
+	}
+
+	var vf VersionFile
+	err = json.Unmarshal(data, &vf)
+	if err != nil {
+		return "", err
+	}
+
+	return vf.Version, nil
+}
+
+// latestFilePath returns the path to latest.json.
+func latestFilePath() string {
+	return filepath.Join(constants.DefaultReleaseDir, constants.DefaultLatestFile)
+}
+
+// writeJSON marshals data to a JSON file with indentation.
+func writeJSON(path string, data interface{}) error {
+	bytes, err := json.MarshalIndent(data, "", constants.JSONIndent)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(path, bytes, constants.DirPermission)
+}

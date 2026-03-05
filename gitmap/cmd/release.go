@@ -7,13 +7,36 @@ import (
 	"os"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/release"
 )
 
 // runRelease handles the 'release' command.
 func runRelease(args []string) {
 	version, assets, commit, branch, bump, draft, dryRun, verbose := parseReleaseFlags(args)
-	_, _, _, _, _, _, _ = assets, commit, branch, draft, dryRun, verbose, bump
+	_ = verbose
 
+	validateReleaseFlags(version, bump, commit, branch)
+
+	opts := release.Options{
+		Version: version,
+		Assets:  assets,
+		Commit:  commit,
+		Branch:  branch,
+		Bump:    bump,
+		Draft:   draft,
+		DryRun:  dryRun,
+		Verbose: verbose,
+	}
+
+	err := release.Execute(opts)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}
+
+// validateReleaseFlags checks for mutually exclusive flags.
+func validateReleaseFlags(version, bump, commit, branch string) {
 	if len(bump) > 0 && len(version) > 0 {
 		fmt.Fprint(os.Stderr, constants.ErrReleaseBumpConflict)
 		os.Exit(1)
@@ -22,9 +45,6 @@ func runRelease(args []string) {
 		fmt.Fprint(os.Stderr, constants.ErrReleaseCommitBranch)
 		os.Exit(1)
 	}
-
-	// TODO: implement release workflow
-	fmt.Printf("release command not yet implemented (version=%s)\n", version)
 }
 
 // parseReleaseFlags parses flags for the release command.
