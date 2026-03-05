@@ -148,61 +148,20 @@ func executeSteps(v Version, branchName, tag, sourceRef, sourceName string, opts
 	return pushAndPublish(v, branchName, tag, sourceName, opts)
 }
 
-// pushAndPublish pushes to remote and creates the GitHub release.
-func pushAndPublish(v Version, branchName, tag, sourceName string, opts Options) error {
+// pushAndFinalize pushes to remote and writes metadata.
+func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options) error {
 	err := PushBranchAndTag(branchName, tag)
 	if err != nil {
 		return fmt.Errorf(constants.ErrReleasePushFailed, err)
 	}
 	fmt.Print(constants.MsgReleasePushed)
 
-	return publishAndRecord(v, branchName, tag, sourceName, opts)
-}
-
-// publishAndRecord creates the GH release and writes metadata.
-func publishAndRecord(v Version, branchName, tag, sourceName string, opts Options) error {
-	body, assets := gatherAttachments(opts.Assets)
-
-	err := GitHubRelease(tag, body, assets, opts.Draft)
-	if err != nil {
-		return fmt.Errorf(constants.ErrReleaseGHFailed, err)
-	}
-	printGHSuccess(opts.Draft)
-
-	return writeMetadata(v, branchName, tag, sourceName, assets, opts.Draft)
-}
-
-// gatherAttachments collects changelog, readme, and user assets.
-func gatherAttachments(assetsPath string) (string, []string) {
-	body := DetectChangelog()
-	if len(body) > 0 {
-		fmt.Print(constants.MsgReleaseChangelog)
-	}
-
-	var allAssets []string
-	readme := DetectReadme()
-	if len(readme) > 0 {
-		allAssets = append(allAssets, readme)
-		fmt.Print(constants.MsgReleaseReadme)
-	}
-
-	userAssets := CollectAssets(assetsPath)
-	for _, a := range userAssets {
-		allAssets = append(allAssets, a)
+	assets := CollectAssets(opts.Assets)
+	for _, a := range assets {
 		fmt.Printf(constants.MsgReleaseAttach, a)
 	}
 
-	return body, allAssets
-}
-
-// printGHSuccess prints the appropriate success message.
-func printGHSuccess(draft bool) {
-	if draft {
-		fmt.Print(constants.MsgReleaseGHDraft)
-		return
-	}
-
-	fmt.Print(constants.MsgReleaseGH)
+	return writeMetadata(v, branchName, tag, sourceName, assets, opts.Draft)
 }
 
 // writeMetadata persists release info and updates latest.
