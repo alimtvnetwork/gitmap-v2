@@ -10,15 +10,24 @@ import (
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/model"
+	"github.com/user/gitmap/verbose"
 )
 
 // runClone handles the "clone" subcommand.
 func runClone(args []string) {
-	source, targetDir, safePull, ghDesktop := parseCloneFlags(args)
+	source, targetDir, safePull, ghDesktop, verboseMode := parseCloneFlags(args)
 	if len(source) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrSourceRequired)
 		fmt.Fprintln(os.Stderr, constants.ErrCloneUsage)
 		os.Exit(1)
+	}
+	if verboseMode {
+		log, err := verbose.Init()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not create verbose log: %v\n", err)
+		} else {
+			defer log.Close()
+		}
 	}
 	source = resolveCloneShorthand(source)
 	executeClone(source, targetDir, safePull, ghDesktop)
@@ -26,13 +35,12 @@ func runClone(args []string) {
 
 // resolveCloneShorthand maps "json", "csv", and "text" to default output paths.
 func resolveCloneShorthand(source string) string {
-	lower := strings.ToLower(source)
 	shorthandMap := map[string]string{
 		constants.ShorthandJSON: filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile),
 		constants.ShorthandCSV:  filepath.Join(constants.DefaultOutputFolder, constants.DefaultCSVFile),
 		constants.ShorthandText: filepath.Join(constants.DefaultOutputFolder, constants.DefaultTextFile),
 	}
-	resolved, ok := shorthandMap[lower]
+	resolved, ok := shorthandMap[strings.ToLower(source)]
 	if !ok {
 		return source
 	}
