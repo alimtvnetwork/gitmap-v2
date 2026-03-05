@@ -12,9 +12,15 @@ folder-structure Markdown, clone script (`clone.ps1`), and desktop
 registration script (`register-desktop.ps1`) — written to a
 `gitmap-output/` folder at the root of the scanned directory.
 
-### `gitmap clone <source-file>`
+### `gitmap clone <source|json|csv>`
 
 Re-clone repositories from a CSV, JSON, or text file.
+
+**Shorthands:**
+- `gitmap clone json` → resolves to `./gitmap-output/gitmap.json`
+- `gitmap clone csv` → resolves to `./gitmap-output/gitmap.csv`
+
+If the resolved file doesn't exist, an error instructs the user to run `gitmap scan` first.
 
 ### `gitmap update`
 
