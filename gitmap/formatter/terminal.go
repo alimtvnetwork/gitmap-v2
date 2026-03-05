@@ -72,6 +72,7 @@ func printOutputFiles(w io.Writer, outputDir string) {
 	printOutputFile(w, outputDir, constants.DefaultJSONFile, "Repo data in JSON")
 	printOutputFile(w, outputDir, constants.DefaultStructureFile, "Folder tree")
 	printOutputFile(w, outputDir, constants.DefaultCloneScript, "PowerShell clone script")
+	printOutputFile(w, outputDir, constants.DefaultDirectCloneScript, "Plain git clone commands")
 	printOutputFile(w, outputDir, constants.DefaultDesktopScript, "GitHub Desktop registration")
 	fmt.Fprintln(w)
 }

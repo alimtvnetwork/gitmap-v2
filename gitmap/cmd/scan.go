@@ -68,6 +68,7 @@ func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string) {
 	writeJSONOutput(records, outputDir)
 	writeFolderStructure(records, outputDir)
 	writeCloneScript(records, outputDir)
+	writeDirectCloneScript(records, outputDir)
 	writeDesktopScript(records, outputDir)
 }
 
@@ -125,6 +126,18 @@ func writeCloneScript(records []model.ScanRecord, outputDir string) {
 	defer file.Close()
 	formatter.WriteCloneScript(file, records)
 	fmt.Printf(constants.MsgCloneScript, path)
+}
+
+// writeDirectCloneScript writes a plain PS1 with one git clone per line.
+func writeDirectCloneScript(records []model.ScanRecord, outputDir string) {
+	path := filepath.Join(outputDir, constants.DefaultDirectCloneScript)
+	file, err := createOutputFile(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	formatter.WriteDirectCloneScript(file, records)
+	fmt.Printf(constants.MsgDirectClone, path)
 }
 
 // writeDesktopScript writes a PowerShell script to register repos with GitHub Desktop.
