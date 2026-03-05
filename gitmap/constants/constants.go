@@ -105,6 +105,7 @@ const (
 	CmdClone            = "clone"
 	CmdCloneAlias       = "c"
 	CmdUpdate           = "update"
+	CmdUpdateCleanup    = "update-cleanup"
 	CmdVersion          = "version"
 	CmdVersionAlias     = "v"
 	CmdHelp             = "help"
