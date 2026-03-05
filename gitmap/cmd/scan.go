@@ -52,7 +52,25 @@ func addToDesktop(records []model.ScanRecord, enabled bool) {
 	if enabled {
 		summary := desktop.AddRepos(records)
 		fmt.Printf(constants.MsgDesktopSummary, summary.Added, summary.Failed)
+}
+
+// openOutputFolder opens the output directory in the OS file explorer.
+func openOutputFolder(outputDir string, enabled bool) {
+	if !enabled {
+		return
 	}
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case constants.OSWindows:
+		cmd = exec.Command("explorer", outputDir)
+	case "darwin":
+		cmd = exec.Command("open", outputDir)
+	default:
+		cmd = exec.Command("xdg-open", outputDir)
+	}
+	_ = cmd.Start()
+	fmt.Printf(constants.MsgOpenedFolder, outputDir)
+}
 }
 
 // resolveOutputDir determines the output directory relative to scan root.
