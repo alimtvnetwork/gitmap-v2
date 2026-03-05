@@ -168,3 +168,42 @@ func runGitCmd(args ...string) error {
 
 	return cmd.Run()
 }
+
+// latestFromGitTags scans all local git tags for the highest stable semver.
+func latestFromGitTags() (Version, error) {
+	cmd := exec.Command(constants.GitBin, constants.GitTag, "-l", "v*")
+	out, err := cmd.Output()
+	if err != nil {
+		return Version{}, fmt.Errorf("no git tags found and no .release/latest.json exists")
+	}
+
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var highest Version
+	found := false
+
+	for _, line := range lines {
+		tag := strings.TrimSpace(line)
+		if len(tag) == 0 {
+			continue
+		}
+		v, parseErr := Parse(tag)
+		if parseErr != nil {
+			continue
+		}
+		if v.IsPreRelease() {
+			continue
+		}
+		if found == false || v.GreaterThan(highest) {
+			highest = v
+			found = true
+		}
+	}
+
+	if found == false {
+		return Version{}, fmt.Errorf("no version tags found. Create an initial release first")
+	}
+
+	fmt.Printf("  → Detected latest version from git tags: %s\n", highest.String())
+
+	return highest, nil
+}
