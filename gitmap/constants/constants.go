@@ -95,6 +95,8 @@ const (
 	CmdHelp             = "help"
 	CmdDesktopSync      = "desktop-sync"
 	CmdDesktopSyncAlias = "ds"
+	CmdPull             = "pull"
+	CmdPullAlias        = "p"
 )
 
 // GitHub Desktop.
