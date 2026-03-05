@@ -3,7 +3,11 @@
 package release
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -71,32 +75,78 @@ func appendAssetArgs(args []string, assets []string) []string {
 	return args
 }
 
-// ghHTTPRelease creates a release via gh api as a fallback.
+// ghHTTPRelease creates a release via the GitHub REST API using net/http.
 func ghHTTPRelease(tag, body string, draft bool, token string) error {
-	draftStr := "false"
-	if draft {
-		draftStr = "true"
+	repoSlug, err := detectRepoSlug()
+	if err != nil {
+		return fmt.Errorf("could not detect GitHub repo: %w", err)
 	}
+
 	notesBody := body
 	if len(notesBody) == 0 {
 		notesBody = "Release " + tag
 	}
 
-	args := []string{
-		"api", "repos/{owner}/{repo}/releases",
-		"--method", "POST",
-		"-f", "tag_name=" + tag,
-		"-f", "name=" + tag,
-		"-f", "body=" + notesBody,
-		"-f", "draft=" + draftStr,
+	payload := map[string]interface{}{
+		"tag_name": tag,
+		"name":     tag,
+		"body":     notesBody,
+		"draft":    draft,
 	}
 
-	cmd := exec.Command(constants.GHBin, args...)
-	cmd.Env = append(os.Environ(), "GITHUB_TOKEN="+token)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	jsonBytes, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("marshal payload: %w", err)
+	}
 
-	return cmd.Run()
+	url := "https://api.github.com/repos/" + repoSlug + "/releases"
+	req, err := http.NewRequest("POST", url, bytes.NewReader(jsonBytes))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 300 {
+		respBody, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("GitHub API returned %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	return nil
+}
+
+// detectRepoSlug extracts "owner/repo" from the git remote origin URL.
+func detectRepoSlug() (string, error) {
+	cmd := exec.Command(constants.GitBin, constants.GitConfigCmd, constants.GitGetFlag, constants.GitRemoteOrigin)
+	out, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("no remote origin configured")
+	}
+
+	remote := strings.TrimSpace(string(out))
+
+	// Handle HTTPS: https://github.com/owner/repo.git
+	if strings.HasPrefix(remote, "https://") {
+		remote = strings.TrimPrefix(remote, "https://github.com/")
+		remote = strings.TrimSuffix(remote, ".git")
+		return remote, nil
+	}
+
+	// Handle SSH: git@github.com:owner/repo.git
+	if strings.Contains(remote, ":") {
+		parts := strings.SplitN(remote, ":", 2)
+		slug := strings.TrimSuffix(parts[1], ".git")
+		return slug, nil
+	}
+
+	return "", fmt.Errorf("unrecognized remote format: %s", remote)
 }
 
 // CollectAssets gathers file paths for release attachment.
