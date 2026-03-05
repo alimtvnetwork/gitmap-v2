@@ -25,7 +25,12 @@ func runScan(args []string) {
 		os.Exit(1)
 	}
 	cfg = config.MergeWithFlags(cfg, mode, output, outputPath)
-	executeScan(dir, cfg, outFile, ghDesktop, openFolder)
+	cache := model.ScanCache{
+		Dir: dir, ConfigPath: cfgPath, Mode: mode, Output: output,
+		OutFile: outFile, OutputPath: outputPath,
+		GithubDesktop: ghDesktop, OpenFolder: openFolder,
+	}
+	executeScan(dir, cfg, outFile, ghDesktop, openFolder, cache)
 }
 
 // executeScan performs the directory scan and outputs results.
