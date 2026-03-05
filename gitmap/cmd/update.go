@@ -144,13 +144,14 @@ if (Test-Path $newBinary) {
     Write-Host "  [OK] Update complete" -ForegroundColor Green
 }
 Write-Host ""
+exit 0
 `, repoPath, runPS1, repoPath)
 }
 
 // runUpdateScript executes the PowerShell script with output piped to terminal.
 func runUpdateScript(scriptPath string) {
 	cmd := exec.Command("powershell", "-ExecutionPolicy", "Bypass",
-		"-NoProfile", "-File", scriptPath)
+		"-NoProfile", "-NoLogo", "-NonInteractive", "-File", scriptPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
