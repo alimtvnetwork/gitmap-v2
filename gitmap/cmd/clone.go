@@ -19,7 +19,26 @@ func runClone(args []string) {
 		fmt.Fprintln(os.Stderr, constants.ErrCloneUsage)
 		os.Exit(1)
 	}
+	source = resolveCloneShorthand(source)
 	executeClone(source, targetDir, safePull, ghDesktop)
+}
+
+// resolveCloneShorthand maps "json" and "csv" to default output paths.
+func resolveCloneShorthand(source string) string {
+	lower := strings.ToLower(source)
+	var resolved string
+	if lower == constants.ShorthandJSON {
+		resolved = filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile)
+	} else if lower == constants.ShorthandCSV {
+		resolved = filepath.Join(constants.DefaultOutputFolder, constants.DefaultCSVFile)
+	} else {
+		return source
+	}
+	if _, err := os.Stat(resolved); os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, constants.ErrShorthandNotFound, resolved)
+		os.Exit(1)
+	}
+	return resolved
 }
 
 // executeClone runs the clone operation and prints the summary.
