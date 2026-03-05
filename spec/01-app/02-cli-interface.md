@@ -208,6 +208,13 @@ activates whenever existing repos are detected during a clone operation.
 |------------------------|--------------------------------------|---------|
 | `--verbose`            | Write detailed debug log to a timestamped file | `false` |
 
+## Setup Flags
+
+| Flag                   | Description                          | Default                    |
+|------------------------|--------------------------------------|----------------------------|
+| `--config <path>`      | Path to git-setup.json config file   | `./data/git-setup.json`    |
+| `--dry-run`            | Preview changes without applying     | `false`                    |
+
 ## Examples
 
 ```bash
@@ -251,6 +258,18 @@ gitmap p my-api      # partial match works
 # Sync existing scan output to GitHub Desktop
 gitmap desktop-sync
 gitmap ds            # alias
+
+# Configure Git global settings (preview first)
+gitmap setup --dry-run
+gitmap setup
+
+# Show repo status dashboard
+gitmap status
+gitmap st            # alias
+
+# Run git fetch across all repos
+gitmap exec fetch --prune
+gitmap x status -s   # alias
 
 # Self-update from source repo
 gitmap update
