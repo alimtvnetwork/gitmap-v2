@@ -55,7 +55,12 @@ const (
 	DefaultBranch        = "main"
 	DefaultDir           = "."
 	DefaultVersionFile   = "version.json"
-	DefaultReleaseDir    = ".release"
+)
+
+// DefaultReleaseDir is a var so tests can override it.
+var DefaultReleaseDir = ".release"
+
+const (
 	DefaultLatestFile    = "latest.json"
 )
 
