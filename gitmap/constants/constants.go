@@ -257,6 +257,7 @@ const (
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
 	HelpPull        = "  pull (p) <name>     Pull a specific repo by its name"
 	HelpRescan      = "  rescan (rs)         Re-run last scan with cached flags"
+	HelpSetup       = "  setup               Configure Git diff/merge tool, aliases & core settings"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
