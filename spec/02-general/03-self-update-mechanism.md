@@ -84,15 +84,15 @@ if ($oldVersion == $newVersion) {
 The build pipeline's deploy step includes rollback safety:
 
 1. **Backup** the existing binary before overwriting:
-   `toolname.exe` → `toolname.exe.bak`
+   `toolname.exe` → `toolname.exe.old`
 2. **Attempt file copy** with retry loop (15–20 attempts × 500ms)
-3. **On success** — delete the backup
-4. **On failure after all retries** — restore the backup so the user
-   still has a working binary
+3. **On success** — leave the `.old` file in place for manual cleanup
+4. **On failure after all retries** — restore the `.old` backup so the
+   user still has a working binary
 
 ```
 # Pseudocode — deploy with rollback
-backup = destination + ".bak"
+backup = destination + ".old"
 if fileExists(destination):
     copy(destination, backup)
 
@@ -109,7 +109,7 @@ while attempts < maxAttempts:
         attempts++
 
 if success:
-    delete(backup)
+    log("Previous binary kept as .old (run cleanup command to remove)")
 else:
     # Restore working binary from backup
     copy(backup, destination)
