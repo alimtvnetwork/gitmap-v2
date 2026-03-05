@@ -4,8 +4,9 @@
 
 GitMap is a CLI tool that scans a directory tree for Git repositories,
 extracts clone URLs and branch information, and outputs structured data
-(terminal, CSV, JSON). It can also re-clone repositories from that
-structured data, preserving the original folder hierarchy.
+(terminal, CSV, JSON, folder-structure Markdown). It can also re-clone
+repositories from that structured data, preserving the original folder
+hierarchy, and optionally register repos with GitHub Desktop.
 
 ## Working Name
 
@@ -24,12 +25,13 @@ structured data, preserving the original folder hierarchy.
 
 ## High-Level Components
 
-1. **Constants** — all shared string literals, formats, and default values.
+1. **Constants** — all shared string literals, formats, ANSI colors, and default values.
 2. **Config loader** — reads JSON config, merges with CLI flags.
 3. **Scanner** — walks directories, detects `.git` folders.
 4. **Mapper** — converts raw Git data into output records.
-5. **Formatter** — renders records to terminal, CSV, or JSON.
+5. **Formatter** — renders records to terminal (colored), CSV, JSON, and folder-structure Markdown.
 6. **Cloner** — re-clones repos from a previously generated file.
+7. **Desktop** — registers repos with GitHub Desktop.
 
 ## Assumptions
 
