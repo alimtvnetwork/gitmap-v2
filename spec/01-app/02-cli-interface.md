@@ -12,9 +12,15 @@ folder-structure Markdown, clone script (`clone.ps1`), and desktop
 registration script (`register-desktop.ps1`) — written to a
 `gitmap-output/` folder at the root of the scanned directory.
 
-### `gitmap clone <source-file>`
+### `gitmap clone <source|json|csv>`
 
 Re-clone repositories from a CSV, JSON, or text file.
+
+**Shorthands:**
+- `gitmap clone json` → resolves to `./gitmap-output/gitmap.json`
+- `gitmap clone csv` → resolves to `./gitmap-output/gitmap.csv`
+
+If the resolved file doesn't exist, an error instructs the user to run `gitmap scan` first.
 
 ### `gitmap update`
 
@@ -35,7 +41,7 @@ without encountering a "file in use" lock.
 
 ### `gitmap version`
 
-Prints the current version number (e.g., `gitmap v1.1.2`) and exits.
+Prints the current version number (e.g., `gitmap v1.2.0`) and exits.
 
 ### `gitmap desktop-sync`
 
@@ -82,6 +88,12 @@ gitmap scan ./projects --github-desktop
 
 # Scan parent directory
 gitmap scan ..
+
+# Clone using shorthand (auto-resolves to ./gitmap-output/gitmap.json)
+gitmap clone json
+
+# Clone using CSV shorthand
+gitmap clone csv
 
 # Clone from JSON, preserving folder structure
 gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored

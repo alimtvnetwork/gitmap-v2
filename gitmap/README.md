@@ -93,11 +93,14 @@ Git repositories discovered by gitmap.
 ### Clone from a previous scan
 
 ```bash
-# Clone from JSON (preserves original folder structure)
-gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
+# Clone using shorthand (auto-resolves to ./gitmap-output/gitmap.json)
+gitmap clone json
 
-# Clone from CSV
-gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored
+# Clone using CSV shorthand
+gitmap clone csv
+
+# Clone from JSON with explicit path (preserves original folder structure)
+gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 
 # Safe-pull existing clones (retries unlink/read-only failures)
 gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored --safe-pull
@@ -151,7 +154,9 @@ CLI flags override config values.
 | `--out-file <path>` | Exact CSV output file path | — |
 | `--github-desktop` | Add discovered repos to GitHub Desktop | `false` |
 
-### `gitmap clone <source>`
+### `gitmap clone <source|json|csv>`
+
+**Shorthands:** `gitmap clone json` and `gitmap clone csv` auto-resolve to `./gitmap-output/gitmap.json` and `./gitmap-output/gitmap.csv`.
 
 | Flag | Description | Default |
 |------|-------------|---------|
