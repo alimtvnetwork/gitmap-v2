@@ -98,6 +98,8 @@ const (
 	CmdDesktopSyncAlias = "ds"
 	CmdPull             = "pull"
 	CmdPullAlias        = "p"
+	CmdRescan           = "rescan"
+	CmdRescanAlias      = "rs"
 )
 
 // GitHub Desktop.
