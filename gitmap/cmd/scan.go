@@ -34,7 +34,7 @@ func runScan(args []string) {
 }
 
 // executeScan performs the directory scan and outputs results.
-func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFolder bool, cache model.ScanCache) {
+func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFolder, quiet bool, cache model.ScanCache) {
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
@@ -47,7 +47,7 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	}
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
-	writeAllOutputs(records, outputDir, outFile)
+	writeAllOutputs(records, outputDir, outFile, quiet)
 	saveScanCache(outputDir, cache)
 	addToDesktop(records, ghDesktop)
 	openOutputFolder(outputDir, openFolder)
