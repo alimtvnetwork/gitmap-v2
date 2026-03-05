@@ -49,6 +49,10 @@ func dispatch(command string) {
 		runRescan()
 		return
 	}
+	if command == constants.CmdSetup {
+		runSetup(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
