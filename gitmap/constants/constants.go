@@ -292,6 +292,7 @@ const (
 	HelpScan       = "  scan (s) [dir]      Scan directory for Git repos"
 	HelpClone      = "  clone (c) <source|json|csv|text>  Re-clone from file (shorthands auto-resolve)"
 	HelpUpdate     = "  update              Self-update from source repo"
+	HelpUpdateCleanup = "  update-cleanup      Remove leftover update temp files and .old backups"
 	HelpVersion    = "  version (v)         Show version number"
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
 	HelpPull        = "  pull (p) <name>     Pull a specific repo by its name"
