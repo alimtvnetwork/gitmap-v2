@@ -12,15 +12,35 @@ folder-structure Markdown, clone script (`clone.ps1`), and desktop
 registration script (`register-desktop.ps1`) — written to a
 `gitmap-output/` folder at the root of the scanned directory.
 
-### `gitmap clone <source|json|csv>`
+After each scan, a **`last-scan.json`** cache file is written to
+`gitmap-output/` so the scan can be replayed with `gitmap rescan`.
+
+### `gitmap clone <source|json|csv>` (alias: `c`)
 
 Re-clone repositories from a CSV, JSON, or text file.
 
 **Shorthands:**
 - `gitmap clone json` → resolves to `./gitmap-output/gitmap.json`
 - `gitmap clone csv` → resolves to `./gitmap-output/gitmap.csv`
+- `gitmap clone text` → resolves to `./gitmap-output/gitmap.txt`
 
 If the resolved file doesn't exist, an error instructs the user to run `gitmap scan` first.
+
+### `gitmap pull <repo-name>` (alias: `p`)
+
+Pull a specific repo by its name (slug). The name is matched
+against `repoName` values in `./gitmap-output/gitmap.json`.
+
+- **Exact match** takes priority; falls back to partial/substring match (case-insensitive).
+- Lists all available repo names if no match is found.
+- Supports `--verbose` for debug logging.
+
+### `gitmap rescan` (alias: `rs`)
+
+Re-run the last scan using cached flags from `gitmap-output/last-scan.json`.
+No flags are needed — all options from the previous scan are replayed exactly.
+
+If no previous scan cache exists, an error instructs the user to run `gitmap scan` first.
 
 ### `gitmap update`
 
@@ -39,11 +59,7 @@ embeds the repo path at build time (via `-ldflags`). When invoked:
 This two-step handoff ensures the deploy step can overwrite `gitmap.exe`
 without encountering a "file in use" lock.
 
-### `gitmap version`
-
-Prints the current version number (e.g., `gitmap v1.2.0`) and exits.
-
-### `gitmap desktop-sync`
+### `gitmap desktop-sync` (alias: `ds`)
 
 Sync previously scanned repos to GitHub Desktop without re-scanning.
 Reads from `./gitmap-output/gitmap.json` in the current directory.
@@ -53,9 +69,59 @@ Reads from `./gitmap-output/gitmap.json` in the current directory.
 - Skips repos whose paths no longer exist on disk.
 - Logs per-repo success/skip/failure and prints a summary.
 
+### `gitmap version` (alias: `v`)
+
+Prints the current version number (e.g., `gitmap v1.6.0`) and exits.
+
 ### `gitmap help`
 
 Display usage information for all commands and flags.
+
+---
+
+## Command Aliases
+
+All aliases are single-letter or short abbreviations for faster usage:
+
+| Command          | Alias |
+|------------------|-------|
+| `scan`           | `s`   |
+| `clone`          | `c`   |
+| `pull`           | `p`   |
+| `rescan`         | `rs`  |
+| `desktop-sync`   | `ds`  |
+| `version`        | `v`   |
+
+---
+
+## Auto Safe-Pull
+
+When running `gitmap clone`, the tool automatically detects whether any
+target directories already contain Git repositories. If existing repos
+are found **and `--safe-pull` was not explicitly passed**, safe-pull is
+enabled automatically and a message is printed:
+
+```
+Existing repos detected — safe-pull enabled automatically.
+```
+
+**Safe-pull behavior:**
+
+1. Runs `git pull --ff-only` inside the existing repo directory.
+2. On failure, retries up to **4 times** with a 600 ms delay between attempts.
+3. On Windows, attempts to clear read-only file attributes on files
+   reported in `unable to unlink` errors before retrying.
+4. After all retries, produces a **diagnosis** covering:
+   - File lock / read-only attribute issues
+   - Windows path length risks (paths ≥ 240 characters)
+   - OneDrive sync folder detection
+5. When `--verbose` is enabled, every attempt, its stdout/stderr output,
+   and the diagnosis are logged to a timestamped file in `gitmap-output/`.
+
+This means users never need to remember to pass `--safe-pull` — it
+activates whenever existing repos are detected during a clone operation.
+
+---
 
 ## Scan Flags
 
@@ -73,13 +139,22 @@ Display usage information for all commands and flags.
 | Flag                   | Description                          | Default |
 |------------------------|--------------------------------------|---------|
 | `--target-dir <path>`  | Base dir to recreate folder structure | `.`    |
+| `--safe-pull`          | Pull existing repos with retry + unlock diagnostics (auto-enabled) | `false` |
 | `--github-desktop`     | Add cloned repos to GitHub Desktop   | `false` |
+| `--verbose`            | Write detailed debug log to a timestamped file | `false` |
+
+## Pull Flags
+
+| Flag                   | Description                          | Default |
+|------------------------|--------------------------------------|---------|
+| `--verbose`            | Write detailed debug log to a timestamped file | `false` |
 
 ## Examples
 
 ```bash
 # Scan current directory — outputs terminal + CSV + JSON + folder-structure.md
 gitmap scan
+gitmap s             # alias
 
 # Scan with SSH URLs
 gitmap scan ./projects --mode ssh
@@ -90,8 +165,13 @@ gitmap scan ./projects --github-desktop
 # Scan parent directory
 gitmap scan ..
 
+# Re-run the last scan with the same flags
+gitmap rescan
+gitmap rs            # alias
+
 # Clone using shorthand (auto-resolves to ./gitmap-output/gitmap.json)
 gitmap clone json
+gitmap c json        # alias
 
 # Clone using CSV shorthand
 gitmap clone csv
@@ -99,15 +179,24 @@ gitmap clone csv
 # Clone from JSON, preserving folder structure
 gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 
+# Clone with verbose logging
+gitmap clone json --verbose
+
 # Clone and register with GitHub Desktop
 gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored --github-desktop
 
+# Pull a single repo by name
+gitmap pull my-api-service
+gitmap p my-api      # partial match works
+
 # Sync existing scan output to GitHub Desktop
 gitmap desktop-sync
+gitmap ds            # alias
 
 # Self-update from source repo
 gitmap update
 
 # Print version number
 gitmap version
+gitmap v             # alias
 ```
