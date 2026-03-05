@@ -63,14 +63,9 @@ func resolveVersion(opts Options) (Version, error) {
 	return resolveFromFile()
 }
 
-// resolveBump reads latest and increments.
+// resolveBump reads latest.json or falls back to git tags, then increments.
 func resolveBump(level string) (Version, error) {
-	latest, err := ReadLatest()
-	if err != nil {
-		return Version{}, fmt.Errorf(constants.ErrReleaseBumpNoLatest)
-	}
-
-	current, err := Parse(latest.Tag)
+	current, err := resolveLatestVersion()
 	if err != nil {
 		return Version{}, err
 	}
@@ -83,6 +78,19 @@ func resolveBump(level string) (Version, error) {
 	fmt.Printf(constants.MsgReleaseBumpResult, current.String(), bumped.String())
 
 	return bumped, nil
+}
+
+// resolveLatestVersion tries latest.json first, then falls back to git tags.
+func resolveLatestVersion() (Version, error) {
+	latest, err := ReadLatest()
+	if err == nil {
+		v, parseErr := Parse(latest.Tag)
+		if parseErr == nil {
+			return v, nil
+		}
+	}
+
+	return latestFromGitTags()
 }
 
 // resolveFromFile reads version.json.
