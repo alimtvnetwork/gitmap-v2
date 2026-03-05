@@ -7,6 +7,7 @@ import (
 
 	"github.com/user/gitmap/config"
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/formatter"
 	"github.com/user/gitmap/mapper"
 	"github.com/user/gitmap/model"
@@ -15,18 +16,18 @@ import (
 
 // runScan handles the "scan" subcommand.
 func runScan(args []string) {
-	dir, cfgPath, mode, output, outFile, outputPath := parseScanFlags(args)
+	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop := parseScanFlags(args)
 	cfg, err := config.LoadFromFile(cfgPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrConfigLoad, err)
 		os.Exit(1)
 	}
 	cfg = config.MergeWithFlags(cfg, mode, output, outputPath)
-	executeScan(dir, cfg, outFile)
+	executeScan(dir, cfg, outFile, ghDesktop)
 }
 
 // executeScan performs the directory scan and outputs results.
-func executeScan(dir string, cfg model.Config, outFile string) {
+func executeScan(dir string, cfg model.Config, outFile string, ghDesktop bool) {
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
@@ -41,6 +42,15 @@ func executeScan(dir string, cfg model.Config, outFile string) {
 	fmt.Printf(constants.MsgFoundRepos, len(records))
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
 	writeAllOutputs(records, outputDir, outFile)
+	addToDesktop(records, ghDesktop)
+}
+
+// addToDesktop registers repos with GitHub Desktop if requested.
+func addToDesktop(records []model.ScanRecord, enabled bool) {
+	if enabled {
+		summary := desktop.AddRepos(records)
+		fmt.Printf(constants.MsgDesktopSummary, summary.Added, summary.Failed)
+	}
 }
 
 // resolveOutputDir determines the output directory relative to scan root.

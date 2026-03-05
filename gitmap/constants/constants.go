@@ -74,6 +74,16 @@ const (
 	CmdHelp  = "help"
 )
 
+// GitHub Desktop.
+const (
+	GitHubDesktopBin   = "github"
+	OSWindows          = "windows"
+	MsgDesktopNotFound = "GitHub Desktop CLI not found — skipping."
+	MsgDesktopAdded    = "  ✓ Added to GitHub Desktop: %s\n"
+	MsgDesktopFailed   = "  ✗ Failed to add %s: %v\n"
+	MsgDesktopSummary  = "GitHub Desktop: %d added, %d failed\n"
+)
+
 // Terminal table headers.
 const (
 	TerminalHeader    = "REPO\tBRANCH\tPATH\tCLONE INSTRUCTION"
@@ -130,7 +140,8 @@ const (
 	HelpMode       = "  --mode ssh|https    Clone URL style (default: https)"
 	HelpOutput     = "  --output csv|json|terminal  Output format (default: terminal)"
 	HelpOutputPath = "  --output-path <dir> Output directory (default: ./gitmap-output)"
-	HelpOutFile    = "  --out-file <path>   Exact output file path"
+	HelpOutFile        = "  --out-file <path>   Exact output file path"
+	HelpGitHubDesktop  = "  --github-desktop    Add repos to GitHub Desktop"
 	HelpCloneFlags = "Clone flags:"
 	HelpTargetDir  = "  --target-dir <dir>  Base directory for clones (default: .)"
 )
@@ -143,6 +154,7 @@ const (
 	FlagDescOutFile    = "Exact output file path"
 	FlagDescOutputPath = "Output directory for CSV/JSON"
 	FlagDescTargetDir  = "Base directory for cloned repos"
+	FlagDescGHDesktop  = "Add discovered repos to GitHub Desktop"
 )
 
 // Directory permissions.
