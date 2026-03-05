@@ -245,6 +245,7 @@ const (
 	FlagDescTargetDir  = "Base directory for cloned repos"
 	FlagDescSafePull   = "If repo exists, run safe git pull with retries and unlock diagnostics"
 	FlagDescGHDesktop  = "Add discovered repos to GitHub Desktop"
+	FlagDescOpen       = "Open output folder after scan completes"
 )
 
 // Clone and Desktop scripts are now generated from Go templates
