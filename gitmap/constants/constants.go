@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "1.3.1"
+const Version = "1.3.2"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -32,6 +32,7 @@ const (
 const (
 	ExtCSV  = ".csv"
 	ExtJSON = ".json"
+	ExtTXT  = ".txt"
 	ExtGit  = ".git"
 )
 
@@ -39,6 +40,7 @@ const (
 const (
 	DefaultCSVFile       = "gitmap.csv"
 	DefaultJSONFile      = "gitmap.json"
+	DefaultTextFile      = "gitmap.txt"
 	DefaultStructureFile = "folder-structure.md"
 	DefaultCloneScript          = "clone.ps1"
 	DefaultDirectCloneScript    = "direct-clone.ps1"
@@ -163,6 +165,7 @@ const (
 	MsgFoundRepos       = "Found %d repositories.\n"
 	MsgCSVWritten       = "CSV written to %s\n"
 	MsgJSONWritten      = "JSON written to %s\n"
+	MsgTextWritten      = "Text clone list written to %s\n"
 	MsgStructureWritten = "Folder structure written to %s\n"
 	MsgCloneScript      = "Clone script written to %s\n"
 	MsgDirectClone      = "Direct clone script written to %s\n"
@@ -200,12 +203,13 @@ const (
 const (
 	ShorthandJSON = "json"
 	ShorthandCSV  = "csv"
+	ShorthandText = "text"
 )
 
 // CLI error messages.
 const (
 	ErrSourceRequired    = "Error: source file is required"
-	ErrCloneUsage        = "Usage: gitmap clone <source|json|csv> [--target-dir <dir>] [--safe-pull]"
+	ErrCloneUsage        = "Usage: gitmap clone <source|json|csv|text> [--target-dir <dir>] [--safe-pull]"
 	ErrShorthandNotFound = "Error: %s not found.\nRun 'gitmap scan' first to generate output files.\n"
 	ErrConfigLoad     = "Error loading config: %v\n"
 	ErrScanFailed     = "Scan error: %v\n"
@@ -222,7 +226,7 @@ const (
 	HelpUsage      = "Usage: gitmap <command> [flags]"
 	HelpCommands   = "Commands:"
 	HelpScan       = "  scan (s) [dir]      Scan directory for Git repos"
-	HelpClone      = "  clone (c) <source|json|csv>  Re-clone from file (json/csv = auto-resolve)"
+	HelpClone      = "  clone (c) <source|json|csv|text>  Re-clone from file (shorthands auto-resolve)"
 	HelpUpdate     = "  update              Self-update from source repo"
 	HelpVersion    = "  version (v)         Show version number"
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"

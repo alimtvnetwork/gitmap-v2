@@ -82,16 +82,29 @@ func resolveOutputDir(cfgDir, scanDir string) string {
 	return filepath.Join(scanDir, constants.DefaultOutputFolder)
 }
 
-// writeAllOutputs writes terminal, CSV, JSON, folder structure, and clone script.
+// writeAllOutputs writes terminal, CSV, JSON, text, folder structure, and clone scripts.
 func writeAllOutputs(records []model.ScanRecord, outputDir, outFile string) {
 	writeTerminalOutput(records, outputDir)
 	writeCSVOutput(records, outputDir, outFile)
 	writeJSONOutput(records, outputDir)
+	writeTextOutput(records, outputDir)
 	writeFolderStructure(records, outputDir)
 	writeCloneScript(records, outputDir)
 	writeDirectCloneScript(records, outputDir)
 	writeDirectCloneSSHScript(records, outputDir)
 	writeDesktopScript(records, outputDir)
+}
+
+// writeTextOutput writes records as plain text clone commands.
+func writeTextOutput(records []model.ScanRecord, outputDir string) {
+	path := filepath.Join(outputDir, constants.DefaultTextFile)
+	file, err := createOutputFile(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	formatter.WriteText(file, records)
+	fmt.Printf(constants.MsgTextWritten, path)
 }
 
 // writeTerminalOutput renders records to stdout.

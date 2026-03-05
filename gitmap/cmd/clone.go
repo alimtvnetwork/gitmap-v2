@@ -24,15 +24,16 @@ func runClone(args []string) {
 	executeClone(source, targetDir, safePull, ghDesktop)
 }
 
-// resolveCloneShorthand maps "json" and "csv" to default output paths.
+// resolveCloneShorthand maps "json", "csv", and "text" to default output paths.
 func resolveCloneShorthand(source string) string {
 	lower := strings.ToLower(source)
-	var resolved string
-	if lower == constants.ShorthandJSON {
-		resolved = filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile)
-	} else if lower == constants.ShorthandCSV {
-		resolved = filepath.Join(constants.DefaultOutputFolder, constants.DefaultCSVFile)
-	} else {
+	shorthandMap := map[string]string{
+		constants.ShorthandJSON: filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile),
+		constants.ShorthandCSV:  filepath.Join(constants.DefaultOutputFolder, constants.DefaultCSVFile),
+		constants.ShorthandText: filepath.Join(constants.DefaultOutputFolder, constants.DefaultTextFile),
+	}
+	resolved, ok := shorthandMap[lower]
+	if !ok {
 		return source
 	}
 	if _, err := os.Stat(resolved); os.IsNotExist(err) {
