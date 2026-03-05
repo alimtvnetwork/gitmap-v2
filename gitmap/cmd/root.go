@@ -45,6 +45,10 @@ func dispatch(command string) {
 		runPull(os.Args[2:])
 		return
 	}
+	if command == constants.CmdRescan || command == constants.CmdRescanAlias {
+		runRescan()
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
