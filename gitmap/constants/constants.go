@@ -226,7 +226,7 @@ const (
 	HelpUsage      = "Usage: gitmap <command> [flags]"
 	HelpCommands   = "Commands:"
 	HelpScan       = "  scan (s) [dir]      Scan directory for Git repos"
-	HelpClone      = "  clone (c) <source|json|csv>  Re-clone from file (json/csv = auto-resolve)"
+	HelpClone      = "  clone (c) <source|json|csv|text>  Re-clone from file (shorthands auto-resolve)"
 	HelpUpdate     = "  update              Self-update from source repo"
 	HelpVersion    = "  version (v)         Show version number"
 	HelpDesktopSync = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
