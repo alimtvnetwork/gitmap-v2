@@ -312,6 +312,13 @@ const (
 	HelpTargetDir     = "  --target-dir <dir>  Base directory for clones (default: .)"
 	HelpSafePull      = "  --safe-pull         Pull existing repos with retry + unlock diagnostics (auto-enabled)"
 	HelpVerbose       = "  --verbose           Write detailed debug log to a timestamped file"
+	HelpReleaseFlags  = "Release flags:"
+	HelpAssets        = "  --assets <path>     Directory or file to attach to the release"
+	HelpCommit        = "  --commit <sha>      Create release from a specific commit"
+	HelpRelBranch     = "  --branch <name>     Create release from latest commit of a branch"
+	HelpBump          = "  --bump major|minor|patch  Auto-increment from latest released version"
+	HelpDraft         = "  --draft             Create an unpublished draft release"
+	HelpDryRun        = "  --dry-run           Preview release steps without executing"
 )
 
 // Flag descriptions.
