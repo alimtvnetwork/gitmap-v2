@@ -18,7 +18,7 @@ import (
 
 // runScan handles the "scan" subcommand.
 func runScan(args []string) {
-	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder := parseScanFlags(args)
+	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder, quiet := parseScanFlags(args)
 	cfg, err := config.LoadFromFile(cfgPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrConfigLoad, err)
@@ -28,9 +28,9 @@ func runScan(args []string) {
 	cache := model.ScanCache{
 		Dir: dir, ConfigPath: cfgPath, Mode: mode, Output: output,
 		OutFile: outFile, OutputPath: outputPath,
-		GithubDesktop: ghDesktop, OpenFolder: openFolder,
+		GithubDesktop: ghDesktop, OpenFolder: openFolder, Quiet: quiet,
 	}
-	executeScan(dir, cfg, outFile, ghDesktop, openFolder, cache)
+	executeScan(dir, cfg, outFile, ghDesktop, openFolder, quiet, cache)
 }
 
 // executeScan performs the directory scan and outputs results.
