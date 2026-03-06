@@ -148,10 +148,10 @@ func formatStashText(stashCount int, s *statusSummary) string {
 	if stashCount > 0 {
 		s.Stashed++
 
-		return fmt.Sprintf("%s📦 %d%s", constants.ColorCyan, stashCount, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusStashFmt+"%s", constants.ColorCyan, stashCount, constants.ColorReset)
 	}
 
-	return constants.ColorDim + "—" + constants.ColorReset
+	return constants.ColorDim + constants.StatusDash + constants.ColorReset
 }
 
 // formatFileCounts returns staged/modified/untracked counts.
