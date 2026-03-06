@@ -240,7 +240,11 @@ func copyFile(src, dst string) error {
 
 // executeUpdate writes a temp PS1 script and runs it.
 func executeUpdate(repoPath string) {
-	scriptPath := writeUpdateScript(repoPath)
+	scriptPath, err := writeUpdateScript(repoPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrUpdateFailed, err)
+		os.Exit(1)
+	}
 	defer os.Remove(scriptPath)
 
 	log := verbose.Get()
@@ -253,16 +257,25 @@ func executeUpdate(repoPath string) {
 
 // writeUpdateScript creates a temporary PowerShell script for self-update.
 // Writes with UTF-8 BOM so PowerShell correctly handles Unicode characters.
-func writeUpdateScript(repoPath string) string {
+func writeUpdateScript(repoPath string) (string, error) {
 	runPS1 := filepath.Join(repoPath, "run.ps1")
 	script := buildUpdateScript(repoPath, runPS1)
-	tmpFile := filepath.Join(os.TempDir(), "gitmap-update.ps1")
+
+	tmpFile, err := os.CreateTemp(os.TempDir(), "gitmap-update-*.ps1")
+	if err != nil {
+		return "", err
+	}
+	defer tmpFile.Close()
 
 	bom := []byte{0xEF, 0xBB, 0xBF}
-	content := append(bom, []byte(script)...)
-	os.WriteFile(tmpFile, content, constants.DirPermission)
+	if _, err := tmpFile.Write(bom); err != nil {
+		return "", err
+	}
+	if _, err := tmpFile.WriteString(script); err != nil {
+		return "", err
+	}
 
-	return tmpFile
+	return tmpFile.Name(), nil
 }
 
 // buildUpdateScript generates the PowerShell script content.
