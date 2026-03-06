@@ -224,9 +224,12 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `exec`           | `x`   |
 | `release`        | `r`   |
 | `release-branch` | `rb`  |
+| `release-pending`| `rp`  |
+| `changelog`      | `cl`  |
 | `version`        | `v`   |
 | `update`         | —     |
 | `update-cleanup` | —     |
+| `doctor`         | —     |
 
 ---
 
