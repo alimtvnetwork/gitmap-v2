@@ -4,6 +4,7 @@ package constants
 const (
 	ColorReset  = "\033[0m"
 	ColorGreen  = "\033[32m"
+	ColorRed    = "\033[31m"
 	ColorYellow = "\033[33m"
 	ColorCyan   = "\033[36m"
 	ColorWhite  = "\033[97m"
