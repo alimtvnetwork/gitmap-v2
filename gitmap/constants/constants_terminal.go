@@ -21,17 +21,36 @@ const (
 
 // Status indicator strings.
 const (
-	StatusIconClean = "✓ clean"
-	StatusIconDirty = "● dirty"
-	StatusDash      = "—"
-	StatusSyncDash  = "  —"
-	StatusStashFmt  = "📦 %d"
-	StatusSyncUpFmt   = "↑%d"
-	StatusSyncDownFmt = "↓%d"
-	StatusSyncBothFmt = "↑%d ↓%d"
-	StatusStagedFmt   = "+%d"
-	StatusModifiedFmt = "~%d"
+	StatusIconClean    = "✓ clean"
+	StatusIconDirty    = "● dirty"
+	StatusDash         = "—"
+	StatusSyncDash     = "  —"
+	StatusStashFmt     = "📦 %d"
+	StatusSyncUpFmt    = "↑%d"
+	StatusSyncDownFmt  = "↓%d"
+	StatusSyncBothFmt  = "↑%d ↓%d"
+	StatusStagedFmt    = "+%d"
+	StatusModifiedFmt  = "~%d"
 	StatusUntrackedFmt = "?%d"
+)
+
+// Status row format strings.
+const (
+	StatusRowFmt     = "  %-22s %s  %s  %s  %s  %s\n"
+	StatusMissingFmt = "  %s%-22s %s⊘ not found%s\n"
+	StatusHeaderFmt  = "  %s%-22s %-12s %-8s %-10s %-8s %-6s%s\n"
+)
+
+// Summary format strings.
+const (
+	SummaryJoinSep    = " · "
+	SummaryReposFmt   = "%d repos"
+	SummaryCleanFmt   = "%d clean"
+	SummaryDirtyFmt   = "%d dirty"
+	SummaryAheadFmt   = "%d ahead"
+	SummaryBehindFmt  = "%d behind"
+	SummaryStashedFmt = "%d stashed"
+	SummaryMissingFmt = "%d missing"
 )
 
 // Terminal output sections.

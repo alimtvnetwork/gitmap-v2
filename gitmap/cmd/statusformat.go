@@ -31,7 +31,7 @@ func printOneStatus(rec model.ScanRecord, s *statusSummary) {
 
 // printMissingRepo prints a row for a repo not found on disk.
 func printMissingRepo(name string, s *statusSummary) {
-	fmt.Printf("  %s%-22s %s⊘ not found%s\n",
+	fmt.Printf(constants.StatusMissingFmt,
 		constants.ColorDim, truncate(name, 22),
 		constants.ColorYellow, constants.ColorReset)
 	s.Missing++
