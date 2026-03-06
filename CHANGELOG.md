@@ -2,7 +2,8 @@
 
 ## v2.4.0
 - Added `gitmap latest-branch` (`lb`) command: finds the most recently updated remote branch by commit date and displays name, SHA, date, and subject.
-  - Flags: `--remote`, `--all-remotes`, `--contains-fallback`, `--top N`.
+  - Flags: `--remote`, `--all-remotes`, `--contains-fallback`, `--top N`, `--json`.
+  - Positional integer shorthand: `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
 
 ## v2.3.12
 - Spec, issue post-mortems, and memory aligned to codify synchronous update handoff and rename-first PATH sync as permanent rules.

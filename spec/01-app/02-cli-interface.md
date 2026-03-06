@@ -226,6 +226,9 @@ Find the most recently updated remote branch by commit date. Fetches
 all remotes, reads tip commits, sorts by date, and resolves the branch
 name via `--points-at`.
 
+A bare integer positional argument is shorthand for `--top`:
+`gitmap lb 5` is equivalent to `gitmap lb --top 5`.
+
 See [14-latest-branch.md](./14-latest-branch.md) for full details.
 
 ### `gitmap version` (alias: `v`)

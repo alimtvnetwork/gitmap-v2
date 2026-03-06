@@ -38,6 +38,9 @@ gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
 gitmap update                                   # Self-update from source repo
 gitmap doctor                                   # Diagnose PATH, version, and deployment issues
 gitmap changelog --latest                       # Show latest release notes
+gitmap lb                                       # Show the most recently updated remote branch
+gitmap lb 5                                     # Show the 5 most recently updated remote branches
+gitmap lb --json                                # Latest branch as structured JSON
 ```
 
 ## Build & Deploy

@@ -14,8 +14,13 @@ where the "active" branch changes frequently.
 
 ```
 gitmap latest-branch [flags]
+gitmap latest-branch <n>
 gitmap lb [flags]
+gitmap lb <n>
 ```
+
+A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
+`--top <n>` — it shows the N most recently updated remote branches.
 
 ## Behavior
 
