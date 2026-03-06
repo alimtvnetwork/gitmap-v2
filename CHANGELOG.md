@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.7.0
+- Added `--sort` flag to `latest-branch`: supports `date` (default, descending) and `name` (alphabetical ascending).
+
 ## v2.6.0
 - Centralized date display formatting: all dates now convert to local timezone and display as `DD-Mon-YYYY hh:mm AM/PM`.
 - Added `gitutil/dateformat.go` with `FormatDisplayDate` and `FormatDisplayDateUTC` functions.

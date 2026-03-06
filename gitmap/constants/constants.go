@@ -386,6 +386,13 @@ const (
 	FlagDescLBJSON        = "Output structured JSON instead of plain text (shorthand for --format json)"
 	FlagDescLBFormat      = "Output format: terminal, json, csv (default: terminal)"
 	FlagDescLBNoFetch     = "Skip git fetch (use existing remote refs)"
+	FlagDescLBSort        = "Sort order: date (default, descending) or name (alphabetical)"
+)
+
+// Sort orders.
+const (
+	SortByDate = "date"
+	SortByName = "name"
 )
 
 // Clone and Desktop scripts are now generated from Go templates
