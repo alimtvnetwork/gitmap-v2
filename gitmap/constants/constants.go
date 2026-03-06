@@ -311,7 +311,7 @@ const (
 	HelpRelease     = "  release (r) [ver]   Create release branch, tag, and push"
 	HelpReleaseBr   = "  release-branch (rb) Complete release from existing release branch"
 	HelpReleasePend = "  release-pending (rp) Release all pending branches without tags"
-	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes"
+	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
