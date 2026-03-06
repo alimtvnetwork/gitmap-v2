@@ -366,13 +366,14 @@ activates whenever existing repos are detected during a clone operation.
 
 ## Latest-Branch Flags
 
-| Flag                    | Description                                          | Default  |
-|-------------------------|------------------------------------------------------|----------|
-| `--remote <name>`       | Remote to filter branches against                    | `origin` |
-| `--all-remotes`         | Include branches from all remotes                    | `false`  |
-| `--contains-fallback`   | Fall back to `--contains` if `--points-at` is empty  | `false`  |
-| `--top <n>`             | Show top N most recently updated branches            | `0`      |
-| `--json`                | Output structured JSON instead of plain text         | `false`  |
+| Flag                    | Description                                          | Default    |
+|-------------------------|------------------------------------------------------|------------|
+| `--remote <name>`       | Remote to filter branches against                    | `origin`   |
+| `--all-remotes`         | Include branches from all remotes                    | `false`    |
+| `--contains-fallback`   | Fall back to `--contains` if `--points-at` is empty  | `false`    |
+| `--top <n>`             | Show top N most recently updated branches            | `0`        |
+| `--format <fmt>`        | Output format: `terminal`, `json`, `csv`             | `terminal` |
+| `--json`                | Shorthand for `--format json`                        | `false`    |
 
 ## Examples
 
@@ -488,6 +489,9 @@ gitmap lb                        # latest branch (single)
 gitmap lb 5                      # top 5 most recently updated branches
 gitmap lb --top 5                # same as above
 gitmap lb --json                 # latest branch as structured JSON
+gitmap lb --format json          # same as above
+gitmap lb --format csv           # latest branch as CSV
+gitmap lb 5 --format csv         # top 5 as CSV (pipe to file: > branches.csv)
 gitmap lb 3 --json               # top 3 as JSON
 gitmap lb --remote upstream      # filter to a specific remote
 gitmap lb --all-remotes          # include all remotes

@@ -56,6 +56,8 @@ A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
 | `--all-remotes`       | bool   | `false`    | Include branches from all remotes                |
 | `--contains-fallback` | bool   | `false`    | Fall back to `--contains` if `--points-at` empty |
 | `--top <n>`           | int    | `0`        | Show top N most recently updated branches        |
+| `--format <fmt>`      | string | `terminal` | Output format: `terminal`, `json`, `csv`         |
+| `--json`              | bool   | `false`    | Shorthand for `--format json`                    |
 
 ## Output Format
 
