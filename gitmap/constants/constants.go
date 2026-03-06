@@ -418,6 +418,24 @@ const (
 	FlagDescLBFilter      = "Filter branches by glob or substring pattern"
 )
 
+// CSV headers.
+var ScanCSVHeaders = []string{
+	"repoName", "httpsUrl", "sshUrl", "branch",
+	"relativePath", "absolutePath", "cloneInstruction", "notes",
+}
+
+var LatestBranchCSVHeaders = []string{
+	"branch", "remote", "sha", "commitDate", "subject", "ref",
+}
+
+// Terminal table headers.
+const (
+	StatusTableHeader    = "%-22s %-12s %-8s %-10s %-8s %-6s"
+	StatusTableColumns   = "REPO\", \"BRANCH\", \"STATE\", \"SYNC\", \"STASH\", \"FILES"
+	LatestBranchTableFmt = "  %-30s %-30s %-9s %s\n"
+	LatestBranchTableHdr = "DATE\", \"BRANCH\", \"SHA\", \"SUBJECT"
+)
+
 // Sort orders.
 const (
 	SortByDate = "date"
