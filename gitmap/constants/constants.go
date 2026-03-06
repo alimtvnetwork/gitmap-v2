@@ -377,7 +377,8 @@ const (
 	FlagDescLBAllRemotes  = "Include branches from all remotes"
 	FlagDescLBContains    = "Fall back to --contains if --points-at returns empty"
 	FlagDescLBTop         = "Show top N most recently updated branches"
-	FlagDescLBJSON        = "Output structured JSON instead of plain text"
+	FlagDescLBJSON        = "Output structured JSON instead of plain text (shorthand for --format json)"
+	FlagDescLBFormat      = "Output format: terminal, json, csv (default: terminal)"
 )
 
 // Clone and Desktop scripts are now generated from Go templates

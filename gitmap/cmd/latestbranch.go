@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -33,7 +34,8 @@ type latestBranchTopItem struct {
 
 // runLatestBranch handles the 'latest-branch' / 'lb' command.
 func runLatestBranch(args []string) {
-	remote, allRemotes, containsFallback, top, jsonOut := parseLatestBranchFlags(args)
+	remote, allRemotes, containsFallback, top, format := parseLatestBranchFlags(args)
+	isMachine := format == constants.OutputJSON || format == constants.OutputCSV
 
 	// 1. Validate git repo.
 	if !gitutil.IsInsideWorkTree() {
@@ -42,10 +44,10 @@ func runLatestBranch(args []string) {
 	}
 
 	// 2. Fetch.
-	if !jsonOut {
+	if !isMachine {
 		fmt.Println(constants.MsgLatestBranchFetching)
 	}
-	if err := gitutil.FetchAllPrune(); err != nil && !jsonOut {
+	if err := gitutil.FetchAllPrune(); err != nil && !isMachine {
 		fmt.Fprintf(os.Stderr, "  Warning: fetch failed: %v\n", err)
 	}
 
@@ -103,87 +105,125 @@ func runLatestBranch(args []string) {
 	}
 	commitDate := latest.CommitDate.Format("2006-01-02T15:04:05-07:00")
 
-	// JSON output.
-	if jsonOut {
-		out := latestBranchJSON{
-			Branch:     branchNames,
-			Remote:     selectedRemote,
-			Sha:        shortSha,
-			CommitDate: commitDate,
-			Subject:    latest.Subject,
-			Ref:        latest.RemoteRef,
+	switch format {
+	case constants.OutputJSON:
+		printLatestBranchJSON(branchNames, selectedRemote, shortSha, commitDate, latest, items, top)
+	case constants.OutputCSV:
+		printLatestBranchCSV(items, selectedRemote, top)
+	default:
+		printLatestBranchTerminal(branchNames, selectedRemote, shortSha, commitDate, latest, items, top)
+	}
+}
+
+// printLatestBranchJSON outputs JSON to stdout.
+func printLatestBranchJSON(branchNames []string, remote, sha, commitDate string, latest gitutil.RemoteBranchInfo, items []gitutil.RemoteBranchInfo, top int) {
+	out := latestBranchJSON{
+		Branch:     branchNames,
+		Remote:     remote,
+		Sha:        sha,
+		CommitDate: commitDate,
+		Subject:    latest.Subject,
+		Ref:        latest.RemoteRef,
+	}
+	if top > 0 {
+		count := top
+		if count > len(items) {
+			count = len(items)
 		}
-		if top > 0 {
-			count := top
-			if count > len(items) {
-				count = len(items)
-			}
-			for _, item := range items[:count] {
-				rName := item.RemoteRef
-				if idx := strings.Index(rName, "/"); idx >= 0 {
-					rName = rName[idx+1:]
-				}
-				sha := item.Sha
-				if len(sha) > 7 {
-					sha = sha[:7]
-				}
-				out.Top = append(out.Top, latestBranchTopItem{
-					Branch:     rName,
-					Sha:        sha,
-					CommitDate: item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
-					Subject:    item.Subject,
-				})
-			}
+		for _, item := range items[:count] {
+			rName := stripRemotePrefix(item.RemoteRef)
+			out.Top = append(out.Top, latestBranchTopItem{
+				Branch:     rName,
+				Sha:        truncSha(item.Sha),
+				CommitDate: item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+				Subject:    item.Subject,
+			})
 		}
-		enc := json.NewEncoder(os.Stdout)
-		enc.SetIndent("", constants.JSONIndent)
-		enc.Encode(out)
-		return
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", constants.JSONIndent)
+	enc.Encode(out)
+}
+
+// printLatestBranchCSV outputs CSV to stdout.
+func printLatestBranchCSV(items []gitutil.RemoteBranchInfo, remote string, top int) {
+	count := 1
+	if top > 0 {
+		count = top
+	}
+	if count > len(items) {
+		count = len(items)
 	}
 
-	// 10. Display (terminal).
+	w := csv.NewWriter(os.Stdout)
+	w.Write([]string{"branch", "remote", "sha", "commitDate", "subject", "ref"})
+	for _, item := range items[:count] {
+		rName := stripRemotePrefix(item.RemoteRef)
+		w.Write([]string{
+			rName,
+			remote,
+			truncSha(item.Sha),
+			item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+			item.Subject,
+			item.RemoteRef,
+		})
+	}
+	w.Flush()
+}
+
+// printLatestBranchTerminal outputs human-readable text to stdout.
+func printLatestBranchTerminal(branchNames []string, remote, sha, commitDate string, latest gitutil.RemoteBranchInfo, items []gitutil.RemoteBranchInfo, top int) {
 	fmt.Println()
 	fmt.Printf("  Latest branch: %s\n", strings.Join(branchNames, ", "))
-	fmt.Printf("  Remote:        %s\n", selectedRemote)
-	fmt.Printf("  SHA:           %s\n", shortSha)
+	fmt.Printf("  Remote:        %s\n", remote)
+	fmt.Printf("  SHA:           %s\n", sha)
 	fmt.Printf("  Commit date:   %s\n", commitDate)
 	fmt.Printf("  Subject:       %s\n", latest.Subject)
 	fmt.Printf("  Ref:           %s\n", latest.RemoteRef)
 
-	// 11. Top N.
 	if top > 0 {
 		count := top
 		if count > len(items) {
 			count = len(items)
 		}
 		fmt.Println()
-		fmt.Printf("  Top %d most recently updated remote branches (%s):\n", count, selectedRemote)
+		fmt.Printf("  Top %d most recently updated remote branches (%s):\n", count, remote)
 		fmt.Printf("  %-30s %-30s %-9s %s\n", "DATE", "BRANCH", "SHA", "SUBJECT")
 		for _, item := range items[:count] {
-			rName := item.RemoteRef
-			if idx := strings.Index(rName, "/"); idx >= 0 {
-				rName = rName[idx+1:]
-			}
-			sha := item.Sha
-			if len(sha) > 7 {
-				sha = sha[:7]
-			}
 			fmt.Printf("  %-30s %-30s %-9s %s\n",
 				item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
-				rName, sha, item.Subject)
+				stripRemotePrefix(item.RemoteRef), truncSha(item.Sha), item.Subject)
 		}
 	}
 	fmt.Println()
 }
 
+// stripRemotePrefix removes the "<remote>/" prefix from a ref name.
+func stripRemotePrefix(ref string) string {
+	if idx := strings.Index(ref, "/"); idx >= 0 {
+		return ref[idx+1:]
+	}
+	return ref
+}
+
+// truncSha returns the first 7 characters of a SHA.
+func truncSha(sha string) string {
+	if len(sha) > 7 {
+		return sha[:7]
+	}
+	return sha
+}
+
 // parseLatestBranchFlags parses flags for the latest-branch command.
 // Supports positional integer shorthand: `gitmap lb 3` == `gitmap lb --top 3`.
-func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int, jsonOut bool) {
+// Supports --format (terminal|json|csv) and --json as shorthand for --format json.
+func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int, format string) {
 	fs := flag.NewFlagSet(constants.CmdLatestBranch, flag.ExitOnError)
 	remoteFlag := fs.String("remote", "origin", constants.FlagDescLBRemote)
 	allRemotesFlag := fs.Bool("all-remotes", false, constants.FlagDescLBAllRemotes)
 	containsFlag := fs.Bool("contains-fallback", false, constants.FlagDescLBContains)
 	topFlag := fs.Int("top", 0, constants.FlagDescLBTop)
+	formatFlag := fs.String("format", constants.OutputTerminal, constants.FlagDescLBFormat)
 	jsonFlag := fs.Bool("json", false, constants.FlagDescLBJSON)
 	fs.Parse(args)
 
@@ -194,5 +234,11 @@ func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsF
 		}
 	}
 
-	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag, *jsonFlag
+	// --json is shorthand for --format json.
+	outFormat := *formatFlag
+	if *jsonFlag {
+		outFormat = constants.OutputJSON
+	}
+
+	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag, outFormat
 }
