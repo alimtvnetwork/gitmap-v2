@@ -52,11 +52,11 @@ type statusSummary struct {
 // printStatusBanner shows the dashboard header.
 func printStatusBanner(count int) {
 	fmt.Println()
-	fmt.Printf("  %s╔══════════════════════════════════════╗%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s║         gitmap status                ║%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s╚══════════════════════════════════════╝%s\n", constants.ColorCyan, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerTop, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerTitle, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerBottom, constants.ColorReset)
 	fmt.Println()
-	fmt.Printf("  %s%d repos from gitmap-output/gitmap.json%s\n", constants.ColorDim, count, constants.ColorReset)
+	fmt.Printf("  %s"+constants.StatusRepoCountFmt+"%s\n", constants.ColorDim, count, constants.ColorReset)
 	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermSeparator, constants.ColorReset)
 	fmt.Println()
 }
@@ -73,7 +73,7 @@ func printStatusTable(records []model.ScanRecord) statusSummary {
 		constants.StatusTableColumns[4], constants.StatusTableColumns[5],
 		constants.ColorReset)
 	fmt.Printf("  %s%s%s\n", constants.ColorDim,
-		strings.Repeat("─", 70), constants.ColorReset)
+		constants.TermTableRule, constants.ColorReset)
 
 	for _, rec := range records {
 		printOneStatus(rec, &s)
@@ -114,11 +114,11 @@ func formatStateIcon(dirty bool, s *statusSummary) string {
 	if dirty {
 		s.Dirty++
 
-		return constants.ColorYellow + "● dirty" + constants.ColorReset
+		return constants.ColorYellow + constants.StatusIconDirty + constants.ColorReset
 	}
 	s.Clean++
 
-	return constants.ColorGreen + "✓ clean" + constants.ColorReset
+	return constants.ColorGreen + constants.StatusIconClean + constants.ColorReset
 }
 
 // formatSyncText returns the ahead/behind indicator and updates summary.
@@ -127,20 +127,20 @@ func formatSyncText(ahead, behind int, s *statusSummary) string {
 		s.Ahead++
 		s.Behind++
 
-		return fmt.Sprintf("%s↑%d ↓%d%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncBothFmt+"%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
 	}
 	if ahead > 0 {
 		s.Ahead++
 
-		return fmt.Sprintf("%s↑%d%s", constants.ColorCyan, ahead, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncUpFmt+"%s", constants.ColorCyan, ahead, constants.ColorReset)
 	}
 	if behind > 0 {
 		s.Behind++
 
-		return fmt.Sprintf("%s↓%d%s", constants.ColorYellow, behind, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncDownFmt+"%s", constants.ColorYellow, behind, constants.ColorReset)
 	}
 
-	return constants.ColorDim + "  —" + constants.ColorReset
+	return constants.ColorDim + constants.StatusSyncDash + constants.ColorReset
 }
 
 // formatStashText returns the stash indicator and updates summary.
@@ -148,10 +148,10 @@ func formatStashText(stashCount int, s *statusSummary) string {
 	if stashCount > 0 {
 		s.Stashed++
 
-		return fmt.Sprintf("%s📦 %d%s", constants.ColorCyan, stashCount, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusStashFmt+"%s", constants.ColorCyan, stashCount, constants.ColorReset)
 	}
 
-	return constants.ColorDim + "—" + constants.ColorReset
+	return constants.ColorDim + constants.StatusDash + constants.ColorReset
 }
 
 // formatFileCounts returns staged/modified/untracked counts.
@@ -161,20 +161,20 @@ func formatFileCounts(rs gitutil.RepoStatus) string {
 		return buildFileCountParts(rs)
 	}
 
-	return constants.ColorDim + "—" + constants.ColorReset
+	return constants.ColorDim + constants.StatusDash + constants.ColorReset
 }
 
 // buildFileCountParts assembles the file count display parts.
 func buildFileCountParts(rs gitutil.RepoStatus) string {
 	parts := make([]string, 0, 3)
 	if rs.Staged > 0 {
-		parts = append(parts, fmt.Sprintf("%s+%d%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusStagedFmt+"%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
 	}
 	if rs.Modified > 0 {
-		parts = append(parts, fmt.Sprintf("%s~%d%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusModifiedFmt+"%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
 	}
 	if rs.Untracked > 0 {
-		parts = append(parts, fmt.Sprintf("%s?%d%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusUntrackedFmt+"%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
 	}
 
 	return strings.Join(parts, " ")
@@ -183,7 +183,7 @@ func buildFileCountParts(rs gitutil.RepoStatus) string {
 // printStatusSummary shows the final totals.
 func printStatusSummary(s statusSummary) {
 	fmt.Println()
-	fmt.Printf("  %s%s%s\n", constants.ColorDim, strings.Repeat("─", 70), constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermTableRule, constants.ColorReset)
 
 	parts := []string{
 		fmt.Sprintf("%d repos", s.Total),

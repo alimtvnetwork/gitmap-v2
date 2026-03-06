@@ -10,6 +10,30 @@ const (
 	ColorDim    = "\033[90m"
 )
 
+// Status banner box-drawing.
+const (
+	StatusBannerTop    = "╔══════════════════════════════════════╗"
+	StatusBannerTitle  = "║         gitmap status                ║"
+	StatusBannerBottom = "╚══════════════════════════════════════╝"
+	StatusRepoCountFmt = "%d repos from gitmap-output/gitmap.json"
+	StatusMissingFmt   = "  %-22s ⊘ not found"
+)
+
+// Status indicator strings.
+const (
+	StatusIconClean = "✓ clean"
+	StatusIconDirty = "● dirty"
+	StatusDash      = "—"
+	StatusSyncDash  = "  —"
+	StatusStashFmt  = "📦 %d"
+	StatusSyncUpFmt   = "↑%d"
+	StatusSyncDownFmt = "↓%d"
+	StatusSyncBothFmt = "↑%d ↓%d"
+	StatusStagedFmt   = "+%d"
+	StatusModifiedFmt = "~%d"
+	StatusUntrackedFmt = "?%d"
+)
+
 // Terminal output sections.
 const (
 	TermBannerTop    = "  ╔══════════════════════════════════════╗"
@@ -20,6 +44,7 @@ const (
 	TermTreeHeader   = "  ■ Folder Structure"
 	TermCloneHeader  = "  ■ How to Clone on Another Machine"
 	TermSeparator    = "  ──────────────────────────────────────────"
+	TermTableRule    = "──────────────────────────────────────────────────────────────────────"
 )
 
 // Terminal repo entry formats.
