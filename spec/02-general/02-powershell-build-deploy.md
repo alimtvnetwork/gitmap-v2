@@ -236,15 +236,23 @@ When a CLI updates itself from a PATH-managed executable, use a two-phase handof
 ### Phase 1: Handoff from active binary
 1. `tool update` creates a handoff copy in the same active binary directory (for example `toolname-update-<pid>.exe`, fallback to `%TEMP%` if locked).
 2. It launches the handoff copy with a hidden worker command (e.g. `update-runner`).
-3. The parent exits immediately.
+3. The parent **exits immediately** (`os.Exit(0)`) — it MUST NOT wait for the worker.
 
 ### Phase 2: Execute update from handoff copy
 1. Resolve repo root from embedded/configured repo path.
 2. Run `run.ps1 -Update` (full pipeline: pull, build, deploy).
-3. Sync active PATH binary from deployed binary using retry loop first, then rename fallback.
+3. Sync active PATH binary using **rename-first** strategy in update mode:
+   - Rename active binary to `.old` (Windows allows renaming a running exe).
+   - Copy deployed binary to the active path.
+   - Fall back to copy-retry loop (20 x 500ms) only if rename fails.
 4. Read and print versions from the binaries (before update and after update) using `tool version`.
 5. Show latest notes using the updated binary (`tool changelog --latest`).
 6. Run `tool update-cleanup` to remove handoff and `.old` artifacts.
+
+### Critical Rules
+- The parent process MUST exit before the worker starts `run.ps1`. Using `cmd.Run()` (synchronous wait) causes the parent to hold the file lock during the entire pipeline, making PATH sync impossible.
+- PATH sync MUST use rename-first in update mode. Copy-overwrite fails on Windows when any process holds the binary.
+- Generated update scripts MUST NOT contain `Read-Host` or any interactive prompts — they run in non-interactive PowerShell sessions.
 
 ### Required Validation
 - Fail the update if active version still does not match deployed version after sync.
@@ -259,3 +267,12 @@ When a CLI updates itself from a PATH-managed executable, use a two-phase handof
 | Check `$LASTEXITCODE` after external commands | Detect non-PowerShell failures |
 | Print error details before `exit 1` | User sees what went wrong |
 | Use `try/finally` with `Push-Location/Pop-Location` | Always restore working directory |
+
+## Contributors
+
+- [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
+  - [Google Profile](https://www.google.com/search?q=Alim+Ul+Karim)
+- [Riseup Asia LLC (Top Leading Software Company in WY)](https://riseup-asia.com) (2026)
+  - [Facebook](https://www.facebook.com/riseupasia.talent/)
+  - [LinkedIn](https://www.linkedin.com/company/105304484/)
+  - [YouTube](https://www.youtube.com/@riseup-asia)
