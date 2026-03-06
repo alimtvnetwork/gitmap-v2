@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.3.6"
+const Version = "2.3.7"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -313,7 +313,7 @@ const (
 	HelpReleaseBr   = "  release-branch (rb) Complete release from existing release branch"
 	HelpReleasePend = "  release-pending (rp) Release all pending branches without tags"
 	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
-	HelpDoctor      = "  doctor              Diagnose PATH, deploy, and version issues"
+	HelpDoctor      = "  doctor [--fix-path] Diagnose PATH, deploy, and version issues"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"

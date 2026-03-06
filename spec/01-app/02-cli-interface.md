@@ -183,7 +183,7 @@ Display concise, CLI-friendly release notes from `CHANGELOG.md`.
 The `gitmap update` command automatically runs `gitmap changelog --latest`
 after a successful update to show the user what changed.
 
-### `gitmap doctor` (no alias)
+### `gitmap doctor [--fix-path]` (no alias)
 
 Diagnose environment and deployment health. Runs a series of checks
 and prints `[OK]`, `[!!]`, or `[--]` for each:
@@ -196,6 +196,22 @@ and prints `[OK]`, `[!!]`, or `[--]` for each:
 5. **Git available** — checks `git --version`.
 6. **Go available** — checks `go version` (warning only, needed for building).
 7. **CHANGELOG.md present** — confirms changelog command will work.
+
+If issues are found, each is accompanied by a recommended fix command.
+
+**`--fix-path` flag:**
+
+When passed, skips the diagnostic checks and instead directly syncs
+the active PATH binary from the deployed binary. Uses a three-layer
+fallback strategy:
+
+1. **Direct copy with retries** — 20 attempts × 500ms delay.
+2. **Rename fallback** — renames the locked `.exe` to `.old`, copies
+   the deployed binary in its place (with rollback on failure).
+3. **Stale-process termination** — finds and kills `gitmap.exe`
+   processes bound to the old PATH location, then retries.
+
+Prints clear confirmation with version verification after sync.
 
 If issues are found, each is accompanied by a recommended fix command.
 

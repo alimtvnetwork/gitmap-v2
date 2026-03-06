@@ -2,18 +2,28 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/user/gitmap/constants"
 )
 
 // runDoctor handles the 'doctor' command.
 func runDoctor() {
+	fixPath := parseDoctorFlags(os.Args[2:])
+
+	if fixPath {
+		runFixPath()
+		return
+	}
+
 	fmt.Printf("\n  gitmap doctor (v%s)\n", constants.Version)
 	fmt.Println("  ──────────────────────────────────────────")
 
@@ -29,9 +39,214 @@ func runDoctor() {
 
 	fmt.Println()
 	if issues > 0 {
-		fmt.Printf("  Found %d issue(s). See recommendations above.\n\n", issues)
+		fmt.Printf("  Found %d issue(s). See recommendations above.\n", issues)
+		fmt.Printf("  Tip: run 'gitmap doctor --fix-path' to auto-sync the PATH binary.\n\n")
 	} else {
 		fmt.Println("  All checks passed.\n")
+	}
+}
+
+// parseDoctorFlags parses flags for the doctor command.
+func parseDoctorFlags(args []string) (fixPath bool) {
+	fs := flag.NewFlagSet(constants.CmdDoctor, flag.ExitOnError)
+	fixPathFlag := fs.Bool("fix-path", false, "Sync the active PATH binary from the deployed binary")
+	fs.Parse(args)
+
+	return *fixPathFlag
+}
+
+// runFixPath syncs the active PATH binary from the deployed binary
+// using retry, rename fallback, and stale-process termination.
+func runFixPath() {
+	fmt.Println()
+	fmt.Printf("  gitmap doctor --fix-path (v%s)\n", constants.Version)
+	fmt.Println("  ──────────────────────────────────────────")
+
+	activePath, activeErr := exec.LookPath("gitmap")
+	if activeErr != nil {
+		printIssue("gitmap not found on PATH", "Cannot sync — no active binary to replace.")
+		printFix("Add your deploy directory to PATH first.")
+		return
+	}
+
+	absActive, _ := filepath.Abs(activePath)
+	activeVersion := getBinaryVersion(absActive)
+
+	deployedPath, deployedErr := resolveDeployedBinary()
+	if deployedErr != nil {
+		printIssue("Cannot resolve deployed binary", deployedErr.Error())
+		return
+	}
+
+	absDeployed, _ := filepath.Abs(deployedPath)
+	deployedVersion := getBinaryVersion(absDeployed)
+
+	fmt.Printf("  Active PATH:  %s (%s)\n", absActive, activeVersion)
+	fmt.Printf("  Deployed:     %s (%s)\n", absDeployed, deployedVersion)
+
+	if absActive == absDeployed {
+		printOK("PATH already points to the deployed binary. Nothing to sync.")
+		return
+	}
+
+	if activeVersion == deployedVersion {
+		printOK("Versions already match (%s). No sync needed.", activeVersion)
+		return
+	}
+
+	fmt.Println()
+	fmt.Printf("  Syncing %s -> %s...\n", absDeployed, absActive)
+
+	// Layer 1: Direct copy with retries.
+	if tryCopyWithRetry(absDeployed, absActive, 20, 500*time.Millisecond) {
+		verifySync(absActive, deployedVersion)
+		return
+	}
+
+	// Layer 2: Rename fallback (Windows allows rename of locked .exe).
+	if tryRenameFallback(absDeployed, absActive) {
+		verifySync(absActive, deployedVersion)
+		return
+	}
+
+	// Layer 3: Kill stale gitmap processes and retry.
+	if tryKillAndCopy(absDeployed, absActive) {
+		verifySync(absActive, deployedVersion)
+		return
+	}
+
+	fmt.Println()
+	printIssue("Could not sync PATH binary after all fallback attempts",
+		"The file is still locked by another process.")
+	printFix("Close all terminals and apps using gitmap, then run:")
+	printFix(fmt.Sprintf("  Copy-Item \"%s\" \"%s\" -Force", absDeployed, absActive))
+}
+
+// resolveDeployedBinary finds the deployed binary path from powershell.json.
+func resolveDeployedBinary() (string, error) {
+	if len(constants.RepoPath) == 0 {
+		return "", fmt.Errorf("RepoPath not embedded — rebuild with run.ps1")
+	}
+
+	configPath := filepath.Join(constants.RepoPath, "gitmap", "powershell.json")
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return "", fmt.Errorf("cannot read powershell.json: %v", err)
+	}
+
+	deployPath := extractJSONString(data, "deployPath")
+	if len(deployPath) == 0 {
+		return "", fmt.Errorf("no deployPath in powershell.json")
+	}
+
+	binaryName := extractJSONString(data, "binaryName")
+	if len(binaryName) == 0 {
+		binaryName = "gitmap.exe"
+	}
+
+	deployed := filepath.Join(deployPath, "gitmap", binaryName)
+	if _, err := os.Stat(deployed); err != nil {
+		return "", fmt.Errorf("deployed binary not found: %s", deployed)
+	}
+
+	return deployed, nil
+}
+
+// tryCopyWithRetry attempts to copy src to dst with retries.
+func tryCopyWithRetry(src, dst string, maxAttempts int, delay time.Duration) bool {
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		err := copyFileOverwrite(src, dst)
+		if err == nil {
+			return true
+		}
+		if attempt < maxAttempts {
+			fmt.Printf("  [%d/%d] File in use, retrying...\n", attempt, maxAttempts)
+			time.Sleep(delay)
+		}
+	}
+
+	return false
+}
+
+// tryRenameFallback renames the locked target to .old, then copies.
+func tryRenameFallback(src, dst string) bool {
+	backup := dst + ".old"
+
+	// Clean up previous backup.
+	os.Remove(backup)
+
+	err := os.Rename(dst, backup)
+	if err != nil {
+		return false
+	}
+
+	fmt.Println("  Renamed locked binary to .old, copying fresh...")
+	err = copyFileOverwrite(src, dst)
+	if err != nil {
+		// Rollback: restore from backup.
+		os.Rename(backup, dst)
+		return false
+	}
+
+	return true
+}
+
+// tryKillAndCopy finds stale gitmap processes on the target path
+// and terminates them before retrying the copy.
+func tryKillAndCopy(src, dst string) bool {
+	if runtime.GOOS != "windows" {
+		return false
+	}
+
+	fmt.Println("  Attempting to stop stale gitmap processes...")
+
+	cmd := exec.Command("powershell", "-NoProfile", "-NonInteractive", "-Command",
+		fmt.Sprintf(`Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" | `+
+			`Where-Object { $_.ExecutablePath -and (Resolve-Path $_.ExecutablePath -ErrorAction SilentlyContinue).Path -eq '%s' -and $_.ProcessId -ne %d } | `+
+			`ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue; $_.ProcessId }`,
+			dst, os.Getpid()))
+
+	out, err := cmd.Output()
+	if err != nil {
+		return false
+	}
+
+	killed := strings.TrimSpace(string(out))
+	if len(killed) > 0 {
+		fmt.Printf("  Stopped process(es): %s\n", killed)
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	return copyFileOverwrite(src, dst) == nil
+}
+
+// copyFileOverwrite copies src to dst, overwriting dst if it exists.
+func copyFileOverwrite(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+
+	return err
+}
+
+// verifySync checks that the synced binary reports the expected version.
+func verifySync(path, expectedVersion string) {
+	fmt.Println()
+	actualVersion := getBinaryVersion(path)
+	if actualVersion == expectedVersion {
+		printOK("PATH binary synced successfully: %s", actualVersion)
+	} else {
+		printWarn(fmt.Sprintf("Synced but version mismatch: got %s, expected %s", actualVersion, expectedVersion))
 	}
 }
 
@@ -131,7 +346,7 @@ func checkVersionMismatch() int {
 	if len(activeVersion) > 0 && activeVersion != sourceVersion {
 		printIssue("PATH binary version mismatch",
 			fmt.Sprintf("PATH: %s, Source: %s", activeVersion, sourceVersion))
-		printFix("Run: gitmap update")
+		printFix("Run: gitmap update  or  gitmap doctor --fix-path")
 		issues++
 	}
 
@@ -148,8 +363,7 @@ func checkVersionMismatch() int {
 		if absActive != absDeployed {
 			printIssue("PATH and deployed binaries differ",
 				fmt.Sprintf("PATH: %s (%s), Deployed: %s (%s)", absActive, activeVersion, absDeployed, deployedVersion))
-			printFix("Copy deployed binary to PATH location:")
-			printFix(fmt.Sprintf("  Copy-Item \"%s\" \"%s\" -Force", absDeployed, absActive))
+			printFix("Run: gitmap doctor --fix-path")
 			issues++
 		}
 	}
@@ -247,13 +461,7 @@ func printWarn(msg string) {
 	fmt.Printf("  %s[--]%s %s\n", colorYellow(), colorReset(), msg)
 }
 
-func colorGreen() string {
-	if runtime.GOOS == "windows" {
-		return constants.ColorGreen
-	}
-	return constants.ColorGreen
-}
-
+func colorGreen() string  { return constants.ColorGreen }
 func colorRed() string    { return "\033[31m" }
 func colorCyan() string   { return constants.ColorCyan }
 func colorYellow() string { return constants.ColorYellow }

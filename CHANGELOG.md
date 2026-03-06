@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.7
+- Added `gitmap doctor --fix-path` flag: automatically syncs the active PATH binary from the deployed binary using retry (20×500ms), rename fallback, and stale-process termination, with clear confirmation output.
+- Doctor diagnostics now suggest `--fix-path` when version mismatches are detected.
+
 ## v2.3.6
 - Added stale-process fallback during PATH-binary sync (`update` + `run.ps1`): if copy+rename fail, it now stops stale `gitmap.exe` processes bound to the old path and retries once.
 - Improved failure guidance to run the deployed binary directly when active PATH binary remains locked.
