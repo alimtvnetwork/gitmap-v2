@@ -114,11 +114,11 @@ func formatStateIcon(dirty bool, s *statusSummary) string {
 	if dirty {
 		s.Dirty++
 
-		return constants.ColorYellow + "● dirty" + constants.ColorReset
+		return constants.ColorYellow + constants.StatusIconDirty + constants.ColorReset
 	}
 	s.Clean++
 
-	return constants.ColorGreen + "✓ clean" + constants.ColorReset
+	return constants.ColorGreen + constants.StatusIconClean + constants.ColorReset
 }
 
 // formatSyncText returns the ahead/behind indicator and updates summary.
