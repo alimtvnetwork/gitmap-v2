@@ -1,6 +1,8 @@
 # Changelog
 
-## v2.3.8
+## v2.3.9
+- Version bump for rebuild validation after update-runner handoff changes.
+
 - Replaced `update --from-copy` with hidden `update-runner` command for cleaner handoff separation.
 - Handoff copy now created in the same directory as the active binary (fallback to %TEMP% if locked).
 - Added `-Update` flag to `run.ps1`: skips `git pull` (delegated to update script), runs build+deploy+sync only.
