@@ -56,7 +56,7 @@ func loadRecordsByGroup(groupName string) []model.ScanRecord {
 
 	records, err := db.ShowGroup(groupName)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrGenericFmt, err)
 		os.Exit(1)
 	}
 
@@ -74,7 +74,7 @@ func loadAllRecordsDB() []model.ScanRecord {
 
 	records, err := db.ListRepos()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrGenericFmt, err)
 		os.Exit(1)
 	}
 
