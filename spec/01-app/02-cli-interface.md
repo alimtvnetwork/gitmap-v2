@@ -160,9 +160,48 @@ Complete a release from an existing `release/vX.Y.Z` branch. Creates
 the tag and pushes if not already done. Useful when the release
 branch was created manually or by a previous incomplete release.
 
+### `gitmap release-pending` (alias: `rp`)
+
+Release all `release/v*` branches that are missing tags. Scans local
+branches for `release/vX.Y.Z` patterns, checks whether the
+corresponding `vX.Y.Z` tag already exists, and creates+pushes tags
+for any that are untagged.
+
+- Supports `--assets`, `--draft`, `--dry-run`, and `--verbose`.
+- Useful for catching up on releases after manual branch creation.
+
+### `gitmap changelog [version]` (alias: `cl`)
+
+Display concise, CLI-friendly release notes from `CHANGELOG.md`.
+
+- **No args** — prints the last 5 versions (configurable via `--limit`).
+- **`--latest`** — prints only the most recent version's notes.
+- **`<version>`** — prints notes for a specific version (e.g., `gitmap changelog v2.3.0`).
+- **`--open`** — opens `CHANGELOG.md` in the default system application.
+- **`changelog.md`** (as command) — shorthand for `changelog --open`.
+
+The `gitmap update` command automatically runs `gitmap changelog --latest`
+after a successful update to show the user what changed.
+
+### `gitmap doctor` (no alias)
+
+Diagnose environment and deployment health. Runs a series of checks
+and prints `[OK]`, `[!!]`, or `[--]` for each:
+
+1. **RepoPath embedded** — confirms binary was built with `run.ps1`.
+2. **PATH binary** — finds `gitmap` on PATH and reports its location/version.
+3. **Deployed binary** — reads `powershell.json` to find the deploy target.
+4. **Version mismatch** — compares source, PATH, and deployed versions;
+   prints exact `Copy-Item` fix commands when they differ.
+5. **Git available** — checks `git --version`.
+6. **Go available** — checks `go version` (warning only, needed for building).
+7. **CHANGELOG.md present** — confirms changelog command will work.
+
+If issues are found, each is accompanied by a recommended fix command.
+
 ### `gitmap version` (alias: `v`)
 
-Prints the current version number (e.g., `gitmap v1.9.0`) and exits.
+Prints the current version number (e.g., `gitmap v2.3.6`) and exits.
 
 ### `gitmap help`
 
@@ -185,9 +224,12 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `exec`           | `x`   |
 | `release`        | `r`   |
 | `release-branch` | `rb`  |
+| `release-pending`| `rp`  |
+| `changelog`      | `cl`  |
 | `version`        | `v`   |
 | `update`         | —     |
 | `update-cleanup` | —     |
+| `doctor`         | —     |
 
 ---
 
@@ -271,6 +313,23 @@ activates whenever existing repos are detected during a clone operation.
 | `--assets <path>` | Directory or file to attach         | (none)  |
 | `--draft`         | Create an unpublished draft release | `false` |
 | `--verbose`       | Write detailed debug log            | `false` |
+
+## Release-Pending Flags
+
+| Flag              | Description                              | Default |
+|-------------------|------------------------------------------|---------|
+| `--assets <path>` | Directory or file to attach              | (none)  |
+| `--draft`         | Mark release metadata as draft           | `false` |
+| `--dry-run`       | Preview steps without executing          | `false` |
+| `--verbose`       | Write detailed debug log                 | `false` |
+
+## Changelog Flags
+
+| Flag              | Description                              | Default |
+|-------------------|------------------------------------------|---------|
+| `--latest`        | Show only the most recent version        | `false` |
+| `--limit <n>`     | Max number of versions to display        | `5`     |
+| `--open`          | Open CHANGELOG.md in default application | `false` |
 
 ## Examples
 
@@ -361,6 +420,21 @@ gitmap release
 # Complete release from existing release branch
 gitmap release-branch release/v1.2.0
 gitmap rb release/v1.2.0
+
+# Release all untagged release branches
+gitmap release-pending
+gitmap rp            # alias
+gitmap release-pending --dry-run
+
+# View changelog
+gitmap changelog             # last 5 versions
+gitmap cl --latest           # most recent only
+gitmap changelog v2.3.0      # specific version
+gitmap changelog --open      # open CHANGELOG.md
+gitmap changelog.md          # shorthand for --open
+
+# Diagnose environment issues
+gitmap doctor
 
 # Print version number
 gitmap version

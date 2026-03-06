@@ -25,6 +25,14 @@ Create a release branch, Git tag, and push to remote.
 Complete a release from an existing `release/vX.Y.Z` branch.
 Creates the tag and pushes if not already done.
 
+### `gitmap release-pending` (alias: `rp`)
+
+Release all `release/v*` branches that are missing tags. Scans
+local branches for `release/vX.Y.Z` patterns, checks whether the
+corresponding `vX.Y.Z` tag already exists, and creates+pushes tags
+for any that are untagged. Useful for batch-releasing after manual
+branch creation.
+
 ---
 
 ## Flags
@@ -49,6 +57,15 @@ Creates the tag and pushes if not already done.
 | `--draft`          | Mark release metadata as draft      | `false` |
 | `--dry-run`        | Preview steps without executing     | `false` |
 | `--verbose`        | Write detailed debug log            | `false` |
+
+### Release-Pending Flags
+
+| Flag               | Description                              | Default |
+|--------------------|------------------------------------------|---------|
+| `--assets <path>`  | Directory or file to record              | (none)  |
+| `--draft`          | Mark release metadata as draft           | `false` |
+| `--dry-run`        | Preview steps without executing          | `false` |
+| `--verbose`        | Write detailed debug log                 | `false` |
 
 ---
 
@@ -268,6 +285,16 @@ gitmap rb release/v1.2.0
 
 # Dry-run from branch
 gitmap release-branch release/v1.2.0 --dry-run
+
+# Release all untagged release branches
+gitmap release-pending
+gitmap rp              # alias
+
+# Preview pending releases
+gitmap release-pending --dry-run
+
+# Release pending with assets
+gitmap release-pending --assets ./dist
 ```
 
 ---
@@ -301,3 +328,7 @@ gitmap release-branch release/v1.2.0 --dry-run
   exclusivity error.
 - **Given** push fails after branch/tag creation, **then** error message
   includes the failed step for manual cleanup.
+- **Given** `gitmap release-pending`, **then** all `release/v*` branches
+  without matching tags are released.
+- **Given** `gitmap release-pending --dry-run`, **then** pending releases
+  are listed but no tags or pushes are created.
