@@ -52,11 +52,11 @@ type statusSummary struct {
 // printStatusBanner shows the dashboard header.
 func printStatusBanner(count int) {
 	fmt.Println()
-	fmt.Printf("  %s╔══════════════════════════════════════╗%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s║         gitmap status                ║%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s╚══════════════════════════════════════╝%s\n", constants.ColorCyan, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerTop, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerTitle, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.StatusBannerBottom, constants.ColorReset)
 	fmt.Println()
-	fmt.Printf("  %s%d repos from gitmap-output/gitmap.json%s\n", constants.ColorDim, count, constants.ColorReset)
+	fmt.Printf("  %s"+constants.StatusRepoCountFmt+"%s\n", constants.ColorDim, count, constants.ColorReset)
 	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermSeparator, constants.ColorReset)
 	fmt.Println()
 }
