@@ -105,7 +105,7 @@ func runLatestBranch(args []string) {
 	if len(shortSha) > 7 {
 		shortSha = shortSha[:7]
 	}
-	commitDate := latest.CommitDate.Format("2006-01-02T15:04:05-07:00")
+	commitDate := gitutil.FormatDisplayDate(latest.CommitDate)
 
 	switch format {
 	case constants.OutputJSON:
@@ -137,7 +137,7 @@ func printLatestBranchJSON(branchNames []string, remote, sha, commitDate string,
 			out.Top = append(out.Top, latestBranchTopItem{
 				Branch:     rName,
 				Sha:        truncSha(item.Sha),
-				CommitDate: item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+				CommitDate: gitutil.FormatDisplayDate(item.CommitDate),
 				Subject:    item.Subject,
 			})
 		}
@@ -165,7 +165,7 @@ func printLatestBranchCSV(items []gitutil.RemoteBranchInfo, remote string, top i
 			rName,
 			remote,
 			truncSha(item.Sha),
-			item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+			gitutil.FormatDisplayDate(item.CommitDate),
 			item.Subject,
 			item.RemoteRef,
 		})
@@ -193,7 +193,7 @@ func printLatestBranchTerminal(branchNames []string, remote, sha, commitDate str
 		fmt.Printf("  %-30s %-30s %-9s %s\n", "DATE", "BRANCH", "SHA", "SUBJECT")
 		for _, item := range items[:count] {
 			fmt.Printf("  %-30s %-30s %-9s %s\n",
-				item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+				gitutil.FormatDisplayDate(item.CommitDate),
 				stripRemotePrefix(item.RemoteRef), truncSha(item.Sha), item.Subject)
 		}
 	}

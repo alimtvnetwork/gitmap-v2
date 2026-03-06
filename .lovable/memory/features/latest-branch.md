@@ -15,13 +15,19 @@ The 'latest-branch' (alias 'lb') command identifies the most recently updated re
 A bare integer positional argument acts as shorthand for `--top`:
 `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
 
+## Date display
+All dates are formatted via `gitutil.FormatDisplayDate`: UTC → local timezone → `DD-Mon-YYYY hh:mm AM/PM` (e.g. `06-Mar-2026 09:17 AM`).
+
 ## Output formats
 - **terminal** — human-readable key-value display + optional top-N table
-- **json** — structured JSON to stdout (branch array, remote, sha, commitDate, subject, ref, optional top array)
-- **csv** — header row + data rows to stdout (branch, remote, sha, commitDate, subject, ref)
+- **json** — structured JSON to stdout
+- **csv** — header row + data rows to stdout
 
 ## Files
-- `cmd/latestbranch.go` — CLI handler, flag parsing, output (printLatestBranchTerminal/JSON/CSV)
+- `cmd/latestbranch.go` — CLI handler, flag parsing, output
 - `gitutil/latestbranch.go` — Git operations (fetch, list, log, resolve)
-- `constants/constants.go` — command name, alias, messages, flags
+- `gitutil/dateformat.go` — centralized date formatting
+- `constants/constants.go` — command name, alias, messages, flags, date layout
 - `spec/01-app/14-latest-branch.md` — full specification
+- `spec/01-app/15-date-display-format.md` — date format spec
+- `spec/02-general/07-date-display-format.md` — general date pattern

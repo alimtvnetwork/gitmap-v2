@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.5.1"
+const Version = "2.6.0"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -201,6 +201,12 @@ const (
 
 // JSON formatting.
 const JSONIndent = "  "
+
+// Date display formatting.
+const (
+	DateDisplayLayout = "02-Jan-2006 03:04 PM"
+	DateUTCSuffix     = " (UTC)"
+)
 
 // CLI messages.
 const (

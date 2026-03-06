@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.6.0
+- Centralized date display formatting: all dates now convert to local timezone and display as `DD-Mon-YYYY hh:mm AM/PM`.
+- Added `gitutil/dateformat.go` with `FormatDisplayDate` and `FormatDisplayDateUTC` functions.
+- Updated `latest-branch` terminal, JSON, and CSV output to use the new date format.
+
 ## v2.5.1
 - Added `--no-fetch` flag to `latest-branch`: skips `git fetch --all --prune` when remote refs are already up to date.
 
