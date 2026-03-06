@@ -53,7 +53,6 @@ func loadRecordsByGroup(groupName string) []model.ScanRecord {
 		os.Exit(1)
 	}
 	defer db.Close()
-
 	records, err := db.ShowGroup(groupName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrGenericFmt, err)
@@ -71,7 +70,6 @@ func loadAllRecordsDB() []model.ScanRecord {
 		os.Exit(1)
 	}
 	defer db.Close()
-
 	records, err := db.ListRepos()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrGenericFmt, err)
@@ -157,32 +155,33 @@ func printStatusSummary(s statusSummary) {
 	fmt.Println()
 	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermTableRule, constants.ColorReset)
 	parts := buildSummaryParts(s)
-	fmt.Printf("  %s\n\n", strings.Join(parts, constants.SummaryJoinSep))
+	line := strings.Join(parts, constants.SummaryJoinSep)
+	fmt.Printf("  %s\n\n", line)
 }
 
 // buildSummaryParts assembles summary line segments.
 func buildSummaryParts(s statusSummary) []string {
-	parts := []string{
-		fmt.Sprintf(constants.SummaryReposFmt, s.Total),
-	}
-	if s.Clean > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryCleanFmt+"%s", constants.ColorGreen, s.Clean, constants.ColorReset))
-	}
-	if s.Dirty > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryDirtyFmt+"%s", constants.ColorYellow, s.Dirty, constants.ColorReset))
-	}
-	if s.Ahead > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryAheadFmt+"%s", constants.ColorCyan, s.Ahead, constants.ColorReset))
-	}
-	if s.Behind > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryBehindFmt+"%s", constants.ColorYellow, s.Behind, constants.ColorReset))
-	}
-	if s.Stashed > 0 {
-		parts = append(parts, fmt.Sprintf(constants.SummaryStashedFmt, s.Stashed))
-	}
-	if s.Missing > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryMissingFmt+"%s", constants.ColorYellow, s.Missing, constants.ColorReset))
-	}
+	parts := []string{fmt.Sprintf(constants.SummaryReposFmt, s.Total)}
+	parts = appendSummaryPart(parts, s.Clean, constants.ColorGreen, constants.SummaryCleanFmt)
+	parts = appendSummaryPart(parts, s.Dirty, constants.ColorYellow, constants.SummaryDirtyFmt)
+	parts = appendSummaryPart(parts, s.Ahead, constants.ColorCyan, constants.SummaryAheadFmt)
+	parts = appendSummaryPart(parts, s.Behind, constants.ColorYellow, constants.SummaryBehindFmt)
+	parts = appendSummaryPart(parts, s.Stashed, "", constants.SummaryStashedFmt)
+	parts = appendSummaryPart(parts, s.Missing, constants.ColorYellow, constants.SummaryMissingFmt)
 
 	return parts
+}
+
+// appendSummaryPart conditionally appends a colored summary segment.
+func appendSummaryPart(parts []string, count int, color, format string) []string {
+	if count == 0 {
+		return parts
+	}
+	if len(color) > 0 {
+		colored := fmt.Sprintf("%s"+format+"%s", color, count, constants.ColorReset)
+
+		return append(parts, colored)
+	}
+
+	return append(parts, fmt.Sprintf(format, count))
 }

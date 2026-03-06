@@ -23,7 +23,12 @@ func runExec(args []string) {
 
 	records := loadExecByScope(groupName, all)
 	printExecBanner(gitArgs, len(records))
+	succeeded, failed, missing := execAllRepos(records, gitArgs)
+	printExecSummary(succeeded, failed, missing, len(records))
+}
 
+// execAllRepos runs a git command across all repos and returns totals.
+func execAllRepos(records []model.ScanRecord, gitArgs []string) (int, int, int) {
 	var succeeded, failed, missing int
 	for _, rec := range records {
 		s, f, m := execOneRepo(rec, gitArgs)
@@ -32,24 +37,24 @@ func runExec(args []string) {
 		missing += m
 	}
 
-	printExecSummary(succeeded, failed, missing, len(records))
+	return succeeded, failed, missing
 }
 
-// execOneRepo runs a git command in one repo, returning (succeeded, failed, missing) increments.
+// execOneRepo runs a git command in one repo, returning increment counts.
 func execOneRepo(rec model.ScanRecord, gitArgs []string) (int, int, int) {
-	if _, err := os.Stat(rec.AbsolutePath); os.IsNotExist(err) {
-		fmt.Printf(constants.ExecMissingFmt,
-			constants.ColorDim, truncateExec(rec.RepoName, 22),
-			constants.ColorYellow, constants.ColorReset)
-
-		return 0, 0, 1
-	}
-
-	if execInRepo(rec, gitArgs) {
+	_, err := os.Stat(rec.AbsolutePath)
+	if err == nil && execInRepo(rec, gitArgs) {
 		return 1, 0, 0
 	}
+	if err == nil {
+		return 0, 1, 0
+	}
 
-	return 0, 1, 0
+	fmt.Printf(constants.ExecMissingFmt,
+		constants.ColorDim, truncate(rec.RepoName, 22),
+		constants.ColorYellow, constants.ColorReset)
+
+	return 0, 0, 1
 }
 
 // parseExecFlags parses --group and --all flags, returning remaining args as git args.
@@ -115,10 +120,10 @@ func execInRepo(rec model.ScanRecord, gitArgs []string) bool {
 
 // printExecResult prints the success or failure line for one repo.
 func printExecResult(name, output string, err error) {
-	if err != nil {
-		fmt.Printf(constants.ExecFailFmt, constants.ColorYellow, truncateExec(name, 22), constants.ColorReset)
+	if err == nil {
+		fmt.Printf(constants.ExecSuccessFmt, constants.ColorGreen, truncate(name, 22), constants.ColorReset)
 	} else {
-		fmt.Printf(constants.ExecSuccessFmt, constants.ColorGreen, truncateExec(name, 22), constants.ColorReset)
+		fmt.Printf(constants.ExecFailFmt, constants.ColorYellow, truncate(name, 22), constants.ColorReset)
 	}
 
 	printExecOutput(output)
@@ -150,32 +155,18 @@ func printExecBanner(gitArgs []string, count int) {
 // printExecSummary shows final totals.
 func printExecSummary(succeeded, failed, missing, total int) {
 	fmt.Println()
-	fmt.Printf("  %s%s%s\n", constants.ColorDim, strings.Repeat("─", 50), constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.ExecSummaryRule, constants.ColorReset)
 	parts := buildExecSummaryParts(succeeded, failed, missing, total)
-	fmt.Printf("  %s\n\n", strings.Join(parts, constants.SummaryJoinSep))
+	line := strings.Join(parts, constants.SummaryJoinSep)
+	fmt.Printf("  %s\n\n", line)
 }
 
-// buildExecSummaryParts assembles summary line segments.
+// buildExecSummaryParts assembles exec summary line segments.
 func buildExecSummaryParts(succeeded, failed, missing, total int) []string {
 	parts := []string{fmt.Sprintf(constants.SummaryReposFmt, total)}
-	if succeeded > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummarySucceededFmt+"%s", constants.ColorGreen, succeeded, constants.ColorReset))
-	}
-	if failed > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryFailedFmt+"%s", constants.ColorYellow, failed, constants.ColorReset))
-	}
-	if missing > 0 {
-		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryMissingFmt+"%s", constants.ColorYellow, missing, constants.ColorReset))
-	}
+	parts = appendSummaryPart(parts, succeeded, constants.ColorGreen, constants.SummarySucceededFmt)
+	parts = appendSummaryPart(parts, failed, constants.ColorYellow, constants.SummaryFailedFmt)
+	parts = appendSummaryPart(parts, missing, constants.ColorYellow, constants.SummaryMissingFmt)
 
 	return parts
-}
-
-// truncateExec shortens a string to maxLen with ellipsis.
-func truncateExec(s string, maxLen int) string {
-	if len(s) <= maxLen {
-		return s
-	}
-
-	return s[:maxLen-1] + constants.TruncateEllipsis
 }
