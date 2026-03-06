@@ -35,10 +35,12 @@ func executeGroupShow(name string) {
 	printGroupShowOutput(name, repos)
 }
 
-// printGroupShowOutput renders repos in a group.
+// printGroupShowOutput renders repos in a group with header and rows.
 func printGroupShowOutput(name string, repos []model.ScanRecord) {
 	fmt.Printf(constants.MsgGroupShowHeader, name, len(repos))
+	fmt.Println(constants.MsgListSeparator)
 	for _, r := range repos {
 		fmt.Printf(constants.MsgGroupShowRowFmt, r.Slug, r.AbsolutePath)
 	}
+	fmt.Println()
 }

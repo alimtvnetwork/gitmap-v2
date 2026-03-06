@@ -31,6 +31,7 @@ func runGroupList() {
 func printGroupList(db *store.DB, groups []model.Group) {
 	if len(groups) == 0 {
 		fmt.Println(constants.MsgGroupEmpty)
+
 		return
 	}
 	fmt.Println(constants.MsgGroupHeader)

@@ -73,39 +73,35 @@ func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, err)
 		os.Exit(1)
 	}
-	printCloneSummary(summary)
+
+	fmt.Printf(constants.MsgCloneComplete, summary.Succeeded, summary.Failed)
+	printCloneFailures(summary)
 	registerCloned(summary, targetDir, ghDesktop)
+}
+
+// printCloneFailures lists any repos that failed to clone.
+func printCloneFailures(s model.CloneSummary) {
+	if s.Failed == 0 {
+		return
+	}
+
+	fmt.Println(constants.MsgFailedClones)
+	for _, e := range s.Errors {
+		fmt.Printf(constants.MsgFailedEntry,
+			e.Record.RepoName, e.Record.RelativePath, e.Error)
+	}
 }
 
 // registerCloned adds successfully cloned repos to GitHub Desktop.
 func registerCloned(s model.CloneSummary, targetDir string, enabled bool) {
 	if enabled {
-		records := buildClonedRecords(s, targetDir)
+		absTarget, _ := filepath.Abs(targetDir)
+		records := make([]model.ScanRecord, 0, s.Succeeded)
+		for _, r := range s.Cloned {
+			r.Record.AbsolutePath = filepath.Join(absTarget, r.Record.RelativePath)
+			records = append(records, r.Record)
+		}
 		result := desktop.AddRepos(records)
 		fmt.Printf(constants.MsgDesktopSummary, result.Added, result.Failed)
-	}
-}
-
-// buildClonedRecords creates records with absolute paths for cloned repos.
-func buildClonedRecords(s model.CloneSummary, targetDir string) []model.ScanRecord {
-	absTarget, _ := filepath.Abs(targetDir)
-	records := make([]model.ScanRecord, 0, s.Succeeded)
-	for _, r := range s.Cloned {
-		r.Record.AbsolutePath = filepath.Join(absTarget, r.Record.RelativePath)
-		records = append(records, r.Record)
-	}
-
-	return records
-}
-
-// printCloneSummary displays clone results and any failures.
-func printCloneSummary(s model.CloneSummary) {
-	fmt.Printf(constants.MsgCloneComplete, s.Succeeded, s.Failed)
-	if s.Failed > 0 {
-		fmt.Println(constants.MsgFailedClones)
-		for _, e := range s.Errors {
-			fmt.Printf(constants.MsgFailedEntry,
-				e.Record.RepoName, e.Record.RelativePath, e.Error)
-		}
 	}
 }
