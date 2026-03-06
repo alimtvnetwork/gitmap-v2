@@ -339,7 +339,7 @@ exit 0
 // runUpdateScript executes the PowerShell script with output piped to terminal.
 func runUpdateScript(scriptPath string) {
 	cmd := exec.Command("powershell", "-ExecutionPolicy", "Bypass",
-		"-NoProfile", "-NoLogo", "-NonInteractive", "-File", scriptPath)
+		"-NoProfile", "-NoLogo", "-File", scriptPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
