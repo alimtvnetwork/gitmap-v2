@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.4
+- Updated PATH-binary sync in `run.ps1` and `gitmap update` to use retry-on-lock behavior (20 attempts × 500ms), matching the self-update spec.
+- Added explicit recovery guidance when active PATH binary is still locked, including an exact `Copy-Item` fix command.
+
 ## v2.3.3
 - Added `gitmap doctor` command: reports PATH binary, deployed binary, version mismatches, git/go availability, and recommends exact fix commands.
 

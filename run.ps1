@@ -506,12 +506,28 @@ if (-not $NoDeploy) {
                 Write-Warn "PATH points to a different gitmap binary."
                 Write-Info "Active:   $activeResolved"
                 Write-Info "Deployed: $deployedResolved"
-                try {
-                    Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
-                    $syncedVersion = & $activeBinaryPath version 2>&1
-                    Write-Success "Synced active PATH binary -> $syncedVersion"
-                } catch {
-                    Write-Warn "Could not sync active PATH binary: $_"
+
+                $maxSyncAttempts = 20
+                $syncSuccess = $false
+                for ($syncAttempt = 1; $syncAttempt -le $maxSyncAttempts; $syncAttempt++) {
+                    try {
+                        Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
+                        $syncedVersion = & $activeBinaryPath version 2>&1
+                        Write-Success "Synced active PATH binary -> $syncedVersion"
+                        $syncSuccess = $true
+                        break
+                    } catch {
+                        if ($syncAttempt -lt $maxSyncAttempts) {
+                            Write-Warn "Active PATH binary is in use; retrying ($syncAttempt/$maxSyncAttempts)..."
+                            Start-Sleep -Milliseconds 500
+                        }
+                    }
+                }
+
+                if (-not $syncSuccess) {
+                    Write-Warn "Could not sync active PATH binary after retries."
+                    Write-Info "Close terminals/apps using gitmap and run:"
+                    Write-Info ('Copy-Item "' + $deployedBinaryPath + '" "' + $activeBinaryPath + '" -Force')
                 }
             }
         }
