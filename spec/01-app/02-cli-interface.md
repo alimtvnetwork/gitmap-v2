@@ -375,6 +375,7 @@ activates whenever existing repos are detected during a clone operation.
 | `--format <fmt>`        | Output format: `terminal`, `json`, `csv`             | `terminal` |
 | `--json`                | Shorthand for `--format json`                        | `false`    |
 | `--no-fetch`            | Skip `git fetch` (use existing remote refs)          | `false`    |
+| `--sort <order>`        | Sort order: `date` (descending) or `name` (A-Z)     | `date`     |
 
 ## Examples
 

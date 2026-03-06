@@ -59,6 +59,7 @@ A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
 | `--format <fmt>`      | string | `terminal` | Output format: `terminal`, `json`, `csv`         |
 | `--json`              | bool   | `false`    | Shorthand for `--format json`                    |
 | `--no-fetch`          | bool   | `false`    | Skip `git fetch` (use existing remote refs)      |
+| `--sort <order>`      | string | `date`     | Sort order: `date` (descending) or `name` (A-Z)  |
 
 ## Output Format
 
