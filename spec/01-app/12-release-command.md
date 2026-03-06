@@ -285,6 +285,16 @@ gitmap rb release/v1.2.0
 
 # Dry-run from branch
 gitmap release-branch release/v1.2.0 --dry-run
+
+# Release all untagged release branches
+gitmap release-pending
+gitmap rp              # alias
+
+# Preview pending releases
+gitmap release-pending --dry-run
+
+# Release pending with assets
+gitmap release-pending --assets ./dist
 ```
 
 ---
