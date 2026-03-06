@@ -34,6 +34,8 @@ against `repoName` values in `./gitmap-output/gitmap.json`.
 - **Exact match** takes priority; falls back to partial/substring match (case-insensitive).
 - Lists all available repo names if no match is found.
 - Supports `--verbose` for debug logging.
+- Supports `--group` (`-g`) to pull all repos in a named group.
+- Supports `--all` to pull every repo tracked in the database.
 
 ### `gitmap rescan` (alias: `rs`)
 
@@ -134,7 +136,10 @@ are optional — omit a section to leave those settings untouched.
 Show a live dashboard of all scanned repos with current branch,
 dirty/clean state, ahead/behind counts, stash entries, and file
 change breakdown (staged/modified/untracked). Reads from
-`./gitmap-output/gitmap.json`.
+`./gitmap-output/gitmap.json` by default.
+
+- Supports `--group` (`-g`) to show status for repos in a named group.
+- Supports `--all` to show status for every repo tracked in the database.
 
 ### `gitmap exec <git-args...>` (alias: `x`)
 
@@ -144,6 +149,8 @@ Arguments after `exec` are passed directly to `git` inside each repo directory.
 - Skips repos whose paths no longer exist on disk.
 - Shows per-repo success/failure with captured output.
 - Prints a summary of succeeded/failed/missing counts.
+- Supports `--group` (`-g`) to target repos in a named group.
+- Supports `--all` to target every repo tracked in the database.
 
 ### `gitmap release [version]` (alias: `r`)
 
@@ -319,7 +326,23 @@ activates whenever existing repos are detected during a clone operation.
 
 | Flag                   | Description                          | Default |
 |------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Pull only repos in the named group  | (none)  |
+| `--all`                | Pull every repo tracked in the database | `false` |
 | `--verbose`            | Write detailed debug log to a timestamped file | `false` |
+
+## Status Flags
+
+| Flag                   | Description                          | Default |
+|------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Show status for repos in the named group | (none) |
+| `--all`                | Show status for every repo in the database | `false` |
+
+## Exec Flags
+
+| Flag                   | Description                          | Default |
+|------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Target repos in the named group     | (none)  |
+| `--all`                | Target every repo in the database   | `false` |
 
 ## Setup Flags
 
@@ -418,6 +441,13 @@ gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored --github-desktop
 gitmap pull my-api-service
 gitmap p my-api      # partial match works
 
+# Pull all repos in a group
+gitmap pull --group backend
+gitmap p -g backend  # alias + short flag
+
+# Pull every tracked repo
+gitmap pull --all
+
 # Sync existing scan output to GitHub Desktop
 gitmap desktop-sync
 gitmap ds            # alias
@@ -430,9 +460,23 @@ gitmap setup
 gitmap status
 gitmap st            # alias
 
+# Show status for a specific group
+gitmap status --group backend
+gitmap st -g backend
+
+# Show status for all tracked repos
+gitmap status --all
+
 # Run git fetch across all repos
 gitmap exec fetch --prune
 gitmap x status -s   # alias
+
+# Run git command on a specific group
+gitmap exec --group backend fetch --prune
+gitmap x -g backend status -s
+
+# Run git command on all tracked repos
+gitmap exec --all fetch --prune
 
 # Self-update from source repo
 gitmap update
