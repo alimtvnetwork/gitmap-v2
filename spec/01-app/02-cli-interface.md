@@ -489,6 +489,9 @@ gitmap lb                        # latest branch (single)
 gitmap lb 5                      # top 5 most recently updated branches
 gitmap lb --top 5                # same as above
 gitmap lb --json                 # latest branch as structured JSON
+gitmap lb --format json          # same as above
+gitmap lb --format csv           # latest branch as CSV
+gitmap lb 5 --format csv         # top 5 as CSV (pipe to file: > branches.csv)
 gitmap lb 3 --json               # top 3 as JSON
 gitmap lb --remote upstream      # filter to a specific remote
 gitmap lb --all-remotes          # include all remotes

@@ -41,6 +41,8 @@ gitmap changelog --latest                       # Show latest release notes
 gitmap lb                                       # Show the most recently updated remote branch
 gitmap lb 5                                     # Show the 5 most recently updated remote branches
 gitmap lb --json                                # Latest branch as structured JSON
+gitmap lb --format csv                          # Latest branch as CSV
+gitmap lb 5 --format csv                        # Top 5 as CSV
 ```
 
 ## Build & Deploy
