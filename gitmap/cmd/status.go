@@ -161,20 +161,20 @@ func formatFileCounts(rs gitutil.RepoStatus) string {
 		return buildFileCountParts(rs)
 	}
 
-	return constants.ColorDim + "—" + constants.ColorReset
+	return constants.ColorDim + constants.StatusDash + constants.ColorReset
 }
 
 // buildFileCountParts assembles the file count display parts.
 func buildFileCountParts(rs gitutil.RepoStatus) string {
 	parts := make([]string, 0, 3)
 	if rs.Staged > 0 {
-		parts = append(parts, fmt.Sprintf("%s+%d%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusStagedFmt+"%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
 	}
 	if rs.Modified > 0 {
-		parts = append(parts, fmt.Sprintf("%s~%d%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusModifiedFmt+"%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
 	}
 	if rs.Untracked > 0 {
-		parts = append(parts, fmt.Sprintf("%s?%d%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.StatusUntrackedFmt+"%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
 	}
 
 	return strings.Join(parts, " ")
@@ -183,7 +183,7 @@ func buildFileCountParts(rs gitutil.RepoStatus) string {
 // printStatusSummary shows the final totals.
 func printStatusSummary(s statusSummary) {
 	fmt.Println()
-	fmt.Printf("  %s%s%s\n", constants.ColorDim, strings.Repeat("─", 70), constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermTableRule, constants.ColorReset)
 
 	parts := []string{
 		fmt.Sprintf("%d repos", s.Total),
