@@ -101,6 +101,10 @@ func dispatch(command string) {
 		runGroup(os.Args[2:])
 		return
 	}
+	if command == constants.CmdDBReset {
+		runDBReset()
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
