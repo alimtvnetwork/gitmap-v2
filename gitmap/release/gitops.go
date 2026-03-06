@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/user/gitmap/constants"
 )
@@ -23,17 +22,17 @@ func CreateBranch(branchName, sourceRef string) error {
 
 // CreateTag creates an annotated git tag.
 func CreateTag(tag, message string) error {
-	return runGitCmd(constants.GitTag, "-a", tag, "-m", message)
+	return runGitCmd(constants.GitTag, constants.GitTagAnnotateFlag, tag, constants.GitTagMessageFlag, message)
 }
 
 // PushBranchAndTag pushes the branch and tag to origin.
 func PushBranchAndTag(branchName, tag string) error {
-	err := runGitCmd(constants.GitPush, "origin", branchName)
+	err := runGitCmd(constants.GitPush, constants.GitOrigin, branchName)
 	if err != nil {
 		return fmt.Errorf("push branch: %w", err)
 	}
 
-	err = runGitCmd(constants.GitPush, "origin", tag)
+	err = runGitCmd(constants.GitPush, constants.GitOrigin, tag)
 	if err != nil {
 		return fmt.Errorf("push tag: %w", err)
 	}
@@ -41,82 +40,14 @@ func PushBranchAndTag(branchName, tag string) error {
 	return nil
 }
 
-// TagExistsLocally checks if a git tag exists in the local repo.
-func TagExistsLocally(tag string) bool {
-	cmd := exec.Command(constants.GitBin, constants.GitTag, "-l", tag)
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-
-	return len(strings.TrimSpace(string(out))) > 0
-}
-
-// TagExistsRemote checks if a git tag exists on the remote.
-func TagExistsRemote(tag string) bool {
-	cmd := exec.Command(constants.GitBin,
-		constants.GitLsRemote, constants.GitLsRemoteTags, "origin", tag)
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-
-	return len(strings.TrimSpace(string(out))) > 0
-}
-
-// BranchExists checks if a local branch exists.
-func BranchExists(branch string) bool {
-	cmd := exec.Command(constants.GitBin, "branch", "--list", branch)
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-
-	return len(strings.TrimSpace(string(out))) > 0
-}
-
 // CheckoutBranch checks out an existing branch.
 func CheckoutBranch(branch string) error {
 	return runGitCmd(constants.GitCheckout, branch)
 }
 
-// CurrentCommitSHA returns the full SHA of HEAD.
-func CurrentCommitSHA() (string, error) {
-	cmd := exec.Command(constants.GitBin, constants.GitRevParse, constants.GitHEAD)
-	out, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-
-	return strings.TrimSpace(string(out)), nil
-}
-
-// CurrentBranchName returns the current branch name.
-func CurrentBranchName() (string, error) {
-	cmd := exec.Command(constants.GitBin,
-		constants.GitRevParse, constants.GitAbbrevRef, constants.GitHEAD)
-	out, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-
-	return strings.TrimSpace(string(out)), nil
-}
-
-// CommitExists checks if a commit SHA is valid.
-func CommitExists(sha string) bool {
-	cmd := exec.Command(constants.GitBin, "cat-file", "-t", sha)
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-
-	return strings.TrimSpace(string(out)) == "commit"
-}
-
 // FetchBranch fetches the latest of a remote branch.
 func FetchBranch(branch string) error {
-	return runGitCmd("fetch", "origin", branch)
+	return runGitCmd(constants.GitFetch, constants.GitOrigin, branch)
 }
 
 // ResolveSourceRef returns the ref to use as the release base.
@@ -133,11 +64,11 @@ func ResolveSourceRef(commit, branch string) (string, string, error) {
 
 // resolveFromCommit validates and returns the commit ref.
 func resolveFromCommit(commit string) (string, string, error) {
-	if CommitExists(commit) == false {
-		return "", "", fmt.Errorf("commit %s not found", commit)
+	if CommitExists(commit) {
+		return commit, constants.GitCommitPrefix + commit, nil
 	}
 
-	return commit, "commit:" + commit, nil
+	return "", "", fmt.Errorf("commit %s not found", commit)
 }
 
 // resolveFromBranch fetches and returns the branch tip.
@@ -147,14 +78,14 @@ func resolveFromBranch(branch string) (string, string, error) {
 		return "", "", fmt.Errorf("branch %s not found: %w", branch, err)
 	}
 
-	return "origin/" + branch, branch, nil
+	return constants.GitOriginPrefix + branch, branch, nil
 }
 
 // resolveFromHead returns HEAD as the source ref.
 func resolveFromHead() (string, string, error) {
 	branchName, err := CurrentBranchName()
 	if err != nil {
-		return constants.GitHEAD, "HEAD", nil
+		return constants.GitHEAD, constants.GitHEAD, nil
 	}
 
 	return constants.GitHEAD, branchName, nil
@@ -167,43 +98,4 @@ func runGitCmd(args ...string) error {
 	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
-}
-
-// latestFromGitTags scans all local git tags for the highest stable semver.
-func latestFromGitTags() (Version, error) {
-	cmd := exec.Command(constants.GitBin, constants.GitTag, "-l", "v*")
-	out, err := cmd.Output()
-	if err != nil {
-		return Version{}, fmt.Errorf("no git tags found and no .release/latest.json exists")
-	}
-
-	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-	var highest Version
-	found := false
-
-	for _, line := range lines {
-		tag := strings.TrimSpace(line)
-		if len(tag) == 0 {
-			continue
-		}
-		v, parseErr := Parse(tag)
-		if parseErr != nil {
-			continue
-		}
-		if v.IsPreRelease() {
-			continue
-		}
-		if found == false || v.GreaterThan(highest) {
-			highest = v
-			found = true
-		}
-	}
-
-	if found == false {
-		return Version{}, fmt.Errorf("no version tags found. Create an initial release first")
-	}
-
-	fmt.Printf("  → Detected latest version from git tags: %s\n", highest.String())
-
-	return highest, nil
 }
