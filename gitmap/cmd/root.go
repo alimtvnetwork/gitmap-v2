@@ -77,6 +77,10 @@ func dispatch(command string) {
 		runChangelog(os.Args[2:])
 		return
 	}
+	if command == constants.CmdChangelogMD {
+		runChangelog([]string{"--open"})
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return

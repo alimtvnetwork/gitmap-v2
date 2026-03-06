@@ -485,10 +485,44 @@ $binaryPath = Build-Binary -Config $config
 $versionOutput = & $binaryPath version 2>&1
 Write-Info "Version: $versionOutput"
 
+$deployedBinaryPath = $null
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
+
+    $effectiveDeployPath = $config.deployPath
+    if ($DeployPath.Length -gt 0) {
+        $effectiveDeployPath = $DeployPath
+    }
+    $deployedBinaryPath = Join-Path (Join-Path $effectiveDeployPath "gitmap") $config.binaryName
+
+    $activeCmd = Get-Command gitmap -ErrorAction SilentlyContinue
+    if ($activeCmd -and (Test-Path $deployedBinaryPath)) {
+        $activeBinaryPath = $activeCmd.Source
+        if (Test-Path $activeBinaryPath) {
+            $activeResolved = (Resolve-Path $activeBinaryPath).Path
+            $deployedResolved = (Resolve-Path $deployedBinaryPath).Path
+            if ($activeResolved -ne $deployedResolved) {
+                Write-Warn "PATH points to a different gitmap binary."
+                Write-Info "Active:   $activeResolved"
+                Write-Info "Deployed: $deployedResolved"
+                try {
+                    Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
+                    $syncedVersion = & $activeBinaryPath version 2>&1
+                    Write-Success "Synced active PATH binary -> $syncedVersion"
+                } catch {
+                    Write-Warn "Could not sync active PATH binary: $_"
+                }
+            }
+        }
+    }
 } else {
     Write-Info "Skipping deploy (-NoDeploy)"
+}
+
+if (Test-Path $binaryPath) {
+    Write-Host ""
+    Write-Info "Latest changelog:"
+    & $binaryPath changelog --latest
 }
 
 if ($R) {

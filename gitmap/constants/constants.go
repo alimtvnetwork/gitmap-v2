@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.3.1"
+const Version = "2.3.2"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -128,6 +128,7 @@ const (
 	CmdReleasePendingAlias = "rp"
 	CmdChangelog          = "changelog"
 	CmdChangelogAlias     = "cl"
+	CmdChangelogMD        = "changelog.md"
 )
 
 // GitHub Desktop.
@@ -287,8 +288,9 @@ const (
 	ErrReleasePushFailed      = "Error: failed to push to remote: %v\n"
 	ErrReleaseVersionLoad     = "Error: could not read version.json: %v\n"
 	ErrReleaseMetaWrite       = "Error: could not write release metadata: %v\n"
-	ErrChangelogRead          = "Error: could not read CHANGELOG.md: %v\n"
+	ErrChangelogRead            = "Error: could not read CHANGELOG.md: %v\n"
 	ErrChangelogVersionNotFound = "Error: version %s not found in CHANGELOG.md\n"
+	ErrChangelogOpen            = "Error: could not open CHANGELOG.md: %v\n"
 )
 
 // CLI help text.
@@ -309,7 +311,7 @@ const (
 	HelpRelease     = "  release (r) [ver]   Create release branch, tag, and push"
 	HelpReleaseBr   = "  release-branch (rb) Complete release from existing release branch"
 	HelpReleasePend = "  release-pending (rp) Release all pending branches without tags"
-	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes"
+	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
@@ -353,8 +355,9 @@ const (
 	FlagDescRelBranch  = "Create release from latest commit of a branch"
 	FlagDescBump       = "Auto-increment version: major, minor, or patch"
 	FlagDescDraft      = "Create an unpublished draft release"
-	FlagDescLatest     = "Show only the latest changelog entry"
-	FlagDescLimit      = "Number of changelog versions to show"
+	FlagDescLatest        = "Show only the latest changelog entry"
+	FlagDescLimit         = "Number of changelog versions to show"
+	FlagDescOpenChangelog = "Open CHANGELOG.md with the default system app"
 )
 
 // Clone and Desktop scripts are now generated from Go templates

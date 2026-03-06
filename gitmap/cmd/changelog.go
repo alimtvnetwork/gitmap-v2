@@ -5,6 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/release"
@@ -12,7 +16,22 @@ import (
 
 // runChangelog handles the 'changelog' command.
 func runChangelog(args []string) {
-	version, latest, limit := parseChangelogFlags(args)
+	version, latest, limit, openFile := parseChangelogFlags(args)
+	if strings.EqualFold(version, constants.ChangelogFile) || strings.EqualFold(version, constants.CmdChangelogMD) {
+		openFile = true
+		version = ""
+	}
+
+	if openFile {
+		err := openChangelogFile()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, err)
+			os.Exit(1)
+		}
+		if latest == false && len(version) == 0 {
+			return
+		}
+	}
 
 	entries, err := release.ReadChangelog()
 	if err != nil {
@@ -39,10 +58,11 @@ func runChangelog(args []string) {
 }
 
 // parseChangelogFlags parses flags for the changelog command.
-func parseChangelogFlags(args []string) (version string, latest bool, limit int) {
+func parseChangelogFlags(args []string) (version string, latest bool, limit int, openFile bool) {
 	fs := flag.NewFlagSet(constants.CmdChangelog, flag.ExitOnError)
 	latestFlag := fs.Bool("latest", false, constants.FlagDescLatest)
 	limitFlag := fs.Int("limit", 5, constants.FlagDescLimit)
+	openFlag := fs.Bool("open", false, constants.FlagDescOpenChangelog)
 	fs.Parse(args)
 
 	version = ""
@@ -54,7 +74,7 @@ func parseChangelogFlags(args []string) (version string, latest bool, limit int)
 		*limitFlag = 1
 	}
 
-	return version, *latestFlag, *limitFlag
+	return version, *latestFlag, *limitFlag, *openFlag
 }
 
 // printChangelogEntries prints the newest N changelog entries.
@@ -73,4 +93,24 @@ func printChangelogEntry(entry release.ChangelogEntry) {
 	for _, note := range entry.Notes {
 		fmt.Printf("  - %s\n", note)
 	}
+}
+
+// openChangelogFile opens CHANGELOG.md with the default OS app.
+func openChangelogFile() error {
+	absPath, err := filepath.Abs(constants.ChangelogFile)
+	if err != nil {
+		return err
+	}
+
+	if runtime.GOOS == "windows" {
+		cmd := exec.Command("cmd", "/c", "start", "", absPath)
+		return cmd.Run()
+	}
+	if runtime.GOOS == "darwin" {
+		cmd := exec.Command("open", absPath)
+		return cmd.Run()
+	}
+
+	cmd := exec.Command("xdg-open", absPath)
+	return cmd.Run()
 }
