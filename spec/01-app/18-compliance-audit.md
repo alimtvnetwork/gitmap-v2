@@ -189,3 +189,139 @@ Last updated: 2026-03-06
 | Negation fixes | 6 | `changelog.go` (3×), `github.go` (2×), `metadata.go`, `semver.go`, `verbose.go`, `config.go` |
 | Switch → if/else | 1 | `semver.go` Bump function |
 | Constants added | 3 files | 12 git args, 3 bump levels, `SetupGlobalFlag`, `ReleaseTagPrefix` |
+
+---
+
+## Constants Inventory
+
+Total: **9 files**, **~280 constants** + **8 vars** across 17 categories.
+
+### `constants.go` — Core Defaults (111 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Version | `Version` |
+| Build-time vars | `RepoPath` (var) |
+| Clone modes | `ModeHTTPS`, `ModeSSH` |
+| Output formats | `OutputTerminal`, `OutputCSV`, `OutputJSON` |
+| URL prefixes | `PrefixHTTPS`, `PrefixSSH` |
+| File extensions | `ExtCSV`, `ExtJSON`, `ExtTXT`, `ExtGit` |
+| Default file names | `DefaultCSVFile`, `DefaultJSONFile`, `DefaultTextFile`, `DefaultVerboseLogDir`, `DefaultStructureFile`, `DefaultCloneScript`, `DefaultDirectCloneScript`, `DefaultDirectCloneSSHScript`, `DefaultDesktopScript`, `DefaultScanCacheFile`, `DefaultConfigPath`, `DefaultSetupConfigPath`, `DefaultOutputDir`, `DefaultOutputFolder`, `DefaultBranch`, `DefaultDir`, `DefaultVersionFile` |
+| Release dir | `DefaultReleaseDir` (var), `DefaultLatestFile` |
+| JSON formatting | `JSONIndent` |
+| Date display | `DateDisplayLayout`, `DateUTCSuffix` |
+| Sort orders | `SortByDate`, `SortByName` |
+| Bump levels | `BumpMajor`, `BumpMinor`, `BumpPatch` |
+| Permissions | `DirPermission` |
+| Safe-pull | `SafePullRetryAttempts`, `SafePullRetryDelayMS`, `WindowsPathWarnThreshold` |
+| Verbose | `VerboseLogFileFmt` |
+
+### `constants_git.go` — Git Commands & Arguments (61 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Core git commands | `GitBin`, `GitClone`, `GitPull`, `GitTag`, `GitCheckout`, `GitPush`, `GitFetch`, `GitBranch`, `GitLog`, `GitForEachRef`, `GitLsRemote`, `GitConfigCmd`, `GitRevParse`, `GitCatFile` |
+| Git flags | `GitBranchFlag`, `GitDirFlag`, `GitFFOnlyFlag`, `GitGetFlag`, `GitAbbrevRef`, `GitLsRemoteTags`, `GitTagAnnotateFlag`, `GitTagMessageFlag`, `GitTagListFlag`, `GitBranchListFlag`, `GitCatFileTypeFlag`, `GitArgAll`, `GitArgPrune`, `GitArgRemote`, `GitArgContains`, `GitArgInsideWorkTree` |
+| Git refs | `GitHEAD`, `GitOrigin`, `GitOriginPrefix`, `GitCommitPrefix`, `GitRemoteOrigin`, `GitCommitType`, `GitTagGlob` |
+| Log format | `GitLogTipFormat`, `GitLogDelimiter`, `GitLogFieldCount`, `GitPointsAtFmt`, `GitRefsRemotesFmt`, `GitFormatRefnameShort`, `HeadPointer`, `ShaDisplayLength` |
+| Clone instructions | `CloneInstructionFmt`, `HTTPSFromSSHFmt`, `SSHFromHTTPSFmt` |
+
+### `constants_cli.go` — CLI Commands & Help (148 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Command names | `CmdScan`, `CmdClone`, `CmdUpdate`, `CmdUpdateRunner`, `CmdUpdateCleanup`, `CmdVersion`, `CmdHelp`, `CmdDesktopSync`, `CmdPull`, `CmdRescan`, `CmdSetup`, `CmdStatus`, `CmdExec`, `CmdRelease`, `CmdReleaseBranch`, `CmdReleasePending`, `CmdChangelog`, `CmdDoctor`, `CmdLatestBranch`, `CmdList`, `CmdGroup`, `CmdDBReset` |
+| Command aliases | `CmdScanAlias`, `CmdCloneAlias`, `CmdVersionAlias`, `CmdDesktopSyncAlias`, `CmdPullAlias`, `CmdRescanAlias`, `CmdStatusAlias`, `CmdExecAlias`, `CmdReleaseAlias`, `CmdReleaseBranchAlias`, `CmdReleasePendingAlias`, `CmdChangelogAlias`, `CmdLatestBranchAlias`, `CmdListAlias`, `CmdGroupAlias` |
+| Group subcommands | `CmdGroupCreate`, `CmdGroupAdd`, `CmdGroupRemove`, `CmdGroupList`, `CmdGroupShow`, `CmdGroupDelete`, `CmdChangelogMD` |
+| Clone shorthands | `ShorthandJSON`, `ShorthandCSV`, `ShorthandText` |
+| Flag values | `FlagOpenValue` |
+| Usage/help text | `UsageHeaderFmt`, `HelpUsage`, `HelpCommands`, `HelpScan`, `HelpClone`, `HelpUpdate`, `HelpUpdateCleanup`, `HelpVersion`, `HelpDesktopSync`, `HelpPull`, `HelpRescan`, `HelpSetup`, `HelpStatus`, `HelpExec`, `HelpRelease`, `HelpReleaseBr`, `HelpReleasePend`, `HelpChangelog`, `HelpDoctor`, `HelpLatestBr`, `HelpList`, `HelpGroup`, `HelpDBReset`, `HelpHelp`, `HelpScanFlags`, `HelpConfig`, `HelpMode`, `HelpOutput`, `HelpOutputPath`, `HelpOutFile`, `HelpGitHubDesktop`, `HelpOpen`, `HelpQuiet`, `HelpCloneFlags`, `HelpTargetDir`, `HelpSafePull`, `HelpVerbose`, `HelpReleaseFlags`, `HelpAssets`, `HelpCommit`, `HelpRelBranch`, `HelpBump`, `HelpDraft`, `HelpDryRun` |
+| Flag descriptions | `FlagDescConfig`, `FlagDescMode`, `FlagDescOutput`, `FlagDescOutFile`, `FlagDescOutputPath`, `FlagDescTargetDir`, `FlagDescSafePull`, `FlagDescGHDesktop`, `FlagDescOpen`, `FlagDescQuiet`, `FlagDescVerbose`, `FlagDescSetupConfig`, `FlagDescDryRun`, `FlagDescAssets`, `FlagDescCommit`, `FlagDescRelBranch`, `FlagDescBump`, `FlagDescDraft`, `FlagDescLatest`, `FlagDescLimit`, `FlagDescOpenChangelog`, `FlagDescLBRemote`, `FlagDescLBAllRemotes`, `FlagDescLBContains`, `FlagDescLBTop`, `FlagDescLBJSON`, `FlagDescLBFormat`, `FlagDescLBNoFetch`, `FlagDescLBSort`, `FlagDescLBFilter`, `FlagDescGroup`, `FlagDescAll`, `FlagDescListVerbose`, `FlagDescGroupDesc`, `FlagDescGroupColor`, `FlagDescConfirm` |
+
+### `constants_terminal.go` — UI & Display (173 lines)
+
+| Category | Constants |
+|----------|-----------|
+| ANSI colors | `ColorReset`, `ColorGreen`, `ColorRed`, `ColorYellow`, `ColorCyan`, `ColorWhite`, `ColorDim` |
+| Status banner | `StatusBannerTop`, `StatusBannerTitle`, `StatusBannerBottom`, `StatusRepoCountFmt` |
+| Status indicators | `StatusIconClean`, `StatusIconDirty`, `StatusDash`, `StatusSyncDash`, `StatusStashFmt`, `StatusSyncUpFmt`, `StatusSyncDownFmt`, `StatusSyncBothFmt`, `StatusStagedFmt`, `StatusModifiedFmt`, `StatusUntrackedFmt` |
+| Status row formats | `StatusRowFmt`, `StatusMissingFmt`, `StatusHeaderFmt` |
+| Summary formats | `SummaryJoinSep`, `SummaryReposFmt`, `SummaryCleanFmt`, `SummaryDirtyFmt`, `SummaryAheadFmt`, `SummaryBehindFmt`, `SummaryStashedFmt`, `SummaryMissingFmt`, `SummarySucceededFmt`, `SummaryFailedFmt`, `StatusFileCountSep`, `TruncateEllipsis` |
+| Setup banner | `SetupBannerTop`, `SetupBannerTitle`, `SetupBannerBottom`, `SetupDryRunFmt`, `SetupAppliedFmt`, `SetupSkippedFmt`, `SetupFailedFmt`, `SetupErrorEntryFmt` |
+| Changelog display | `ChangelogVersionFmt`, `ChangelogNoteFmt` |
+| Exec banner | `ExecBannerTop`, `ExecBannerTitle`, `ExecBannerBottom`, `ExecCommandFmt`, `ExecRepoCountFmt`, `ExecSuccessFmt`, `ExecFailFmt`, `ExecMissingFmt`, `ExecOutputLineFmt`, `ExecSummaryRule` |
+| Terminal banner | `TermBannerTop`, `TermBannerTitle`, `TermBannerBottom`, `TermFoundFmt`, `TermReposHeader`, `TermTreeHeader`, `TermCloneHeader`, `TermSeparator`, `TermTableRule` |
+| Terminal repo entry | `TermRepoIcon`, `TermPathLine`, `TermCloneLine` |
+| Clone help text | `TermCloneStep1`–`TermCloneStep6`, `TermCloneCmd1`–`TermCloneCmd6`, `TermCloneNote` (20 constants) |
+| Folder structure MD | `StructureTitle`, `StructureDescription`, `StructureRepoFmt`, `TreeBranch`, `TreeCorner`, `TreePipe`, `TreeSpace` |
+| CSV headers | `ScanCSVHeaders` (var), `LatestBranchCSVHeaders` (var) |
+| Latest-branch display | `LBTermLatestFmt`, `LBTermRemoteFmt`, `LBTermSHAFmt`, `LBTermDateFmt`, `LBTermSubjectFmt`, `LBTermRefFmt`, `LBTermTopHdrFmt`, `LBTermRowFmt` |
+| Latest-branch table | `LatestBranchTableColumns` (var), `StatusTableColumns` (var — in terminal) |
+
+### `constants_messages.go` — User Messages & Errors (176 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Notes | `NoteNoRemote`, `UnknownRepoName` |
+| GitHub Desktop | `GitHubDesktopBin`, `OSWindows`, `MsgDesktopNotFound`, `MsgDesktopAdded`, `MsgDesktopFailed`, `MsgDesktopSummary` |
+| Latest-branch messages | `MsgLatestBranchFetching`, `MsgLatestBranchFetchWarning`, `LBUnknownBranch` |
+| Generic errors | `ErrGenericFmt`, `ErrBareFmt` |
+| OS platform | `OSDarwin` |
+| OS commands | `CmdExplorer`, `CmdOpen`, `CmdXdgOpen`, `CmdWindowsShell`, `CmdArgSlashC`, `CmdArgStart`, `CmdArgEmpty` |
+| Desktop sync errors | `ErrDesktopReadFailed`, `ErrDesktopParseFailed`, `ErrNoAbsPath` |
+| Dispatch errors | `ErrUnknownCommand`, `ErrUnknownGroupSub` |
+| Version display | `MsgVersionFmt` |
+| CLI messages | `MsgFoundRepos`, `MsgCSVWritten`, `MsgJSONWritten`, `MsgTextWritten`, `MsgStructureWritten`, `MsgCloneScript`, `MsgDirectClone`, `MsgDirectCloneSSH`, `MsgDesktopScript`, `MsgCloneComplete`, `MsgAutoSafePull`, `MsgOpenedFolder`, `MsgVerboseLogFile`, `MsgDesktopSyncStart`, `MsgDesktopSyncSkipped`, `MsgDesktopSyncAdded`, `MsgDesktopSyncFailed`, `MsgDesktopSyncDone`, `MsgNoOutputDir`, `MsgNoJSONFile`, `MsgFailedClones`, `MsgFailedEntry`, `MsgPullStarting`, `MsgPullSuccess`, `MsgPullFailed`, `MsgPullAvailable`, `MsgPullListEntry`, `WarnVerboseLogFailed`, `MsgRescanReplay`, `MsgScanCacheSaved`, `MsgDBUpsertDone`, `MsgDBUpsertFailed`, `MsgUpdateStarting`, `MsgUpdateRepoPath`, `MsgUpdateVersion` |
+| List/group messages | `MsgListHeader`, `MsgListSeparator`, `MsgListRowFmt`, `MsgListVerboseFmt`, `MsgListEmpty`, `MsgGroupCreated`, `MsgGroupDeleted`, `MsgGroupAdded`, `MsgGroupRemoved`, `MsgGroupHeader`, `MsgGroupRowFmt`, `MsgGroupShowHeader`, `MsgGroupShowRowFmt`, `MsgGroupEmpty`, `ErrGroupNameReq`, `ErrGroupUsage`, `ErrGroupSlugReq`, `ErrListDBFailed`, `ErrNoDatabase`, `MsgDBResetDone`, `ErrDBResetFailed`, `ErrDBResetNoConfirm` |
+| Latest-branch errors | `ErrLatestBranchNotRepo`, `ErrLatestBranchNoRefs`, `ErrLatestBranchNoRefsAll`, `ErrLatestBranchNoCommits`, `ErrLatestBranchNoMatch` |
+| CLI errors | `ErrSourceRequired`, `ErrCloneUsage`, `ErrShorthandNotFound`, `ErrConfigLoad`, `ErrScanFailed`, `ErrCloneFailed`, `ErrOutputFailed`, `ErrCreateDir`, `ErrCreateFile`, `ErrNoRepoPath`, `ErrUpdateFailed`, `ErrPullSlugRequired`, `ErrPullUsage`, `ErrPullLoadFailed`, `ErrPullNotFound`, `ErrPullNotRepo`, `ErrRescanNoCache`, `ErrSetupLoadFailed`, `ErrStatusLoadFailed`, `ErrExecUsage`, `ErrExecLoadFailed`, `ErrReleaseVersionRequired`, `ErrReleaseUsage`, `ErrReleaseBranchUsage`, `ErrReleaseAlreadyExists`, `ErrReleaseTagExists`, `ErrReleaseBranchNotFound`, `ErrReleaseCommitNotFound`, `ErrReleaseInvalidVersion`, `ErrReleaseBumpNoLatest`, `ErrReleaseBumpConflict`, `ErrReleaseCommitBranch`, `ErrReleasePushFailed`, `ErrReleaseVersionLoad`, `ErrReleaseMetaWrite`, `ErrChangelogRead`, `ErrChangelogVersionNotFound`, `ErrChangelogOpen` |
+
+### `constants_release.go` — Release & Setup (37 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Setup sections | `SetupSectionDiff`, `SetupSectionMerge`, `SetupSectionAlias`, `SetupSectionCred`, `SetupSectionCore`, `SetupGlobalFlag` |
+| Release messages | `MsgReleaseStart`, `MsgReleaseBranch`, `MsgReleaseTag`, `MsgReleasePushed`, `MsgReleaseMeta`, `MsgReleaseLatest`, `MsgReleaseAttach`, `MsgReleaseChangelog`, `MsgReleaseReadme`, `MsgReleaseDryRun`, `MsgReleaseComplete`, `MsgReleaseBranchStart`, `MsgReleaseVersionRead`, `MsgReleaseBumpResult`, `MsgReleaseSwitchedBack`, `MsgReleasePendingNone`, `MsgReleasePendingFound`, `MsgReleasePendingFailed` |
+| Release paths | `ReleaseBranchPrefix`, `ChangelogFile`, `ReadmeFile`, `ReleaseTagPrefix` |
+
+### `constants_store.go` — Database & SQL (122 lines)
+
+| Category | Constants |
+|----------|-----------|
+| DB location | `DBDir`, `DBFile` |
+| Table names | `TableRepos`, `TableGroups`, `TableGroupRepo` |
+| Schema DDL | `SQLCreateRepos`, `SQLCreateGroups`, `SQLCreateGroupRepos`, `SQLEnableFK`, `SQLCreateAbsPathIndex` |
+| Repo queries | `SQLUpsertRepo`, `SQLSelectAllRepos`, `SQLSelectRepoBySlug`, `SQLSelectRepoByPath`, `SQLUpsertRepoByPath` |
+| Group queries | `SQLInsertGroup`, `SQLSelectAllGroups`, `SQLSelectGroupByName`, `SQLDeleteGroup`, `SQLInsertGroupRepo`, `SQLDeleteGroupRepo`, `SQLSelectGroupRepos`, `SQLCountGroupRepos` |
+| Reset queries | `SQLDropGroupRepos`, `SQLDropGroups`, `SQLDropRepos` |
+| Store errors | `ErrDBOpen`, `ErrDBMigrate`, `ErrDBUpsert`, `ErrDBQuery`, `ErrDBNoMatch`, `ErrDBCreateDir`, `ErrDBGroupCreate`, `ErrDBGroupQuery`, `ErrDBGroupAdd`, `ErrDBGroupRemove`, `ErrDBGroupDelete`, `ErrDBGroupNone`, `ErrDBGroupExists` |
+
+### `constants_doctor.go` — Diagnostics (91 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Doctor banners | `DoctorBannerFmt`, `DoctorBannerRule`, `DoctorIssuesFmt`, `DoctorFixPathTip`, `DoctorAllPassed`, `DoctorFixBannerFmt` |
+| Doctor path/deploy | `DoctorActivePathFmt`, `DoctorDeployedFmt`, `DoctorSyncingFmt`, `DoctorRetryFmt`, `DoctorRenamedMsg`, `DoctorKillingMsg`, `DoctorKilledFmt` |
+| Doctor sync failures | `DoctorSyncFailTitle`, `DoctorSyncFailDetail`, `DoctorSyncFailFix1`, `DoctorSyncFailFix2Fmt` |
+| Doctor check results | `DoctorFixFlagDesc`, `DoctorOKPathFmt`, `DoctorWarnSyncFmt`, `DoctorNotOnPath`, `DoctorNoSync`, `DoctorAddPathFix`, `DoctorCannotResolve`, `DoctorAlreadySynced`, `DoctorVersionsMatch` |
+| Doctor RepoPath | `DoctorRepoPathMissing`, `DoctorRepoPathDetail`, `DoctorRepoPathFix`, `DoctorRepoPathOKFmt` |
+| Doctor PATH binary | `DoctorPathBinaryFmt`, `DoctorPathMissTitle`, `DoctorPathMissDetail`, `DoctorPathMissFix` |
+| Doctor deploy binary | `DoctorDeployReadFail`, `DoctorDeployReadDet`, `DoctorNoDeployPath`, `DoctorNoDeployDet`, `DoctorDeployNotFound`, `DoctorDeployRunFix`, `DoctorDeployOKFmt` |
+| Doctor git/go checks | `DoctorGitMissTitle`, `DoctorGitMissDetail`, `DoctorGitOKFmt`, `DoctorGitOKPathFmt`, `DoctorGoWarn`, `DoctorGoOKFmt`, `DoctorGoOKPathFmt` |
+| Doctor changelog | `DoctorChangelogWarn`, `DoctorChangelogOK` |
+| Doctor version mismatch | `DoctorVersionMismatch`, `DoctorVMismatchFmt`, `DoctorVMismatchFix`, `DoctorDeployMismatch`, `DoctorDMismatchFmt`, `DoctorDMismatchFix`, `DoctorBinariesDiffer`, `DoctorBDifferFmt`, `DoctorBDifferFix`, `DoctorSourceOKFmt` |
+| Doctor resolve | `DoctorResolveNoRepo`, `DoctorResolveNoRead`, `DoctorResolveNoDeploy`, `DoctorResolveNotFound`, `DoctorDefaultBinary` |
+| Doctor binary lookup | `GitMapBin`, `GoBin`, `GoVersionArg`, `PowershellConfigFile`, `JSONKeyDeployPath`, `JSONKeyBinaryName`, `BackupSuffix`, `GitMapSubdir` |
+| Doctor format markers | `DoctorOKFmt`, `DoctorIssueFmt`, `DoctorFixFmt`, `DoctorWarnFmt`, `DoctorDetail` |
+
+### `constants_update.go` — Self-Update & PowerShell (119 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Update file patterns | `UpdateCopyFmt`, `UpdateCopyGlob`, `UpdateScriptGlob` |
+| Update flags | `FlagVerbose` |
+| Update UI messages | `MsgUpdateActive`, `MsgUpdateCleanStart`, `MsgUpdateCleanDone`, `MsgUpdateCleanNone`, `MsgUpdateTempRemoved`, `MsgUpdateOldRemoved`, `UpdateRunnerLogStart`, `UpdateScriptLogExec`, `UpdateScriptLogExit` |
+| Update errors | `ErrUpdateExecFind`, `ErrUpdateCopyFail` |
+| Update PS script | `UpdatePSHeader`, `UpdatePSDeployDetect`, `UpdatePSVersionBefore`, `UpdatePSRunUpdate`, `UpdatePSVersionAfter`, `UpdatePSVerify`, `UpdatePSPostActions` |
+| Backup glob | `OldBackupGlob` |
+| PowerShell args | `PSBin`, `PSExecPolicy`, `PSBypass`, `PSNoProfile`, `PSNoLogo`, `PSFile`, `PSNonInteractive`, `PSCommand` |
