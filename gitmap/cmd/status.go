@@ -84,70 +84,100 @@ func printStatusTable(records []model.ScanRecord) statusSummary {
 
 // printOneStatus prints a single repo's status row.
 func printOneStatus(rec model.ScanRecord, s *statusSummary) {
-	// Check if repo still exists on disk.
 	if _, err := os.Stat(rec.AbsolutePath); os.IsNotExist(err) {
-		fmt.Printf("  %s%-22s %s⊘ not found%s\n",
-			constants.ColorDim, truncate(rec.RepoName, 22),
-			constants.ColorYellow, constants.ColorReset)
-		s.Missing++
+		printMissingRepo(rec.RepoName, s)
 
 		return
 	}
-
 	rs := gitutil.Status(rec.AbsolutePath)
-
-	// State indicator.
-	stateIcon := constants.ColorGreen + "✓ clean" + constants.ColorReset
-	if rs.Dirty {
-		stateIcon = constants.ColorYellow + "● dirty" + constants.ColorReset
-		s.Dirty++
-	} else {
-		s.Clean++
-	}
-
-	// Sync indicator.
-	syncText := constants.ColorDim + "  —" + constants.ColorReset
-	if rs.Ahead > 0 && rs.Behind > 0 {
-		syncText = fmt.Sprintf("%s↑%d ↓%d%s", constants.ColorYellow, rs.Ahead, rs.Behind, constants.ColorReset)
-		s.Ahead++
-		s.Behind++
-	} else if rs.Ahead > 0 {
-		syncText = fmt.Sprintf("%s↑%d%s", constants.ColorCyan, rs.Ahead, constants.ColorReset)
-		s.Ahead++
-	} else if rs.Behind > 0 {
-		syncText = fmt.Sprintf("%s↓%d%s", constants.ColorYellow, rs.Behind, constants.ColorReset)
-		s.Behind++
-	}
-
-	// Stash indicator.
-	stashText := constants.ColorDim + "—" + constants.ColorReset
-	if rs.StashCount > 0 {
-		stashText = fmt.Sprintf("%s📦 %d%s", constants.ColorCyan, rs.StashCount, constants.ColorReset)
-		s.Stashed++
-	}
-
-	// File counts.
-	filesText := constants.ColorDim + "—" + constants.ColorReset
-	if rs.Dirty {
-		parts := make([]string, 0, 3)
-		if rs.Staged > 0 {
-			parts = append(parts, fmt.Sprintf("%s+%d%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
-		}
-		if rs.Modified > 0 {
-			parts = append(parts, fmt.Sprintf("%s~%d%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
-		}
-		if rs.Untracked > 0 {
-			parts = append(parts, fmt.Sprintf("%s?%d%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
-		}
-		filesText = strings.Join(parts, " ")
-	}
-
-	// Branch with color.
+	stateIcon := formatStateIcon(rs.Dirty, s)
+	syncText := formatSyncText(rs.Ahead, rs.Behind, s)
+	stashText := formatStashText(rs.StashCount, s)
+	filesText := formatFileCounts(rs)
 	branchText := fmt.Sprintf("%s%s%s", constants.ColorCyan, truncate(rs.Branch, 12), constants.ColorReset)
 
 	fmt.Printf("  %-22s %s  %s  %s  %s  %s\n",
 		truncate(rec.RepoName, 22),
 		branchText, stateIcon, syncText, stashText, filesText)
+}
+
+// printMissingRepo prints a row for a repo not found on disk.
+func printMissingRepo(name string, s *statusSummary) {
+	fmt.Printf("  %s%-22s %s⊘ not found%s\n",
+		constants.ColorDim, truncate(name, 22),
+		constants.ColorYellow, constants.ColorReset)
+	s.Missing++
+}
+
+// formatStateIcon returns the clean/dirty indicator and updates summary.
+func formatStateIcon(dirty bool, s *statusSummary) string {
+	if dirty {
+		s.Dirty++
+
+		return constants.ColorYellow + "● dirty" + constants.ColorReset
+	}
+	s.Clean++
+
+	return constants.ColorGreen + "✓ clean" + constants.ColorReset
+}
+
+// formatSyncText returns the ahead/behind indicator and updates summary.
+func formatSyncText(ahead, behind int, s *statusSummary) string {
+	if ahead > 0 && behind > 0 {
+		s.Ahead++
+		s.Behind++
+
+		return fmt.Sprintf("%s↑%d ↓%d%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
+	}
+	if ahead > 0 {
+		s.Ahead++
+
+		return fmt.Sprintf("%s↑%d%s", constants.ColorCyan, ahead, constants.ColorReset)
+	}
+	if behind > 0 {
+		s.Behind++
+
+		return fmt.Sprintf("%s↓%d%s", constants.ColorYellow, behind, constants.ColorReset)
+	}
+
+	return constants.ColorDim + "  —" + constants.ColorReset
+}
+
+// formatStashText returns the stash indicator and updates summary.
+func formatStashText(stashCount int, s *statusSummary) string {
+	if stashCount > 0 {
+		s.Stashed++
+
+		return fmt.Sprintf("%s📦 %d%s", constants.ColorCyan, stashCount, constants.ColorReset)
+	}
+
+	return constants.ColorDim + "—" + constants.ColorReset
+}
+
+// formatFileCounts returns staged/modified/untracked counts.
+func formatFileCounts(rs gitutil.RepoStatus) string {
+	if rs.Dirty {
+
+		return buildFileCountParts(rs)
+	}
+
+	return constants.ColorDim + "—" + constants.ColorReset
+}
+
+// buildFileCountParts assembles the file count display parts.
+func buildFileCountParts(rs gitutil.RepoStatus) string {
+	parts := make([]string, 0, 3)
+	if rs.Staged > 0 {
+		parts = append(parts, fmt.Sprintf("%s+%d%s", constants.ColorGreen, rs.Staged, constants.ColorReset))
+	}
+	if rs.Modified > 0 {
+		parts = append(parts, fmt.Sprintf("%s~%d%s", constants.ColorYellow, rs.Modified, constants.ColorReset))
+	}
+	if rs.Untracked > 0 {
+		parts = append(parts, fmt.Sprintf("%s?%d%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
+	}
+
+	return strings.Join(parts, " ")
 }
 
 // printStatusSummary shows the final totals.
