@@ -20,6 +20,7 @@ param(
     [switch]$NoPull,
     [switch]$NoDeploy,
     [string]$DeployPath = "",
+    [switch]$Update,
     [switch]$R,
     [Parameter(ValueFromRemainingArguments=$true)]
     [string[]]$RunArgs
