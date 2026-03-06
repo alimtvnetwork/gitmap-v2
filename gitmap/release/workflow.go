@@ -122,13 +122,24 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 	branchName := constants.ReleaseBranchPrefix + v.String()
 	tag := v.String()
 
+	originalBranch, _ := CurrentBranchName()
+
 	fmt.Printf(constants.MsgReleaseStart, tag)
 
 	if opts.DryRun {
-		return printDryRun(v, branchName, tag, sourceName, opts)
+		err := printDryRun(v, branchName, tag, sourceName, opts)
+		if len(originalBranch) > 0 {
+			fmt.Printf(constants.MsgReleaseDryRun, "Switch back to "+originalBranch)
+		}
+		return err
 	}
 
-	return executeSteps(v, branchName, tag, sourceRef, sourceName, opts)
+	err := executeSteps(v, branchName, tag, sourceRef, sourceName, opts)
+	if err != nil {
+		return err
+	}
+
+	return returnToBranch(originalBranch)
 }
 
 // executeSteps runs each release step in sequence.
