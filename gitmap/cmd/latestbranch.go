@@ -193,7 +193,7 @@ func printLatestBranchTerminal(branchNames []string, remote, sha, commitDate str
 		fmt.Printf("  %-30s %-30s %-9s %s\n", "DATE", "BRANCH", "SHA", "SUBJECT")
 		for _, item := range items[:count] {
 			fmt.Printf("  %-30s %-30s %-9s %s\n",
-				item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+				gitutil.FormatDisplayDate(item.CommitDate),
 				stripRemotePrefix(item.RemoteRef), truncSha(item.Sha), item.Subject)
 		}
 	}
