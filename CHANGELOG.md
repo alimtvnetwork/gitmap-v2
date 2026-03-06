@@ -1,6 +1,14 @@
 # Changelog
 
-## v2.3.7
+## v2.3.8
+- Replaced `update --from-copy` with hidden `update-runner` command for cleaner handoff separation.
+- Handoff copy now created in the same directory as the active binary (fallback to %TEMP% if locked).
+- Added `-Update` flag to `run.ps1`: skips `git pull` (delegated to update script), runs build+deploy+sync only.
+- Update script now calls `run.ps1 -Update` instead of managing git pull separately.
+- Before/after version output derived from actual executables, not static constants.
+- Mandatory `update-cleanup` runs after successful update to remove handoff and `.old` artifacts.
+- Cleanup now scans both `%TEMP%` and same-directory for leftover `gitmap-update-*.exe` files.
+
 - Added `gitmap doctor --fix-path` flag: automatically syncs the active PATH binary from the deployed binary using retry (20×500ms), rename fallback, and stale-process termination, with clear confirmation output.
 - Doctor diagnostics now suggest `--fix-path` when version mismatches are detected.
 
