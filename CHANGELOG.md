@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.3.5
+- Hardened `gitmap update` PATH sync with retry + rename fallback, and it now exits with failure if active PATH binary remains stale.
+- Clarified update output labels to distinguish source version (`constants.go`) vs active executable version.
+- Added same rename-fallback PATH sync behavior in `run.ps1`.
+
 ## v2.3.4
 - Updated PATH-binary sync in `run.ps1` and `gitmap update` to use retry-on-lock behavior (20 attempts × 500ms), matching the self-update spec.
 - Added explicit recovery guidance when active PATH binary is still locked, including an exact `Copy-Item` fix command.

@@ -427,6 +427,12 @@ if (Test-Path $cleanupBinary) {
     & $cleanupBinary update-cleanup
 }
 
+if ($syncFailed) {
+    Write-Host "" 
+    Write-Host "  [FAIL] Update finished, but active PATH binary is still stale." -ForegroundColor Red
+    exit 1
+}
+
 Write-Host ""
 exit 0
 `, repoPath, repoPath, repoPath, runPS1, repoPath)

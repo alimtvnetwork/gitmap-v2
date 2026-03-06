@@ -525,7 +525,28 @@ if (-not $NoDeploy) {
                 }
 
                 if (-not $syncSuccess) {
-                    Write-Warn "Could not sync active PATH binary after retries."
+                    $activeBackup = "$activeBinaryPath.old"
+                    try {
+                        if (Test-Path $activeBackup) {
+                            Remove-Item $activeBackup -Force -ErrorAction SilentlyContinue
+                        }
+                        Rename-Item $activeBinaryPath $activeBackup -Force -ErrorAction Stop
+                        Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
+                        $syncedVersion = & $activeBinaryPath version 2>&1
+                        Write-Success "Synced active PATH binary via rename fallback -> $syncedVersion"
+                        $syncSuccess = $true
+                    } catch {
+                        if ((Test-Path $activeBackup) -and (-not (Test-Path $activeBinaryPath))) {
+                            try {
+                                Copy-Item $activeBackup $activeBinaryPath -Force -ErrorAction Stop
+                            } catch {
+                            }
+                        }
+                    }
+                }
+
+                if (-not $syncSuccess) {
+                    Write-Warn "Could not sync active PATH binary after retries and rename fallback."
                     Write-Info "Close terminals/apps using gitmap and run:"
                     Write-Info ('Copy-Item "' + $deployedBinaryPath + '" "' + $activeBinaryPath + '" -Force')
                 }
