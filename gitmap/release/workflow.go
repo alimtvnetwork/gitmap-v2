@@ -11,12 +11,6 @@ import (
 	"github.com/user/gitmap/constants"
 )
 
-import (
-	"fmt"
-	"time"
-
-	"github.com/user/gitmap/constants"
-)
 
 // Options holds all parameters for a release operation.
 type Options struct {
