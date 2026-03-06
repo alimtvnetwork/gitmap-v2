@@ -68,7 +68,9 @@ func printStatusTable(records []model.ScanRecord) statusSummary {
 	// Print header row.
 	fmt.Printf("  %s%-22s %-12s %-8s %-10s %-8s %-6s%s\n",
 		constants.ColorWhite,
-		"REPO", "BRANCH", "STATE", "SYNC", "STASH", "FILES",
+		constants.StatusTableColumns[0], constants.StatusTableColumns[1],
+		constants.StatusTableColumns[2], constants.StatusTableColumns[3],
+		constants.StatusTableColumns[4], constants.StatusTableColumns[5],
 		constants.ColorReset)
 	fmt.Printf("  %s%s%s\n", constants.ColorDim,
 		strings.Repeat("─", 70), constants.ColorReset)

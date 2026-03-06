@@ -156,7 +156,9 @@ func printTerminalTopTable(items []gitutil.RemoteBranchInfo, remote string, top 
 	}
 	fmt.Println()
 	fmt.Printf("  Top %d most recently updated remote branches (%s):\n", count, remote)
-	fmt.Printf("  %-30s %-30s %-9s %s\n", "DATE", "BRANCH", "SHA", "SUBJECT")
+	fmt.Printf("  %-30s %-30s %-9s %s\n",
+		constants.LatestBranchTableColumns[0], constants.LatestBranchTableColumns[1],
+		constants.LatestBranchTableColumns[2], constants.LatestBranchTableColumns[3])
 	for _, item := range items[:count] {
 		fmt.Printf("  %-30s %-30s %-9s %s\n",
 			gitutil.FormatDisplayDate(item.CommitDate),
