@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/store"
 )
 
 // runGroupRemove handles "group remove <group> <slug...>".
@@ -27,7 +28,7 @@ func runGroupRemove(args []string) {
 	}
 }
 
-// removeOneSlugFromGroup resolves a slug and removes matching repos from the group.
+// removeOneSlugFromGroup resolves a slug and removes matching repos.
 func removeOneSlugFromGroup(db *store.DB, groupName, slug string) {
 	repos, err := db.FindBySlug(slug)
 	if err != nil {

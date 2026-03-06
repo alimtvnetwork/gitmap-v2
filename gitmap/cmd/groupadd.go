@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/store"
 )
 
 // runGroupAdd handles "group add <group> <slug...>".
