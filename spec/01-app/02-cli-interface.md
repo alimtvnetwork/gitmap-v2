@@ -149,6 +149,8 @@ Arguments after `exec` are passed directly to `git` inside each repo directory.
 - Skips repos whose paths no longer exist on disk.
 - Shows per-repo success/failure with captured output.
 - Prints a summary of succeeded/failed/missing counts.
+- Supports `--group` (`-g`) to target repos in a named group.
+- Supports `--all` to target every repo tracked in the database.
 
 ### `gitmap release [version]` (alias: `r`)
 
