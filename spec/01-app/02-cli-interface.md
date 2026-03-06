@@ -497,4 +497,6 @@ gitmap lb 3 --json               # top 3 as JSON
 gitmap lb --remote upstream      # filter to a specific remote
 gitmap lb --all-remotes          # include all remotes
 gitmap lb --contains-fallback    # fall back to --contains if --points-at is empty
+gitmap lb --no-fetch             # skip fetch, use existing remote refs
+gitmap lb 3 --no-fetch --json    # fast: no fetch, top 3 as JSON
 ```

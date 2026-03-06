@@ -9,6 +9,7 @@ The 'latest-branch' (alias 'lb') command identifies the most recently updated re
 - `--top <n>` — show top N most recently updated branches
 - `--format <fmt>` — output format: `terminal` (default), `json`, `csv`
 - `--json` — shorthand for `--format json`
+- `--no-fetch` — skip `git fetch --all --prune` (use existing remote refs)
 
 ## Positional integer shorthand
 A bare integer positional argument acts as shorthand for `--top`:
