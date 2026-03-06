@@ -73,6 +73,10 @@ func dispatch(command string) {
 		runReleasePending(os.Args[2:])
 		return
 	}
+	if command == constants.CmdChangelog || command == constants.CmdChangelogAlias {
+		runChangelog(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
@@ -105,6 +109,7 @@ func printUsage() {
 	fmt.Println(constants.HelpRelease)
 	fmt.Println(constants.HelpReleaseBr)
 	fmt.Println(constants.HelpReleasePend)
+	fmt.Println(constants.HelpChangelog)
 	fmt.Println(constants.HelpUpdateCleanup)
 	fmt.Println(constants.HelpHelp)
 	fmt.Println()

@@ -222,10 +222,13 @@ function Test-SourceFiles {
         "cmd/exec.go",
         "cmd/release.go",
         "cmd/releasebranch.go",
+        "cmd/releasepending.go",
+        "cmd/changelog.go",
         "release/semver.go",
         "release/metadata.go",
         "release/gitops.go",
         "release/github.go",
+        "release/changelog.go",
         "release/workflow.go"
     )
 
