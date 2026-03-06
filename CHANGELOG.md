@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.3.10
+- Fixed `Read-Host` error in non-interactive PowerShell sessions during update by removing trailing prompt.
+- Parent `update` process now exits immediately (handoff copy runs synchronously via `update-runner`).
+- Added diagnostic log at update start showing active exe path and handoff copy path.
+- Update script now uses unique temp file names (`gitmap-update-*.ps1`) to avoid stale script collisions.
+
 ## v2.3.9
 - Version bump for rebuild validation after update-runner handoff changes.
 
