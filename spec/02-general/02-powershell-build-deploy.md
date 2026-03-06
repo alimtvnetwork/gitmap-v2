@@ -236,7 +236,7 @@ When a CLI updates itself from a PATH-managed executable, use a two-phase handof
 ### Phase 1: Handoff from active binary
 1. `tool update` creates a handoff copy in the same active binary directory (for example `toolname-update-<pid>.exe`, fallback to `%TEMP%` if locked).
 2. It launches the handoff copy with a hidden worker command (e.g. `update-runner`).
-3. The parent **exits immediately** (`os.Exit(0)`) — it MUST NOT wait for the worker.
+3. The parent **waits for the worker** using foreground/blocking execution (`cmd.Run()`). This keeps the terminal session stable. The handoff copy is a different file so there is no lock conflict with deploy.
 
 ### Phase 2: Execute update from handoff copy
 1. Resolve repo root from embedded/configured repo path.
@@ -250,7 +250,7 @@ When a CLI updates itself from a PATH-managed executable, use a two-phase handof
 6. Run `tool update-cleanup` to remove handoff and `.old` artifacts.
 
 ### Critical Rules
-- The parent process MUST exit before the worker starts `run.ps1`. Using `cmd.Run()` (synchronous wait) causes the parent to hold the file lock during the entire pipeline, making PATH sync impossible.
+- The parent MUST use `cmd.Run()` (foreground/blocking). Using `cmd.Start()` + `os.Exit(0)` (async) breaks the terminal session.
 - PATH sync MUST use rename-first in update mode. Copy-overwrite fails on Windows when any process holds the binary.
 - Generated update scripts MUST NOT contain `Read-Host` or any interactive prompts — they run in non-interactive PowerShell sessions.
 

@@ -37,8 +37,8 @@ A three-layer approach that reliably bypasses file locks:
 # Pseudocode — applies to any compiled language
 func runUpdate():
     tempPath = copyBinaryToTemp()
-    launchProcess(tempPath, ["update-runner"])
-    exit(0)  # Release file lock immediately
+    runForeground(tempPath, ["update-runner"])  # Blocking — keeps terminal stable
+    # Parent exits naturally after worker completes
 
 func runUpdateRunner():
     # This is the worker — runs from the temp copy

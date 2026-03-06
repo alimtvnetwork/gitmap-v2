@@ -48,21 +48,22 @@ Self-update gitmap by pulling latest source and rebuilding. The binary
 embeds the repo path at build time (via `-ldflags`). When invoked:
 
 1. Copies itself to a temporary file (`gitmap-update-<pid>.exe`) in the same directory (fallback to `%TEMP%`).
-2. Launches the copy with the hidden `update-runner` command.
-3. The original process **exits immediately**, releasing the file lock.
+2. Launches the copy with the hidden `update-runner` command using **foreground/blocking** execution.
+3. The parent waits for the worker to complete, keeping the terminal session stable.
 4. The `update-runner` spawns a temporary PowerShell script that:
    - Captures the currently deployed version.
    - Runs `run.ps1 -Update` (full pipeline: pull → build → deploy with `.old` rollback backup).
+   - PATH sync uses rename-first (rename active to `.old`, copy new).
    - Compares old vs new version (warns if unchanged).
    - Runs `gitmap changelog --latest` from the updated binary.
    - Runs `gitmap update-cleanup` to remove temp copies and `.old` backups.
 
 This two-step handoff ensures the deploy step can overwrite `gitmap.exe`
-without encountering a "file in use" lock.
+without encountering a "file in use" lock (rename-first handles the locked binary).
 
 **Critical rules:**
-- Parent MUST use `cmd.Start()` + `os.Exit(0)`, never `cmd.Run()`.
-- PATH sync MUST use rename-first in update mode (rename active to `.old`, then copy new).
+- Parent MUST use `cmd.Run()` (foreground/blocking), NEVER `cmd.Start()` + `os.Exit(0)` (async breaks terminal).
+- PATH sync MUST use rename-first in update mode.
 - Generated scripts MUST NOT contain `Read-Host` or interactive prompts.
 
 ### `gitmap update-cleanup`
