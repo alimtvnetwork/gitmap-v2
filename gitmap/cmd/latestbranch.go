@@ -177,6 +177,7 @@ func runLatestBranch(args []string) {
 }
 
 // parseLatestBranchFlags parses flags for the latest-branch command.
+// Supports positional integer shorthand: `gitmap lb 3` == `gitmap lb --top 3`.
 func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int, jsonOut bool) {
 	fs := flag.NewFlagSet(constants.CmdLatestBranch, flag.ExitOnError)
 	remoteFlag := fs.String("remote", "origin", constants.FlagDescLBRemote)
@@ -185,6 +186,13 @@ func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsF
 	topFlag := fs.Int("top", 0, constants.FlagDescLBTop)
 	jsonFlag := fs.Bool("json", false, constants.FlagDescLBJSON)
 	fs.Parse(args)
+
+	// Positional integer shorthand for --top.
+	if *topFlag == 0 && fs.NArg() > 0 {
+		if n, err := strconv.Atoi(fs.Arg(0)); err == nil && n > 0 {
+			*topFlag = n
+		}
+	}
 
 	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag, *jsonFlag
 }
