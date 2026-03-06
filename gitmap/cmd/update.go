@@ -281,6 +281,7 @@ if ($cmd) {
     }
 }
 
+$syncFailed = $false
 
 function Sync-ActivePathBinary {
     param(
@@ -321,18 +322,64 @@ function Sync-ActivePathBinary {
         }
     }
 
-    Write-Host "  [WARN] Could not sync active PATH binary after retries." -ForegroundColor Yellow
-    Write-Host "         Close terminals/apps using gitmap and run:" -ForegroundColor Yellow
-    Write-Host ("         Copy-Item \"" + $DeployedPath + "\" \"" + $ActivePath + "\" -Force") -ForegroundColor Yellow
+    $backupActive = "$ActivePath.old"
+    try {
+        if (Test-Path $backupActive) {
+            Remove-Item $backupActive -Force -ErrorAction SilentlyContinue
+        }
+        Rename-Item $ActivePath $backupActive -Force -ErrorAction Stop
+        Copy-Item $DeployedPath $ActivePath -Force -ErrorAction Stop
+        $syncedVersion = & $ActivePath version 2>&1
+        Write-Host "  [OK] Synced active PATH binary via rename fallback." -ForegroundColor Green
+        Write-Host "  Active PATH version is now: $syncedVersion" -ForegroundColor Green
+        return $true
+    } catch {
+        if ((Test-Path $backupActive) -and (-not (Test-Path $ActivePath))) {
+            try {
+                Copy-Item $backupActive $ActivePath -Force -ErrorAction Stop
+            } catch {
+            }
+        }
+    }
+
+    Write-Host "  [FAIL] Could not sync active PATH binary after retries and rename fallback." -ForegroundColor Red
+    Write-Host "         Close terminals/apps using gitmap and run:" -ForegroundColor Red
+    Write-Host ("         Copy-Item \"" + $DeployedPath + "\" \"" + $ActivePath + "\" -Force") -ForegroundColor Red
+    $script:syncFailed = $true
     return $false
+}
+
+function Ensure-ActiveVersionMatchesSource {
+    param(
+        [string]$ActivePath,
+        [string]$ExpectedVersion
+    )
+
+    if ((-not $ActivePath) -or (-not (Test-Path $ActivePath))) {
+        return $true
+    }
+    if ((-not $ExpectedVersion) -or ($ExpectedVersion -eq "unknown")) {
+        return $true
+    }
+
+    $actualVersion = & $ActivePath version 2>&1
+    if ($actualVersion -ne $ExpectedVersion) {
+        Write-Host "  [FAIL] Active PATH binary is still stale." -ForegroundColor Red
+        Write-Host "         Active:   $actualVersion" -ForegroundColor Red
+        Write-Host "         Expected: $ExpectedVersion" -ForegroundColor Red
+        $script:syncFailed = $true
+        return $false
+    }
+
+    return $true
 }
 
 Write-Host ""
 Write-Host "  Current deployed version: $oldVersion" -ForegroundColor DarkGray
-Write-Host "  Current source version:   $sourceVersion" -ForegroundColor DarkGray
+Write-Host "  Current source version (from constants.go): $sourceVersion" -ForegroundColor DarkGray
 if ($activeBinary) {
     Write-Host "  Current PATH binary: $activeBinary" -ForegroundColor DarkGray
-    Write-Host "  Current PATH version: $activeVersion" -ForegroundColor DarkGray
+    Write-Host "  Current PATH version (actual executable): $activeVersion" -ForegroundColor DarkGray
 }
 
 # Check if there are changes to pull
