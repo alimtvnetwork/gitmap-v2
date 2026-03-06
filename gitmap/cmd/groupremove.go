@@ -7,8 +7,8 @@ import (
 	"github.com/user/gitmap/constants"
 )
 
-// runGroupAdd handles "group add <group> <slug...>".
-func runGroupAdd(args []string) {
+// runGroupRemove handles "group remove <group> <slug...>".
+func runGroupRemove(args []string) {
 	if len(args) < 2 {
 		fmt.Fprintln(os.Stderr, constants.ErrGroupSlugReq)
 		os.Exit(1)
@@ -23,12 +23,12 @@ func runGroupAdd(args []string) {
 	defer db.Close()
 
 	for _, slug := range slugs {
-		addOneSlugToGroup(db, groupName, slug)
+		removeOneSlugFromGroup(db, groupName, slug)
 	}
 }
 
-// addOneSlugToGroup resolves a slug and adds matching repos to the group.
-func addOneSlugToGroup(db *store.DB, groupName, slug string) {
+// removeOneSlugFromGroup resolves a slug and removes matching repos from the group.
+func removeOneSlugFromGroup(db *store.DB, groupName, slug string) {
 	repos, err := db.FindBySlug(slug)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrDBNoMatch+"\n", slug)
@@ -39,11 +39,11 @@ func addOneSlugToGroup(db *store.DB, groupName, slug string) {
 		return
 	}
 	for _, r := range repos {
-		err := db.AddRepoToGroup(groupName, r.ID)
+		err := db.RemoveRepoFromGroup(groupName, r.ID)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			return
 		}
-		fmt.Printf(constants.MsgGroupAdded, r.Slug, groupName)
+		fmt.Printf(constants.MsgGroupRemoved, r.Slug, groupName)
 	}
 }
