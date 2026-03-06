@@ -55,7 +55,12 @@ const (
 	ShorthandText = "text"
 )
 
-// CLI help text.
+// CLI flag values.
+const FlagOpenValue = "--open"
+
+// Usage header.
+const UsageHeaderFmt = "gitmap v%s\n\n"
+
 const (
 	HelpUsage         = "Usage: gitmap <command> [flags]"
 	HelpCommands      = "Commands:"
