@@ -91,11 +91,11 @@ func NormalizeVersion(version string) string {
 	if len(v) == 0 {
 		return ""
 	}
-	if strings.HasPrefix(v, "v") == false {
-		v = "v" + v
+	if strings.HasPrefix(v, "v") {
+		return v
 	}
 
-	return v
+	return "v" + v
 }
 
 // parseVersionHeader extracts the version token from a markdown heading.
