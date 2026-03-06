@@ -476,7 +476,6 @@ $config = Load-Config
 
 if ($Update) {
     Write-Info "Update mode enabled (-Update)"
-    $NoPull = $true
 }
 
 if (-not $NoPull) {
