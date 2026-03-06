@@ -441,6 +441,13 @@ gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored --github-desktop
 gitmap pull my-api-service
 gitmap p my-api      # partial match works
 
+# Pull all repos in a group
+gitmap pull --group backend
+gitmap p -g backend  # alias + short flag
+
+# Pull every tracked repo
+gitmap pull --all
+
 # Sync existing scan output to GitHub Desktop
 gitmap desktop-sync
 gitmap ds            # alias
@@ -453,9 +460,23 @@ gitmap setup
 gitmap status
 gitmap st            # alias
 
+# Show status for a specific group
+gitmap status --group backend
+gitmap st -g backend
+
+# Show status for all tracked repos
+gitmap status --all
+
 # Run git fetch across all repos
 gitmap exec fetch --prune
 gitmap x status -s   # alias
+
+# Run git command on a specific group
+gitmap exec --group backend fetch --prune
+gitmap x -g backend status -s
+
+# Run git command on all tracked repos
+gitmap exec --all fetch --prune
 
 # Self-update from source repo
 gitmap update
