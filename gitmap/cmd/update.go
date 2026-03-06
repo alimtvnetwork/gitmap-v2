@@ -40,6 +40,8 @@ func runUpdate() {
 		copyPath = fallbackPath
 	}
 
+	fmt.Printf("  → Active: %s\n  → Handoff: %s\n", selfPath, copyPath)
+
 	copyArgs := []string{constants.CmdUpdateRunner}
 	if verboseMode {
 		copyArgs = append(copyArgs, "--verbose")
