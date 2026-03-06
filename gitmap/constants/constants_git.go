@@ -18,7 +18,18 @@ const (
 	GitCheckout     = "checkout"
 	GitPush         = "push"
 	GitLsRemote     = "ls-remote"
-	GitLsRemoteTags = "--tags"
+	GitLsRemoteTags    = "--tags"
+	GitOrigin          = "origin"
+	GitOriginPrefix    = "origin/"
+	GitCommitPrefix    = "commit:"
+	GitTagAnnotateFlag = "-a"
+	GitTagMessageFlag  = "-m"
+	GitTagListFlag     = "--list"
+	GitBranchListFlag  = "--list"
+	GitCatFile         = "cat-file"
+	GitCatFileTypeFlag = "-t"
+	GitCommitType      = "commit"
+	GitTagGlob         = "v*"
 )
 
 // Git arguments for latest-branch operations.

@@ -25,7 +25,7 @@ func LoadFromFile(path string) (model.Config, error) {
 
 // handleMissingFile returns nil for missing files, error otherwise.
 func handleMissingFile(err error) error {
-	if os.IsNotExist(err) {
+	if errors.Is(err, fs.ErrNotExist) {
 		return nil
 	}
 

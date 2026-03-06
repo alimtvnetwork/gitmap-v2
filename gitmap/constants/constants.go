@@ -87,6 +87,13 @@ const (
 	SortByName = "name"
 )
 
+// Bump levels.
+const (
+	BumpMajor = "major"
+	BumpMinor = "minor"
+	BumpPatch = "patch"
+)
+
 // Clone and Desktop scripts are now generated from Go templates
 // embedded in formatter/templates/. See clone.ps1.tmpl and desktop.ps1.tmpl.
 

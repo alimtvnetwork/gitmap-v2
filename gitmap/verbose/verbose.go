@@ -50,9 +50,16 @@ func (l *Logger) Close() {
 
 // Log writes a formatted message to the log file and stderr.
 func (l *Logger) Log(format string, args ...interface{}) {
-	if l == nil || !l.enabled {
+	if l == nil {
 		return
 	}
+	if l.enabled {
+		writeLogEntry(l, format, args...)
+	}
+}
+
+// writeLogEntry writes a timestamped log entry to file and stderr.
+func writeLogEntry(l *Logger, format string, args ...interface{}) {
 	line := fmt.Sprintf(format, args...)
 	ts := time.Now().Format("15:04:05.000")
 	entry := fmt.Sprintf("[%s] %s\n", ts, line)

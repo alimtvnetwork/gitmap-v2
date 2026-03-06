@@ -69,12 +69,8 @@ func WriteReleaseMeta(meta ReleaseMeta) error {
 
 // WriteLatest updates .release/latest.json if the version is the highest stable.
 func WriteLatest(v Version) error {
-	current, err := ReadLatest()
-	if err == nil {
-		currentVer, parseErr := Parse(current.Tag)
-		if parseErr == nil && v.GreaterThan(currentVer) == false {
-			return nil
-		}
+	if latestIsHigher(v) {
+		return nil
 	}
 
 	latest := LatestMeta{
@@ -84,6 +80,23 @@ func WriteLatest(v Version) error {
 	}
 
 	return writeJSON(latestFilePath(), latest)
+}
+
+// latestIsHigher returns true when the existing latest version is >= candidate.
+func latestIsHigher(candidate Version) bool {
+	current, err := ReadLatest()
+	if err != nil {
+		return false
+	}
+	currentVer, parseErr := Parse(current.Tag)
+	if parseErr != nil {
+		return false
+	}
+	if candidate.GreaterThan(currentVer) {
+		return false
+	}
+
+	return true
 }
 
 // ReadLatest reads .release/latest.json.

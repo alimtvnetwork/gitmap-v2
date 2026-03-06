@@ -114,10 +114,9 @@ func parseVersionHeader(header string) string {
 	if len(version) == 0 {
 		return ""
 	}
-
-	if strings.HasPrefix(version, "v") == false {
-		version = "v" + version
+	if strings.HasPrefix(version, "v") {
+		return version
 	}
 
-	return version
+	return "v" + version
 }

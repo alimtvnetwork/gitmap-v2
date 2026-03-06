@@ -147,14 +147,15 @@ func preReleaseGreater(a, b string) bool {
 
 // Bump increments the version by the given level (major, minor, patch).
 func Bump(v Version, level string) (Version, error) {
-	switch level {
-	case "major":
+	if level == constants.BumpMajor {
 		return Version{Major: v.Major + 1, Minor: 0, Patch: 0}, nil
-	case "minor":
-		return Version{Major: v.Major, Minor: v.Minor + 1, Patch: 0}, nil
-	case "patch":
-		return Version{Major: v.Major, Minor: v.Minor, Patch: v.Patch + 1}, nil
-	default:
-		return Version{}, fmt.Errorf("invalid bump level: %s (use major, minor, or patch)", level)
 	}
+	if level == constants.BumpMinor {
+		return Version{Major: v.Major, Minor: v.Minor + 1, Patch: 0}, nil
+	}
+	if level == constants.BumpPatch {
+		return Version{Major: v.Major, Minor: v.Minor, Patch: v.Patch + 1}, nil
+	}
+
+	return Version{}, fmt.Errorf("invalid bump level: %s (use major, minor, or patch)", level)
 }

@@ -33,4 +33,5 @@ const (
 	ReleaseBranchPrefix     = "release/"
 	ChangelogFile           = "CHANGELOG.md"
 	ReadmeFile              = "README.md"
+	ReleaseTagPrefix        = "Release "
 )
