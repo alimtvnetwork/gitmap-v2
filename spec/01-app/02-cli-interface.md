@@ -502,4 +502,6 @@ gitmap lb --contains-fallback    # fall back to --contains if --points-at is emp
 gitmap lb --no-fetch             # skip fetch, use existing remote refs
 gitmap lb 3 --no-fetch --json    # fast: no fetch, top 3 as JSON
 gitmap lb 5 --sort name          # top 5 sorted alphabetically by branch name
+gitmap lb --filter 'feature/*'   # only branches matching feature/*
+gitmap lb 5 --filter release     # top 5 branches containing "release"
 ```
