@@ -126,8 +126,8 @@ const (
 	CmdReleaseBranch      = "release-branch"
 	CmdReleaseBranchAlias = "rb"
 	CmdReleasePending      = "release-pending"
+	CmdReleasePendingAlias = "rp"
 	CmdChangelog          = "changelog"
-	CmdChangelogAlias     = "cl"
 	CmdChangelogMD        = "changelog.md"
 	CmdDoctor             = "doctor"
 )
