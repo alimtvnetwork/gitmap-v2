@@ -139,4 +139,5 @@ const (
 	FlagDescListVerbose   = "Show full paths and URLs"
 	FlagDescGroupDesc     = "Optional group description"
 	FlagDescGroupColor    = "Terminal color for group display"
+	FlagDescConfirm       = "Confirm destructive operation"
 )

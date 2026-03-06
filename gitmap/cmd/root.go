@@ -102,7 +102,7 @@ func dispatch(command string) {
 		return
 	}
 	if command == constants.CmdDBReset {
-		runDBReset()
+		runDBReset(os.Args[2:])
 		return
 	}
 	if command == constants.CmdHelp {
