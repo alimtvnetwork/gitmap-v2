@@ -171,8 +171,11 @@ release/v2.3.0,origin,b7c8d9e,04-Mar-2025 05:45 PM,Bump version,origin/release/v
 
 ## File Layout
 
-| File                          | Purpose                              |
-|-------------------------------|--------------------------------------|
-| `cmd/latestbranch.go`         | CLI handler, flag parsing, output    |
-| `gitutil/latestbranch.go`     | Git operations (fetch, list, log)    |
-| `constants/constants.go`      | Command name, alias, messages, flags |
+| File                              | Purpose                                      |
+|-----------------------------------|----------------------------------------------|
+| `cmd/latestbranch.go`             | Config struct, flag parsing, orchestrator    |
+| `cmd/latestbranchresolve.go`      | Result type, branch name resolve helpers     |
+| `cmd/latestbranchoutput.go`       | JSON/CSV/terminal output formatters          |
+| `gitutil/latestbranch.go`         | Core git operations: list, filter, sort      |
+| `gitutil/latestbranchresolve.go`  | ReadBranchTips, ResolvePointsAt, ResolveContains |
+| `constants/constants.go`          | Command name, alias, messages, flags         |
