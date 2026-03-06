@@ -369,7 +369,7 @@ function Deploy-Binary {
                     Write-Warn "Deploy failed - restoring previous binary from backup"
                     try {
                         Copy-Item $backupFile $destFile -Force -ErrorAction Stop
-                        Write-Success "Rollback complete — previous version restored"
+                        Write-Success "Rollback complete - previous version restored"
                     } catch {
                         Write-Fail "Rollback also failed: $_"
                     }
