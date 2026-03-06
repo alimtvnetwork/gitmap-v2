@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.5.0
+- Added `--format` flag to `latest-branch`: supports `terminal` (default), `json`, and `csv` output formats.
+  - CSV outputs a header row + data rows to stdout, suitable for piping and spreadsheets.
+  - `--json` remains as shorthand for `--format json`.
+- Refactored `latest-branch` output into dedicated functions per format.
+
 ## v2.4.1
 - Added positional integer shorthand for `latest-branch`: `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
 

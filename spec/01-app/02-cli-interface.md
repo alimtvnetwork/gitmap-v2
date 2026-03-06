@@ -366,13 +366,14 @@ activates whenever existing repos are detected during a clone operation.
 
 ## Latest-Branch Flags
 
-| Flag                    | Description                                          | Default  |
-|-------------------------|------------------------------------------------------|----------|
-| `--remote <name>`       | Remote to filter branches against                    | `origin` |
-| `--all-remotes`         | Include branches from all remotes                    | `false`  |
-| `--contains-fallback`   | Fall back to `--contains` if `--points-at` is empty  | `false`  |
-| `--top <n>`             | Show top N most recently updated branches            | `0`      |
-| `--json`                | Output structured JSON instead of plain text         | `false`  |
+| Flag                    | Description                                          | Default    |
+|-------------------------|------------------------------------------------------|------------|
+| `--remote <name>`       | Remote to filter branches against                    | `origin`   |
+| `--all-remotes`         | Include branches from all remotes                    | `false`    |
+| `--contains-fallback`   | Fall back to `--contains` if `--points-at` is empty  | `false`    |
+| `--top <n>`             | Show top N most recently updated branches            | `0`        |
+| `--format <fmt>`        | Output format: `terminal`, `json`, `csv`             | `terminal` |
+| `--json`                | Shorthand for `--format json`                        | `false`    |
 
 ## Examples
 
