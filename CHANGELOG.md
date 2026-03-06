@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.1
+- Added positional integer shorthand for `latest-branch`: `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
+
 ## v2.4.0
 - Added `gitmap latest-branch` (`lb`) command: finds the most recently updated remote branch by commit date and displays name, SHA, date, and subject.
   - Flags: `--remote`, `--all-remotes`, `--contains-fallback`, `--top N`, `--json`.
