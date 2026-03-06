@@ -105,3 +105,15 @@ exit 0
 
 // Backup file extension glob.
 const OldBackupGlob = "*.old"
+
+// PowerShell execution arguments.
+const (
+	PSBin            = "powershell"
+	PSExecPolicy     = "-ExecutionPolicy"
+	PSBypass         = "Bypass"
+	PSNoProfile      = "-NoProfile"
+	PSNoLogo         = "-NoLogo"
+	PSFile           = "-File"
+	PSNonInteractive = "-NonInteractive"
+	PSCommand        = "-Command"
+)

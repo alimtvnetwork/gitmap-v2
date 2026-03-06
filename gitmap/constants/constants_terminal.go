@@ -155,10 +155,17 @@ var LatestBranchCSVHeaders = []string{
 	"branch", "remote", "sha", "commitDate", "subject", "ref",
 }
 
-// Status terminal table header columns.
-var StatusTableColumns = []string{
-	"REPO", "BRANCH", "STATE", "SYNC", "STASH", "FILES",
-}
+// Latest-branch terminal display format strings.
+const (
+	LBTermLatestFmt  = "  Latest branch: %s\n"
+	LBTermRemoteFmt  = "  Remote:        %s\n"
+	LBTermSHAFmt     = "  SHA:           %s\n"
+	LBTermDateFmt    = "  Commit date:   %s\n"
+	LBTermSubjectFmt = "  Subject:       %s\n"
+	LBTermRefFmt     = "  Ref:           %s\n"
+	LBTermTopHdrFmt  = "  Top %d most recently updated remote branches (%s):\n"
+	LBTermRowFmt     = "  %-30s %-30s %-9s %s\n"
+)
 
 // Latest-branch terminal table header columns.
 var LatestBranchTableColumns = []string{
