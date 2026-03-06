@@ -76,12 +76,40 @@ const SQLUpsertRepoByPath = `INSERT INTO repos (id, slug, repo_name, https_url, 
 // SQL: create unique index on absolute_path for upsert-by-path.
 const SQLCreateAbsPathIndex = "CREATE UNIQUE INDEX IF NOT EXISTS idx_repos_absolute_path ON repos(absolute_path)"
 
+// SQL: group operations.
+const (
+	SQLInsertGroup = "INSERT INTO groups (id, name, description, color) VALUES (?, ?, ?, ?)"
+
+	SQLSelectAllGroups = "SELECT id, name, description, color, created_at FROM groups ORDER BY name"
+
+	SQLSelectGroupByName = "SELECT id, name, description, color, created_at FROM groups WHERE name = ?"
+
+	SQLDeleteGroup = "DELETE FROM groups WHERE name = ?"
+
+	SQLInsertGroupRepo = "INSERT OR IGNORE INTO group_repos (group_id, repo_id) VALUES (?, ?)"
+
+	SQLDeleteGroupRepo = "DELETE FROM group_repos WHERE group_id = ? AND repo_id = ?"
+
+	SQLSelectGroupRepos = `SELECT r.id, r.slug, r.repo_name, r.https_url, r.ssh_url, r.branch,
+		r.relative_path, r.absolute_path, r.clone_instruction, r.notes
+		FROM repos r JOIN group_repos gr ON r.id = gr.repo_id WHERE gr.group_id = ? ORDER BY r.slug`
+
+	SQLCountGroupRepos = "SELECT COUNT(*) FROM group_repos WHERE group_id = ?"
+)
+
 // Store error messages.
 const (
-	ErrDBOpen      = "failed to open database: %v"
-	ErrDBMigrate   = "failed to initialize tables: %v"
-	ErrDBUpsert    = "failed to upsert repo: %v"
-	ErrDBQuery     = "failed to query repos: %v"
-	ErrDBNoMatch   = "no repo matches slug: %s"
-	ErrDBCreateDir = "failed to create database directory: %v"
+	ErrDBOpen        = "failed to open database: %v"
+	ErrDBMigrate     = "failed to initialize tables: %v"
+	ErrDBUpsert      = "failed to upsert repo: %v"
+	ErrDBQuery       = "failed to query repos: %v"
+	ErrDBNoMatch     = "no repo matches slug: %s"
+	ErrDBCreateDir   = "failed to create database directory: %v"
+	ErrDBGroupCreate = "failed to create group: %v"
+	ErrDBGroupQuery  = "failed to query groups: %v"
+	ErrDBGroupAdd    = "failed to add repo to group: %v"
+	ErrDBGroupRemove = "failed to remove repo from group: %v"
+	ErrDBGroupDelete = "failed to delete group: %v"
+	ErrDBGroupNone   = "no group found: %s"
+	ErrDBGroupExists = "group already exists: %s"
 )
