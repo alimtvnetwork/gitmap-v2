@@ -38,7 +38,7 @@ func dispatch(command string) {
 		return
 	}
 	if command == constants.CmdVersion || command == constants.CmdVersionAlias {
-		fmt.Printf("gitmap v%s\n", constants.Version)
+		fmt.Printf(constants.MsgVersionFmt, constants.Version)
 		return
 	}
 	if command == constants.CmdDesktopSync || command == constants.CmdDesktopSyncAlias {
@@ -113,7 +113,7 @@ func dispatch(command string) {
 		runUpdateCleanup()
 		return
 	}
-	fmt.Fprintf(os.Stderr, "Unknown command: %s\n", command)
+	fmt.Fprintf(os.Stderr, constants.ErrUnknownCommand, command)
 	printUsage()
 	os.Exit(1)
 }

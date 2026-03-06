@@ -21,16 +21,22 @@ func runClone(args []string) {
 		fmt.Fprintln(os.Stderr, constants.ErrCloneUsage)
 		os.Exit(1)
 	}
-	if verboseMode {
-		log, err := verbose.Init()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: could not create verbose log: %v\n", err)
-		} else {
-			defer log.Close()
-		}
-	}
+	initCloneVerbose(verboseMode)
 	source = resolveCloneShorthand(source)
 	executeClone(source, targetDir, safePull, ghDesktop)
+}
+
+// initCloneVerbose sets up verbose logging if enabled.
+func initCloneVerbose(enabled bool) {
+	if enabled {
+		log, err := verbose.Init()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, constants.WarnVerboseLogFailed, err)
+
+			return
+		}
+		defer log.Close()
+	}
 }
 
 // resolveCloneShorthand maps "json", "csv", and "text" to default output paths.
@@ -41,14 +47,23 @@ func resolveCloneShorthand(source string) string {
 		constants.ShorthandText: filepath.Join(constants.DefaultOutputFolder, constants.DefaultTextFile),
 	}
 	resolved, ok := shorthandMap[strings.ToLower(source)]
-	if !ok {
-		return source
+	if ok {
+		return validateShorthandPath(resolved)
 	}
-	if _, err := os.Stat(resolved); os.IsNotExist(err) {
-		fmt.Fprintf(os.Stderr, constants.ErrShorthandNotFound, resolved)
-		os.Exit(1)
+
+	return source
+}
+
+// validateShorthandPath checks that the resolved shorthand file exists.
+func validateShorthandPath(resolved string) string {
+	_, err := os.Stat(resolved)
+	if err == nil {
+		return resolved
 	}
-	return resolved
+	fmt.Fprintf(os.Stderr, constants.ErrShorthandNotFound, resolved)
+	os.Exit(1)
+
+	return ""
 }
 
 // executeClone runs the clone operation and prints the summary.
@@ -58,7 +73,7 @@ func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, err)
 		os.Exit(1)
 	}
-	printSummary(summary)
+	printCloneSummary(summary)
 	registerCloned(summary, targetDir, ghDesktop)
 }
 
@@ -83,19 +98,14 @@ func buildClonedRecords(s model.CloneSummary, targetDir string) []model.ScanReco
 	return records
 }
 
-// printSummary displays clone results to the user.
-func printSummary(s model.CloneSummary) {
+// printCloneSummary displays clone results and any failures.
+func printCloneSummary(s model.CloneSummary) {
 	fmt.Printf(constants.MsgCloneComplete, s.Succeeded, s.Failed)
 	if s.Failed > 0 {
-		printFailures(s)
-	}
-}
-
-// printFailures lists each failed clone operation.
-func printFailures(s model.CloneSummary) {
-	fmt.Println(constants.MsgFailedClones)
-	for _, e := range s.Errors {
-		fmt.Printf(constants.MsgFailedEntry,
-			e.Record.RepoName, e.Record.RelativePath, e.Error)
+		fmt.Println(constants.MsgFailedClones)
+		for _, e := range s.Errors {
+			fmt.Printf(constants.MsgFailedEntry,
+				e.Record.RepoName, e.Record.RelativePath, e.Error)
+		}
 	}
 }

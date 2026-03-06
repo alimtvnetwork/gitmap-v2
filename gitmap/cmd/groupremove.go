@@ -16,6 +16,7 @@ func runGroupRemove(args []string) {
 	}
 	groupName := args[0]
 	slugs := args[1:]
+
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
@@ -31,18 +32,16 @@ func runGroupRemove(args []string) {
 // removeOneSlugFromGroup resolves a slug and removes matching repos.
 func removeOneSlugFromGroup(db *store.DB, groupName, slug string) {
 	repos, err := db.FindBySlug(slug)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrDBNoMatch+"\n", slug)
-		return
-	}
-	if len(repos) == 0 {
-		fmt.Fprintf(os.Stderr, constants.ErrDBNoMatch+"\n", slug)
+	if err != nil || len(repos) == 0 {
+		fmt.Fprintf(os.Stderr, constants.ErrDBNoMatch, slug)
+
 		return
 	}
 	for _, r := range repos {
 		err := db.RemoveRepoFromGroup(groupName, r.ID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
+			fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
+
 			return
 		}
 		fmt.Printf(constants.MsgGroupRemoved, r.Slug, groupName)

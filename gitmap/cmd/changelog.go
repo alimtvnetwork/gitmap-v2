@@ -17,44 +17,66 @@ import (
 // runChangelog handles the 'changelog' command.
 func runChangelog(args []string) {
 	version, latest, limit, openFile := parseChangelogFlags(args)
-	if strings.EqualFold(version, constants.ChangelogFile) || strings.EqualFold(version, constants.CmdChangelogMD) {
-		openFile = true
-		version = ""
-	}
-
+	version, openFile = resolveChangelogAlias(version, openFile)
 	if openFile {
-		err := openChangelogFile()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, err)
-			os.Exit(1)
-		}
-		if latest == false && len(version) == 0 {
-			return
-		}
+		handleChangelogOpen(latest, version)
+	}
+	if latest == false && len(version) == 0 && openFile {
+		return
 	}
 
+	dispatchChangelogOutput(version, latest, limit)
+}
+
+// resolveChangelogAlias detects if the version arg is actually a file-open alias.
+func resolveChangelogAlias(version string, openFile bool) (string, bool) {
+	if strings.EqualFold(version, constants.ChangelogFile) || strings.EqualFold(version, constants.CmdChangelogMD) {
+		return "", true
+	}
+
+	return version, openFile
+}
+
+// handleChangelogOpen opens the changelog file and exits on error.
+func handleChangelogOpen(latest bool, version string) {
+	err := openChangelogFile()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, err)
+		os.Exit(1)
+	}
+	if latest == false && len(version) == 0 {
+		os.Exit(0)
+	}
+}
+
+// dispatchChangelogOutput prints the appropriate changelog entries.
+func dispatchChangelogOutput(version string, latest bool, limit int) {
 	entries, err := release.ReadChangelog()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogRead, err)
 		os.Exit(1)
 	}
-
 	if latest {
 		printChangelogEntries(entries, 1)
+
 		return
 	}
-
 	if len(version) > 0 {
-		entry, found := release.FindChangelogEntry(entries, version)
-		if found == false {
-			fmt.Fprintf(os.Stderr, constants.ErrChangelogVersionNotFound, release.NormalizeVersion(version))
-			os.Exit(1)
-		}
-		printChangelogEntry(entry)
+		printSingleVersion(entries, version)
+
 		return
 	}
-
 	printChangelogEntries(entries, limit)
+}
+
+// printSingleVersion finds and prints one version's changelog.
+func printSingleVersion(entries []release.ChangelogEntry, version string) {
+	entry, found := release.FindChangelogEntry(entries, version)
+	if found == false {
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogVersionNotFound, release.NormalizeVersion(version))
+		os.Exit(1)
+	}
+	printChangelogEntry(entry)
 }
 
 // parseChangelogFlags parses flags for the changelog command.
@@ -69,7 +91,6 @@ func parseChangelogFlags(args []string) (version string, latest bool, limit int,
 	if fs.NArg() > 0 {
 		version = fs.Arg(0)
 	}
-
 	if *limitFlag < 1 {
 		*limitFlag = 1
 	}
@@ -89,9 +110,9 @@ func printChangelogEntries(entries []release.ChangelogEntry, limit int) {
 
 // printChangelogEntry prints a single changelog entry.
 func printChangelogEntry(entry release.ChangelogEntry) {
-	fmt.Printf("\n%s\n", entry.Version)
+	fmt.Printf(constants.ChangelogVersionFmt+"\n", entry.Version)
 	for _, note := range entry.Notes {
-		fmt.Printf("  - %s\n", note)
+		fmt.Printf(constants.ChangelogNoteFmt+"\n", note)
 	}
 }
 
@@ -102,15 +123,22 @@ func openChangelogFile() error {
 		return err
 	}
 
-	if runtime.GOOS == "windows" {
-		cmd := exec.Command("cmd", "/c", "start", "", absPath)
-		return cmd.Run()
-	}
-	if runtime.GOOS == "darwin" {
-		cmd := exec.Command("open", absPath)
-		return cmd.Run()
-	}
+	return runOpenCommand(absPath)
+}
 
-	cmd := exec.Command("xdg-open", absPath)
+// runOpenCommand executes the platform-specific open command.
+func runOpenCommand(path string) error {
+	if runtime.GOOS == constants.OSWindows {
+		cmd := exec.Command("cmd", "/c", "start", "", path)
+
+		return cmd.Run()
+	}
+	if runtime.GOOS == constants.OSDarwin {
+		cmd := exec.Command("open", path)
+
+		return cmd.Run()
+	}
+	cmd := exec.Command("xdg-open", path)
+
 	return cmd.Run()
 }

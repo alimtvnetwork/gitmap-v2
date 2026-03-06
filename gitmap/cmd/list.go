@@ -12,21 +12,19 @@ import (
 
 // runList handles the "list" subcommand.
 func runList(args []string) {
-	groupFilter, verbose := parseListFlags(args)
+	groupFilter, verboseMode := parseListFlags(args)
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
 		os.Exit(1)
 	}
 	defer db.Close()
-
 	records, err := loadListRecords(db, groupFilter)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
 		os.Exit(1)
 	}
-
-	printListOutput(records, verbose)
+	printListOutput(records, verboseMode)
 }
 
 // parseListFlags parses flags for the list command.
@@ -52,6 +50,7 @@ func loadListRecords(db *store.DB, group string) ([]model.ScanRecord, error) {
 func printListOutput(records []model.ScanRecord, verbose bool) {
 	if len(records) == 0 {
 		fmt.Println(constants.MsgListEmpty)
+
 		return
 	}
 	fmt.Println(constants.MsgListHeader)
@@ -65,6 +64,7 @@ func printListOutput(records []model.ScanRecord, verbose bool) {
 func printListRow(r model.ScanRecord, verbose bool) {
 	if verbose {
 		fmt.Printf(constants.MsgListVerboseFmt, r.Slug, r.RepoName, r.AbsolutePath)
+
 		return
 	}
 	fmt.Printf(constants.MsgListRowFmt, r.Slug, r.RepoName)

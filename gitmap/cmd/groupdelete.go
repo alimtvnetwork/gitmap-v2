@@ -14,6 +14,11 @@ func runGroupDelete(args []string) {
 		os.Exit(1)
 	}
 	name := args[0]
+	executeGroupDelete(name)
+}
+
+// executeGroupDelete opens the DB and deletes the group.
+func executeGroupDelete(name string) {
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
@@ -23,7 +28,7 @@ func runGroupDelete(args []string) {
 
 	err = db.DeleteGroup(name)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
 	fmt.Printf(constants.MsgGroupDeleted, name)

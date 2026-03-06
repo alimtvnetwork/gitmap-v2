@@ -37,33 +37,43 @@ func parseSetupFlags(args []string) (configPath string, dryRun bool) {
 // printSetupBanner shows the setup header.
 func printSetupBanner(dryRun bool) {
 	fmt.Println()
-	fmt.Printf("  %s╔══════════════════════════════════════╗%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s║         gitmap setup                 ║%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s╚══════════════════════════════════════╝%s\n", constants.ColorCyan, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.SetupBannerTop, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.SetupBannerTitle, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.SetupBannerBottom, constants.ColorReset)
 	if dryRun {
-		fmt.Printf("\n  %s[DRY RUN] No changes will be made%s\n", constants.ColorYellow, constants.ColorReset)
+		fmt.Printf("\n  %s%s%s\n", constants.ColorYellow, constants.SetupDryRunFmt, constants.ColorReset)
 	}
 }
 
 // printSetupSummary shows the final results.
 func printSetupSummary(r setup.SetupResult) {
 	fmt.Println()
-	fmt.Printf("  %s──────────────────────────────────────────%s\n", constants.ColorDim, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermSeparator, constants.ColorReset)
+	_ = filepath.Abs(".")
+	printSetupCounts(r)
+	printSetupErrors(r)
+	fmt.Println()
+}
 
-	binDir, _ := filepath.Abs(".")
-	_ = binDir
-
+// printSetupCounts prints applied/skipped/failed counts.
+func printSetupCounts(r setup.SetupResult) {
 	if r.Applied > 0 {
-		fmt.Printf("  %s✓ %d settings applied%s\n", constants.ColorGreen, r.Applied, constants.ColorReset)
+		fmt.Printf("  %s"+constants.SetupAppliedFmt+"%s\n", constants.ColorGreen, r.Applied, constants.ColorReset)
 	}
 	if r.Skipped > 0 {
-		fmt.Printf("  %s⊘ %d settings unchanged%s\n", constants.ColorDim, r.Skipped, constants.ColorReset)
+		fmt.Printf("  %s"+constants.SetupSkippedFmt+"%s\n", constants.ColorDim, r.Skipped, constants.ColorReset)
 	}
 	if r.Failed > 0 {
-		fmt.Printf("  %s✗ %d settings failed%s\n", constants.ColorYellow, r.Failed, constants.ColorReset)
-		for _, e := range r.Errors {
-			fmt.Printf("    %s- %s%s\n", constants.ColorYellow, e, constants.ColorReset)
-		}
+		fmt.Printf("  %s"+constants.SetupFailedFmt+"%s\n", constants.ColorYellow, r.Failed, constants.ColorReset)
 	}
-	fmt.Println()
+}
+
+// printSetupErrors prints each failed setting detail.
+func printSetupErrors(r setup.SetupResult) {
+	if r.Failed == 0 {
+		return
+	}
+	for _, e := range r.Errors {
+		fmt.Printf("    %s"+constants.SetupErrorEntryFmt+"%s\n", constants.ColorYellow, e, constants.ColorReset)
+	}
 }

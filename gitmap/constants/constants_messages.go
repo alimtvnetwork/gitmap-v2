@@ -23,8 +23,30 @@ const (
 	LBUnknownBranch             = "<unknown>"
 )
 
-// Generic error format.
-const ErrGenericFmt = "Error: %v\n"
+// Generic error formats.
+const (
+	ErrGenericFmt = "Error: %v\n"
+	ErrBareFmt    = "%v\n"
+)
+
+// OS platform constants.
+const OSDarwin = "darwin"
+
+// Desktop sync error messages.
+const (
+	ErrDesktopReadFailed  = "Error reading %s: %v\n"
+	ErrDesktopParseFailed = "Error parsing JSON from %s: %v\n"
+	ErrNoAbsPath          = "no absolute path"
+)
+
+// Command dispatch errors.
+const (
+	ErrUnknownCommand  = "Unknown command: %s\n"
+	ErrUnknownGroupSub = "Unknown group subcommand: %s\n"
+)
+
+// Version display.
+const MsgVersionFmt = "gitmap v%s\n"
 
 // CLI messages.
 const (

@@ -110,7 +110,7 @@ const (
 	ErrDBMigrate     = "failed to initialize tables: %v"
 	ErrDBUpsert      = "failed to upsert repo: %v"
 	ErrDBQuery       = "failed to query repos: %v"
-	ErrDBNoMatch     = "no repo matches slug: %s"
+	ErrDBNoMatch     = "no repo matches slug: %s\n"
 	ErrDBCreateDir   = "failed to create database directory: %v"
 	ErrDBGroupCreate = "failed to create group: %v"
 	ErrDBGroupQuery  = "failed to query groups: %v"

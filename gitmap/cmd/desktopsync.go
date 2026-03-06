@@ -14,49 +14,37 @@ import (
 // runDesktopSync handles the "desktop-sync" subcommand.
 func runDesktopSync() {
 	outputDir := constants.DefaultOutputFolder
-	if dirMissing(outputDir) {
-		fmt.Fprintln(os.Stderr, constants.MsgNoOutputDir)
-		os.Exit(1)
-		return
-	}
 	jsonPath := filepath.Join(outputDir, constants.DefaultJSONFile)
-	if fileMissing(jsonPath) {
-		fmt.Fprintf(os.Stderr, constants.MsgNoJSONFile, jsonPath)
-		os.Exit(1)
-		return
-	}
-	records := loadRecords(jsonPath)
+	validateDesktopSyncPaths(outputDir, jsonPath)
+	records := loadDesktopRecords(jsonPath)
 	syncToDesktop(records, jsonPath)
 }
 
-// dirMissing returns true if the directory does not exist.
-func dirMissing(path string) bool {
-	info, err := os.Stat(path)
-	if err != nil {
-		return true
+// validateDesktopSyncPaths checks that the output dir and JSON file exist.
+func validateDesktopSyncPaths(outputDir, jsonPath string) {
+	info, err := os.Stat(outputDir)
+	if err != nil || info.IsDir() == false {
+		fmt.Fprintln(os.Stderr, constants.MsgNoOutputDir)
+		os.Exit(1)
 	}
-
-	return !info.IsDir()
+	_, jsonErr := os.Stat(jsonPath)
+	if jsonErr != nil {
+		fmt.Fprintf(os.Stderr, constants.MsgNoJSONFile, jsonPath)
+		os.Exit(1)
+	}
 }
 
-// fileMissing returns true if the file does not exist.
-func fileMissing(path string) bool {
-	_, err := os.Stat(path)
-
-	return err != nil
-}
-
-// loadRecords reads and parses the JSON file into ScanRecords.
-func loadRecords(path string) []model.ScanRecord {
+// loadDesktopRecords reads and parses the JSON file into ScanRecords.
+func loadDesktopRecords(path string) []model.ScanRecord {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading %s: %v\n", path, err)
+		fmt.Fprintf(os.Stderr, constants.ErrDesktopReadFailed, path, err)
 		os.Exit(1)
 	}
 	var records []model.ScanRecord
 	err = json.Unmarshal(data, &records)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error parsing JSON from %s: %v\n", path, err)
+		fmt.Fprintf(os.Stderr, constants.ErrDesktopParseFailed, path, err)
 		os.Exit(1)
 	}
 
@@ -65,21 +53,16 @@ func loadRecords(path string) []model.ScanRecord {
 
 // syncToDesktop registers each repo with GitHub Desktop.
 func syncToDesktop(records []model.ScanRecord, source string) {
-	if desktopMissing() {
-		fmt.Fprintln(os.Stderr, constants.MsgDesktopNotFound)
-		os.Exit(1)
+	_, err := exec.LookPath(constants.GitHubDesktopBin)
+	if err == nil {
+		fmt.Printf(constants.MsgDesktopSyncStart, source)
+		added, skipped, failed := syncAll(records)
+		fmt.Printf(constants.MsgDesktopSyncDone, added, skipped, failed)
+
 		return
 	}
-	fmt.Printf(constants.MsgDesktopSyncStart, source)
-	added, skipped, failed := syncAll(records)
-	fmt.Printf(constants.MsgDesktopSyncDone, added, skipped, failed)
-}
-
-// desktopMissing returns true if GitHub Desktop CLI is not found.
-func desktopMissing() bool {
-	_, err := exec.LookPath(constants.GitHubDesktopBin)
-
-	return err != nil
+	fmt.Fprintln(os.Stderr, constants.MsgDesktopNotFound)
+	os.Exit(1)
 }
 
 // syncAll iterates records and syncs each to GitHub Desktop.
@@ -103,26 +86,24 @@ const (
 
 // syncOne attempts to register a single repo with GitHub Desktop.
 func syncOne(r model.ScanRecord) syncResult {
-	repoPath := r.AbsolutePath
-	if repoPath == "" {
-		fmt.Printf(constants.MsgDesktopSyncFailed, r.RepoName, "no absolute path")
+	if len(r.AbsolutePath) == 0 {
+		fmt.Printf(constants.MsgDesktopSyncFailed, r.RepoName, constants.ErrNoAbsPath)
 
 		return syncFailed
 	}
-	if pathMissing(repoPath) {
-		fmt.Printf(constants.MsgDesktopSyncSkipped, r.RepoName)
 
-		return syncSkipped
-	}
-
-	return registerOne(r.RepoName, repoPath)
+	return syncExistingPath(r)
 }
 
-// pathMissing returns true if a directory path does not exist.
-func pathMissing(path string) bool {
-	_, err := os.Stat(path)
+// syncExistingPath checks path existence and registers with Desktop.
+func syncExistingPath(r model.ScanRecord) syncResult {
+	_, err := os.Stat(r.AbsolutePath)
+	if err == nil {
+		return registerOne(r.RepoName, r.AbsolutePath)
+	}
+	fmt.Printf(constants.MsgDesktopSyncSkipped, r.RepoName)
 
-	return err != nil
+	return syncSkipped
 }
 
 // registerOne calls the GitHub Desktop CLI for a single repo.

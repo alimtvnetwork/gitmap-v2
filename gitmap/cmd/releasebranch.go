@@ -22,7 +22,7 @@ func runReleaseBranch(args []string) {
 
 	err := release.ExecuteFromBranch(branch, assets, draft, dryRun)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
 }

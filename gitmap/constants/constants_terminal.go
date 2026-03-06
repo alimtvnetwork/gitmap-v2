@@ -56,6 +56,24 @@ const (
 	TruncateEllipsis    = "…"
 )
 
+// Setup banner box-drawing.
+const (
+	SetupBannerTop     = "╔══════════════════════════════════════╗"
+	SetupBannerTitle   = "║         gitmap setup                 ║"
+	SetupBannerBottom  = "╚══════════════════════════════════════╝"
+	SetupDryRunFmt     = "[DRY RUN] No changes will be made"
+	SetupAppliedFmt    = "✓ %d settings applied"
+	SetupSkippedFmt    = "⊘ %d settings unchanged"
+	SetupFailedFmt     = "✗ %d settings failed"
+	SetupErrorEntryFmt = "- %s"
+)
+
+// Changelog entry format strings.
+const (
+	ChangelogVersionFmt = "\n%s"
+	ChangelogNoteFmt    = "  - %s"
+)
+
 // Exec banner box-drawing.
 const (
 	ExecBannerTop     = "╔══════════════════════════════════════╗"

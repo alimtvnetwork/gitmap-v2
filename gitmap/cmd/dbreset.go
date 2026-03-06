@@ -38,7 +38,6 @@ func executeDBReset() {
 		os.Exit(1)
 	}
 	defer db.Close()
-
 	err = db.Reset()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrDBResetFailed, err)

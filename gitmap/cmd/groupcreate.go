@@ -15,6 +15,11 @@ func runGroupCreate(args []string) {
 		fmt.Fprintln(os.Stderr, constants.ErrGroupNameReq)
 		os.Exit(1)
 	}
+	executeGroupCreate(name, desc, color)
+}
+
+// executeGroupCreate opens the DB and creates the group.
+func executeGroupCreate(name, desc, color string) {
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
@@ -24,7 +29,7 @@ func runGroupCreate(args []string) {
 
 	_, err = db.CreateGroup(name, desc, color)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
 	fmt.Printf(constants.MsgGroupCreated, name)

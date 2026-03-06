@@ -15,6 +15,11 @@ func runGroupShow(args []string) {
 		os.Exit(1)
 	}
 	name := args[0]
+	executeGroupShow(name)
+}
+
+// executeGroupShow opens the DB and displays group repos.
+func executeGroupShow(name string) {
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
@@ -24,10 +29,9 @@ func runGroupShow(args []string) {
 
 	repos, err := db.ShowGroup(name)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
-
 	printGroupShowOutput(name, repos)
 }
 

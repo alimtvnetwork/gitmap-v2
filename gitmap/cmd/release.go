@@ -14,23 +14,21 @@ import (
 func runRelease(args []string) {
 	version, assets, commit, branch, bump, draft, dryRun, verbose := parseReleaseFlags(args)
 	_ = verbose
-
 	validateReleaseFlags(version, bump, commit, branch)
+	executeRelease(version, assets, commit, branch, bump, draft, dryRun, verbose)
+}
 
+// executeRelease builds options and runs the release workflow.
+func executeRelease(version, assets, commit, branch, bump string, draft, dryRun, verbose bool) {
 	opts := release.Options{
-		Version: version,
-		Assets:  assets,
-		Commit:  commit,
-		Branch:  branch,
-		Bump:    bump,
-		Draft:   draft,
-		DryRun:  dryRun,
-		Verbose: verbose,
+		Version: version, Assets: assets,
+		Commit: commit, Branch: branch,
+		Bump: bump, Draft: draft,
+		DryRun: dryRun, Verbose: verbose,
 	}
-
 	err := release.Execute(opts)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
 }
