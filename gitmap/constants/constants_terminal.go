@@ -50,7 +50,8 @@ const (
 	SummaryAheadFmt   = "%d ahead"
 	SummaryBehindFmt  = "%d behind"
 	SummaryStashedFmt = "%d stashed"
-	SummaryMissingFmt = "%d missing"
+	SummaryMissingFmt    = "%d missing"
+	StatusFileCountSep   = " "
 )
 
 // Terminal output sections.

@@ -105,7 +105,7 @@ func buildFileCountParts(rs gitutil.RepoStatus) string {
 		parts = append(parts, fmt.Sprintf("%s"+constants.StatusUntrackedFmt+"%s", constants.ColorDim, rs.Untracked, constants.ColorReset))
 	}
 
-	return strings.Join(parts, " ")
+	return strings.Join(parts, constants.StatusFileCountSep)
 }
 
 // truncate shortens a string to maxLen, adding ellipsis if needed.
