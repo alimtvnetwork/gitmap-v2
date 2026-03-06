@@ -472,7 +472,7 @@ $config = Load-Config
 if (-not $NoPull) {
     Invoke-GitPull
 } else {
-    Write-Info "Skipping git pull (--NoPull)"
+    Write-Info "Skipping git pull (-NoPull)"
 }
 
 Resolve-Dependencies
