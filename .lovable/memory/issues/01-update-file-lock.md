@@ -10,9 +10,8 @@ Five-layer fix:
 
 1. **Copy-and-handoff** (`gitmap/cmd/update.go`):
    - Parent copies itself to same directory as `gitmap-update-<pid>.exe` (fallback to `%TEMP%`)
-   - Launches the copy with hidden `update-runner` command
-   - Parent **exits immediately** via `cmd.Start()` + `os.Exit(0)` to release the file lock
-   - **MUST use `cmd.Start()`, never `cmd.Run()`** — synchronous wait holds the lock
+   - Launches the copy with hidden `update-runner` command using `cmd.Run()` (foreground/blocking)
+   - The handoff copy is a different file so the parent's lock does NOT conflict
 
 2. **Rename-first PATH sync** (`run.ps1` in `-Update` mode):
    - Renames the active binary to `.old` (Windows allows renaming a running exe)
