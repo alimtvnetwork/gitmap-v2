@@ -317,6 +317,7 @@ const (
 	HelpReleasePend = "  release-pending (rp) Release all pending branches without tags"
 	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
 	HelpDoctor      = "  doctor [--fix-path] Diagnose PATH, deploy, and version issues"
+	HelpLatestBr    = "  latest-branch (lb)  Find most recently updated remote branch"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
