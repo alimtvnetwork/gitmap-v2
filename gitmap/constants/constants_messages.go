@@ -81,6 +81,8 @@ const (
 	ErrGroupSlugReq     = "Error: at least one slug is required"
 	ErrListDBFailed     = "Error: could not open database: %v\nRun 'gitmap scan' first.\n"
 	ErrNoDatabase       = "No database found. Run 'gitmap scan' first."
+	MsgDBResetDone    = "Database reset: all repos and groups cleared.\n"
+	ErrDBResetFailed  = "Error: database reset failed: %v\n"
 )
 
 // Latest-branch error messages.

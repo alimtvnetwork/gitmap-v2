@@ -45,6 +45,7 @@ const (
 	CmdGroupList           = "list"
 	CmdGroupShow           = "show"
 	CmdGroupDelete         = "delete"
+	CmdDBReset             = "db-reset"
 )
 
 // Clone shorthands.
@@ -77,6 +78,7 @@ const (
 	HelpLatestBr      = "  latest-branch (lb)  Find most recently updated remote branch"
 	HelpList          = "  list (ls)           Show all tracked repos with slugs"
 	HelpGroup         = "  group (g) <sub>     Manage repo groups (create, add, remove, list, show, delete)"
+	HelpDBReset       = "  db-reset            Clear all tracked repos and groups from the database"
 	HelpHelp          = "  help                Show this help message"
 	HelpScanFlags     = "Scan flags:"
 	HelpConfig        = "  --config <path>     Config file (default: ./data/config.json)"

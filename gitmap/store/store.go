@@ -49,6 +49,23 @@ func (db *DB) Migrate() error {
 	return nil
 }
 
+// Reset drops all tables and recreates them for a fresh start.
+func (db *DB) Reset() error {
+	drops := []string{
+		constants.SQLDropGroupRepos,
+		constants.SQLDropGroups,
+		constants.SQLDropRepos,
+	}
+
+	for _, stmt := range drops {
+		if _, err := db.conn.Exec(stmt); err != nil {
+			return fmt.Errorf(constants.ErrDBMigrate, err)
+		}
+	}
+
+	return db.Migrate()
+}
+
 // Close closes the database connection.
 func (db *DB) Close() error {
 	return db.conn.Close()

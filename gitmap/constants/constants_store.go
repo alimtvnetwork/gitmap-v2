@@ -97,6 +97,13 @@ const (
 	SQLCountGroupRepos = "SELECT COUNT(*) FROM group_repos WHERE group_id = ?"
 )
 
+// SQL: reset operations.
+const (
+	SQLDropGroupRepos = "DROP TABLE IF EXISTS group_repos"
+	SQLDropGroups     = "DROP TABLE IF EXISTS groups"
+	SQLDropRepos      = "DROP TABLE IF EXISTS repos"
+)
+
 // Store error messages.
 const (
 	ErrDBOpen        = "failed to open database: %v"
