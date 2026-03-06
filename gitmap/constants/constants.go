@@ -250,6 +250,7 @@ const (
 	ErrLatestBranchNoRefs     = "Error: no remote-tracking branches found for remote '%s'.\n"
 	ErrLatestBranchNoRefsAll  = "Error: no remote-tracking branches found on any remote."
 	ErrLatestBranchNoCommits  = "Error: could not read commit info for remote branches."
+	ErrLatestBranchNoMatch   = "Error: no branches matching filter '%s'.\n"
 )
 
 // Folder structure Markdown.
