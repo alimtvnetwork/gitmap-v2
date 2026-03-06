@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.8.0
+- Added `--filter` flag to `latest-branch`: filter branches by glob pattern (e.g. `feature/*`) or substring match.
+
 ## v2.7.0
 - Added `--sort` flag to `latest-branch`: supports `date` (default, descending) and `name` (alphabetical ascending).
 

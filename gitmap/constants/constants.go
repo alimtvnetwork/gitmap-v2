@@ -388,6 +388,7 @@ const (
 	FlagDescLBFormat      = "Output format: terminal, json, csv (default: terminal)"
 	FlagDescLBNoFetch     = "Skip git fetch (use existing remote refs)"
 	FlagDescLBSort        = "Sort order: date (default, descending) or name (alphabetical)"
+	FlagDescLBFilter      = "Filter branches by glob or substring pattern"
 )
 
 // Sort orders.
