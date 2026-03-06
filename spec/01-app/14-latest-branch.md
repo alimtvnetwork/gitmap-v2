@@ -92,7 +92,7 @@ all N rows are included:
 
 ```
 branch,remote,sha,commitDate,subject,ref
-feature/v1.5.1,origin,a1b2c3d,2025-03-06T14:22:31+01:00,Fix auth token refresh,origin/feature/v1.5.1
+feature/v1.5.1,origin,a1b2c3d,06-Mar-2025 03:22 PM,Fix auth token refresh,origin/feature/v1.5.1
 ```
 
 ### With `--format csv --top 3`
