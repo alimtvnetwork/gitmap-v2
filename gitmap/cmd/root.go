@@ -69,6 +69,10 @@ func dispatch(command string) {
 		runReleaseBranch(os.Args[2:])
 		return
 	}
+	if command == constants.CmdReleasePending || command == constants.CmdReleasePendingAlias {
+		runReleasePending(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
