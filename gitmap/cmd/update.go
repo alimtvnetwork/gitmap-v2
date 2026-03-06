@@ -241,13 +241,12 @@ func writeUpdateScript(repoPath string) string {
 }
 
 // buildUpdateScript generates the PowerShell script content.
-// Captures current version before update, checks if git pull brings changes,
-// and compares versions after update to confirm it applied.
+// Captures versions before/after update and validates PATH vs deployed binary.
 func buildUpdateScript(repoPath, runPS1 string) string {
 	return fmt.Sprintf(`# gitmap self-update script (auto-generated)
 Set-Location "%s"
 
-# Capture current version before update
+# Detect deployed binary from powershell.json
 $deployedBinary = $null
 $oldVersion = "unknown"
 $configPath = Join-Path "%s" "gitmap\powershell.json"
@@ -261,8 +260,23 @@ if (Test-Path $configPath) {
     }
 }
 
+# Detect active gitmap on PATH (what the user invokes)
+$activeBinary = $null
+$activeVersion = "unknown"
+$cmd = Get-Command gitmap -ErrorAction SilentlyContinue
+if ($cmd) {
+    $activeBinary = $cmd.Source
+    if (Test-Path $activeBinary) {
+        $activeVersion = & $activeBinary version 2>&1
+    }
+}
+
 Write-Host ""
-Write-Host "  Current version: $oldVersion" -ForegroundColor DarkGray
+Write-Host "  Current deployed version: $oldVersion" -ForegroundColor DarkGray
+if ($activeBinary) {
+    Write-Host "  Current PATH binary: $activeBinary" -ForegroundColor DarkGray
+    Write-Host "  Current PATH version: $activeVersion" -ForegroundColor DarkGray
+}
 
 # Check if there are changes to pull
 $prevPref = $ErrorActionPreference
@@ -274,7 +288,7 @@ $pullText = ($pullOutput | Out-String).Trim()
 if ($pullText -match "Already up to date") {
     Write-Host "  Source is already up to date." -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "  No update needed — you are running the latest version." -ForegroundColor Green
+    Write-Host "  No update needed - you are running the latest source." -ForegroundColor Green
     Write-Host ""
     exit 0
 }
@@ -285,24 +299,53 @@ Start-Sleep -Milliseconds 1200
 & "%s" -NoPull
 Write-Host ""
 
-# Compare versions
-$newBinary = Join-Path "%s" "bin\gitmap.exe"
-if (Test-Path $newBinary) {
-    $newVersion = & $newBinary version 2>&1
-    if ($oldVersion -eq $newVersion) {
-        Write-Host "  [WARN] Version unchanged after update ($newVersion)" -ForegroundColor Yellow
-        Write-Host "  The source changed but the version constant was not bumped." -ForegroundColor Yellow
-    } else {
-        Write-Host "  [OK] Updated: $oldVersion -> $newVersion" -ForegroundColor Green
-    }
+# Compare deployed versions before/after update
+$newVersion = "unknown"
+if ($deployedBinary -and (Test-Path $deployedBinary)) {
+    $newVersion = & $deployedBinary version 2>&1
+}
 
-    # Run update-cleanup to remove temp copies and .old backups
+if ($oldVersion -eq $newVersion) {
+    Write-Host "  [WARN] Version unchanged after update ($newVersion)" -ForegroundColor Yellow
+    Write-Host "  The source changed but the version constant may not have been bumped." -ForegroundColor Yellow
+} else {
+    Write-Host "  [OK] Updated: $oldVersion -> $newVersion" -ForegroundColor Green
+}
+
+if ($deployedBinary) {
+    Write-Host "  Deployed binary: $deployedBinary" -ForegroundColor DarkGray
+}
+
+# Warn if PATH still points to a different gitmap binary
+if ($activeBinary -and $deployedBinary -and (Test-Path $activeBinary) -and (Test-Path $deployedBinary)) {
+    $activeResolved = (Resolve-Path $activeBinary).Path
+    $deployedResolved = (Resolve-Path $deployedBinary).Path
+    if ($activeResolved -ne $deployedResolved) {
+        Write-Host "  [WARN] PATH points to a different gitmap binary." -ForegroundColor Yellow
+        Write-Host "         Active:   $activeResolved" -ForegroundColor Yellow
+        Write-Host "         Deployed: $deployedResolved" -ForegroundColor Yellow
+    }
+}
+
+# Show short changelog after update
+if ($deployedBinary -and (Test-Path $deployedBinary)) {
+    Write-Host ""
+    Write-Host "  Latest changelog:" -ForegroundColor Cyan
+    & $deployedBinary changelog --latest
+}
+
+# Run update-cleanup to remove temp copies and .old backups
+$cleanupBinary = Join-Path "%s" "bin\gitmap.exe"
+if ($deployedBinary -and (Test-Path $deployedBinary)) {
+    $cleanupBinary = $deployedBinary
+}
+
+if (Test-Path $cleanupBinary) {
     Write-Host ""
     Write-Host "  Cleaning up update artifacts..." -ForegroundColor DarkGray
-    & $newBinary update-cleanup
-} else {
-    Write-Host "  [OK] Update complete" -ForegroundColor Green
+    & $cleanupBinary update-cleanup
 }
+
 Write-Host ""
 exit 0
 `, repoPath, repoPath, runPS1, repoPath)

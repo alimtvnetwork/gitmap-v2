@@ -109,6 +109,7 @@ func printUsage() {
 	fmt.Println(constants.HelpRelease)
 	fmt.Println(constants.HelpReleaseBr)
 	fmt.Println(constants.HelpReleasePend)
+	fmt.Println(constants.HelpChangelog)
 	fmt.Println(constants.HelpUpdateCleanup)
 	fmt.Println(constants.HelpHelp)
 	fmt.Println()
