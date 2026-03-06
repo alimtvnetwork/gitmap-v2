@@ -114,6 +114,17 @@ func loadJSONRecords(path string) ([]model.ScanRecord, error) {
 // findBySlug finds records matching the slug (case-insensitive, partial match).
 func findBySlug(records []model.ScanRecord, slug string) []model.ScanRecord {
 	slugLower := strings.ToLower(slug)
+	exact, partial := partitionBySlug(records, slugLower)
+
+	if len(exact) > 0 {
+		return exact
+	}
+
+	return partial
+}
+
+// partitionBySlug separates records into exact and partial matches.
+func partitionBySlug(records []model.ScanRecord, slugLower string) ([]model.ScanRecord, []model.ScanRecord) {
 	var exact, partial []model.ScanRecord
 
 	for _, r := range records {
@@ -125,11 +136,7 @@ func findBySlug(records []model.ScanRecord, slug string) []model.ScanRecord {
 		}
 	}
 
-	if len(exact) > 0 {
-		return exact
-	}
-
-	return partial
+	return exact, partial
 }
 
 // pullOneRepo runs safe-pull on a single repo using its absolute path.

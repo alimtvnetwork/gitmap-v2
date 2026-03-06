@@ -129,16 +129,16 @@ func openChangelogFile() error {
 // runOpenCommand executes the platform-specific open command.
 func runOpenCommand(path string) error {
 	if runtime.GOOS == constants.OSWindows {
-		cmd := exec.Command("cmd", "/c", "start", "", path)
+		cmd := exec.Command(constants.CmdWindowsShell, constants.CmdArgSlashC, constants.CmdArgStart, constants.CmdArgEmpty, path)
 
 		return cmd.Run()
 	}
 	if runtime.GOOS == constants.OSDarwin {
-		cmd := exec.Command("open", path)
+		cmd := exec.Command(constants.CmdOpen, path)
 
 		return cmd.Run()
 	}
-	cmd := exec.Command("xdg-open", path)
+	cmd := exec.Command(constants.CmdXdgOpen, path)
 
 	return cmd.Run()
 }

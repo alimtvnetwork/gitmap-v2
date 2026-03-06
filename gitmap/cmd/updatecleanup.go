@@ -109,13 +109,13 @@ func cleanupOldBackups() int {
 
 // readDeployPath reads the deploy path from powershell.json.
 func readDeployPath(repoPath string) string {
-	configPath := filepath.Join(repoPath, "gitmap", "powershell.json")
+	configPath := filepath.Join(repoPath, constants.GitMapSubdir, constants.PowershellConfigFile)
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return ""
 	}
 
-	return extractJSONString(data, "deployPath")
+	return extractJSONString(data, constants.JSONKeyDeployPath)
 }
 
 // removeOldFiles removes .old files from the deploy app directory.

@@ -55,32 +55,34 @@ func runScanFromCache(c model.ScanCache) {
 // buildScanArgs reconstructs CLI args from a ScanCache.
 func buildScanArgs(c model.ScanCache) []string {
 	var args []string
-	if len(c.ConfigPath) > 0 {
-		args = append(args, "--config", c.ConfigPath)
-	}
-	if len(c.Mode) > 0 {
-		args = append(args, "--mode", c.Mode)
-	}
-	if len(c.Output) > 0 {
-		args = append(args, "--output", c.Output)
-	}
-	if len(c.OutFile) > 0 {
-		args = append(args, "--out-file", c.OutFile)
-	}
-	if len(c.OutputPath) > 0 {
-		args = append(args, "--output-path", c.OutputPath)
-	}
-	if c.GithubDesktop {
-		args = append(args, "--github-desktop")
-	}
-	if c.OpenFolder {
-		args = append(args, "--open")
-	}
-	if c.Quiet {
-		args = append(args, "--quiet")
-	}
+	args = appendStringFlag(args, "--config", c.ConfigPath)
+	args = appendStringFlag(args, "--mode", c.Mode)
+	args = appendStringFlag(args, "--output", c.Output)
+	args = appendStringFlag(args, "--out-file", c.OutFile)
+	args = appendStringFlag(args, "--output-path", c.OutputPath)
+	args = appendBoolFlag(args, "--github-desktop", c.GithubDesktop)
+	args = appendBoolFlag(args, "--open", c.OpenFolder)
+	args = appendBoolFlag(args, "--quiet", c.Quiet)
 	if len(c.Dir) > 0 && c.Dir != constants.DefaultDir {
 		args = append(args, c.Dir)
+	}
+
+	return args
+}
+
+// appendStringFlag appends a flag pair if the value is non-empty.
+func appendStringFlag(args []string, flag, value string) []string {
+	if len(value) > 0 {
+		return append(args, flag, value)
+	}
+
+	return args
+}
+
+// appendBoolFlag appends a flag if the condition is true.
+func appendBoolFlag(args []string, flag string, enabled bool) []string {
+	if enabled {
+		return append(args, flag)
 	}
 
 	return args

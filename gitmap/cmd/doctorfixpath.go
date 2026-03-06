@@ -2,13 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
-	"strings"
-	"time"
 
 	"github.com/user/gitmap/constants"
 )
@@ -35,7 +31,7 @@ func runFixPath() {
 
 // resolveActiveBinary finds and validates the active PATH binary.
 func resolveActiveBinary() (string, string) {
-	activePath, activeErr := exec.LookPath("gitmap")
+	activePath, activeErr := exec.LookPath(constants.GitMapBin)
 	if activeErr != nil {
 		printIssue(constants.DoctorNotOnPath, constants.DoctorNoSync)
 		printFix(constants.DoctorAddPathFix)
@@ -89,7 +85,7 @@ func syncBinaries(absActive, activeVersion, absDeployed, deployedVersion string)
 
 // attemptSync tries copy, rename fallback, and kill strategies.
 func attemptSync(absDeployed, absActive, deployedVersion string) {
-	if tryCopyWithRetry(absDeployed, absActive, 20, 500*time.Millisecond) {
+	if tryCopyWithRetry(absDeployed, absActive, 20, 500*timeMillisecond) {
 		verifySync(absActive, deployedVersion)
 
 		return
@@ -124,7 +120,7 @@ func resolveDeployedBinary() (string, error) {
 		return "", fmt.Errorf(constants.DoctorResolveNoRepo)
 	}
 
-	configPath := filepath.Join(constants.RepoPath, "gitmap", "powershell.json")
+	configPath := filepath.Join(constants.RepoPath, constants.GitMapSubdir, constants.PowershellConfigFile)
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return "", fmt.Errorf(constants.DoctorResolveNoRead, err)
@@ -135,116 +131,22 @@ func resolveDeployedBinary() (string, error) {
 
 // resolveDeployedPath extracts and validates the deployed path from config data.
 func resolveDeployedPath(data []byte) (string, error) {
-	deployPath := extractJSONString(data, "deployPath")
+	deployPath := extractJSONString(data, constants.JSONKeyDeployPath)
 	if len(deployPath) == 0 {
 		return "", fmt.Errorf(constants.DoctorResolveNoDeploy)
 	}
 
-	binaryName := extractJSONString(data, "binaryName")
+	binaryName := extractJSONString(data, constants.JSONKeyBinaryName)
 	if len(binaryName) == 0 {
 		binaryName = constants.DoctorDefaultBinary
 	}
 
-	deployed := filepath.Join(deployPath, "gitmap", binaryName)
+	deployed := filepath.Join(deployPath, constants.GitMapSubdir, binaryName)
 	if _, err := os.Stat(deployed); err != nil {
 		return "", fmt.Errorf(constants.DoctorResolveNotFound, deployed)
 	}
 
 	return deployed, nil
-}
-
-// tryCopyWithRetry attempts to copy src to dst with retries.
-func tryCopyWithRetry(src, dst string, maxAttempts int, delay time.Duration) bool {
-	for attempt := 1; attempt <= maxAttempts; attempt++ {
-		err := copyFileOverwrite(src, dst)
-		if err == nil {
-			return true
-		}
-		if attempt < maxAttempts {
-			fmt.Printf(constants.DoctorRetryFmt, attempt, maxAttempts)
-			time.Sleep(delay)
-		}
-	}
-
-	return false
-}
-
-// tryRenameFallback renames the locked target to .old, then copies.
-func tryRenameFallback(src, dst string) bool {
-	backup := dst + ".old"
-	os.Remove(backup)
-
-	err := os.Rename(dst, backup)
-	if err != nil {
-		return false
-	}
-
-	fmt.Println(constants.DoctorRenamedMsg)
-	err = copyFileOverwrite(src, dst)
-	if err != nil {
-		os.Rename(backup, dst)
-
-		return false
-	}
-
-	return true
-}
-
-// tryKillAndCopy finds stale gitmap processes and terminates them.
-func tryKillAndCopy(src, dst string) bool {
-	if runtime.GOOS == constants.OSWindows {
-		return tryKillWindows(src, dst)
-	}
-
-	return false
-}
-
-// tryKillWindows kills stale gitmap processes on Windows and retries copy.
-func tryKillWindows(src, dst string) bool {
-	fmt.Println(constants.DoctorKillingMsg)
-
-	cmd := exec.Command("powershell", "-NoProfile", "-NonInteractive", "-Command",
-		fmt.Sprintf(`Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" | `+
-			`Where-Object { $_.ExecutablePath -and (Resolve-Path $_.ExecutablePath -ErrorAction SilentlyContinue).Path -eq '%s' -and $_.ProcessId -ne %d } | `+
-			`ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue; $_.ProcessId }`,
-			dst, os.Getpid()))
-
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-
-	reportKilledProcesses(string(out))
-
-	return copyFileOverwrite(src, dst) == nil
-}
-
-// reportKilledProcesses logs which processes were stopped.
-func reportKilledProcesses(output string) {
-	killed := strings.TrimSpace(output)
-	if len(killed) > 0 {
-		fmt.Printf(constants.DoctorKilledFmt, killed)
-		time.Sleep(500 * time.Millisecond)
-	}
-}
-
-// copyFileOverwrite copies src to dst, overwriting dst if it exists.
-func copyFileOverwrite(src, dst string) error {
-	in, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer in.Close()
-
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, in)
-
-	return err
 }
 
 // verifySync checks that the synced binary reports the expected version.

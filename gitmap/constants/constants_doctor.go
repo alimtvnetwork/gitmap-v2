@@ -69,6 +69,18 @@ const (
 	DoctorDefaultBinary   = "gitmap.exe"
 )
 
+// Doctor binary and tool lookup names.
+const (
+	GitMapBin            = "gitmap"
+	GoBin                = "go"
+	GoVersionArg         = "version"
+	PowershellConfigFile = "powershell.json"
+	JSONKeyDeployPath    = "deployPath"
+	JSONKeyBinaryName    = "binaryName"
+	BackupSuffix         = ".old"
+	GitMapSubdir         = "gitmap"
+)
+
 // Doctor format markers.
 const (
 	DoctorOKFmt    = "  %s[OK]%s %s\n"

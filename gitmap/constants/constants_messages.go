@@ -34,9 +34,13 @@ const OSDarwin = "darwin"
 
 // OS file-explorer commands.
 const (
-	CmdExplorer = "explorer"
-	CmdOpen     = "open"
-	CmdXdgOpen  = "xdg-open"
+	CmdExplorer     = "explorer"
+	CmdOpen         = "open"
+	CmdXdgOpen      = "xdg-open"
+	CmdWindowsShell = "cmd"
+	CmdArgSlashC    = "/c"
+	CmdArgStart     = "start"
+	CmdArgEmpty     = ""
 )
 
 // Desktop sync error messages.

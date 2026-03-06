@@ -138,30 +138,37 @@ func printLatestTerminal(result latestBranchResult, items []gitutil.RemoteBranch
 
 // printTerminalHeader prints the main latest-branch info block.
 func printTerminalHeader(result latestBranchResult) {
-	fmt.Printf("  Latest branch: %s\n", strings.Join(result.branchNames, ", "))
-	fmt.Printf("  Remote:        %s\n", result.selectedRemote)
-	fmt.Printf("  SHA:           %s\n", result.shortSha)
-	fmt.Printf("  Commit date:   %s\n", result.commitDate)
-	fmt.Printf("  Subject:       %s\n", result.latest.Subject)
-	fmt.Printf("  Ref:           %s\n", result.latest.RemoteRef)
+	fmt.Printf(constants.LBTermLatestFmt, strings.Join(result.branchNames, ", "))
+	fmt.Printf(constants.LBTermRemoteFmt, result.selectedRemote)
+	fmt.Printf(constants.LBTermSHAFmt, result.shortSha)
+	fmt.Printf(constants.LBTermDateFmt, result.commitDate)
+	fmt.Printf(constants.LBTermSubjectFmt, result.latest.Subject)
+	fmt.Printf(constants.LBTermRefFmt, result.latest.RemoteRef)
 }
 
 // printTerminalTopTable prints the top-N branches table.
 func printTerminalTopTable(items []gitutil.RemoteBranchInfo, remote string, top int) {
-	count := top
-	if count > len(items) {
-		count = len(items)
-	}
+	count := resolveTopCount(top, len(items))
 	fmt.Println()
-	fmt.Printf("  Top %d most recently updated remote branches (%s):\n", count, remote)
-	fmt.Printf("  %-30s %-30s %-9s %s\n",
+	fmt.Printf(constants.LBTermTopHdrFmt, count, remote)
+	printTerminalTopHeader()
+	for _, item := range items[:count] {
+		printTerminalTopRow(item)
+	}
+}
+
+// printTerminalTopHeader prints the table column headers.
+func printTerminalTopHeader() {
+	fmt.Printf(constants.LBTermRowFmt,
 		constants.LatestBranchTableColumns[0], constants.LatestBranchTableColumns[1],
 		constants.LatestBranchTableColumns[2], constants.LatestBranchTableColumns[3])
-	for _, item := range items[:count] {
-		fmt.Printf("  %-30s %-30s %-9s %s\n",
-			gitutil.FormatDisplayDate(item.CommitDate),
-			gitutil.StripRemotePrefix(item.RemoteRef),
-			gitutil.TruncSha(item.Sha),
-			item.Subject)
-	}
+}
+
+// printTerminalTopRow prints a single branch row.
+func printTerminalTopRow(item gitutil.RemoteBranchInfo) {
+	fmt.Printf(constants.LBTermRowFmt,
+		gitutil.FormatDisplayDate(item.CommitDate),
+		gitutil.StripRemotePrefix(item.RemoteRef),
+		gitutil.TruncSha(item.Sha),
+		item.Subject)
 }

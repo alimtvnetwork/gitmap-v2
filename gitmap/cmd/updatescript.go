@@ -68,8 +68,8 @@ func buildUpdateScript(repoPath, runPS1 string) string {
 
 // runUpdateScript executes the PowerShell script with output piped to terminal.
 func runUpdateScript(scriptPath string) {
-	cmd := exec.Command("powershell", "-ExecutionPolicy", "Bypass",
-		"-NoProfile", "-NoLogo", "-File", scriptPath)
+	cmd := exec.Command(constants.PSBin, constants.PSExecPolicy, constants.PSBypass,
+		constants.PSNoProfile, constants.PSNoLogo, constants.PSFile, scriptPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin

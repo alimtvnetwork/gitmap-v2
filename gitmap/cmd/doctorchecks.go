@@ -26,7 +26,7 @@ func checkRepoPath() int {
 
 // checkActiveBinary reports the gitmap binary on PATH.
 func checkActiveBinary() int {
-	path, err := exec.LookPath("gitmap")
+	path, err := exec.LookPath(constants.GitMapBin)
 	if err != nil {
 		printIssue(constants.DoctorPathMissTitle, constants.DoctorPathMissDetail)
 		printFix(constants.DoctorPathMissFix)
@@ -67,26 +67,26 @@ func checkDeployedBinary() int {
 
 // readPowershellJSON reads the powershell.json config file.
 func readPowershellJSON() ([]byte, error) {
-	configPath := filepath.Join(constants.RepoPath, "gitmap", "powershell.json")
+	configPath := filepath.Join(constants.RepoPath, constants.GitMapSubdir, constants.PowershellConfigFile)
 
 	return os.ReadFile(configPath)
 }
 
 // resolveDeployedFromData extracts and validates the deployed binary path.
 func resolveDeployedFromData(data []byte) (string, int) {
-	deployPath := extractJSONString(data, "deployPath")
+	deployPath := extractJSONString(data, constants.JSONKeyDeployPath)
 	if len(deployPath) == 0 {
 		printIssue(constants.DoctorNoDeployPath, constants.DoctorNoDeployDet)
 
 		return "", 1
 	}
 
-	binaryName := extractJSONString(data, "binaryName")
+	binaryName := extractJSONString(data, constants.JSONKeyBinaryName)
 	if len(binaryName) == 0 {
 		binaryName = constants.DoctorDefaultBinary
 	}
 
-	deployedBinary := filepath.Join(deployPath, "gitmap", binaryName)
+	deployedBinary := filepath.Join(deployPath, constants.GitMapSubdir, binaryName)
 	if _, err := os.Stat(deployedBinary); err != nil {
 		printIssue(constants.DoctorDeployNotFound, deployedBinary)
 		printFix(constants.DoctorDeployRunFix)
@@ -95,111 +95,6 @@ func resolveDeployedFromData(data []byte) (string, int) {
 	}
 
 	return deployedBinary, 0
-}
-
-// checkVersionMismatch compares PATH vs deployed vs source versions.
-func checkVersionMismatch() int {
-	sourceVersion := fmt.Sprintf(constants.MsgVersionFmt[:len(constants.MsgVersionFmt)-1], constants.Version)
-	activeVersion, activePath := getActiveVersion()
-	deployedVersion, deployedPath := getDeployedVersion()
-	issues := 0
-
-	issues += checkActiveVsSource(activeVersion, sourceVersion)
-	issues += checkDeployedVsSource(deployedVersion, sourceVersion)
-	issues += checkActiveVsDeployed(activeVersion, deployedVersion, activePath, deployedPath)
-
-	if issues == 0 {
-		printOK(constants.DoctorSourceOKFmt, sourceVersion)
-	}
-
-	return issues
-}
-
-// getActiveVersion returns version and path of the active PATH binary.
-func getActiveVersion() (string, string) {
-	path, err := exec.LookPath("gitmap")
-	if err != nil {
-		return "", ""
-	}
-
-	absPath, _ := filepath.Abs(path)
-
-	return getBinaryVersion(absPath), absPath
-}
-
-// getDeployedVersion returns version and path of the deployed binary.
-func getDeployedVersion() (string, string) {
-	if len(constants.RepoPath) == 0 {
-		return "", ""
-	}
-
-	data, err := readPowershellJSON()
-	if err != nil {
-		return "", ""
-	}
-
-	dp := extractJSONString(data, "deployPath")
-	bn := extractJSONString(data, "binaryName")
-	if len(bn) == 0 {
-		bn = constants.DoctorDefaultBinary
-	}
-
-	if len(dp) == 0 {
-		return "", ""
-	}
-
-	deployedPath := filepath.Join(dp, "gitmap", bn)
-
-	return getBinaryVersion(deployedPath), deployedPath
-}
-
-// checkActiveVsSource reports if PATH binary differs from source.
-func checkActiveVsSource(activeVersion, sourceVersion string) int {
-	if len(activeVersion) > 0 && activeVersion != sourceVersion {
-		printIssue(constants.DoctorVersionMismatch,
-			fmt.Sprintf(constants.DoctorVMismatchFmt, activeVersion, sourceVersion))
-		printFix(constants.DoctorVMismatchFix)
-
-		return 1
-	}
-
-	return 0
-}
-
-// checkDeployedVsSource reports if deployed binary differs from source.
-func checkDeployedVsSource(deployedVersion, sourceVersion string) int {
-	if len(deployedVersion) > 0 && deployedVersion != sourceVersion {
-		printIssue(constants.DoctorDeployMismatch,
-			fmt.Sprintf(constants.DoctorDMismatchFmt, deployedVersion, sourceVersion))
-		printFix(constants.DoctorDMismatchFix)
-
-		return 1
-	}
-
-	return 0
-}
-
-// checkActiveVsDeployed reports if PATH and deployed binaries differ.
-func checkActiveVsDeployed(activeVersion, deployedVersion, activePath, deployedPath string) int {
-	if len(activeVersion) == 0 || len(deployedVersion) == 0 {
-		return 0
-	}
-
-	if activeVersion == deployedVersion {
-		return 0
-	}
-
-	absActive, _ := filepath.Abs(activePath)
-	absDeployed, _ := filepath.Abs(deployedPath)
-	if absActive == absDeployed {
-		return 0
-	}
-
-	printIssue(constants.DoctorBinariesDiffer,
-		fmt.Sprintf(constants.DoctorBDifferFmt, absActive, activeVersion, absDeployed, deployedVersion))
-	printFix(constants.DoctorBDifferFix)
-
-	return 1
 }
 
 // checkGit verifies git is available.
@@ -225,14 +120,14 @@ func checkGit() int {
 
 // checkGo verifies Go is available for building.
 func checkGo() int {
-	path, err := exec.LookPath("go")
+	path, err := exec.LookPath(constants.GoBin)
 	if err != nil {
 		printWarn(constants.DoctorGoWarn)
 
 		return 0
 	}
 
-	version := getToolVersion("go", "version")
+	version := getToolVersion(constants.GoBin, constants.GoVersionArg)
 	if len(version) == 0 {
 		printOK(constants.DoctorGoOKPathFmt, path)
 
