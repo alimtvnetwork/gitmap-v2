@@ -34,7 +34,7 @@ type latestBranchTopItem struct {
 
 // runLatestBranch handles the 'latest-branch' / 'lb' command.
 func runLatestBranch(args []string) {
-	remote, allRemotes, containsFallback, top, format := parseLatestBranchFlags(args)
+	remote, allRemotes, containsFallback, top, format, noFetch := parseLatestBranchFlags(args)
 	isMachine := format == constants.OutputJSON || format == constants.OutputCSV
 
 	// 1. Validate git repo.
@@ -43,12 +43,14 @@ func runLatestBranch(args []string) {
 		os.Exit(1)
 	}
 
-	// 2. Fetch.
-	if !isMachine {
-		fmt.Println(constants.MsgLatestBranchFetching)
-	}
-	if err := gitutil.FetchAllPrune(); err != nil && !isMachine {
-		fmt.Fprintf(os.Stderr, "  Warning: fetch failed: %v\n", err)
+	// 2. Fetch (unless --no-fetch).
+	if !noFetch {
+		if !isMachine {
+			fmt.Println(constants.MsgLatestBranchFetching)
+		}
+		if err := gitutil.FetchAllPrune(); err != nil && !isMachine {
+			fmt.Fprintf(os.Stderr, "  Warning: fetch failed: %v\n", err)
+		}
 	}
 
 	// 3. List remote branches.
