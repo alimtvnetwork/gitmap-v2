@@ -546,9 +546,28 @@ if (-not $NoDeploy) {
                 }
 
                 if (-not $syncSuccess) {
-                    Write-Warn "Could not sync active PATH binary after retries and rename fallback."
+                    try {
+                        $staleProcs = Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" -ErrorAction SilentlyContinue |
+                            Where-Object { $_.ExecutablePath -and ((Resolve-Path $_.ExecutablePath -ErrorAction SilentlyContinue).Path -eq $activeResolved) -and ($_.ProcessId -ne $PID) }
+                        foreach ($p in $staleProcs) {
+                            Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+                        }
+                        if ($staleProcs) {
+                            Start-Sleep -Milliseconds 500
+                            Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
+                            $syncedVersion = & $activeBinaryPath version 2>&1
+                            Write-Success "Synced active PATH binary after stopping stale gitmap process(es) -> $syncedVersion"
+                            $syncSuccess = $true
+                        }
+                    } catch {
+                    }
+                }
+
+                if (-not $syncSuccess) {
+                    Write-Warn "Could not sync active PATH binary after retries and fallback attempts."
                     Write-Info "Close terminals/apps using gitmap and run:"
                     Write-Info ('Copy-Item "' + $deployedBinaryPath + '" "' + $activeBinaryPath + '" -Force')
+                    Write-Info ('Or run directly: "' + $deployedBinaryPath + '" <command>')
                 }
             }
         }

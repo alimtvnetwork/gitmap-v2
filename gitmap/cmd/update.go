@@ -342,9 +342,28 @@ function Sync-ActivePathBinary {
         }
     }
 
-    Write-Host "  [FAIL] Could not sync active PATH binary after retries and rename fallback." -ForegroundColor Red
+    # Last resort: terminate stale gitmap processes holding the old binary, then retry once.
+    try {
+        $staleProcs = Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" -ErrorAction SilentlyContinue |
+            Where-Object { $_.ExecutablePath -and ((Resolve-Path $_.ExecutablePath -ErrorAction SilentlyContinue).Path -eq $activeResolved) -and ($_.ProcessId -ne $PID) }
+        foreach ($p in $staleProcs) {
+            Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+        }
+        if ($staleProcs) {
+            Start-Sleep -Milliseconds 500
+            Copy-Item $DeployedPath $ActivePath -Force -ErrorAction Stop
+            $syncedVersion = & $ActivePath version 2>&1
+            Write-Host "  [OK] Synced active PATH binary after stopping stale gitmap process(es)." -ForegroundColor Green
+            Write-Host "  Active PATH version is now: $syncedVersion" -ForegroundColor Green
+            return $true
+        }
+    } catch {
+    }
+
+    Write-Host "  [FAIL] Could not sync active PATH binary after retries and fallback attempts." -ForegroundColor Red
     Write-Host "         Close terminals/apps using gitmap and run:" -ForegroundColor Red
     Write-Host ("         Copy-Item \"" + $DeployedPath + "\" \"" + $ActivePath + "\" -Force") -ForegroundColor Red
+    Write-Host ("         or run commands directly from deployed binary: \"" + $DeployedPath + "\" <command>") -ForegroundColor Red
     $script:syncFailed = $true
     return $false
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.6
+- Added stale-process fallback during PATH-binary sync (`update` + `run.ps1`): if copy+rename fail, it now stops stale `gitmap.exe` processes bound to the old path and retries once.
+- Improved failure guidance to run the deployed binary directly when active PATH binary remains locked.
+
 ## v2.3.5
 - Hardened `gitmap update` PATH sync with retry + rename fallback, and it now exits with failure if active PATH binary remains stale.
 - Clarified update output labels to distinguish source version (`constants.go`) vs active executable version.
