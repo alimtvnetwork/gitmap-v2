@@ -12,9 +12,9 @@ import (
 )
 
 // runUpdate handles the "update" subcommand.
-// It creates a handoff copy of the active binary, starts a hidden worker
-// command from that copy, and exits immediately so file locks are released
-// before deploy attempts to sync the active PATH binary.
+// It creates a handoff copy of the active binary and runs a hidden worker
+// command from that copy in the same terminal session so update output
+// stays attached and command-line behavior remains stable.
 func runUpdate() {
 	repoPath := constants.RepoPath
 	if len(repoPath) == 0 {
@@ -51,13 +51,13 @@ func runUpdate() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Run(); err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			os.Exit(exitErr.ExitCode())
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrUpdateFailed, err)
 		os.Exit(1)
 	}
-
-	// Parent must exit immediately to release lock on active binary.
-	os.Exit(0)
 }
 
 // runUpdateRunner is a hidden command that performs the real update work.
