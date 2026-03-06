@@ -17,9 +17,10 @@ func Terminal(w io.Writer, records []model.ScanRecord, outputDir string, quiet b
 	printRepoList(w, records)
 	printFolderTree(w, records)
 	printOutputFiles(w, outputDir)
-	if !quiet {
-		printCloneHelp(w)
+	if quiet {
+		return nil
 	}
+	printCloneHelp(w)
 
 	return nil
 }
