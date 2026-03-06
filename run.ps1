@@ -519,6 +519,12 @@ if (-not $NoDeploy) {
     Write-Info "Skipping deploy (-NoDeploy)"
 }
 
+if (Test-Path $binaryPath) {
+    Write-Host ""
+    Write-Info "Latest changelog:"
+    & $binaryPath changelog --latest
+}
+
 if ($R) {
     Invoke-Run -Config $config -BinaryPath $binaryPath -CliArgs $RunArgs
 }
