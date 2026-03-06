@@ -326,7 +326,23 @@ activates whenever existing repos are detected during a clone operation.
 
 | Flag                   | Description                          | Default |
 |------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Pull only repos in the named group  | (none)  |
+| `--all`                | Pull every repo tracked in the database | `false` |
 | `--verbose`            | Write detailed debug log to a timestamped file | `false` |
+
+## Status Flags
+
+| Flag                   | Description                          | Default |
+|------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Show status for repos in the named group | (none) |
+| `--all`                | Show status for every repo in the database | `false` |
+
+## Exec Flags
+
+| Flag                   | Description                          | Default |
+|------------------------|--------------------------------------|---------|
+| `--group <name>` / `-g`| Target repos in the named group     | (none)  |
+| `--all`                | Target every repo in the database   | `false` |
 
 ## Setup Flags
 
