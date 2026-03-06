@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.3.12
+- Spec, issue post-mortems, and memory aligned to codify synchronous update handoff and rename-first PATH sync as permanent rules.
+
 ## v2.3.11
 - Rename-first PATH sync in `-Update` mode: renames active binary to `.old` before copying, eliminating lock-retry loops.
 - Parent `update` handoff uses `cmd.Start()` + `os.Exit(0)` to release file lock before worker runs.
