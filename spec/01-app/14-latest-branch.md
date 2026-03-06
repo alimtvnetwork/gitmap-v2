@@ -58,6 +58,7 @@ A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
 | `--top <n>`           | int    | `0`        | Show top N most recently updated branches        |
 | `--format <fmt>`      | string | `terminal` | Output format: `terminal`, `json`, `csv`         |
 | `--json`              | bool   | `false`    | Shorthand for `--format json`                    |
+| `--no-fetch`          | bool   | `false`    | Skip `git fetch` (use existing remote refs)      |
 
 ## Output Format
 

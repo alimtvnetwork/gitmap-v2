@@ -374,6 +374,7 @@ activates whenever existing repos are detected during a clone operation.
 | `--top <n>`             | Show top N most recently updated branches            | `0`        |
 | `--format <fmt>`        | Output format: `terminal`, `json`, `csv`             | `terminal` |
 | `--json`                | Shorthand for `--format json`                        | `false`    |
+| `--no-fetch`            | Skip `git fetch` (use existing remote refs)          | `false`    |
 
 ## Examples
 
