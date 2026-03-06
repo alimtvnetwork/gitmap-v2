@@ -53,6 +53,8 @@ const (
 	MsgPullAvailable      = "\nAvailable repos:"
 	MsgRescanReplay       = "\n  Rescanning with cached flags (dir: %s)...\n"
 	MsgScanCacheSaved     = "Scan cache written to %s\n"
+	MsgDBUpsertDone       = "Database updated: %d repos upserted\n"
+	MsgDBUpsertFailed     = "Warning: database upsert failed: %v\n"
 	MsgUpdateStarting     = "\n  Updating gitmap from source repo...\n"
 	MsgUpdateRepoPath     = "  → Repo path: %s\n"
 	MsgUpdateVersion      = "\n  ✓ Updated to gitmap v%s\n"

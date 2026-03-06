@@ -50,8 +50,30 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
 	writeAllOutputs(records, outputDir, outFile, quiet)
 	saveScanCache(outputDir, cache)
+	upsertToDB(records, outputDir)
 	addToDesktop(records, ghDesktop)
 	openOutputFolder(outputDir, openFolder)
+}
+
+// upsertToDB persists scan results into the SQLite database.
+func upsertToDB(records []model.ScanRecord, outputDir string) {
+	db, err := store.Open(outputDir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.MsgDBUpsertFailed, err)
+		return
+	}
+	defer db.Close()
+
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, constants.MsgDBUpsertFailed, err)
+		return
+	}
+
+	if err := db.UpsertRepos(records); err != nil {
+		fmt.Fprintf(os.Stderr, constants.MsgDBUpsertFailed, err)
+		return
+	}
+	fmt.Printf(constants.MsgDBUpsertDone, len(records))
 }
 
 // addToDesktop registers repos with GitHub Desktop if requested.
