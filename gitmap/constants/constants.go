@@ -364,6 +364,10 @@ const (
 	FlagDescLatest        = "Show only the latest changelog entry"
 	FlagDescLimit         = "Number of changelog versions to show"
 	FlagDescOpenChangelog = "Open CHANGELOG.md with the default system app"
+	FlagDescLBRemote      = "Remote to filter branches against (default: origin)"
+	FlagDescLBAllRemotes  = "Include branches from all remotes"
+	FlagDescLBContains    = "Fall back to --contains if --points-at returns empty"
+	FlagDescLBTop         = "Show top N most recently updated branches"
 )
 
 // Clone and Desktop scripts are now generated from Go templates
