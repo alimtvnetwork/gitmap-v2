@@ -119,3 +119,52 @@ func TestBuildRecords(t *testing.T) {
 		t.Log("Missing remote noted — OK")
 	}
 }
+
+// TestBuildSlug_HTTPS verifies slug from a standard HTTPS URL.
+func TestBuildSlug_HTTPS(t *testing.T) {
+	slug := buildSlug("https://github.com/user/my-api.git", "fallback")
+	if slug != "my-api" {
+		t.Errorf("Expected 'my-api', got: %s", slug)
+	}
+}
+
+// TestBuildSlug_HTTPSNoGitSuffix verifies slug when .git suffix is absent.
+func TestBuildSlug_HTTPSNoGitSuffix(t *testing.T) {
+	slug := buildSlug("https://github.com/org/dashboard", "fallback")
+	if slug != "dashboard" {
+		t.Errorf("Expected 'dashboard', got: %s", slug)
+	}
+}
+
+// TestBuildSlug_Lowercase verifies slug is lowercased.
+func TestBuildSlug_Lowercase(t *testing.T) {
+	slug := buildSlug("https://github.com/Org/My-Repo.git", "fallback")
+	if slug != "my-repo" {
+		t.Errorf("Expected 'my-repo', got: %s", slug)
+	}
+}
+
+// TestBuildSlug_EmptyURL verifies fallback to repoName.
+func TestBuildSlug_EmptyURL(t *testing.T) {
+	slug := buildSlug("", "MyFallback")
+	if slug != "myfallback" {
+		t.Errorf("Expected 'myfallback', got: %s", slug)
+	}
+}
+
+// TestBuildSlug_DuplicateOrgs verifies same slug from different orgs.
+func TestBuildSlug_DuplicateOrgs(t *testing.T) {
+	slug1 := buildSlug("https://github.com/org-a/my-api.git", "")
+	slug2 := buildSlug("https://github.com/org-b/my-api.git", "")
+	if slug1 != slug2 {
+		t.Errorf("Expected matching slugs, got: %s vs %s", slug1, slug2)
+	}
+}
+
+// TestBuildSlug_SSHFallback verifies slug from an SSH-style URL passed as HTTPS.
+func TestBuildSlug_SSHFallback(t *testing.T) {
+	slug := buildSlug("git@github.com:user/auth-service.git", "fallback")
+	if slug != "auth-service" {
+		t.Errorf("Expected 'auth-service', got: %s", slug)
+	}
+}
