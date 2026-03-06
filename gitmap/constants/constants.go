@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.3.12"
+const Version = "2.4.0"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -131,6 +131,8 @@ const (
 	CmdChangelogAlias     = "cl"
 	CmdChangelogMD        = "changelog.md"
 	CmdDoctor             = "doctor"
+	CmdLatestBranch       = "latest-branch"
+	CmdLatestBranchAlias  = "lb"
 )
 
 // GitHub Desktop.
@@ -233,6 +235,15 @@ const (
 	MsgUpdateStarting   = "\n  Updating gitmap from source repo...\n"
 	MsgUpdateRepoPath   = "  → Repo path: %s\n"
 	MsgUpdateVersion    = "\n  ✓ Updated to gitmap v%s\n"
+	MsgLatestBranchFetching = "\n  Fetching remote refs..."
+)
+
+// Latest-branch error messages.
+const (
+	ErrLatestBranchNotRepo    = "Error: not inside a Git repository."
+	ErrLatestBranchNoRefs     = "Error: no remote-tracking branches found for remote '%s'.\n"
+	ErrLatestBranchNoRefsAll  = "Error: no remote-tracking branches found on any remote."
+	ErrLatestBranchNoCommits  = "Error: could not read commit info for remote branches."
 )
 
 // Folder structure Markdown.
@@ -315,6 +326,7 @@ const (
 	HelpReleasePend = "  release-pending (rp) Release all pending branches without tags"
 	HelpChangelog   = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
 	HelpDoctor      = "  doctor [--fix-path] Diagnose PATH, deploy, and version issues"
+	HelpLatestBr    = "  latest-branch (lb)  Find most recently updated remote branch"
 	HelpHelp        = "  help                Show this help message"
 	HelpScanFlags  = "Scan flags:"
 	HelpConfig     = "  --config <path>     Config file (default: ./data/config.json)"
@@ -361,6 +373,10 @@ const (
 	FlagDescLatest        = "Show only the latest changelog entry"
 	FlagDescLimit         = "Number of changelog versions to show"
 	FlagDescOpenChangelog = "Open CHANGELOG.md with the default system app"
+	FlagDescLBRemote      = "Remote to filter branches against (default: origin)"
+	FlagDescLBAllRemotes  = "Include branches from all remotes"
+	FlagDescLBContains    = "Fall back to --contains if --points-at returns empty"
+	FlagDescLBTop         = "Show top N most recently updated branches"
 )
 
 // Clone and Desktop scripts are now generated from Go templates

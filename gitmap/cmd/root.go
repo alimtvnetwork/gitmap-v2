@@ -89,6 +89,10 @@ func dispatch(command string) {
 		runDoctor()
 		return
 	}
+	if command == constants.CmdLatestBranch || command == constants.CmdLatestBranchAlias {
+		runLatestBranch(os.Args[2:])
+		return
+	}
 	if command == constants.CmdHelp {
 		printUsage()
 		return
@@ -123,6 +127,7 @@ func printUsage() {
 	fmt.Println(constants.HelpReleasePend)
 	fmt.Println(constants.HelpChangelog)
 	fmt.Println(constants.HelpDoctor)
+	fmt.Println(constants.HelpLatestBr)
 	fmt.Println(constants.HelpUpdateCleanup)
 	fmt.Println(constants.HelpHelp)
 	fmt.Println()

@@ -1,9 +1,11 @@
 # Changelog
 
+## v2.4.0
+- Added `gitmap latest-branch` (`lb`) command: finds the most recently updated remote branch by commit date and displays name, SHA, date, and subject.
+  - Flags: `--remote`, `--all-remotes`, `--contains-fallback`, `--top N`.
+
 ## v2.3.12
 - Spec, issue post-mortems, and memory aligned to codify synchronous update handoff and rename-first PATH sync as permanent rules.
-
-## v2.3.11
 - Rename-first PATH sync in `-Update` mode: renames active binary to `.old` before copying, eliminating lock-retry loops.
 - Parent `update` handoff uses `cmd.Start()` + `os.Exit(0)` to release file lock before worker runs.
 - Handoff diagnostic log prints active exe and copy paths at update start.
