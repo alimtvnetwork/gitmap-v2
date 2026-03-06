@@ -474,6 +474,11 @@ function Resolve-RunArgs {
 Show-Banner
 $config = Load-Config
 
+if ($Update) {
+    Write-Info "Update mode enabled (-Update)"
+    $NoPull = $true
+}
+
 if (-not $NoPull) {
     Invoke-GitPull
 } else {
