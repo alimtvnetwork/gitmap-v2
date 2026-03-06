@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -11,9 +12,27 @@ import (
 	"github.com/user/gitmap/gitutil"
 )
 
+// latestBranchJSON is the JSON output structure.
+type latestBranchJSON struct {
+	Branch     []string              `json:"branch"`
+	Remote     string                `json:"remote"`
+	Sha        string                `json:"sha"`
+	CommitDate string                `json:"commitDate"`
+	Subject    string                `json:"subject"`
+	Ref        string                `json:"ref"`
+	Top        []latestBranchTopItem `json:"top,omitempty"`
+}
+
+type latestBranchTopItem struct {
+	Branch     string `json:"branch"`
+	Sha        string `json:"sha"`
+	CommitDate string `json:"commitDate"`
+	Subject    string `json:"subject"`
+}
+
 // runLatestBranch handles the 'latest-branch' / 'lb' command.
 func runLatestBranch(args []string) {
-	remote, allRemotes, containsFallback, top := parseLatestBranchFlags(args)
+	remote, allRemotes, containsFallback, top, jsonOut := parseLatestBranchFlags(args)
 
 	// 1. Validate git repo.
 	if !gitutil.IsInsideWorkTree() {
@@ -22,8 +41,10 @@ func runLatestBranch(args []string) {
 	}
 
 	// 2. Fetch.
-	fmt.Println(constants.MsgLatestBranchFetching)
-	if err := gitutil.FetchAllPrune(); err != nil {
+	if !jsonOut {
+		fmt.Println(constants.MsgLatestBranchFetching)
+	}
+	if err := gitutil.FetchAllPrune(); err != nil && !jsonOut {
 		fmt.Fprintf(os.Stderr, "  Warning: fetch failed: %v\n", err)
 	}
 
@@ -75,16 +96,56 @@ func runLatestBranch(args []string) {
 		branchNames = []string{"<unknown>"}
 	}
 
-	// 10. Display.
 	shortSha := latest.Sha
 	if len(shortSha) > 7 {
 		shortSha = shortSha[:7]
 	}
+	commitDate := latest.CommitDate.Format("2006-01-02T15:04:05-07:00")
+
+	// JSON output.
+	if jsonOut {
+		out := latestBranchJSON{
+			Branch:     branchNames,
+			Remote:     selectedRemote,
+			Sha:        shortSha,
+			CommitDate: commitDate,
+			Subject:    latest.Subject,
+			Ref:        latest.RemoteRef,
+		}
+		if top > 0 {
+			count := top
+			if count > len(items) {
+				count = len(items)
+			}
+			for _, item := range items[:count] {
+				rName := item.RemoteRef
+				if idx := strings.Index(rName, "/"); idx >= 0 {
+					rName = rName[idx+1:]
+				}
+				sha := item.Sha
+				if len(sha) > 7 {
+					sha = sha[:7]
+				}
+				out.Top = append(out.Top, latestBranchTopItem{
+					Branch:     rName,
+					Sha:        sha,
+					CommitDate: item.CommitDate.Format("2006-01-02T15:04:05-07:00"),
+					Subject:    item.Subject,
+				})
+			}
+		}
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", constants.JSONIndent)
+		enc.Encode(out)
+		return
+	}
+
+	// 10. Display (terminal).
 	fmt.Println()
 	fmt.Printf("  Latest branch: %s\n", strings.Join(branchNames, ", "))
 	fmt.Printf("  Remote:        %s\n", selectedRemote)
 	fmt.Printf("  SHA:           %s\n", shortSha)
-	fmt.Printf("  Commit date:   %s\n", latest.CommitDate.Format("2006-01-02T15:04:05-07:00"))
+	fmt.Printf("  Commit date:   %s\n", commitDate)
 	fmt.Printf("  Subject:       %s\n", latest.Subject)
 	fmt.Printf("  Ref:           %s\n", latest.RemoteRef)
 
@@ -115,13 +176,14 @@ func runLatestBranch(args []string) {
 }
 
 // parseLatestBranchFlags parses flags for the latest-branch command.
-func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int) {
+func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int, jsonOut bool) {
 	fs := flag.NewFlagSet(constants.CmdLatestBranch, flag.ExitOnError)
 	remoteFlag := fs.String("remote", "origin", constants.FlagDescLBRemote)
 	allRemotesFlag := fs.Bool("all-remotes", false, constants.FlagDescLBAllRemotes)
 	containsFlag := fs.Bool("contains-fallback", false, constants.FlagDescLBContains)
 	topFlag := fs.Int("top", 0, constants.FlagDescLBTop)
+	jsonFlag := fs.Bool("json", false, constants.FlagDescLBJSON)
 	fs.Parse(args)
 
-	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag
+	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag, *jsonFlag
 }
