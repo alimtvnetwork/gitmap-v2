@@ -10,13 +10,20 @@ import (
 	"github.com/user/gitmap/model"
 )
 
-// printOneStatus prints a single repo's status row.
+// printOneStatus prints a single repo's status row or missing indicator.
 func printOneStatus(rec model.ScanRecord, s *statusSummary) {
-	if _, err := os.Stat(rec.AbsolutePath); os.IsNotExist(err) {
-		printMissingRepo(rec.RepoName, s)
+	_, err := os.Stat(rec.AbsolutePath)
+	if err == nil {
+		printRepoStatus(rec, s)
 
 		return
 	}
+
+	printMissingRepo(rec.RepoName, s)
+}
+
+// printRepoStatus prints the status row for a repo that exists on disk.
+func printRepoStatus(rec model.ScanRecord, s *statusSummary) {
 	rs := gitutil.Status(rec.AbsolutePath)
 	stateIcon := formatStateIcon(rs.Dirty, s)
 	syncText := formatSyncText(rs.Ahead, rs.Behind, s)
@@ -31,8 +38,9 @@ func printOneStatus(rec model.ScanRecord, s *statusSummary) {
 
 // printMissingRepo prints a row for a repo not found on disk.
 func printMissingRepo(name string, s *statusSummary) {
+	truncated := truncate(name, 22)
 	fmt.Printf(constants.StatusMissingFmt,
-		constants.ColorDim, truncate(name, 22),
+		constants.ColorDim, truncated,
 		constants.ColorYellow, constants.ColorReset)
 	s.Missing++
 }
@@ -57,6 +65,12 @@ func formatSyncText(ahead, behind int, s *statusSummary) string {
 
 		return fmt.Sprintf("%s"+constants.StatusSyncBothFmt+"%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
 	}
+
+	return formatSyncSingle(ahead, behind, s)
+}
+
+// formatSyncSingle handles one-directional or no sync difference.
+func formatSyncSingle(ahead, behind int, s *statusSummary) string {
 	if ahead > 0 {
 		s.Ahead++
 
@@ -85,11 +99,12 @@ func formatStashText(stashCount int, s *statusSummary) string {
 // formatFileCounts returns staged/modified/untracked counts.
 func formatFileCounts(rs gitutil.RepoStatus) string {
 	if rs.Dirty {
-
 		return buildFileCountParts(rs)
 	}
 
-	return constants.ColorDim + constants.StatusDash + constants.ColorReset
+	dash := constants.ColorDim + constants.StatusDash + constants.ColorReset
+
+	return dash
 }
 
 // buildFileCountParts assembles the file count display parts.
@@ -114,5 +129,7 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 
-	return s[:maxLen-1] + "…"
+	trimmed := s[:maxLen-1] + constants.TruncateEllipsis
+
+	return trimmed
 }

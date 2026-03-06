@@ -16,7 +16,6 @@ const (
 	StatusBannerTitle  = "║         gitmap status                ║"
 	StatusBannerBottom = "╚══════════════════════════════════════╝"
 	StatusRepoCountFmt = "%d repos from gitmap-output/gitmap.json"
-	StatusMissingFmt   = "  %-22s ⊘ not found"
 )
 
 // Status indicator strings.
@@ -54,20 +53,21 @@ const (
 	SummarySucceededFmt = "%d succeeded"
 	SummaryFailedFmt    = "%d failed"
 	StatusFileCountSep  = " "
+	TruncateEllipsis    = "…"
 )
 
 // Exec banner box-drawing.
 const (
-	ExecBannerTop    = "╔══════════════════════════════════════╗"
-	ExecBannerTitle  = "║           gitmap exec                ║"
-	ExecBannerBottom = "╚══════════════════════════════════════╝"
-	ExecCommandFmt   = "Command: git %s"
-	ExecRepoCountFmt = "%d repos from gitmap-output/gitmap.json"
-	ExecSuccessFmt   = "  %s✓ %-22s%s\n"
-	ExecFailFmt      = "  %s✗ %-22s%s\n"
-	ExecMissingFmt   = "  %s⊘ %-22s %snot found%s\n"
+	ExecBannerTop     = "╔══════════════════════════════════════╗"
+	ExecBannerTitle   = "║           gitmap exec                ║"
+	ExecBannerBottom  = "╚══════════════════════════════════════╝"
+	ExecCommandFmt    = "Command: git %s"
+	ExecRepoCountFmt  = "%d repos from gitmap-output/gitmap.json"
+	ExecSuccessFmt    = "  %s✓ %-22s%s\n"
+	ExecFailFmt       = "  %s✗ %-22s%s\n"
+	ExecMissingFmt    = "  %s⊘ %-22s %snot found%s\n"
 	ExecOutputLineFmt = "    %s%s%s\n"
-	TruncateEllipsis = "…"
+	ExecSummaryRule   = "──────────────────────────────────────────────────"
 )
 
 // Terminal output sections.
