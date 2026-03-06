@@ -3,6 +3,8 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
+	"io/fs"
 	"os"
 
 	"github.com/user/gitmap/model"
