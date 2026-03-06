@@ -224,6 +224,7 @@ function Test-SourceFiles {
         "cmd/releasebranch.go",
         "cmd/releasepending.go",
         "cmd/changelog.go",
+        "cmd/doctor.go",
         "release/semver.go",
         "release/metadata.go",
         "release/gitops.go",

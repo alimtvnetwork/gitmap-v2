@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.3.3
+- Added `gitmap doctor` command: reports PATH binary, deployed binary, version mismatches, git/go availability, and recommends exact fix commands.
+
 ## v2.3.2
 - `gitmap update` now syncs the active PATH binary with the deployed binary, so commands like `release` are available immediately.
 - `gitmap update` now prints changelog bullet points after update (or no-op update) for quick visibility.
