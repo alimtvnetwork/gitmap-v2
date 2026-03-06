@@ -485,7 +485,7 @@ Write-Info "Version: $versionOutput"
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 } else {
-    Write-Info "Skipping deploy (--NoDeploy)"
+    Write-Info "Skipping deploy (-NoDeploy)"
 }
 
 if ($R) {
