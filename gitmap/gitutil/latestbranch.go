@@ -75,7 +75,44 @@ func FilterByRemote(refs []string, remote string) []string {
 			filtered = append(filtered, r)
 		}
 	}
+
 	return filtered
+}
+
+// FilterByPattern keeps only refs whose branch name (after remote prefix)
+// matches the given glob or substring pattern.
+func FilterByPattern(refs []string, pattern string) []string {
+	var filtered []string
+	for _, r := range refs {
+		name := stripPrefix(r)
+		if matchesPattern(name, pattern) {
+			filtered = append(filtered, r)
+		}
+	}
+
+	return filtered
+}
+
+// stripPrefix removes the "<remote>/" prefix from a ref.
+func stripPrefix(ref string) string {
+	if idx := strings.Index(ref, "/"); idx >= 0 {
+
+		return ref[idx+1:]
+	}
+
+	return ref
+}
+
+// matchesPattern checks if name matches a glob pattern or contains
+// the pattern as a substring.
+func matchesPattern(name, pattern string) bool {
+	matched, err := filepath.Match(pattern, name)
+	if err == nil && matched {
+
+		return true
+	}
+
+	return strings.Contains(name, pattern)
 }
 
 // ReadBranchTips reads commit date, SHA, and subject for each ref.
