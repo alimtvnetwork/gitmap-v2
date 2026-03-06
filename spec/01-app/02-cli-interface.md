@@ -47,15 +47,14 @@ If no previous scan cache exists, an error instructs the user to run `gitmap sca
 Self-update gitmap by pulling latest source and rebuilding. The binary
 embeds the repo path at build time (via `-ldflags`). When invoked:
 
-1. Copies itself to a temporary file (`gitmap-update-<pid>.exe`).
-2. Launches the copy with `update --from-copy`.
+1. Copies itself to a temporary file (`gitmap-update-<pid>.exe`) in the same directory (fallback to `%TEMP%`).
+2. Launches the copy with the hidden `update-runner` command.
 3. The original process **exits immediately**, releasing the file lock.
-4. The copy spawns a temporary PowerShell script that:
+4. The `update-runner` spawns a temporary PowerShell script that:
    - Captures the currently deployed version.
-   - Runs `git pull` — if already up to date, exits early (no rebuild).
-   - Waits briefly for the parent to fully exit.
-   - Runs `run.ps1 -NoPull` (build → deploy with `.old` rollback backup).
+   - Runs `run.ps1 -Update` (full pipeline: pull → build → deploy with `.old` rollback backup).
    - Compares old vs new version (warns if unchanged).
+   - Runs `gitmap changelog --latest` from the updated binary.
    - Runs `gitmap update-cleanup` to remove temp copies and `.old` backups.
 
 This two-step handoff ensures the deploy step can overwrite `gitmap.exe`

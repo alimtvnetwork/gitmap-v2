@@ -5,8 +5,8 @@
 
 - Replaced `update --from-copy` with hidden `update-runner` command for cleaner handoff separation.
 - Handoff copy now created in the same directory as the active binary (fallback to %TEMP% if locked).
-- Added `-Update` flag to `run.ps1`: skips `git pull` (delegated to update script), runs build+deploy+sync only.
-- Update script now calls `run.ps1 -Update` instead of managing git pull separately.
+- Added `-Update` flag to `run.ps1`: runs full update pipeline (pull, build, deploy, sync) with post-update validation and cleanup.
+- Update script delegates entire pipeline to `run.ps1 -Update`.
 - Before/after version output derived from actual executables, not static constants.
 - Mandatory `update-cleanup` runs after successful update to remove handoff and `.old` artifacts.
 - Cleanup now scans both `%TEMP%` and same-directory for leftover `gitmap-update-*.exe` files.

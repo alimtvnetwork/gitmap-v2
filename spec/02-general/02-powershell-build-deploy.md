@@ -234,13 +234,13 @@ Before executing, print diagnostic info:
 When a CLI updates itself from a PATH-managed executable, use a two-phase handoff so the active binary lock is released before deploy.
 
 ### Phase 1: Handoff from active binary
-1. `tool update` creates a handoff copy in the same active binary directory (for example `toolname.exe.old` or `toolname-update-<pid>.exe`).
-2. It launches the handoff copy with `update --from-copy`.
+1. `tool update` creates a handoff copy in the same active binary directory (for example `toolname-update-<pid>.exe`, fallback to `%TEMP%` if locked).
+2. It launches the handoff copy with a hidden worker command (e.g. `update-runner`).
 3. The parent exits immediately.
 
 ### Phase 2: Execute update from handoff copy
 1. Resolve repo root from embedded/configured repo path.
-2. Run `run.ps1 -Update` (pull, build, deploy).
+2. Run `run.ps1 -Update` (full pipeline: pull, build, deploy).
 3. Sync active PATH binary from deployed binary using retry loop first, then rename fallback.
 4. Read and print versions from the binaries (before update and after update) using `tool version`.
 5. Show latest notes using the updated binary (`tool changelog --latest`).
