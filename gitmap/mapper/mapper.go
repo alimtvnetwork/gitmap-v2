@@ -36,8 +36,8 @@ func buildOneRecord(repo scanner.RepoInfo, mode, note string) model.ScanRecord {
 	instruction := buildInstruction(cloneURL, branch, repo.RelativePath)
 
 	return model.ScanRecord{
-		ID: uuid.New().String(), RepoName: repoName,
-		HTTPSUrl: httpsURL, SSHUrl: sshURL, Branch: branch,
+		ID: uuid.New().String(), Slug: buildSlug(httpsURL, repoName),
+		RepoName: repoName, HTTPSUrl: httpsURL, SSHUrl: sshURL, Branch: branch,
 		RelativePath: repo.RelativePath, AbsolutePath: repo.AbsolutePath,
 		CloneInstruction: instruction, Notes: noteText,
 	}
