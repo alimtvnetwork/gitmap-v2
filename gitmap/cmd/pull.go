@@ -16,47 +16,59 @@ import (
 
 // runPull handles the "pull" subcommand.
 func runPull(args []string) {
-	slug, verboseMode := parsePullFlags(args)
-	if len(slug) == 0 {
-		fmt.Fprintln(os.Stderr, constants.ErrPullSlugRequired)
-		fmt.Fprintln(os.Stderr, constants.ErrPullUsage)
-		os.Exit(1)
-	}
+	slug, groupName, all, verboseMode := parsePullFlags(args)
 	if verboseMode {
-		log, err := verbose.Init()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: could not create verbose log: %v\n", err)
-		} else {
-			defer log.Close()
-		}
+		initVerboseLog()
 	}
-	executePull(slug)
+	records := resolvePullTargets(slug, groupName, all)
+
+	for _, rec := range records {
+		pullOneRepo(rec)
+	}
 }
 
 // parsePullFlags parses flags for the pull command.
-func parsePullFlags(args []string) (slug string, verboseFlag bool) {
+func parsePullFlags(args []string) (slug, group string, all, verboseFlag bool) {
 	fs := flag.NewFlagSet(constants.CmdPull, flag.ExitOnError)
 	vFlag := fs.Bool("verbose", false, constants.FlagDescVerbose)
+	gFlag := fs.String("group", "", constants.FlagDescGroup)
+	fs.StringVar(gFlag, "g", "", constants.FlagDescGroup)
+	aFlag := fs.Bool("all", false, constants.FlagDescAll)
 	fs.Parse(args)
 
 	if fs.NArg() > 0 {
 		slug = fs.Arg(0)
 	}
 
-	return slug, *vFlag
+	return slug, *gFlag, *aFlag, *vFlag
 }
 
-// executePull uses DB-first lookup with JSON fallback to find and pull repos.
-func executePull(slug string) {
-	matches := lookupBySlugDBFirst(slug)
-	if len(matches) == 0 {
-		fmt.Fprintf(os.Stderr, constants.ErrPullNotFound, slug)
+// initVerboseLog sets up verbose logging, warning on failure.
+func initVerboseLog() {
+	log, err := verbose.Init()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnVerboseLogFailed, err)
+
+		return
+	}
+	defer log.Close()
+}
+
+// resolvePullTargets returns records based on group, all, or slug lookup.
+func resolvePullTargets(slug, groupName string, all bool) []model.ScanRecord {
+	if len(groupName) > 0 {
+		return loadRecordsByGroup(groupName)
+	}
+	if all {
+		return loadAllRecordsDB()
+	}
+	if len(slug) == 0 {
+		fmt.Fprintln(os.Stderr, constants.ErrPullSlugRequired)
+		fmt.Fprintln(os.Stderr, constants.ErrPullUsage)
 		os.Exit(1)
 	}
 
-	for _, rec := range matches {
-		pullOneRepo(rec)
-	}
+	return lookupBySlugDBFirst(slug)
 }
 
 // lookupBySlugDBFirst tries the database first, then falls back to JSON.
@@ -102,8 +114,7 @@ func loadJSONRecords(path string) ([]model.ScanRecord, error) {
 // findBySlug finds records matching the slug (case-insensitive, partial match).
 func findBySlug(records []model.ScanRecord, slug string) []model.ScanRecord {
 	slugLower := strings.ToLower(slug)
-	var exact []model.ScanRecord
-	var partial []model.ScanRecord
+	var exact, partial []model.ScanRecord
 
 	for _, r := range records {
 		nameLower := strings.ToLower(r.RepoName)
@@ -125,8 +136,9 @@ func findBySlug(records []model.ScanRecord, slug string) []model.ScanRecord {
 func pullOneRepo(rec model.ScanRecord) {
 	fmt.Printf(constants.MsgPullStarting, rec.RepoName, rec.AbsolutePath)
 
-	if !cloner.IsGitRepo(rec.AbsolutePath) {
+	if cloner.IsMissingRepo(rec.AbsolutePath) {
 		fmt.Fprintf(os.Stderr, constants.ErrPullNotRepo, rec.AbsolutePath)
+
 		return
 	}
 
@@ -142,6 +154,6 @@ func pullOneRepo(rec model.ScanRecord) {
 func listAvailableRepos(records []model.ScanRecord) {
 	fmt.Fprintln(os.Stderr, constants.MsgPullAvailable)
 	for _, r := range records {
-		fmt.Fprintf(os.Stderr, "  - %s\n", r.RepoName)
+		fmt.Fprintf(os.Stderr, constants.MsgPullListEntry, r.RepoName)
 	}
 }
