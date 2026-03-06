@@ -23,11 +23,11 @@ The update flow expectation was repeated several times but remained inconsistent
 
 Document and enforce one canonical two-phase process:
 
-### Phase 1: Handoff and lock release
+### Phase 1: Handoff and foreground execution
 
 1. `gitmap update` creates a handoff copy in the active binary directory (`gitmap-update-<pid>.exe`, fallback to `%TEMP%`).
-2. Launch handoff copy with hidden `update-runner` command.
-3. Parent exits immediately via `cmd.Start()` + `os.Exit(0)`. **Never `cmd.Run()`.**
+2. Launch handoff copy with hidden `update-runner` command using `cmd.Run()` (foreground/blocking).
+3. Parent waits for worker to complete. Terminal stays attached. **Never async detach.**
 
 ### Phase 2: Update pipeline and validation
 

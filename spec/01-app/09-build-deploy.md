@@ -201,7 +201,7 @@ file handle when deploy starts.
 
 1. `gitmap update` detects the active `gitmap` executable currently resolved by `PATH`.
 2. It creates a handoff copy beside that active binary (same directory), such as `gitmap-update-<pid>.exe` (fallback to `%TEMP%` if locked).
-3. It launches the handoff copy with the hidden `update-runner` command and **exits immediately** to release file locks. The parent MUST NOT wait for the worker.
+3. It launches the handoff copy with the hidden `update-runner` command using **foreground/blocking** execution (`cmd.Run()`). The parent waits for the worker to complete so the terminal session stays stable. This is safe because the handoff copy is a different file — the parent's lock on the original binary is resolved by rename-first sync.
 4. The handoff copy (`update-runner`) resolves the repo path and runs `run.ps1 -Update` from the repo root.
 5. `run.ps1 -Update` performs the full pipeline: pull -> build -> deploy.
 6. PATH sync uses **rename-first** strategy: renames active binary to `.old`, copies deployed binary to active path. Falls back to copy-retry loop (20 x 500ms) only if rename fails.
@@ -211,7 +211,7 @@ file handle when deploy starts.
 
 ### Critical Rules
 
-- Parent MUST use `cmd.Start()` + `os.Exit(0)`, never `cmd.Run()`. Synchronous wait holds the file lock during the entire pipeline.
+- Parent MUST use `cmd.Run()` (foreground/blocking), NEVER `cmd.Start()` + `os.Exit(0)` (async detach breaks terminal).
 - PATH sync MUST use rename-first in update mode. Copy-overwrite fails on Windows when any process holds the binary.
 - Generated scripts MUST NOT contain `Read-Host` or interactive prompts.
 

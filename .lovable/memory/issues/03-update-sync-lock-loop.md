@@ -1,4 +1,4 @@
-# Issue: PATH sync lock loop during `gitmap update` (v2.3.9 → v2.3.10)
+# Issue: PATH sync lock loop during `gitmap update` (v2.3.9 → v2.3.11) — RESOLVED
 
 ## Summary
 
@@ -36,22 +36,30 @@
 
 ## Solutions Applied
 
-1. **Handoff uses `cmd.Start()` + `os.Exit(0)`** — parent exits immediately, releasing the file lock before deploy/sync runs.
-2. **Rename-first PATH sync in `-Update` mode** — `run.ps1` now renames the active binary to `.old` first, then copies the new one, avoiding the lock entirely.
+1. **Handoff uses `cmd.Run()` (foreground/blocking)** — parent waits for the worker to complete, keeping the terminal session stable. The handoff copy is a different binary so the parent's lock on the original exe doesn't matter for deploy.
+2. **Rename-first PATH sync in `-Update` mode** — `run.ps1` now renames the active binary to `.old` first (Windows allows rename of running exe), then copies the new one, avoiding the lock entirely.
 3. **Removed `Read-Host`** — update script exits cleanly without waiting for user input.
 4. **Diagnostic log** — prints active exe path and handoff copy path at update start.
 5. **Unique temp script names** — `gitmap-update-*.ps1` instead of fixed `gitmap-update.ps1` to avoid stale collisions.
 
+## Key Insight
+
+The parent process holds a lock on `E:\bin-run\gitmap.exe` (the active PATH binary). The handoff copy runs from `E:\bin-run\gitmap-update-<pid>.exe` — a DIFFERENT file. So the parent CAN wait synchronously (`cmd.Run()`) because the lock conflict is between the PARENT and the PATH SYNC step, NOT between the parent and the worker. The rename-first strategy in `run.ps1 -Update` resolves the lock by renaming (not overwriting) the locked binary.
+
+**Therefore:** `cmd.Run()` (foreground) is correct. `cmd.Start()` + `os.Exit(0)` (async) breaks the terminal session.
+
 ## Acceptance Criteria
 
-- Parent process exits before `run.ps1` starts (verified by zero lock retries during PATH sync).
+- Update runs foreground in the same terminal session (no async detach).
 - PATH sync uses rename-first in `-Update` mode; falls back to copy-retry loop otherwise.
 - No `Read-Host` or interactive prompts in generated update scripts.
 - Build compiles cleanly with no syntax errors.
 
 ## Prevention Rules
 
-1. **Never use `cmd.Run()` in `runUpdate()`** — the parent MUST exit before the worker touches any binaries.
+1. **Always use `cmd.Run()` in `runUpdate()`** — foreground execution keeps the terminal stable. The handoff copy is a different file so there is no lock conflict.
+2. **NEVER use `cmd.Start()` + `os.Exit(0)` in `runUpdate()`** — async detach breaks the command line session.
+3. **Always use rename-first for PATH sync during update** — copy-overwrite is unreliable on Windows when any process may hold the binary.
 2. **Always use rename-first for PATH sync during update** — copy-overwrite is unreliable on Windows when any process may hold the binary.
 3. **Never add interactive prompts to generated scripts** — they run in non-interactive PowerShell sessions.
 4. **After switching between `cmd.Run()` and `cmd.Start()`, verify the function has a closing brace** — this is a mechanical error that breaks the build.

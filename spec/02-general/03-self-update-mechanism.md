@@ -29,14 +29,16 @@ A three-layer approach that reliably bypasses file locks:
    `%TEMP%\<toolname>-update-<pid>.exe` (or same directory as the active binary).
 2. It launches the temp copy with a hidden worker command (e.g. `update-runner`)
    to indicate it's the delegated updater.
-3. The parent **exits immediately** to release the file lock.
+3. The parent **waits for the worker** using foreground/blocking execution.
+   This keeps the terminal session stable. The handoff copy is a different
+   file so there is no lock conflict with deploy — rename-first handles it.
 
 ```
 # Pseudocode — applies to any compiled language
 func runUpdate():
     tempPath = copyBinaryToTemp()
-    launchProcess(tempPath, ["update-runner"])
-    exit(0)  # Release file lock immediately
+    runForeground(tempPath, ["update-runner"])  # Blocking — keeps terminal stable
+    # Parent exits naturally after worker completes
 
 func runUpdateRunner():
     # This is the worker — runs from the temp copy
@@ -121,22 +123,21 @@ else:
 ```
 User runs: <tool> update
    │
-   ├─ Parent copies self → %TEMP%\<tool>-update-<pid>.exe
-   ├─ Parent launches copy with: update-runner
-   ├─ Parent exits (releases file lock)
+   ├─ Parent copies self → <tool>-update-<pid>.exe (same dir, fallback %TEMP%)
+   ├─ Parent launches copy with: update-runner (foreground/blocking)
+   ├─ Parent waits for worker to complete (terminal stays attached)
    │
-   └─ Temp copy starts
+   └─ Worker (update-runner) starts
       ├─ Captures current deployed version
-      ├─ Runs git pull
-      ├─ If already up to date → exits early (no rebuild)
-      ├─ Waits 1–2 seconds
-      ├─ Runs: build pipeline (deps → build → deploy)
+      ├─ Runs: run.ps1 -Update (pull → build → deploy)
       │    ├─ Backs up existing binary as .old
       │    ├─ Deploys new binary (with retry)
+      │    ├─ PATH sync: rename-first (.old), then copy new
       │    └─ On failure: restores .old backup
       ├─ Compares old vs new version
+      ├─ Runs: <tool> changelog --latest
       ├─ Runs: <tool> update-cleanup (auto)
-      │    ├─ Removes %TEMP%\<tool>-update-*.exe
+      │    ├─ Removes <tool>-update-*.exe
       │    └─ Removes *.old from deploy directory
       └─ Cleans up temp script
 ```
@@ -283,11 +284,12 @@ is needed.
    delay before attempting to overwrite.
 2. **Always add retry logic** for file operations on deployed
    binaries — even with the handoff, a small timing window exists.
-3. **Never run the build script from the same process** that holds
-   the file lock on the target binary.
-4. **The parent MUST use `cmd.Start()` + `os.Exit(0)`, never
-   `cmd.Run()`** — synchronous wait holds the lock during the
-   entire pipeline, making PATH sync impossible.
+3. **The handoff copy is a different file** — the parent's lock on
+   the original binary does not conflict with the worker. Rename-first
+   in `run.ps1` handles the locked active PATH binary.
+4. **The parent MUST use `cmd.Run()` (foreground/blocking)** — keeps
+   the terminal session stable. NEVER use `cmd.Start()` + `os.Exit(0)`
+   which detaches and breaks the command line.
 5. **Use rename-first, not copy-first** for PATH sync — Windows
    blocks overwrite of a running `.exe` but allows renaming it.
 6. **Bump the version on every change** so the user can confirm
