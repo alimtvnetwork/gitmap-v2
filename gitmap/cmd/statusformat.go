@@ -24,7 +24,7 @@ func printOneStatus(rec model.ScanRecord, s *statusSummary) {
 	filesText := formatFileCounts(rs)
 	branchText := fmt.Sprintf("%s%s%s", constants.ColorCyan, truncate(rs.Branch, 12), constants.ColorReset)
 
-	fmt.Printf("  %-22s %s  %s  %s  %s  %s\n",
+	fmt.Printf(constants.StatusRowFmt,
 		truncate(rec.RepoName, 22),
 		branchText, stateIcon, syncText, stashText, filesText)
 }
