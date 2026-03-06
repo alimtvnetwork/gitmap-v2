@@ -35,6 +35,16 @@ const (
 	CmdDoctor              = "doctor"
 	CmdLatestBranch        = "latest-branch"
 	CmdLatestBranchAlias   = "lb"
+	CmdList                = "list"
+	CmdListAlias           = "ls"
+	CmdGroup               = "group"
+	CmdGroupAlias          = "g"
+	CmdGroupCreate         = "create"
+	CmdGroupAdd            = "add"
+	CmdGroupRemove         = "remove"
+	CmdGroupList           = "list"
+	CmdGroupShow           = "show"
+	CmdGroupDelete         = "delete"
 )
 
 // Clone shorthands.
@@ -65,6 +75,8 @@ const (
 	HelpChangelog     = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
 	HelpDoctor        = "  doctor [--fix-path] Diagnose PATH, deploy, and version issues"
 	HelpLatestBr      = "  latest-branch (lb)  Find most recently updated remote branch"
+	HelpList          = "  list (ls)           Show all tracked repos with slugs"
+	HelpGroup         = "  group (g) <sub>     Manage repo groups (create, add, remove, list, show, delete)"
 	HelpHelp          = "  help                Show this help message"
 	HelpScanFlags     = "Scan flags:"
 	HelpConfig        = "  --config <path>     Config file (default: ./data/config.json)"
@@ -120,4 +132,8 @@ const (
 	FlagDescLBNoFetch     = "Skip git fetch (use existing remote refs)"
 	FlagDescLBSort        = "Sort order: date (default, descending) or name (alphabetical)"
 	FlagDescLBFilter      = "Filter branches by glob or substring pattern"
+	FlagDescGroup         = "Filter by group name"
+	FlagDescListVerbose   = "Show full paths and URLs"
+	FlagDescGroupDesc     = "Optional group description"
+	FlagDescGroupColor    = "Terminal color for group display"
 )

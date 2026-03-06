@@ -1,0 +1,40 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/model"
+)
+
+// runGroupShow handles "group show <name>".
+func runGroupShow(args []string) {
+	if len(args) == 0 {
+		fmt.Fprintln(os.Stderr, constants.ErrGroupNameReq)
+		os.Exit(1)
+	}
+	name := args[0]
+	db, err := openDB()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	repos, err := db.ShowGroup(name)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+
+	printGroupShowOutput(name, repos)
+}
+
+// printGroupShowOutput renders repos in a group.
+func printGroupShowOutput(name string, repos []model.ScanRecord) {
+	fmt.Printf(constants.MsgGroupShowHeader, name, len(repos))
+	for _, r := range repos {
+		fmt.Printf(constants.MsgGroupShowRowFmt, r.Slug, r.AbsolutePath)
+	}
+}

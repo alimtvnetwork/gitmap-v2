@@ -60,6 +60,29 @@ const (
 	MsgUpdateVersion      = "\n  ✓ Updated to gitmap v%s\n"
 )
 
+// List and group messages.
+const (
+	MsgListHeader       = "SLUG                 REPO NAME"
+	MsgListSeparator    = "──────────────────────────────────────────"
+	MsgListRowFmt       = "%-20s %s\n"
+	MsgListVerboseFmt   = "%-20s %-20s %s\n"
+	MsgListEmpty        = "No repos tracked. Run 'gitmap scan' first."
+	MsgGroupCreated     = "Group created: %s\n"
+	MsgGroupDeleted     = "Group deleted: %s\n"
+	MsgGroupAdded       = "Added %s to group %s\n"
+	MsgGroupRemoved     = "Removed %s from group %s\n"
+	MsgGroupHeader      = "GROUP           REPOS   DESCRIPTION"
+	MsgGroupRowFmt      = "%-15s %-7d %s\n"
+	MsgGroupShowHeader  = "Group: %s (%d repos)\n"
+	MsgGroupShowRowFmt  = "  %-16s %s\n"
+	MsgGroupEmpty       = "No groups defined. Use 'gitmap group create <name>' to create one."
+	ErrGroupNameReq     = "Error: group name is required"
+	ErrGroupUsage       = "Usage: gitmap group <create|add|remove|list|show|delete> [args]"
+	ErrGroupSlugReq     = "Error: at least one slug is required"
+	ErrListDBFailed     = "Error: could not open database: %v\nRun 'gitmap scan' first.\n"
+	ErrNoDatabase       = "No database found. Run 'gitmap scan' first."
+)
+
 // Latest-branch error messages.
 const (
 	ErrLatestBranchNotRepo   = "Error: not inside a Git repository."
