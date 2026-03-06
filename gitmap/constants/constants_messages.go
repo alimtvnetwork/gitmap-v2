@@ -23,6 +23,9 @@ const (
 	LBUnknownBranch             = "<unknown>"
 )
 
+// Generic error format.
+const ErrGenericFmt = "Error: %v\n"
+
 // CLI messages.
 const (
 	MsgFoundRepos         = "Found %d repositories.\n"

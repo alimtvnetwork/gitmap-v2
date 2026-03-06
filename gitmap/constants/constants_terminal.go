@@ -43,15 +43,31 @@ const (
 
 // Summary format strings.
 const (
-	SummaryJoinSep    = " · "
-	SummaryReposFmt   = "%d repos"
-	SummaryCleanFmt   = "%d clean"
-	SummaryDirtyFmt   = "%d dirty"
-	SummaryAheadFmt   = "%d ahead"
-	SummaryBehindFmt  = "%d behind"
-	SummaryStashedFmt = "%d stashed"
-	SummaryMissingFmt    = "%d missing"
-	StatusFileCountSep   = " "
+	SummaryJoinSep      = " · "
+	SummaryReposFmt     = "%d repos"
+	SummaryCleanFmt     = "%d clean"
+	SummaryDirtyFmt     = "%d dirty"
+	SummaryAheadFmt     = "%d ahead"
+	SummaryBehindFmt    = "%d behind"
+	SummaryStashedFmt   = "%d stashed"
+	SummaryMissingFmt   = "%d missing"
+	SummarySucceededFmt = "%d succeeded"
+	SummaryFailedFmt    = "%d failed"
+	StatusFileCountSep  = " "
+)
+
+// Exec banner box-drawing.
+const (
+	ExecBannerTop    = "╔══════════════════════════════════════╗"
+	ExecBannerTitle  = "║           gitmap exec                ║"
+	ExecBannerBottom = "╚══════════════════════════════════════╝"
+	ExecCommandFmt   = "Command: git %s"
+	ExecRepoCountFmt = "%d repos from gitmap-output/gitmap.json"
+	ExecSuccessFmt   = "  %s✓ %-22s%s\n"
+	ExecFailFmt      = "  %s✗ %-22s%s\n"
+	ExecMissingFmt   = "  %s⊘ %-22s %snot found%s\n"
+	ExecOutputLineFmt = "    %s%s%s\n"
+	TruncateEllipsis = "…"
 )
 
 // Terminal output sections.
