@@ -26,23 +26,30 @@ func runExec(args []string) {
 
 	var succeeded, failed, missing int
 	for _, rec := range records {
-		if _, err := os.Stat(rec.AbsolutePath); os.IsNotExist(err) {
-			fmt.Printf("  %s⊘ %-22s %snot found%s\n",
-				constants.ColorDim, truncateExec(rec.RepoName, 22),
-				constants.ColorYellow, constants.ColorReset)
-			missing++
-			continue
-		}
-
-		ok := execInRepo(rec, gitArgs)
-		if ok {
-			succeeded++
-		} else {
-			failed++
-		}
+		s, f, m := execOneRepo(rec, gitArgs)
+		succeeded += s
+		failed += f
+		missing += m
 	}
 
 	printExecSummary(succeeded, failed, missing, len(records))
+}
+
+// execOneRepo runs a git command in one repo, returning (succeeded, failed, missing) increments.
+func execOneRepo(rec model.ScanRecord, gitArgs []string) (int, int, int) {
+	if _, err := os.Stat(rec.AbsolutePath); os.IsNotExist(err) {
+		fmt.Printf(constants.ExecMissingFmt,
+			constants.ColorDim, truncateExec(rec.RepoName, 22),
+			constants.ColorYellow, constants.ColorReset)
+
+		return 0, 0, 1
+	}
+
+	if execInRepo(rec, gitArgs) {
+		return 1, 0, 0
+	}
+
+	return 0, 1, 0
 }
 
 // parseExecFlags parses --group and --all flags, returning remaining args as git args.
@@ -101,37 +108,41 @@ func execInRepo(rec model.ScanRecord, gitArgs []string) bool {
 
 	out, err := cmd.CombinedOutput()
 	output := strings.TrimSpace(string(out))
+	printExecResult(rec.RepoName, output, err)
 
+	return err == nil
+}
+
+// printExecResult prints the success or failure line for one repo.
+func printExecResult(name, output string, err error) {
 	if err != nil {
-		fmt.Printf("  %s✗ %-22s%s\n", constants.ColorYellow, truncateExec(rec.RepoName, 22), constants.ColorReset)
-		if len(output) > 0 {
-			for _, line := range strings.Split(output, "\n") {
-				fmt.Printf("    %s%s%s\n", constants.ColorDim, line, constants.ColorReset)
-			}
-		}
-
-		return false
+		fmt.Printf(constants.ExecFailFmt, constants.ColorYellow, truncateExec(name, 22), constants.ColorReset)
+	} else {
+		fmt.Printf(constants.ExecSuccessFmt, constants.ColorGreen, truncateExec(name, 22), constants.ColorReset)
 	}
 
-	fmt.Printf("  %s✓ %-22s%s\n", constants.ColorGreen, truncateExec(rec.RepoName, 22), constants.ColorReset)
-	if len(output) > 0 {
-		for _, line := range strings.Split(output, "\n") {
-			fmt.Printf("    %s%s%s\n", constants.ColorDim, line, constants.ColorReset)
-		}
-	}
+	printExecOutput(output)
+}
 
-	return true
+// printExecOutput prints indented command output lines.
+func printExecOutput(output string) {
+	if len(output) == 0 {
+		return
+	}
+	for _, line := range strings.Split(output, "\n") {
+		fmt.Printf(constants.ExecOutputLineFmt, constants.ColorDim, line, constants.ColorReset)
+	}
 }
 
 // printExecBanner shows the command header.
 func printExecBanner(gitArgs []string, count int) {
 	fmt.Println()
-	fmt.Printf("  %s╔══════════════════════════════════════╗%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s║           gitmap exec                ║%s\n", constants.ColorCyan, constants.ColorReset)
-	fmt.Printf("  %s╚══════════════════════════════════════╝%s\n", constants.ColorCyan, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.ExecBannerTop, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.ExecBannerTitle, constants.ColorReset)
+	fmt.Printf("  %s%s%s\n", constants.ColorCyan, constants.ExecBannerBottom, constants.ColorReset)
 	fmt.Println()
-	fmt.Printf("  %sCommand: git %s%s\n", constants.ColorWhite, strings.Join(gitArgs, " "), constants.ColorReset)
-	fmt.Printf("  %s%d repos from gitmap-output/gitmap.json%s\n", constants.ColorDim, count, constants.ColorReset)
+	fmt.Printf("  %s"+constants.ExecCommandFmt+"%s\n", constants.ColorWhite, strings.Join(gitArgs, " "), constants.ColorReset)
+	fmt.Printf("  %s"+constants.ExecRepoCountFmt+"%s\n", constants.ColorDim, count, constants.ColorReset)
 	fmt.Printf("  %s%s%s\n", constants.ColorDim, constants.TermSeparator, constants.ColorReset)
 	fmt.Println()
 }
@@ -140,19 +151,24 @@ func printExecBanner(gitArgs []string, count int) {
 func printExecSummary(succeeded, failed, missing, total int) {
 	fmt.Println()
 	fmt.Printf("  %s%s%s\n", constants.ColorDim, strings.Repeat("─", 50), constants.ColorReset)
+	parts := buildExecSummaryParts(succeeded, failed, missing, total)
+	fmt.Printf("  %s\n\n", strings.Join(parts, constants.SummaryJoinSep))
+}
 
-	parts := []string{fmt.Sprintf("%d repos", total)}
+// buildExecSummaryParts assembles summary line segments.
+func buildExecSummaryParts(succeeded, failed, missing, total int) []string {
+	parts := []string{fmt.Sprintf(constants.SummaryReposFmt, total)}
 	if succeeded > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d succeeded%s", constants.ColorGreen, succeeded, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.SummarySucceededFmt+"%s", constants.ColorGreen, succeeded, constants.ColorReset))
 	}
 	if failed > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d failed%s", constants.ColorYellow, failed, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryFailedFmt+"%s", constants.ColorYellow, failed, constants.ColorReset))
 	}
 	if missing > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d missing%s", constants.ColorYellow, missing, constants.ColorReset))
+		parts = append(parts, fmt.Sprintf("%s"+constants.SummaryMissingFmt+"%s", constants.ColorYellow, missing, constants.ColorReset))
 	}
 
-	fmt.Printf("  %s\n\n", strings.Join(parts, " · "))
+	return parts
 }
 
 // truncateExec shortens a string to maxLen with ellipsis.
@@ -161,5 +177,5 @@ func truncateExec(s string, maxLen int) string {
 		return s
 	}
 
-	return s[:maxLen-1] + "…"
+	return s[:maxLen-1] + constants.TruncateEllipsis
 }
