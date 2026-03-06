@@ -126,6 +126,8 @@ const (
 	CmdReleaseBranchAlias = "rb"
 	CmdReleasePending      = "release-pending"
 	CmdReleasePendingAlias = "rp"
+	CmdChangelog          = "changelog"
+	CmdChangelogAlias     = "cl"
 )
 
 // GitHub Desktop.
