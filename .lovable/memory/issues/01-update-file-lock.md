@@ -48,10 +48,9 @@ Five-layer fix:
 
 ## What NOT to Repeat
 
-- Don't use `cmd.Run()` in `runUpdate()` — this holds the lock during the entire pipeline
+- Don't use `cmd.Start()` + `os.Exit(0)` (async) — it breaks the terminal session
 - Don't use copy-overwrite as the primary PATH sync strategy — use rename-first
-- Don't run `run.ps1` (which overwrites the binary) from the same process that holds the lock
-- Don't skip the deploy retry — even with the handoff, a small timing window exists
-- Don't auto-delete backups on startup — use an explicit cleanup command
 - Don't add `Read-Host` or interactive prompts to generated scripts
+- Don't skip the deploy retry — even with rename-first, a fallback is needed
+- Don't auto-delete backups on startup — use an explicit cleanup command
 - Always bump the version so the user can confirm the update actually applied
