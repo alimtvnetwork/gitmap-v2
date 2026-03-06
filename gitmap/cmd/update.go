@@ -98,24 +98,37 @@ func runUpdateCleanup() {
 	}
 }
 
-// cleanupTempCopies removes leftover temp binaries from previous updates.
+// cleanupTempCopies removes leftover handoff binaries from previous updates.
 func cleanupTempCopies() int {
-	pattern := filepath.Join(os.TempDir(), "gitmap-update-*.exe")
-	matches, err := filepath.Glob(pattern)
-	if err != nil {
-		return 0
+	selfPath, _ := os.Executable()
+	patterns := []string{
+		filepath.Join(os.TempDir(), "gitmap-update-*.exe"),
+	}
+	if selfPath != "" {
+		patterns = append(patterns, filepath.Join(filepath.Dir(selfPath), "gitmap-update-*.exe"))
 	}
 
-	selfPath, _ := os.Executable()
+	seen := map[string]bool{}
 	cleaned := 0
-	for _, match := range matches {
-		// Don't delete ourselves if we're running as the update copy.
-		if selfPath != "" && filepath.Clean(match) == filepath.Clean(selfPath) {
+	for _, pattern := range patterns {
+		matches, err := filepath.Glob(pattern)
+		if err != nil {
 			continue
 		}
-		if os.Remove(match) == nil {
-			fmt.Printf("  → Removed temp copy: %s\n", filepath.Base(match))
-			cleaned++
+		for _, match := range matches {
+			cleanPath := filepath.Clean(match)
+			if seen[cleanPath] {
+				continue
+			}
+			seen[cleanPath] = true
+
+			if selfPath != "" && cleanPath == filepath.Clean(selfPath) {
+				continue
+			}
+			if os.Remove(match) == nil {
+				fmt.Printf("  → Removed temp copy: %s\n", filepath.Base(match))
+				cleaned++
+			}
 		}
 	}
 
