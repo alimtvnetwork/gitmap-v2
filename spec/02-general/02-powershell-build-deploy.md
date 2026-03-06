@@ -229,6 +229,28 @@ Before executing, print diagnostic info:
 → Scan target: D:\projects
 ```
 
+## Self-Update Orchestration (Windows-Safe)
+
+When a CLI updates itself from a PATH-managed executable, use a two-phase handoff so the active binary lock is released before deploy.
+
+### Phase 1: Handoff from active binary
+1. `tool update` creates a handoff copy in the same active binary directory (for example `toolname.exe.old` or `toolname-update-<pid>.exe`).
+2. It launches the handoff copy with `update --from-copy`.
+3. The parent exits immediately.
+
+### Phase 2: Execute update from handoff copy
+1. Resolve repo root from embedded/configured repo path.
+2. Run `run.ps1 -Update` (pull, build, deploy).
+3. Sync active PATH binary from deployed binary using retry loop first, then rename fallback.
+4. Read and print versions from the binaries (before update and after update) using `tool version`.
+5. Show latest notes using the updated binary (`tool changelog --latest`).
+6. Run `tool update-cleanup` to remove handoff and `.old` artifacts.
+
+### Required Validation
+- Fail the update if active version still does not match deployed version after sync.
+- Version/changelog output must come from the updated executable, not static constants.
+- Cleanup must run after successful update so rollback artifacts exist during deploy.
+
 ## Error Handling
 
 | Pattern | Implementation |

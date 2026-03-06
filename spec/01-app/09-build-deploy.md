@@ -199,11 +199,18 @@ file handle when deploy starts.
 
 ## Self-Update Flow (`gitmap update`)
 
-1. `gitmap update` copies itself to `%TEMP%\gitmap-update-<pid>.exe`.
-2. Launches the copy with `update --from-copy`.
-3. **Exits immediately** to release the file lock on `gitmap.exe`.
-4. The copy writes a temporary PowerShell script that:
-   - Waits 1.2 seconds for the parent to fully exit.
-   - Runs `run.ps1` (pull → build → deploy).
-   - Prints the updated version.
-5. The copy cleans up the temp script after completion.
+1. `gitmap update` detects the active `gitmap` executable currently resolved by `PATH`.
+2. It creates a handoff copy beside that active binary (same directory), such as `gitmap.exe.old` or `gitmap-update-<pid>.exe`.
+3. It launches the handoff copy with `update --from-copy` and exits immediately to release file locks.
+4. The handoff copy resolves the repo path and runs `run.ps1 -Update` from the repo root.
+5. `run.ps1 -Update` performs pull -> build -> deploy, then safe PATH sync with retry + rename fallback.
+6. The updater prints executable-derived version comparison (`before` vs `after`) using `gitmap version`.
+7. It runs `gitmap changelog --latest` using the updated binary.
+8. It runs `gitmap update-cleanup` to remove temporary handoff and `.old` artifacts.
+
+### Minimum Confirmation Output
+
+- Active version before update
+- Deployed version after update
+- Final active version after sync (must match deployed)
+- Latest changelog entries from updated binary
