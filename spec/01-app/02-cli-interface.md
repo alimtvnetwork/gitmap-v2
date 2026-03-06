@@ -60,6 +60,11 @@ embeds the repo path at build time (via `-ldflags`). When invoked:
 This two-step handoff ensures the deploy step can overwrite `gitmap.exe`
 without encountering a "file in use" lock.
 
+**Critical rules:**
+- Parent MUST use `cmd.Start()` + `os.Exit(0)`, never `cmd.Run()`.
+- PATH sync MUST use rename-first in update mode (rename active to `.old`, then copy new).
+- Generated scripts MUST NOT contain `Read-Host` or interactive prompts.
+
 ### `gitmap update-cleanup`
 
 Remove leftover artifacts from the update process:
