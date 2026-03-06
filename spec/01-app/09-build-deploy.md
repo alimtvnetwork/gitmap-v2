@@ -23,7 +23,7 @@ Build configuration lives in `gitmap/powershell.json`.
 | `-NoPull` | Skip `git pull` | pull enabled |
 | `-NoDeploy` | Skip deploy step | deploy enabled |
 | `-DeployPath <dir>` | Override deploy directory | from `powershell.json` |
-| `-Update` | Update mode for self-update handoff (runs update pipeline + validation + cleanup) | off |
+| `-Update` | Update mode: runs full pipeline (pull, build, deploy, sync) with post-update validation and cleanup | off |
 | `-R` | Switch - run gitmap after build | off |
 | *(trailing args)* | All args after `-R` are forwarded to gitmap | `scan <parent-folder>` |
 
