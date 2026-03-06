@@ -6,6 +6,7 @@ import "github.com/user/gitmap/constants"
 // ScanRecord holds all information about a discovered Git repository.
 type ScanRecord struct {
 	ID               string `json:"id"               csv:"id"`
+	Slug             string `json:"slug"             csv:"slug"`
 	RepoName         string `json:"repoName"         csv:"repoName"`
 	HTTPSUrl         string `json:"httpsUrl"          csv:"httpsUrl"`
 	SSHUrl           string `json:"sshUrl"            csv:"sshUrl"`
