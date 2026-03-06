@@ -2,8 +2,6 @@
 package cmd
 
 import (
-	"encoding/csv"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -14,248 +12,164 @@ import (
 	"github.com/user/gitmap/gitutil"
 )
 
-// latestBranchJSON is the JSON output structure.
-type latestBranchJSON struct {
-	Branch     []string              `json:"branch"`
-	Remote     string                `json:"remote"`
-	Sha        string                `json:"sha"`
-	CommitDate string                `json:"commitDate"`
-	Subject    string                `json:"subject"`
-	Ref        string                `json:"ref"`
-	Top        []latestBranchTopItem `json:"top,omitempty"`
-}
-
-type latestBranchTopItem struct {
-	Branch     string `json:"branch"`
-	Sha        string `json:"sha"`
-	CommitDate string `json:"commitDate"`
-	Subject    string `json:"subject"`
+// latestBranchConfig holds parsed flags for the latest-branch command.
+type latestBranchConfig struct {
+	remote           string
+	filterByRemote   bool
+	containsFallback bool
+	top              int
+	format           string
+	shouldFetch      bool
+	sortBy           string
+	filter           string
 }
 
 // runLatestBranch handles the 'latest-branch' / 'lb' command.
 func runLatestBranch(args []string) {
-	remote, allRemotes, containsFallback, top, format, noFetch, sortBy, filter := parseLatestBranchFlags(args)
-	isMachine := format == constants.OutputJSON || format == constants.OutputCSV
+	cfg := parseLatestBranchFlags(args)
+	validateLatestBranchRepo()
+	fetchLatestBranchRefs(cfg)
+	refs := loadFilteredRefs(cfg)
+	items := readAndSortBranches(refs, cfg.sortBy)
+	result := resolveLatestResult(items, cfg)
+	dispatchLatestOutput(result, items, cfg)
+}
 
-	// 1. Validate git repo.
-	if !gitutil.IsInsideWorkTree() {
-		fmt.Fprintln(os.Stderr, constants.ErrLatestBranchNotRepo)
-		os.Exit(1)
+// validateLatestBranchRepo exits if the current directory is outside a git repo.
+func validateLatestBranchRepo() {
+	if gitutil.IsInsideWorkTree() {
+
+		return
 	}
+	fmt.Fprintln(os.Stderr, constants.ErrLatestBranchNotRepo)
+	os.Exit(1)
+}
 
-	// 2. Fetch (unless --no-fetch).
-	if !noFetch {
-		if !isMachine {
+// fetchLatestBranchRefs fetches remotes when shouldFetch is enabled.
+func fetchLatestBranchRefs(cfg latestBranchConfig) {
+	if cfg.shouldFetch {
+		isTerminal := cfg.format == constants.OutputTerminal
+		if isTerminal {
 			fmt.Println(constants.MsgLatestBranchFetching)
 		}
-		if err := gitutil.FetchAllPrune(); err != nil && !isMachine {
-			fmt.Fprintf(os.Stderr, "  Warning: fetch failed: %v\n", err)
+		err := gitutil.FetchAllPrune()
+		if err != nil && isTerminal {
+			fmt.Fprintf(os.Stderr, constants.MsgLatestBranchFetchWarning, err)
 		}
 	}
+}
 
-	// 3. List remote branches.
+// loadFilteredRefs lists remote branches and applies remote + pattern filters.
+func loadFilteredRefs(cfg latestBranchConfig) []string {
 	refs, err := gitutil.ListRemoteBranches()
 	if err != nil || len(refs) == 0 {
-		if allRemotes {
-			fmt.Fprintln(os.Stderr, constants.ErrLatestBranchNoRefsAll)
-		} else {
-			fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoRefs, remote)
-		}
+		printNoRefsError(cfg)
 		os.Exit(1)
 	}
+	refs = applyRemoteFilter(refs, cfg)
+	refs = applyPatternFilter(refs, cfg)
 
-	// 4. Filter by remote.
-	if !allRemotes {
-		refs = gitutil.FilterByRemote(refs, remote)
-		if len(refs) == 0 {
-			fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoRefs, remote)
+	return refs
+}
+
+// printNoRefsError prints the appropriate "no refs" error message.
+func printNoRefsError(cfg latestBranchConfig) {
+	if cfg.filterByRemote {
+		fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoRefs, cfg.remote)
+
+		return
+	}
+	fmt.Fprintln(os.Stderr, constants.ErrLatestBranchNoRefsAll)
+}
+
+// applyRemoteFilter filters refs by remote when filterByRemote is set.
+func applyRemoteFilter(refs []string, cfg latestBranchConfig) []string {
+	if cfg.filterByRemote {
+		filtered := gitutil.FilterByRemote(refs, cfg.remote)
+		if len(filtered) == 0 {
+			fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoRefs, cfg.remote)
 			os.Exit(1)
 		}
+
+		return filtered
 	}
 
-	// 5. Filter by pattern.
-	if len(filter) > 0 {
-		refs = gitutil.FilterByPattern(refs, filter)
-		if len(refs) == 0 {
-			fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoMatch, filter)
+	return refs
+}
+
+// applyPatternFilter filters refs by glob/substring when filter is set.
+func applyPatternFilter(refs []string, cfg latestBranchConfig) []string {
+	if len(cfg.filter) > 0 {
+		filtered := gitutil.FilterByPattern(refs, cfg.filter)
+		if len(filtered) == 0 {
+			fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoMatch, cfg.filter)
 			os.Exit(1)
 		}
+
+		return filtered
 	}
 
-	// 6. Read tip commits.
+	return refs
+}
+
+// readAndSortBranches reads tip commits and sorts by the given order.
+func readAndSortBranches(refs []string, sortBy string) []gitutil.RemoteBranchInfo {
 	items, err := gitutil.ReadBranchTips(refs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrLatestBranchNoCommits+"\n")
 		os.Exit(1)
 	}
-
-	// 6. Sort.
 	if sortBy == constants.SortByName {
 		gitutil.SortByNameAsc(items)
 	} else {
 		gitutil.SortByDateDesc(items)
 	}
 
-	// 7. Pick latest.
-	latest := items[0]
-	selectedRemote := latest.RemoteRef
-	if idx := strings.Index(selectedRemote, "/"); idx >= 0 {
-		selectedRemote = selectedRemote[:idx]
-	}
-
-	// 8. Resolve branch name(s).
-	branchNames := gitutil.ResolvePointsAt(latest.Sha, selectedRemote)
-
-	// 9. Contains fallback.
-	if len(branchNames) == 0 && containsFallback {
-		branchNames = gitutil.ResolveContains(latest.Sha, selectedRemote)
-	}
-	if len(branchNames) == 0 {
-		branchNames = []string{"<unknown>"}
-	}
-
-	shortSha := latest.Sha
-	if len(shortSha) > 7 {
-		shortSha = shortSha[:7]
-	}
-	commitDate := gitutil.FormatDisplayDate(latest.CommitDate)
-
-	switch format {
-	case constants.OutputJSON:
-		printLatestBranchJSON(branchNames, selectedRemote, shortSha, commitDate, latest, items, top)
-	case constants.OutputCSV:
-		printLatestBranchCSV(items, selectedRemote, top)
-	default:
-		printLatestBranchTerminal(branchNames, selectedRemote, shortSha, commitDate, latest, items, top)
-	}
+	return items
 }
 
-// printLatestBranchJSON outputs JSON to stdout.
-func printLatestBranchJSON(branchNames []string, remote, sha, commitDate string, latest gitutil.RemoteBranchInfo, items []gitutil.RemoteBranchInfo, top int) {
-	out := latestBranchJSON{
-		Branch:     branchNames,
-		Remote:     remote,
-		Sha:        sha,
-		CommitDate: commitDate,
-		Subject:    latest.Subject,
-		Ref:        latest.RemoteRef,
-	}
-	if top > 0 {
-		count := top
-		if count > len(items) {
-			count = len(items)
-		}
-		for _, item := range items[:count] {
-			rName := stripRemotePrefix(item.RemoteRef)
-			out.Top = append(out.Top, latestBranchTopItem{
-				Branch:     rName,
-				Sha:        truncSha(item.Sha),
-				CommitDate: gitutil.FormatDisplayDate(item.CommitDate),
-				Subject:    item.Subject,
-			})
-		}
-	}
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", constants.JSONIndent)
-	enc.Encode(out)
-}
-
-// printLatestBranchCSV outputs CSV to stdout.
-func printLatestBranchCSV(items []gitutil.RemoteBranchInfo, remote string, top int) {
-	count := 1
-	if top > 0 {
-		count = top
-	}
-	if count > len(items) {
-		count = len(items)
-	}
-
-	w := csv.NewWriter(os.Stdout)
-	w.Write([]string{"branch", "remote", "sha", "commitDate", "subject", "ref"})
-	for _, item := range items[:count] {
-		rName := stripRemotePrefix(item.RemoteRef)
-		w.Write([]string{
-			rName,
-			remote,
-			truncSha(item.Sha),
-			gitutil.FormatDisplayDate(item.CommitDate),
-			item.Subject,
-			item.RemoteRef,
-		})
-	}
-	w.Flush()
-}
-
-// printLatestBranchTerminal outputs human-readable text to stdout.
-func printLatestBranchTerminal(branchNames []string, remote, sha, commitDate string, latest gitutil.RemoteBranchInfo, items []gitutil.RemoteBranchInfo, top int) {
-	fmt.Println()
-	fmt.Printf("  Latest branch: %s\n", strings.Join(branchNames, ", "))
-	fmt.Printf("  Remote:        %s\n", remote)
-	fmt.Printf("  SHA:           %s\n", sha)
-	fmt.Printf("  Commit date:   %s\n", commitDate)
-	fmt.Printf("  Subject:       %s\n", latest.Subject)
-	fmt.Printf("  Ref:           %s\n", latest.RemoteRef)
-
-	if top > 0 {
-		count := top
-		if count > len(items) {
-			count = len(items)
-		}
-		fmt.Println()
-		fmt.Printf("  Top %d most recently updated remote branches (%s):\n", count, remote)
-		fmt.Printf("  %-30s %-30s %-9s %s\n", "DATE", "BRANCH", "SHA", "SUBJECT")
-		for _, item := range items[:count] {
-			fmt.Printf("  %-30s %-30s %-9s %s\n",
-				gitutil.FormatDisplayDate(item.CommitDate),
-				stripRemotePrefix(item.RemoteRef), truncSha(item.Sha), item.Subject)
-		}
-	}
-	fmt.Println()
-}
-
-// stripRemotePrefix removes the "<remote>/" prefix from a ref name.
-func stripRemotePrefix(ref string) string {
-	if idx := strings.Index(ref, "/"); idx >= 0 {
-		return ref[idx+1:]
-	}
-	return ref
-}
-
-// truncSha returns the first 7 characters of a SHA.
-func truncSha(sha string) string {
-	if len(sha) > 7 {
-		return sha[:7]
-	}
-	return sha
-}
-
-// parseLatestBranchFlags parses flags for the latest-branch command.
-// Supports positional integer shorthand: `gitmap lb 3` == `gitmap lb --top 3`.
-func parseLatestBranchFlags(args []string) (remote string, allRemotes, containsFallback bool, top int, format string, noFetch bool, sortBy string, filter string) {
+// parseLatestBranchFlags parses flags and returns a config struct.
+func parseLatestBranchFlags(args []string) latestBranchConfig {
 	fs := flag.NewFlagSet(constants.CmdLatestBranch, flag.ExitOnError)
-	remoteFlag := fs.String("remote", "origin", constants.FlagDescLBRemote)
-	allRemotesFlag := fs.Bool("all-remotes", false, constants.FlagDescLBAllRemotes)
-	containsFlag := fs.Bool("contains-fallback", false, constants.FlagDescLBContains)
-	topFlag := fs.Int("top", 0, constants.FlagDescLBTop)
-	formatFlag := fs.String("format", constants.OutputTerminal, constants.FlagDescLBFormat)
-	jsonFlag := fs.Bool("json", false, constants.FlagDescLBJSON)
-	noFetchFlag := fs.Bool("no-fetch", false, constants.FlagDescLBNoFetch)
-	sortFlag := fs.String("sort", constants.SortByDate, constants.FlagDescLBSort)
-	filterFlag := fs.String("filter", "", constants.FlagDescLBFilter)
+	var cfg latestBranchConfig
+	var allRemotes, noFetch, jsonOut bool
+	fs.StringVar(&cfg.remote, "remote", "origin", constants.FlagDescLBRemote)
+	fs.BoolVar(&allRemotes, "all-remotes", false, constants.FlagDescLBAllRemotes)
+	fs.BoolVar(&cfg.containsFallback, "contains-fallback", false, constants.FlagDescLBContains)
+	fs.IntVar(&cfg.top, "top", 0, constants.FlagDescLBTop)
+	fs.StringVar(&cfg.format, "format", constants.OutputTerminal, constants.FlagDescLBFormat)
+	fs.BoolVar(&jsonOut, "json", false, constants.FlagDescLBJSON)
+	fs.BoolVar(&noFetch, "no-fetch", false, constants.FlagDescLBNoFetch)
+	fs.StringVar(&cfg.sortBy, "sort", constants.SortByDate, constants.FlagDescLBSort)
+	fs.StringVar(&cfg.filter, "filter", "", constants.FlagDescLBFilter)
 	fs.Parse(args)
 
-	// Positional integer shorthand for --top.
-	if *topFlag == 0 && fs.NArg() > 0 {
-		if n, err := strconv.Atoi(fs.Arg(0)); err == nil && n > 0 {
-			*topFlag = n
-		}
+	return resolveLatestBranchConfig(fs, cfg, allRemotes, noFetch, jsonOut)
+}
+
+// resolveLatestBranchConfig converts parsed flags into positive-logic config.
+func resolveLatestBranchConfig(fs *flag.FlagSet, cfg latestBranchConfig, allRemotes, noFetch, jsonOut bool) latestBranchConfig {
+	cfg.filterByRemote = allRemotes == false
+	cfg.shouldFetch = noFetch == false
+	if jsonOut {
+		cfg.format = constants.OutputJSON
+	}
+	cfg.top = resolvePositionalTop(fs, cfg.top)
+
+	return cfg
+}
+
+// resolvePositionalTop checks for a bare integer positional argument.
+func resolvePositionalTop(fs *flag.FlagSet, current int) int {
+	if current > 0 || fs.NArg() == 0 {
+
+		return current
+	}
+	n, err := strconv.Atoi(fs.Arg(0))
+	if err == nil && n > 0 {
+
+		return n
 	}
 
-	// --json is shorthand for --format json.
-	outFormat := *formatFlag
-	if *jsonFlag {
-		outFormat = constants.OutputJSON
-	}
-
-	return *remoteFlag, *allRemotesFlag, *containsFlag, *topFlag, outFormat, *noFetchFlag, *sortFlag, *filterFlag
+	return current
 }

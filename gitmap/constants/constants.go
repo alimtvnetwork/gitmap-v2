@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.8.1"
+const Version = "2.9.0"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -83,6 +83,34 @@ const (
 	GitPush         = "push"
 	GitLsRemote     = "ls-remote"
 	GitLsRemoteTags = "--tags"
+)
+
+// Git arguments for latest-branch operations.
+const (
+	GitFetch              = "fetch"
+	GitBranch             = "branch"
+	GitLog                = "log"
+	GitForEachRef         = "for-each-ref"
+	GitArgAll             = "--all"
+	GitArgPrune           = "--prune"
+	GitArgRemote          = "-r"
+	GitArgContains        = "--contains"
+	GitArgInsideWorkTree  = "--is-inside-work-tree"
+	GitLogTipFormat       = "--format=%cI|%H|%s"
+	GitLogDelimiter       = "|"
+	GitLogFieldCount      = 3
+	GitPointsAtFmt        = "--points-at=%s"
+	GitRefsRemotesFmt     = "refs/remotes/%s"
+	GitFormatRefnameShort = "--format=%(refname:short)"
+	HeadPointer           = " -> "
+	ShaDisplayLength      = 7
+)
+
+// Latest-branch display messages.
+const (
+	MsgLatestBranchFetching     = "  Fetching remotes..."
+	MsgLatestBranchFetchWarning = "  Warning: fetch failed: %v\n"
+	LBUnknownBranch             = "<unknown>"
 )
 
 // Clone instruction format.
@@ -241,7 +269,6 @@ const (
 	MsgUpdateStarting   = "\n  Updating gitmap from source repo...\n"
 	MsgUpdateRepoPath   = "  → Repo path: %s\n"
 	MsgUpdateVersion    = "\n  ✓ Updated to gitmap v%s\n"
-	MsgLatestBranchFetching = "\n  Fetching remote refs..."
 )
 
 // Latest-branch error messages.

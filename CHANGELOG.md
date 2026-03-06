@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.9.0
+- Full code style refactor of `latest-branch` command:
+  - Split `cmd/latestbranch.go` into 3 files: handler, resolve, output (all under 200 lines).
+  - Split `gitutil/latestbranch.go` into 2 files: core operations, resolve helpers.
+  - All functions comply with 8-15 line limit. Positive logic throughout.
+  - Blank line before every return. No magic strings. Chained if+return replaces switch.
+  - Extracted git constants and display message constants.
+
 ## v2.8.0
 - Added `--filter` flag to `latest-branch`: filter branches by glob pattern (e.g. `feature/*`) or substring match.
 
