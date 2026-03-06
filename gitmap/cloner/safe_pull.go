@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"runtime"
-	"strings"
 	"time"
 
 	"github.com/user/gitmap/constants"
