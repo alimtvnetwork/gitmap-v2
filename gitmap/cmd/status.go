@@ -127,20 +127,20 @@ func formatSyncText(ahead, behind int, s *statusSummary) string {
 		s.Ahead++
 		s.Behind++
 
-		return fmt.Sprintf("%s↑%d ↓%d%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncBothFmt+"%s", constants.ColorYellow, ahead, behind, constants.ColorReset)
 	}
 	if ahead > 0 {
 		s.Ahead++
 
-		return fmt.Sprintf("%s↑%d%s", constants.ColorCyan, ahead, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncUpFmt+"%s", constants.ColorCyan, ahead, constants.ColorReset)
 	}
 	if behind > 0 {
 		s.Behind++
 
-		return fmt.Sprintf("%s↓%d%s", constants.ColorYellow, behind, constants.ColorReset)
+		return fmt.Sprintf("%s"+constants.StatusSyncDownFmt+"%s", constants.ColorYellow, behind, constants.ColorReset)
 	}
 
-	return constants.ColorDim + "  —" + constants.ColorReset
+	return constants.ColorDim + constants.StatusSyncDash + constants.ColorReset
 }
 
 // formatStashText returns the stash indicator and updates summary.
