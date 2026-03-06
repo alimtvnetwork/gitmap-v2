@@ -81,8 +81,9 @@ const (
 	ErrGroupSlugReq     = "Error: at least one slug is required"
 	ErrListDBFailed     = "Error: could not open database: %v\nRun 'gitmap scan' first.\n"
 	ErrNoDatabase       = "No database found. Run 'gitmap scan' first."
-	MsgDBResetDone    = "Database reset: all repos and groups cleared.\n"
-	ErrDBResetFailed  = "Error: database reset failed: %v\n"
+	MsgDBResetDone      = "Database reset: all repos and groups cleared.\n"
+	ErrDBResetFailed    = "Error: database reset failed: %v\n"
+	ErrDBResetNoConfirm = "Error: this will delete all tracked repos and groups.\nRun with --confirm to proceed: gitmap db-reset --confirm"
 )
 
 // Latest-branch error messages.
