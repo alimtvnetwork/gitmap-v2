@@ -151,7 +151,7 @@ func executeSteps(v Version, branchName, tag, sourceRef, sourceName string, opts
 	}
 	fmt.Printf(constants.MsgReleaseBranch, branchName)
 
-	err = CreateTag(tag, "Release "+tag)
+	err = CreateTag(tag, constants.ReleaseTagPrefix+tag)
 	if err != nil {
 		return fmt.Errorf("create tag: %w", err)
 	}
