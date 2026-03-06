@@ -4,7 +4,7 @@
 package constants
 
 // Version.
-const Version = "2.5.0"
+const Version = "2.5.1"
 
 // RepoPath is set at build time via -ldflags.
 var RepoPath = ""
@@ -379,6 +379,7 @@ const (
 	FlagDescLBTop         = "Show top N most recently updated branches"
 	FlagDescLBJSON        = "Output structured JSON instead of plain text (shorthand for --format json)"
 	FlagDescLBFormat      = "Output format: terminal, json, csv (default: terminal)"
+	FlagDescLBNoFetch     = "Skip git fetch (use existing remote refs)"
 )
 
 // Clone and Desktop scripts are now generated from Go templates

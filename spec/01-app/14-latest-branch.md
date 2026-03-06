@@ -26,7 +26,7 @@ A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
 
 1. **Validate** — confirm the current directory is inside a Git repo
    (`git rev-parse --is-inside-work-tree`).
-2. **Fetch** — run `git fetch --all --prune` to update remote refs.
+2. **Fetch** — unless `--no-fetch` is set, run `git fetch --all --prune` to update remote refs.
 3. **List remote branches** — run `git branch -r`, trim whitespace,
    exclude `HEAD ->` pointer lines.
 4. **Filter by remote** — if `--all-remotes` is not set, keep only
@@ -58,6 +58,7 @@ A bare integer argument (e.g. `gitmap lb 3`) is shorthand for
 | `--top <n>`           | int    | `0`        | Show top N most recently updated branches        |
 | `--format <fmt>`      | string | `terminal` | Output format: `terminal`, `json`, `csv`         |
 | `--json`              | bool   | `false`    | Shorthand for `--format json`                    |
+| `--no-fetch`          | bool   | `false`    | Skip `git fetch` (use existing remote refs)      |
 
 ## Output Format
 

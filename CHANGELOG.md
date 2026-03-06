@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.5.1
+- Added `--no-fetch` flag to `latest-branch`: skips `git fetch --all --prune` when remote refs are already up to date.
+
 ## v2.5.0
 - Added `--format` flag to `latest-branch`: supports `terminal` (default), `json`, and `csv` output formats.
   - CSV outputs a header row + data rows to stdout, suitable for piping and spreadsheets.
