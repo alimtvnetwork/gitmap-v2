@@ -12,9 +12,9 @@ import (
 )
 
 // runUpdate handles the "update" subcommand.
-// It creates a handoff copy of the active binary and re-launches a hidden
-// worker command from that copy. The parent exits immediately so file locks
-// are released before deploy overwrites gitmap.exe.
+// It creates a handoff copy of the active binary and runs a hidden
+// worker command from that copy in the same console session so update
+// progress and failures are visible end-to-end.
 func runUpdate() {
 	repoPath := constants.RepoPath
 	if len(repoPath) == 0 {
