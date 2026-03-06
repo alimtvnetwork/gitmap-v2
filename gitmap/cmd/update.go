@@ -241,7 +241,7 @@ func writeUpdateScript(repoPath string) string {
 }
 
 // buildUpdateScript generates the PowerShell script content.
-// Captures versions before/after update and validates PATH vs deployed binary.
+// Ensures active PATH binary is synced and prints changelog bullets.
 func buildUpdateScript(repoPath, runPS1 string) string {
 	return fmt.Sprintf(`# gitmap self-update script (auto-generated)
 Set-Location "%s"
@@ -260,6 +260,16 @@ if (Test-Path $configPath) {
     }
 }
 
+# Detect source version from constants.go
+$sourceVersion = "unknown"
+$constantsPath = Join-Path "%s" "gitmap\constants\constants.go"
+if (Test-Path $constantsPath) {
+    $match = Select-String -Path $constantsPath -Pattern 'const Version = "([^"]+)"' | Select-Object -First 1
+    if ($match -and $match.Matches.Count -gt 0) {
+        $sourceVersion = "gitmap v" + $match.Matches[0].Groups[1].Value
+    }
+}
+
 # Detect active gitmap on PATH (what the user invokes)
 $activeBinary = $null
 $activeVersion = "unknown"
@@ -273,6 +283,7 @@ if ($cmd) {
 
 Write-Host ""
 Write-Host "  Current deployed version: $oldVersion" -ForegroundColor DarkGray
+Write-Host "  Current source version:   $sourceVersion" -ForegroundColor DarkGray
 if ($activeBinary) {
     Write-Host "  Current PATH binary: $activeBinary" -ForegroundColor DarkGray
     Write-Host "  Current PATH version: $activeVersion" -ForegroundColor DarkGray
@@ -286,11 +297,49 @@ $ErrorActionPreference = $prevPref
 $pullText = ($pullOutput | Out-String).Trim()
 
 if ($pullText -match "Already up to date") {
-    Write-Host "  Source is already up to date." -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "  No update needed - you are running the latest source." -ForegroundColor Green
-    Write-Host ""
-    exit 0
+    $needsRebuild = $false
+    if ($sourceVersion -ne "unknown" -and $oldVersion -ne "unknown" -and $oldVersion -ne $sourceVersion) {
+        $needsRebuild = $true
+    }
+
+    if ($needsRebuild -eq $false) {
+        if ($activeBinary -and $deployedBinary -and (Test-Path $activeBinary) -and (Test-Path $deployedBinary)) {
+            $activeResolved = (Resolve-Path $activeBinary).Path
+            $deployedResolved = (Resolve-Path $deployedBinary).Path
+            if ($activeResolved -ne $deployedResolved) {
+                Write-Host "  [WARN] PATH points to a different gitmap binary." -ForegroundColor Yellow
+                Write-Host "         Active:   $activeResolved" -ForegroundColor Yellow
+                Write-Host "         Deployed: $deployedResolved" -ForegroundColor Yellow
+                try {
+                    Copy-Item $deployedBinary $activeBinary -Force -ErrorAction Stop
+                    Write-Host "  [OK] Synced active PATH binary with deployed build." -ForegroundColor Green
+                    $activeVersion = & $activeBinary version 2>&1
+                    Write-Host "  Active PATH version is now: $activeVersion" -ForegroundColor Green
+                } catch {
+                    Write-Host "  [WARN] Could not sync active PATH binary: $_" -ForegroundColor Yellow
+                }
+            }
+        }
+
+        Write-Host "  Source is already up to date." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  No update needed - you are running the latest source." -ForegroundColor Green
+
+        $changelogBinary = $activeBinary
+        if ((-not $changelogBinary) -or (-not (Test-Path $changelogBinary))) {
+            $changelogBinary = $deployedBinary
+        }
+        if ($changelogBinary -and (Test-Path $changelogBinary)) {
+            Write-Host ""
+            Write-Host "  Latest changelog:" -ForegroundColor Cyan
+            & $changelogBinary changelog --latest
+        }
+
+        Write-Host ""
+        exit 0
+    }
+
+    Write-Host "  Source is up to date, but binary version mismatch detected. Rebuilding..." -ForegroundColor Yellow
 }
 
 Write-Host "  Changes detected, rebuilding..." -ForegroundColor Cyan
@@ -316,7 +365,7 @@ if ($deployedBinary) {
     Write-Host "  Deployed binary: $deployedBinary" -ForegroundColor DarkGray
 }
 
-# Warn if PATH still points to a different gitmap binary
+# Sync active PATH binary when it differs
 if ($activeBinary -and $deployedBinary -and (Test-Path $activeBinary) -and (Test-Path $deployedBinary)) {
     $activeResolved = (Resolve-Path $activeBinary).Path
     $deployedResolved = (Resolve-Path $deployedBinary).Path
@@ -324,14 +373,30 @@ if ($activeBinary -and $deployedBinary -and (Test-Path $activeBinary) -and (Test
         Write-Host "  [WARN] PATH points to a different gitmap binary." -ForegroundColor Yellow
         Write-Host "         Active:   $activeResolved" -ForegroundColor Yellow
         Write-Host "         Deployed: $deployedResolved" -ForegroundColor Yellow
+        try {
+            Copy-Item $deployedBinary $activeBinary -Force -ErrorAction Stop
+            Write-Host "  [OK] Synced active PATH binary with deployed build." -ForegroundColor Green
+            $activeVersion = & $activeBinary version 2>&1
+            Write-Host "  Active PATH version is now: $activeVersion" -ForegroundColor Green
+        } catch {
+            Write-Host "  [WARN] Could not sync active PATH binary: $_" -ForegroundColor Yellow
+        }
     }
 }
 
-# Show short changelog after update
-if ($deployedBinary -and (Test-Path $deployedBinary)) {
+# Show changelog bullets for updated version
+$changelogBinary = $activeBinary
+if ((-not $changelogBinary) -or (-not (Test-Path $changelogBinary))) {
+    $changelogBinary = $deployedBinary
+}
+if ($changelogBinary -and (Test-Path $changelogBinary)) {
     Write-Host ""
-    Write-Host "  Latest changelog:" -ForegroundColor Cyan
-    & $deployedBinary changelog --latest
+    Write-Host "  Changelog:" -ForegroundColor Cyan
+    if ($newVersion -and $newVersion -ne "unknown") {
+        & $changelogBinary changelog $newVersion
+    } else {
+        & $changelogBinary changelog --latest
+    }
 }
 
 # Run update-cleanup to remove temp copies and .old backups
@@ -348,7 +413,7 @@ if (Test-Path $cleanupBinary) {
 
 Write-Host ""
 exit 0
-`, repoPath, repoPath, runPS1, repoPath)
+`, repoPath, repoPath, repoPath, runPS1, repoPath)
 }
 
 // runUpdateScript executes the PowerShell script with output piped to terminal.

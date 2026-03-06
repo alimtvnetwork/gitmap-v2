@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.3.2
+- `gitmap update` now syncs the active PATH binary with the deployed binary, so commands like `release` are available immediately.
+- `gitmap update` now prints changelog bullet points after update (or no-op update) for quick visibility.
+- Added `gitmap changelog --open` and `gitmap changelog.md` to open `CHANGELOG.md` in the default app.
+
 ## v2.3.1
 - Added `gitmap changelog` command for concise, CLI-friendly release notes.
 - Improved `gitmap update` output to show deployed binary/version and warn if PATH points to another binary.
