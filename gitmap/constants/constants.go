@@ -131,6 +131,8 @@ const (
 	CmdChangelogAlias     = "cl"
 	CmdChangelogMD        = "changelog.md"
 	CmdDoctor             = "doctor"
+	CmdLatestBranch       = "latest-branch"
+	CmdLatestBranchAlias  = "lb"
 )
 
 // GitHub Desktop.
