@@ -105,7 +105,7 @@ func runLatestBranch(args []string) {
 	if len(shortSha) > 7 {
 		shortSha = shortSha[:7]
 	}
-	commitDate := latest.CommitDate.Format("2006-01-02T15:04:05-07:00")
+	commitDate := gitutil.FormatDisplayDate(latest.CommitDate)
 
 	switch format {
 	case constants.OutputJSON:
