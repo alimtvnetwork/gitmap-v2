@@ -428,13 +428,15 @@ var LatestBranchCSVHeaders = []string{
 	"branch", "remote", "sha", "commitDate", "subject", "ref",
 }
 
-// Terminal table headers.
-const (
-	StatusTableHeader    = "%-22s %-12s %-8s %-10s %-8s %-6s"
-	StatusTableColumns   = "REPO\", \"BRANCH\", \"STATE\", \"SYNC\", \"STASH\", \"FILES"
-	LatestBranchTableFmt = "  %-30s %-30s %-9s %s\n"
-	LatestBranchTableHdr = "DATE\", \"BRANCH\", \"SHA\", \"SUBJECT"
-)
+// Status terminal table header columns.
+var StatusTableColumns = []string{
+	"REPO", "BRANCH", "STATE", "SYNC", "STASH", "FILES",
+}
+
+// Latest-branch terminal table header columns.
+var LatestBranchTableColumns = []string{
+	"DATE", "BRANCH", "SHA", "SUBJECT",
+}
 
 // Sort orders.
 const (
