@@ -328,3 +328,7 @@ gitmap release-pending --assets ./dist
   exclusivity error.
 - **Given** push fails after branch/tag creation, **then** error message
   includes the failed step for manual cleanup.
+- **Given** `gitmap release-pending`, **then** all `release/v*` branches
+  without matching tags are released.
+- **Given** `gitmap release-pending --dry-run`, **then** pending releases
+  are listed but no tags or pushes are created.
