@@ -202,6 +202,12 @@ const (
 // JSON formatting.
 const JSONIndent = "  "
 
+// Date display formatting.
+const (
+	DateDisplayLayout = "02-Jan-2006 03:04 PM"
+	DateUTCSuffix     = " (UTC)"
+)
+
 // CLI messages.
 const (
 	MsgFoundRepos       = "Found %d repositories.\n"
