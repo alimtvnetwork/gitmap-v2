@@ -1,4 +1,4 @@
-# Issue: PATH sync lock loop during `gitmap update` (v2.3.9 → v2.3.10)
+# Issue: PATH sync lock loop during `gitmap update` (v2.3.9 → v2.3.11) — RESOLVED
 
 ## Summary
 
