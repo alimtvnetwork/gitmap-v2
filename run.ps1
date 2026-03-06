@@ -514,17 +514,43 @@ if (-not $NoDeploy) {
 
                 $maxSyncAttempts = 20
                 $syncSuccess = $false
-                for ($syncAttempt = 1; $syncAttempt -le $maxSyncAttempts; $syncAttempt++) {
+
+                if ($Update) {
+                    Write-Info "Update mode: using rename-first PATH sync"
+                    $activeBackup = "$activeBinaryPath.old"
                     try {
+                        if (Test-Path $activeBackup) {
+                            Remove-Item $activeBackup -Force -ErrorAction SilentlyContinue
+                        }
+                        Rename-Item $activeBinaryPath $activeBackup -Force -ErrorAction Stop
                         Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
                         $syncedVersion = & $activeBinaryPath version 2>&1
-                        Write-Success "Synced active PATH binary -> $syncedVersion"
+                        Write-Success "Synced active PATH binary via rename-first -> $syncedVersion"
                         $syncSuccess = $true
-                        break
                     } catch {
-                        if ($syncAttempt -lt $maxSyncAttempts) {
-                            Write-Warn "Active PATH binary is in use; retrying ($syncAttempt/$maxSyncAttempts)..."
-                            Start-Sleep -Milliseconds 500
+                        if ((Test-Path $activeBackup) -and (-not (Test-Path $activeBinaryPath))) {
+                            try {
+                                Copy-Item $activeBackup $activeBinaryPath -Force -ErrorAction Stop
+                            } catch {
+                            }
+                        }
+                        Write-Warn "Rename-first sync failed; retrying with copy loop"
+                    }
+                }
+
+                if (-not $syncSuccess) {
+                    for ($syncAttempt = 1; $syncAttempt -le $maxSyncAttempts; $syncAttempt++) {
+                        try {
+                            Copy-Item $deployedBinaryPath $activeBinaryPath -Force -ErrorAction Stop
+                            $syncedVersion = & $activeBinaryPath version 2>&1
+                            Write-Success "Synced active PATH binary -> $syncedVersion"
+                            $syncSuccess = $true
+                            break
+                        } catch {
+                            if ($syncAttempt -lt $maxSyncAttempts) {
+                                Write-Warn "Active PATH binary is in use; retrying ($syncAttempt/$maxSyncAttempts)..."
+                                Start-Sleep -Milliseconds 500
+                            }
                         }
                     }
                 }
