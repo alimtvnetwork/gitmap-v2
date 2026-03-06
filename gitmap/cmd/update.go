@@ -58,6 +58,7 @@ func runUpdate() {
 
 	// Parent must exit immediately to release lock on active binary.
 	os.Exit(0)
+}
 
 // runUpdateRunner is a hidden command that performs the real update work.
 func runUpdateRunner() {
