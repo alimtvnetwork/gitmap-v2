@@ -6,17 +6,18 @@ When `gitmap update` runs from `E:\bin-run\gitmap\gitmap.exe`, the process holds
 
 ## Solution (Final)
 
-Four-layer fix:
+Five-layer fix:
 
 1. **Copy-and-handoff** (`gitmap/cmd/update.go`):
-   - Parent copies itself to `%TEMP%\gitmap-update-<pid>.exe`
-   - Launches the copy with `update --from-copy`
-   - Parent **exits immediately** (`os.Exit(0)`) to release the file lock
+   - Parent copies itself to same directory as `gitmap-update-<pid>.exe` (fallback to `%TEMP%`)
+   - Launches the copy with hidden `update-runner` command
+   - Parent **exits immediately** via `cmd.Start()` + `os.Exit(0)` to release the file lock
+   - **MUST use `cmd.Start()`, never `cmd.Run()`** — synchronous wait holds the lock
 
-2. **Skip-if-current** (generated PowerShell script):
-   - Captures current deployed version before pulling
-   - Runs `git pull` and checks output
-   - If "Already up to date" → exits early (no rebuild)
+2. **Rename-first PATH sync** (`run.ps1` in `-Update` mode):
+   - Renames the active binary to `.old` (Windows allows renaming a running exe)
+   - Copies deployed binary to the active path
+   - Falls back to copy-retry loop (20 x 500ms) only if rename fails
 
 3. **Deploy with rollback** (`run.ps1`):
    - Backs up existing binary as `.old` before overwriting
@@ -43,10 +44,15 @@ Four-layer fix:
 - **Keep `.old` backups until explicitly cleaned** — serves as manual rollback if new version has issues
 - **Auto-cleanup at end of update** — best of both worlds: cleanup happens but user can still roll back before it runs
 - **Skip unnecessary rebuilds** — check `git pull` output before building
+- **Use rename-first, not copy-first** — Windows blocks overwrite of running exe but allows rename
+- **Never add `Read-Host` to generated scripts** — they run in non-interactive PowerShell
 
 ## What NOT to Repeat
 
+- Don't use `cmd.Run()` in `runUpdate()` — this holds the lock during the entire pipeline
+- Don't use copy-overwrite as the primary PATH sync strategy — use rename-first
 - Don't run `run.ps1` (which overwrites the binary) from the same process that holds the lock
 - Don't skip the deploy retry — even with the handoff, a small timing window exists
 - Don't auto-delete backups on startup — use an explicit cleanup command
+- Don't add `Read-Host` or interactive prompts to generated scripts
 - Always bump the version so the user can confirm the update actually applied

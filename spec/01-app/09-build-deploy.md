@@ -201,12 +201,19 @@ file handle when deploy starts.
 
 1. `gitmap update` detects the active `gitmap` executable currently resolved by `PATH`.
 2. It creates a handoff copy beside that active binary (same directory), such as `gitmap-update-<pid>.exe` (fallback to `%TEMP%` if locked).
-3. It launches the handoff copy with the hidden `update-runner` command and exits immediately to release file locks.
+3. It launches the handoff copy with the hidden `update-runner` command and **exits immediately** to release file locks. The parent MUST NOT wait for the worker.
 4. The handoff copy (`update-runner`) resolves the repo path and runs `run.ps1 -Update` from the repo root.
-5. `run.ps1 -Update` performs the full pipeline: pull → build → deploy, then safe PATH sync with retry + rename fallback.
-6. The updater prints executable-derived version comparison (`before` vs `after`) using `gitmap version`.
-7. It runs `gitmap changelog --latest` using the updated binary.
-8. It runs `gitmap update-cleanup` to remove temporary handoff and `.old` artifacts.
+5. `run.ps1 -Update` performs the full pipeline: pull -> build -> deploy.
+6. PATH sync uses **rename-first** strategy: renames active binary to `.old`, copies deployed binary to active path. Falls back to copy-retry loop (20 x 500ms) only if rename fails.
+7. The updater prints executable-derived version comparison (`before` vs `after`) using `gitmap version`.
+8. It runs `gitmap changelog --latest` using the updated binary.
+9. It runs `gitmap update-cleanup` to remove temporary handoff and `.old` artifacts.
+
+### Critical Rules
+
+- Parent MUST use `cmd.Start()` + `os.Exit(0)`, never `cmd.Run()`. Synchronous wait holds the file lock during the entire pipeline.
+- PATH sync MUST use rename-first in update mode. Copy-overwrite fails on Windows when any process holds the binary.
+- Generated scripts MUST NOT contain `Read-Host` or interactive prompts.
 
 ### Minimum Confirmation Output
 
@@ -214,3 +221,12 @@ file handle when deploy starts.
 - Deployed version after update
 - Final active version after sync (must match deployed)
 - Latest changelog entries from updated binary
+
+## Contributors
+
+- [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
+  - [Google Profile](https://www.google.com/search?q=Alim+Ul+Karim)
+- [Riseup Asia LLC (Top Leading Software Company in WY)](https://riseup-asia.com) (2026)
+  - [Facebook](https://www.facebook.com/riseupasia.talent/)
+  - [LinkedIn](https://www.linkedin.com/company/105304484/)
+  - [YouTube](https://www.youtube.com/@riseup-asia)
