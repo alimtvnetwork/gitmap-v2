@@ -80,9 +80,9 @@ Appends a table after the main output:
 ```
   Top 3 most recently updated remote branches (origin):
   DATE                           BRANCH                SHA      SUBJECT
-  2025-03-06T14:22:31+01:00      feature/v1.5.1        a1b2c3d  Fix auth token refresh
-  2025-03-05T09:10:00+01:00      main                  d4e5f6a  Merge PR #42
-  2025-03-04T17:45:12+01:00      release/v2.3.0        b7c8d9e  Bump version
+  06-Mar-2025 03:22 PM           feature/v1.5.1        a1b2c3d  Fix auth token refresh
+  05-Mar-2025 09:10 AM           main                  d4e5f6a  Merge PR #42
+  04-Mar-2025 05:45 PM           release/v2.3.0        b7c8d9e  Bump version
 ```
 
 ### With `--format csv`
