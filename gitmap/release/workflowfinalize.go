@@ -85,6 +85,10 @@ func updateLatestIfStable(v Version) error {
 		return nil
 	}
 
+	if LastMeta != nil {
+		LastMeta.IsLatest = true
+	}
+
 	err := WriteLatest(v)
 	if err != nil {
 		return err
