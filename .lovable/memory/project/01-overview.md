@@ -6,11 +6,12 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 
 ## Current Version
 
-**v2.1.0** (defined in `gitmap/constants/constants.go`)
+**v2.14.0** (defined in `gitmap/constants/constants.go`)
 
 ## Tech Stack
 
 - **CLI**: Go (compiled to `gitmap.exe`)
+- **Database**: SQLite via `modernc.org/sqlite` (CGo-free)
 - **Build/Deploy**: PowerShell (`run.ps1`)
 - **Frontend**: React + Vite + Tailwind (documentation site, currently placeholder)
 - **Config**: JSON (`powershell.json`, `data/config.json`)
@@ -37,12 +38,30 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 | `setup` | — | Configure Git global settings from JSON | ✅ Done |
 | `status` | `st` | Show dirty/clean, ahead/behind for all repos | ✅ Done |
 | `exec <args>` | `x` | Run any git command across all repos | ✅ Done |
-| `release [ver]` | `r` | Create release branch, tag, push | ✅ Done |
+| `release [ver]` | `r` | Create release branch, tag, push, persist to DB | ✅ Done |
 | `release-branch` | `rb` | Complete release from existing branch | ✅ Done |
+| `release-pending` | `rp` | Release all pending branches without tags | ✅ Done |
+| `changelog [ver]` | `cl` | Show concise release notes | ✅ Done |
+| `latest-branch` | `lb` | Find most recently updated remote branch | ✅ Done |
+| `list` | `ls` | Show all tracked repos with slugs | ✅ Done |
+| `group <sub>` | `g` | Manage repo groups | ✅ Done |
+| `list-versions` | `lv` | Show all release tags with changelog | ✅ Done |
+| `revert <ver>` | — | Revert to a specific release version | ✅ Done |
+| `doctor` | — | Diagnose PATH, deploy, and version issues | ✅ Done |
 | `update` | — | Self-update via copy-and-handoff + auto-cleanup | ✅ Done |
 | `update-cleanup` | — | Remove update temp files and .old backups | ✅ Done |
+| `db-reset` | — | Clear all repos, groups, releases from database | ✅ Done |
 | `version` | `v` | Print version string and exit | ✅ Done |
 | `help` | — | Show usage information | ✅ Done |
+
+## Database Tables (PascalCase)
+
+| Table | Purpose |
+|-------|---------|
+| `Repos` | Discovered Git repositories |
+| `Groups` | Named collections of repos |
+| `GroupRepos` | Join table linking repos to groups |
+| `Releases` | Release metadata with changelog |
 
 ## Output Files (per scan)
 
@@ -59,24 +78,16 @@ All written to `gitmap-output/` inside the scanned directory:
 | `direct-clone-ssh.ps1` | Plain `git clone` commands (SSH) |
 | `register-desktop.ps1` | GitHub Desktop registration script |
 
-## Deploy Structure
-
-```
-bin-run/
-└── gitmap/
-    ├── gitmap.exe
-    └── data/
-        └── config.json
-```
-
 ## Code Style Rules
 
 - No negation in `if` conditions (no `!`, no `!=`)
+- No `switch` statements — use `if`/`else if` chains
 - Functions: 8–15 lines
 - Files: 100–200 lines max
 - One responsibility per package
 - Blank line before `return` (unless sole line in `if` block)
 - All string literals in `constants` package (no magic strings)
+- All DB table/column names in PascalCase
 
 ## Version Policy
 
@@ -84,3 +95,8 @@ bin-run/
 - Follows SemVer (`MAJOR.MINOR.PATCH`)
 - Displayed in terminal banner, `help`, and `version` command
 - `run.ps1` prints version after each build
+
+## File Naming Convention
+
+- All `.md` files use **lowercase-hyphen** naming (e.g. `01-overview.md`, `19-list-versions.md`)
+- Go files use lowercase (e.g. `listversions.go`, `revertscript.go`)

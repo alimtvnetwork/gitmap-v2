@@ -2,44 +2,43 @@
 
 ## Completed Work
 
-### v1.1.0 → v1.1.1
-- ✅ **Self-update handoff**: Implemented copy-and-handoff mechanism to avoid Windows file locks during `gitmap update`
-- ✅ **Direct SSH clone output**: Added `direct-clone-ssh.ps1` with raw SSH `git clone` commands
-- ✅ **Version bump**: 1.1.0 → 1.1.1
-
-### v1.1.1 → v1.1.2
-- ✅ **Deploy retry logic**: Added 20-attempt retry with 500ms delay in `run.ps1` for locked binary
-- ✅ **Update delay**: Added 1.2s delay before rebuild in update handoff
-- ✅ **Version command docs**: Updated all spec docs for `version` command and build output
-- ✅ **Spec updates**: Documented direct-clone-ssh.ps1, copy-and-handoff update, deploy retry, version display
-- ✅ **Version bump**: 1.1.1 → 1.1.2
-
-### v1.1.2 → v1.1.3
-- ✅ **`desktop-sync` command**: New command that syncs repos from gitmap-output/gitmap.json to GitHub Desktop
-- ✅ **Enhanced terminal clone hints**: Show both HTTPS and SSH clone commands, script shortcuts, and desktop-sync at end of output
-- ✅ **Specs**: Created spec/01-app/11-desktop-sync.md, updated CLI interface and output formatting specs
-- ✅ **Version bump**: 1.1.2 → 1.1.3
+### v1.1.0 → v1.1.3
+- ✅ Self-update handoff, direct SSH clone output, deploy retry logic
+- ✅ Desktop-sync command, enhanced terminal clone hints
 
 ### v2.0.0 → v2.1.0
-- ✅ **Removed GitHub Release integration**: Release command now handles Git branch/tag/push and local metadata only
-- ✅ **Nested deploy structure**: Deploy to `bin-run/gitmap/` subfolder instead of flat directory
-- ✅ **Update enhancements**: Skip-if-current, version comparison before/after, rollback safety with `.old` backups
-- ✅ **`update-cleanup` command**: Explicit cleanup of temp copies and `.old` backups, auto-runs at end of update
-- ✅ **Proactive temp cleanup removed**: Replaced auto-startup cleanup with explicit `update-cleanup` command
-- ✅ **Generic spec files**: All `spec/02-general/` files made fully generic and shareable (no gitmap-specific references)
+- ✅ Removed GitHub Release integration (Git-only + local metadata)
+- ✅ Nested deploy structure, update enhancements, update-cleanup command
+- ✅ Generic spec files in `spec/02-general/`
 
-### General Guidelines (spec/02-general/)
-- ✅ **CLI design patterns**: Subcommand routing, flag parsing, version command, constants, help output, error handling
-- ✅ **PowerShell build/deploy**: Step-based scripts, logging, config, retry-on-lock, nested deploy, -R flag forwarding
-- ✅ **Self-update mechanism**: Copy-and-handoff, skip-if-current, version comparison, rollback, cleanup command
-- ✅ **Output & formatting**: Multi-format strategy, terminal reports, templates, CSV/JSON/Markdown
-- ✅ **Config pattern**: Three-layer merge (defaults → JSON → CLI flags)
-- ✅ **Code style rules**: Positive conditionals, function/file limits, no magic strings, naming
+### v2.2.0 → v2.9.0
+- ✅ Release-pending, changelog, doctor, latest-branch commands
+- ✅ Date formatting, sort/filter flags, CSV/JSON output formats
+- ✅ Database with repos, groups, group management commands
+- ✅ Self-update hardening (rename-first, stale-process fallback)
+
+### v2.10.0 — Compliance Audit
+- ✅ Full compliance audit (Wave 1 + Wave 2): all 75+ source files pass code style rules
+- ✅ Trimmed oversized files, fixed negation/switch violations, extracted constants
+
+### v2.11.0 — Constants Inventory
+- ✅ Added constants inventory audit section documenting ~280 constants
+
+### v2.12.0 — New Commands
+- ✅ `list-versions` (`lv`): show all release tags sorted highest-first with changelog
+- ✅ `revert <version>`: checkout tag + handoff rebuild (same mechanism as update)
+
+### v2.13.0 — Changelog Enhancements
+- ✅ Release metadata JSON includes changelog field from CHANGELOG.md
+- ✅ `list-versions` shows changelog notes as sub-points (terminal + JSON)
+
+### v2.14.0 — Database Releases & PascalCase
+- ✅ Added `Releases` table to SQLite for persistent release metadata
+- ✅ Converted all DB table/column names from snake_case to PascalCase
+- ✅ Release workflow auto-persists to database after successful releases
 
 ## Pending Work
 
-- ⬜ **Verify update flow end-to-end**: Run `gitmap update` and confirm full cycle (skip-if-current, rollback, auto-cleanup)
-- ⬜ **Verify direct-clone-ssh.ps1**: Run scan and confirm SSH output file is generated correctly
-- ⬜ **Verify desktop-sync**: Run `gitmap desktop-sync` end-to-end
-- ⬜ **Frontend documentation site**: Currently a placeholder React app — needs actual content
-- ⬜ **Cross-platform support**: Currently Windows-only (PowerShell scripts, `.exe` binary)
+- ⬜ **Frontend documentation site**: Currently a placeholder React app
+- ⬜ **Cross-platform support**: Currently Windows-only (PowerShell scripts)
+- ⬜ **Add `list-releases` command**: Query Releases table from database
