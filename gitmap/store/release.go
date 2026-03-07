@@ -24,7 +24,7 @@ func (db *DB) UpsertRelease(r model.ReleaseRecord) error {
 
 	_, err := db.conn.Exec(constants.SQLUpsertRelease,
 		id, r.Version, r.Tag, r.Branch, r.SourceBranch,
-		r.CommitSha, r.Changelog, draft, preRelease, isLatest, r.CreatedAt,
+		r.CommitSha, r.Changelog, draft, preRelease, isLatest, r.Source, r.CreatedAt,
 	)
 	if err != nil {
 		return fmt.Errorf(constants.ErrDBReleaseUpsert, err)
