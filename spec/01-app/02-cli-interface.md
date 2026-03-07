@@ -238,9 +238,69 @@ A bare integer positional argument is shorthand for `--top`:
 
 See [14-latest-branch.md](./14-latest-branch.md) for full details.
 
+### `gitmap list` (alias: `ls`)
+
+Show all tracked repositories from the SQLite database with slugs and
+repo names in a table format.
+
+- Supports `--group` (`-g`) to filter by a named group.
+- Supports `--verbose` to show full paths alongside slugs.
+- If the database is empty, instructs the user to run `gitmap scan` first.
+
+### `gitmap group` (alias: `g`)
+
+Manage repository groups. Subcommands:
+
+- `gitmap group create <name> [--description "..."] [--color <color>]` — create a group.
+- `gitmap group add <group> <slug...>` — add repos to a group by slug.
+- `gitmap group remove <group> <slug...>` — remove repos from a group.
+- `gitmap group list` — list all groups with repo counts.
+- `gitmap group show <name>` — show repos in a group.
+- `gitmap group delete <name>` — delete a group (repos are not deleted).
+
+See [17-repo-grouping.md](./17-repo-grouping.md) for full details.
+
+### `gitmap db-reset --confirm`
+
+Drop all database tables and recreate them. Requires `--confirm` flag
+to prevent accidental data loss. Clears all tracked repos, groups, and
+releases from the SQLite database.
+
+### `gitmap list-versions` (alias: `lv`)
+
+List all Git release tags (matching `v*`) sorted from highest to lowest
+semantic version. Attaches changelog notes from `CHANGELOG.md` as
+sub-points under each version.
+
+- Supports `--json` for structured JSON output.
+- Supports `--limit N` to show only the top N versions (0 = all).
+- Data source: `git tag` (reads directly from Git, not the database).
+
+See [19-list-versions.md](./19-list-versions.md) for full details.
+
+### `gitmap list-releases` (alias: `lr`)
+
+Query the `Releases` table in the SQLite database and display stored
+release records in a table format (version, tag, branch, draft, latest,
+date).
+
+- Supports `--json` for structured JSON output.
+- Supports `--limit N` to show only the top N releases (0 = all).
+- Data source: `Releases` DB table (populated by `gitmap release` and scan import).
+
+See [21-list-releases.md](./21-list-releases.md) for full details.
+
+### `gitmap revert <version>`
+
+Revert to a specific release version by checking out the corresponding
+Git tag and rebuilding.
+
+- Requires the tag to exist locally (suggests `git fetch --tags` if missing).
+- Uses a two-step handoff similar to `update` for binary replacement.
+
 ### `gitmap version` (alias: `v`)
 
-Prints the current version number (e.g., `gitmap v2.4.0`) and exits.
+Prints the current version number (e.g., `gitmap v2.16.0`) and exits.
 
 ### `gitmap help`
 
