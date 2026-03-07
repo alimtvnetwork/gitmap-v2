@@ -180,6 +180,18 @@ const (
 	ErrListVersionsNoTags = "Error: no version tags found. Create a release first."
 )
 
+// List-releases messages.
+const (
+	MsgListReleasesEmpty     = "No releases found."
+	MsgListReleasesHeader    = "Releases (%d found)\n"
+	MsgListReleasesSeparator = "──────────────────────────────────────────────────────────────"
+	MsgListReleasesColumns   = "  VERSION    TAG          BRANCH              DRAFT  LATEST  DATE"
+	MsgListReleasesRowFmt    = "  %-10s %-12s %-19s %-6s %-7s %s\n"
+	ErrListReleasesFailed    = "Error: failed to load releases: %v\n"
+	MsgYes                   = "yes"
+	MsgNo                    = "no"
+)
+
 // Revert messages.
 const (
 	MsgRevertCheckout       = "  → Checking out %s...\n"
