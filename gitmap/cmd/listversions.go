@@ -21,7 +21,9 @@ type versionEntry struct {
 // runListVersions handles the "list-versions" command.
 func runListVersions(args []string) {
 	asJSON := hasListVersionsJSONFlag(args)
+	limit := parseListVersionsLimit(args)
 	entries := collectVersionEntries()
+	entries = applyVersionLimit(entries, limit)
 
 	if asJSON {
 		printVersionEntriesJSON(entries)
