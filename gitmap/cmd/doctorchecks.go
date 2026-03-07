@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"os"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
