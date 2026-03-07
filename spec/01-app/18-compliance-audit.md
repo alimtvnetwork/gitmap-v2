@@ -70,8 +70,8 @@ Last updated: 2026-03-07
 | `constants_messages.go` | ~195 | ✅ Pass | Added list-versions + revert messages |
 | `constants_release.go` | ~37 | ✅ Pass | Added SetupGlobalFlag, ReleaseTagPrefix |
 | `constants_store.go` | ~20 | ✅ Pass | |
-| `constants_terminal.go` | ~180 | ✅ Pass | Format strings extracted |
-| `constants_update.go` | ~40 | ✅ Pass | PS/shell constants added |
+| `constants_terminal.go` | ~180 | ✅ Pass | Added StatusTableColumns |
+| `constants_update.go` | ~140 | ✅ Pass | Added revert PS script templates |
 
 ## Package: `release`
 
