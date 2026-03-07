@@ -192,16 +192,14 @@ const (
 	MsgNo                    = "no"
 )
 
-// Revert messages.
-
 // Release import messages.
 const (
-	MsgReleasesImported    = "Releases imported: %d from .release/\n"
-	WarnReleaseImportSkip  = "Warning: skipping %s: %v\n"
-	ReleaseGlob            = "v*.json"
+	MsgReleasesImported   = "Releases imported: %d from .release/\n"
+	WarnReleaseImportSkip = "Warning: skipping %s: %v\n"
+	ReleaseGlob           = "v*.json"
 )
 
-// Revert messages (continued).
+// Revert messages.
 const (
 	MsgRevertCheckout       = "  → Checking out %s...\n"
 	MsgRevertStarting       = "\n  Building reverted version...\n"
