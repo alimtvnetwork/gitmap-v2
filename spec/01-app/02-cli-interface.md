@@ -673,6 +673,8 @@ gitmap list-releases
 gitmap lr                        # alias
 gitmap lr --limit 10             # top 10 releases
 gitmap lr --json                 # JSON output
+gitmap lr --source release       # only releases created via gitmap release
+gitmap lr --source import        # only releases imported from .release/ files
 
 # Reset database
 gitmap db-reset --confirm
