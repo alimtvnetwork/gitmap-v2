@@ -13,5 +13,12 @@ type ReleaseRecord struct {
 	Draft        bool   `json:"draft"`
 	PreRelease   bool   `json:"preRelease"`
 	IsLatest     bool   `json:"isLatest"`
+	Source       string `json:"source"`
 	CreatedAt    string `json:"createdAt"`
 }
+
+// Release source values.
+const (
+	SourceRelease = "release"
+	SourceImport  = "import"
+)

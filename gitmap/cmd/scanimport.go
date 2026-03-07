@@ -102,6 +102,7 @@ func mapMetaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
 		Draft:        m.Draft,
 		PreRelease:   m.PreRelease,
 		IsLatest:     m.IsLatest,
+		Source:       model.SourceImport,
 		CreatedAt:    m.CreatedAt,
 	}
 }

@@ -184,9 +184,9 @@ const (
 const (
 	MsgListReleasesEmpty     = "No releases found."
 	MsgListReleasesHeader    = "Releases (%d found)\n"
-	MsgListReleasesSeparator = "──────────────────────────────────────────────────────────────"
-	MsgListReleasesColumns   = "  VERSION    TAG          BRANCH              DRAFT  LATEST  DATE"
-	MsgListReleasesRowFmt    = "  %-10s %-12s %-19s %-6s %-7s %s\n"
+	MsgListReleasesSeparator = "────────────────────────────────────────────────────────────────────────"
+	MsgListReleasesColumns   = "  VERSION    TAG          BRANCH              DRAFT  LATEST  SOURCE   DATE"
+	MsgListReleasesRowFmt    = "  %-10s %-12s %-19s %-6s %-7s %-8s %s\n"
 	ErrListReleasesFailed    = "Error: failed to load releases: %v\n"
 	MsgYes                   = "yes"
 	MsgNo                    = "no"

@@ -17,10 +17,13 @@ gitmap lr [flags]
 |------------|-------|---------|------------------------------------------|
 | `--json`   |       | false   | Output as JSON array                     |
 | `--limit`  |       | 0       | Show only the top N releases (0 = all)   |
+| `--source` |       | (all)   | Filter by source: `release` or `import`  |
 
 ## Data Source
 
-All data comes from the `Releases` table (populated by `gitmap release`).
+All data comes from the `Releases` table (populated by `gitmap release` or
+scan import from `.release/v*.json` files). Each record stores a `Source`
+field indicating its origin (`release` or `import`).
 No Git commands are executed. If the database is missing or empty, print an
 informative message and exit 1.
 
@@ -59,6 +62,7 @@ Releases (3 found)
     "draft": false,
     "preRelease": false,
     "isLatest": true,
+    "source": "release",
     "createdAt": "2026-03-07T10:00:00Z"
   }
 ]

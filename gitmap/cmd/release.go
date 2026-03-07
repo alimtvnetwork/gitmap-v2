@@ -98,6 +98,7 @@ func metaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
 		Draft:        m.Draft,
 		PreRelease:   m.PreRelease,
 		IsLatest:     m.IsLatest,
+		Source:       model.SourceRelease,
 		CreatedAt:    m.CreatedAt,
 	}
 }

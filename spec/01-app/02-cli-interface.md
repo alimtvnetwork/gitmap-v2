@@ -287,10 +287,11 @@ See [19-list-versions.md](./19-list-versions.md) for full details.
 
 Query the `Releases` table in the SQLite database and display stored
 release records in a table format (version, tag, branch, draft, latest,
-date).
+source, date).
 
 - Supports `--json` for structured JSON output.
 - Supports `--limit N` to show only the top N releases (0 = all).
+- Supports `--source release|import` to filter by origin.
 - Data source: `Releases` DB table (populated by `gitmap release` and scan import).
 
 See [21-list-releases.md](./21-list-releases.md) for full details.
@@ -495,6 +496,7 @@ activates whenever existing repos are detected during a clone operation.
 |------------|------------------------------------------|---------|
 | `--json`   | Output as JSON array                     | `false` |
 | `--limit`  | Show only the top N releases (0 = all)   | `0`     |
+| `--source` | Filter by source: `release` or `import`  | (all)   |
 
 ## Examples
 
@@ -671,6 +673,8 @@ gitmap list-releases
 gitmap lr                        # alias
 gitmap lr --limit 10             # top 10 releases
 gitmap lr --json                 # JSON output
+gitmap lr --source release       # only releases created via gitmap release
+gitmap lr --source import        # only releases imported from .release/ files
 
 # Reset database
 gitmap db-reset --confirm

@@ -47,7 +47,14 @@ func (db *DB) Migrate() error {
 		}
 	}
 
+	db.migrateSourceColumn()
+
 	return nil
+}
+
+// migrateSourceColumn adds the Source column to existing Releases tables.
+func (db *DB) migrateSourceColumn() {
+	_, _ = db.conn.Exec(constants.SQLAddSourceColumn)
 }
 
 // Reset drops all tables and recreates them for a fresh start.
