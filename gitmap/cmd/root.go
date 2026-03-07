@@ -181,6 +181,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdListVersions || command == constants.CmdListVersionsAlias {
+		runListVersions(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

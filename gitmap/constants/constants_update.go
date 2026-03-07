@@ -103,6 +103,36 @@ exit 0
 `
 )
 
+// Revert PowerShell script template sections.
+const (
+	RevertPSHeader = `# gitmap revert script (auto-generated)
+Set-Location "%s"
+`
+	RevertPSBuild = `
+Write-Host ""
+Write-Host "  Building from checked-out version..." -ForegroundColor Cyan
+& "%s"
+$runExit = $LASTEXITCODE
+if (($runExit -ne 0) -and ($runExit -ne $null)) {
+    exit $runExit
+}
+`
+	RevertPSPostActions = `
+$cmdAfter = Get-Command gitmap -ErrorAction SilentlyContinue
+if ($cmdAfter -and (Test-Path $cmdAfter.Source)) {
+    $activeAfter = & $cmdAfter.Source version 2>&1
+    Write-Host "  Active version: $activeAfter" -ForegroundColor DarkGray
+
+    Write-Host ""
+    Write-Host "  Cleaning artifacts..." -ForegroundColor DarkGray
+    & $cmdAfter.Source update-cleanup
+}
+
+Write-Host ""
+exit 0
+`
+)
+
 // Backup file extension glob.
 const OldBackupGlob = "*.old"
 
