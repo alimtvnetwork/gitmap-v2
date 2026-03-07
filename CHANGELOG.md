@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.11.0
+- Added constants inventory audit section to compliance spec, documenting ~280 constants across 9 files and 17 categories.
+
+## v2.10.0
+- Full compliance audit (Wave 1 + Wave 2): all 75 source files pass code style rules.
+  - Trimmed 4 oversized files: `workflow.go`, `terminal.go`, `safe_pull.go`, `setup.go` (all under 200 lines).
+  - Fixed all negation and switch violations across `changelog.go`, `github.go`, `metadata.go`, `config.go`, `verbose.go`, `semver.go`.
+  - Extracted missing constants to dedicated constants files.
+
 ## v2.9.0
 - Full code style refactor of `latest-branch` command:
   - Split `cmd/latestbranch.go` into 3 files: handler, resolve, output (all under 200 lines).
