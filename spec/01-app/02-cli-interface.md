@@ -15,6 +15,11 @@ registration script (`register-desktop.ps1`) — written to a
 After each scan, a **`last-scan.json`** cache file is written to
 `gitmap-output/` so the scan can be replayed with `gitmap rescan`.
 
+After repo upsert, the scan also **imports `.release/v*.json` metadata
+files** from the scan root into the `Releases` database table. This
+keeps the DB in sync with on-disk release history automatically.
+See [22-scan-release-import.md](./22-scan-release-import.md) for details.
+
 ### `gitmap clone <source|json|csv>` (alias: `c`)
 
 Re-clone repositories from a CSV, JSON, or text file.
