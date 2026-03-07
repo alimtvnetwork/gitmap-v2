@@ -157,4 +157,5 @@ const (
 	FlagDescGroupDesc     = "Optional group description"
 	FlagDescGroupColor    = "Terminal color for group display"
 	FlagDescConfirm       = "Confirm destructive operation"
+	FlagDescSource        = "Filter by source: release or import"
 )

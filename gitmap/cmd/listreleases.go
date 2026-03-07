@@ -14,7 +14,9 @@ import (
 func runListReleases(args []string) {
 	asJSON := hasListReleasesJSONFlag(args)
 	limit := parseListReleasesLimit(args)
+	source := parseListReleasesSource(args)
 	releases := loadReleases()
+	releases = filterBySource(releases, source)
 	releases = applyReleaseLimit(releases, limit)
 
 	if asJSON {
@@ -24,6 +26,33 @@ func runListReleases(args []string) {
 	}
 
 	printReleasesTerminal(releases)
+}
+
+// parseListReleasesSource extracts the --source value from args.
+func parseListReleasesSource(args []string) string {
+	for i, arg := range args {
+		if arg == constants.FlagSource && i+1 < len(args) {
+			return args[i+1]
+		}
+	}
+
+	return ""
+}
+
+// filterBySource keeps only releases matching the given source (empty = all).
+func filterBySource(releases []model.ReleaseRecord, source string) []model.ReleaseRecord {
+	if source == "" {
+		return releases
+	}
+
+	var filtered []model.ReleaseRecord
+	for _, r := range releases {
+		if r.Source == source {
+			filtered = append(filtered, r)
+		}
+	}
+
+	return filtered
 }
 
 // hasListReleasesJSONFlag checks if --json is present in args.
