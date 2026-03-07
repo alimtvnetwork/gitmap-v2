@@ -78,7 +78,7 @@ Last updated: 2026-03-07
 | File | Lines | Status | Notes |
 |------|-------|--------|-------|
 | `workflow.go` | ~163 | ✅ Pass | Trimmed from 416; imports cleaned; magic strings fixed |
-| `workflowfinalize.go` | ~130 | ✅ Pass | Extracted from workflow.go |
+| `workflowfinalize.go` | ~145 | ✅ Pass | Added loadChangelogNotes helper |
 | `workflowbranch.go` | ~165 | ✅ Pass | Extracted from workflow.go |
 | `gitops.go` | ~100 | ✅ Pass | Rewritten; query functions extracted |
 | `gitopsquery.go` | ~135 | ✅ Pass | Extracted from gitops.go |
