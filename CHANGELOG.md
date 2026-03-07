@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.15.0
+- Added `--limit N` flag to `gitmap list-versions` (`lv`): show only the top N versions (0 or omitted = all).
+
 ## v2.14.0
 - Added `Releases` table to SQLite database: stores release metadata (version, tag, branch, commit, changelog, flags) persistently.
 - Release workflow now auto-persists metadata to the database after successful releases.
