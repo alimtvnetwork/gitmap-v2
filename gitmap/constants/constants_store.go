@@ -58,8 +58,12 @@ const SQLCreateReleases = `CREATE TABLE IF NOT EXISTS Releases (
 	Draft        INTEGER DEFAULT 0,
 	PreRelease   INTEGER DEFAULT 0,
 	IsLatest     INTEGER DEFAULT 0,
+	Source       TEXT DEFAULT 'release',
 	CreatedAt    TEXT DEFAULT CURRENT_TIMESTAMP
 )`
+
+// SQL: add Source column to existing Releases table.
+const SQLAddSourceColumn = "ALTER TABLE Releases ADD COLUMN Source TEXT DEFAULT 'release'"
 
 // SQL: enable foreign keys.
 const SQLEnableFK = "PRAGMA foreign_keys = ON"
