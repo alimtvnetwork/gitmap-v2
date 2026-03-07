@@ -49,11 +49,27 @@ func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, ass
 		Commit:       commit,
 		Tag:          tag,
 		Assets:       assetPaths,
+		Changelog:    loadChangelogNotes(v.String()),
 		Draft:        draft,
 		PreRelease:   v.IsPreRelease(),
 		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
 		IsLatest:     false,
 	}
+}
+
+// loadChangelogNotes reads changelog notes for a version, returning nil on error.
+func loadChangelogNotes(version string) []string {
+	entries, err := ReadChangelog()
+	if err != nil {
+		return nil
+	}
+
+	entry, found := FindChangelogEntry(entries, version)
+	if found {
+		return entry.Notes
+	}
+
+	return nil
 }
 
 // updateLatestIfStable marks the release as latest if stable.
