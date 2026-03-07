@@ -62,6 +62,7 @@ const (
 // CLI flag values.
 const FlagOpenValue = "--open"
 const FlagJSON = "--json"
+const FlagLimit = "--limit"
 
 // Usage header.
 const UsageHeaderFmt = "gitmap v%s\n\n"
