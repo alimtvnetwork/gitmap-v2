@@ -55,6 +55,9 @@ Last updated: 2026-03-07
 | `grouplist.go` | ~50 | ✅ Pass | |
 | `groupshow.go` | ~60 | ✅ Pass | |
 | `flags_test.go` | ~40 | ✅ Pass | |
+| `listversions.go` | ~140 | ✅ Pass | New: list-versions command with changelog sub-points |
+| `revert.go` | ~90 | ✅ Pass | New: revert command, validation, checkout, handoff |
+| `revertscript.go` | ~85 | ✅ Pass | New: revert-runner, PS1 script generation |
 
 ## Package: `constants`
 
