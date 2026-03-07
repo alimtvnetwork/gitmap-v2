@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.16.0
+- Added `gitmap list-releases` (`lr`) command: queries the Releases DB table and displays stored releases with `--json` and `--limit N` support.
+- Enhanced `gitmap scan` to import `.release/v*.json` metadata files into the Releases DB table automatically after each scan.
+
 ## v2.15.0
 - Added `--limit N` flag to `gitmap list-versions` (`lv`): show only the top N versions (0 or omitted = all).
 
