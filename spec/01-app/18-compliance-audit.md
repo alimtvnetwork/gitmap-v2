@@ -180,8 +180,8 @@ Last updated: 2026-03-07
 
 | Metric | Count |
 |--------|-------|
-| Total files audited | 75 |
-| Passing | 75 |
+| Total files audited | 80 |
+| Passing | 80 |
 | Pending | 0 |
 
 ## Wave 2 Changes Applied
