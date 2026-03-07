@@ -46,6 +46,10 @@ const (
 	CmdGroupShow           = "show"
 	CmdGroupDelete         = "delete"
 	CmdDBReset             = "db-reset"
+	CmdListVersions        = "list-versions"
+	CmdListVersionsAlias   = "lv"
+	CmdRevert              = "revert"
+	CmdRevertRunner        = "revert-runner"
 )
 
 // Clone shorthands.
