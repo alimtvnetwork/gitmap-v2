@@ -20,7 +20,7 @@ Last updated: 2026-03-07
 |------|-------|--------|-------|
 | `root.go` | ~70 | ✅ Pass | Added revert + revert-runner dispatch |
 | `rootflags.go` | ~50 | ✅ Pass | |
-| `rootusage.go` | ~45 | ✅ Pass | |
+| `rootusage.go` | ~47 | ✅ Pass | Added list-versions + revert help |
 | `scan.go` | ~113 | ✅ Pass | Split from 257 lines |
 | `scanoutput.go` | ~155 | ✅ Pass | Extracted from scan.go |
 | `clone.go` | ~140 | ✅ Pass | |
