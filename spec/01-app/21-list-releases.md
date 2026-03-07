@@ -17,6 +17,7 @@ gitmap lr [flags]
 |------------|-------|---------|------------------------------------------|
 | `--json`   |       | false   | Output as JSON array                     |
 | `--limit`  |       | 0       | Show only the top N releases (0 = all)   |
+| `--source` |       | (all)   | Filter by source: `release` or `import`  |
 
 ## Data Source
 
