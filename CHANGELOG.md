@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.12.0
+- Added `gitmap list-versions` (`lv`) command: lists all release tags sorted highest-first, with `--json` output support.
+- Added `gitmap revert <version>` command: checks out a release tag and rebuilds/deploys via handoff (same mechanism as `update`).
+
 ## v2.11.0
 - Added constants inventory audit section to compliance spec, documenting ~280 constants across 9 files and 17 categories.
 
