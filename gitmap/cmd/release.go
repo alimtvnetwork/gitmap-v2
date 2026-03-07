@@ -83,5 +83,21 @@ func persistReleaseToDB() {
 	defer db.Close()
 
 	_ = db.Migrate()
-	_ = db.UpsertRelease(*meta)
+	_ = db.UpsertRelease(metaToRecord(*meta))
+}
+
+// metaToRecord converts a ReleaseMeta to a ReleaseRecord for DB storage.
+func metaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
+	return model.ReleaseRecord{
+		Version:      m.Version,
+		Tag:          m.Tag,
+		Branch:       m.Branch,
+		SourceBranch: m.SourceBranch,
+		CommitSha:    m.Commit,
+		Changelog:    store.JoinChangelog(m.Changelog),
+		Draft:        m.Draft,
+		PreRelease:   m.PreRelease,
+		IsLatest:     m.IsLatest,
+		CreatedAt:    m.CreatedAt,
+	}
 }
