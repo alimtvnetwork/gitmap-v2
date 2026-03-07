@@ -7,6 +7,9 @@ import (
 	"github.com/user/gitmap/constants"
 )
 
+// LastMeta holds the most recent release metadata after Execute completes.
+var LastMeta *ReleaseMeta
+
 // pushAndFinalize pushes to remote and writes metadata.
 func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options) error {
 	err := PushBranchAndTag(branchName, tag)
