@@ -21,7 +21,9 @@ gitmap lr [flags]
 
 ## Data Source
 
-All data comes from the `Releases` table (populated by `gitmap release`).
+All data comes from the `Releases` table (populated by `gitmap release` or
+scan import from `.release/v*.json` files). Each record stores a `Source`
+field indicating its origin (`release` or `import`).
 No Git commands are executed. If the database is missing or empty, print an
 informative message and exit 1.
 
