@@ -12,18 +12,24 @@ import (
 	"github.com/user/gitmap/release"
 )
 
+// versionEntry pairs a parsed version with its changelog notes.
+type versionEntry struct {
+	Version release.Version
+	Notes   []string
+}
+
 // runListVersions handles the "list-versions" command.
 func runListVersions(args []string) {
 	asJSON := hasListVersionsJSONFlag(args)
-	versions := collectVersionTags()
+	entries := collectVersionEntries()
 
 	if asJSON {
-		printVersionsJSON(versions)
+		printVersionEntriesJSON(entries)
 
 		return
 	}
 
-	printVersionsTerminal(versions)
+	printVersionEntriesTerminal(entries)
 }
 
 // hasListVersionsJSONFlag checks if --json is present in args.
@@ -37,9 +43,23 @@ func hasListVersionsJSONFlag(args []string) bool {
 	return false
 }
 
+// collectVersionEntries reads tags, parses, sorts, and attaches changelog.
+func collectVersionEntries() []versionEntry {
+	versions := collectVersionTags()
+	changelog := loadChangelogMap()
+
+	entries := make([]versionEntry, len(versions))
+	for i, v := range versions {
+		entries[i] = versionEntry{Version: v, Notes: changelog[v.String()]}
+	}
+
+	return entries
+}
+
 // collectVersionTags reads git tags, parses, sorts descending.
 func collectVersionTags() []release.Version {
-	cmd := exec.Command(constants.GitBin, constants.GitTag, constants.GitTagListFlag, constants.GitTagGlob)
+	cmd := exec.Command(constants.GitBin, constants.GitTag,
+		constants.GitTagListFlag, constants.GitTagGlob)
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, constants.ErrListVersionsNoTags)
@@ -79,20 +99,44 @@ func parseVersionTags(output string) []release.Version {
 	return versions
 }
 
-// printVersionsTerminal prints versions one per line.
-func printVersionsTerminal(versions []release.Version) {
-	for _, v := range versions {
-		fmt.Println(v.String())
+// loadChangelogMap reads CHANGELOG.md into a version→notes map.
+func loadChangelogMap() map[string][]string {
+	entries, err := release.ReadChangelog()
+	if err != nil {
+		return map[string][]string{}
+	}
+
+	m := make(map[string][]string, len(entries))
+	for _, e := range entries {
+		m[e.Version] = e.Notes
+	}
+
+	return m
+}
+
+// printVersionEntriesTerminal prints versions with changelog sub-points.
+func printVersionEntriesTerminal(entries []versionEntry) {
+	for _, e := range entries {
+		fmt.Println(e.Version.String())
+		for _, note := range e.Notes {
+			fmt.Printf("  - %s\n", note)
+		}
 	}
 }
 
-// printVersionsJSON prints versions as a JSON array.
-func printVersionsJSON(versions []release.Version) {
-	strs := make([]string, len(versions))
-	for i, v := range versions {
-		strs[i] = v.String()
+// lvJSONEntry is the JSON output shape for list-versions.
+type lvJSONEntry struct {
+	Version   string   `json:"version"`
+	Changelog []string `json:"changelog,omitempty"`
+}
+
+// printVersionEntriesJSON prints versions with changelog as JSON.
+func printVersionEntriesJSON(entries []versionEntry) {
+	out := make([]lvJSONEntry, len(entries))
+	for i, e := range entries {
+		out[i] = lvJSONEntry{Version: e.Version.String(), Changelog: e.Notes}
 	}
 
-	data, _ := json.Marshal(strs)
+	data, _ := json.MarshalIndent(out, "", constants.JSONIndent)
 	fmt.Println(string(data))
 }
