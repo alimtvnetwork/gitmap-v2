@@ -287,10 +287,11 @@ See [19-list-versions.md](./19-list-versions.md) for full details.
 
 Query the `Releases` table in the SQLite database and display stored
 release records in a table format (version, tag, branch, draft, latest,
-date).
+source, date).
 
 - Supports `--json` for structured JSON output.
 - Supports `--limit N` to show only the top N releases (0 = all).
+- Supports `--source release|import` to filter by origin.
 - Data source: `Releases` DB table (populated by `gitmap release` and scan import).
 
 See [21-list-releases.md](./21-list-releases.md) for full details.
