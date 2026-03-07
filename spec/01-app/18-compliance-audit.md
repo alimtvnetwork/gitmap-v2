@@ -84,7 +84,7 @@ Last updated: 2026-03-07
 | `gitopsquery.go` | ~135 | ✅ Pass | Extracted from gitops.go |
 | `changelog.go` | ~120 | ✅ Pass | Fixed `== false` → positive logic (3 occurrences) |
 | `github.go` | ~66 | ✅ Pass | Fixed `IsDir() == false` → positive logic (2 occurrences) |
-| `metadata.go` | ~145 | ✅ Pass | Fixed `GreaterThan == false` → `latestIsHigher` helper |
+| `metadata.go` | ~145 | ✅ Pass | Added Changelog field to ReleaseMeta |
 | `metadata_test.go` | ~40 | ✅ Pass | |
 | `semver.go` | ~160 | ✅ Pass | Fixed switch → if/else chain; added constants import |
 | `semver_test.go` | ~80 | ✅ Pass | |
