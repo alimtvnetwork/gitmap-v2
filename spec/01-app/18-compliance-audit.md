@@ -259,7 +259,7 @@ Total: **9 files**, **~310 constants** + **9 vars** across 17 categories.
 | Folder structure MD | `StructureTitle`, `StructureDescription`, `StructureRepoFmt`, `TreeBranch`, `TreeCorner`, `TreePipe`, `TreeSpace` |
 | CSV headers | `ScanCSVHeaders` (var), `LatestBranchCSVHeaders` (var) |
 | Latest-branch display | `LBTermLatestFmt`, `LBTermRemoteFmt`, `LBTermSHAFmt`, `LBTermDateFmt`, `LBTermSubjectFmt`, `LBTermRefFmt`, `LBTermTopHdrFmt`, `LBTermRowFmt` |
-| Latest-branch table | `LatestBranchTableColumns` (var), `StatusTableColumns` (var — in terminal) |
+| Latest-branch table | `LatestBranchTableColumns` (var), `StatusTableColumns` (var) |
 
 ### `constants_messages.go` — User Messages & Errors (176 lines)
 
