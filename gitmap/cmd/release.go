@@ -67,3 +67,20 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump str
 
 	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *draftFlag, *dryRunFlag, *verboseFlag
 }
+
+// persistReleaseToDB saves the release metadata to SQLite if available.
+func persistReleaseToDB() {
+	meta := release.LastMeta
+	if meta == nil {
+		return
+	}
+
+	db, err := store.Open(constants.DefaultOutputFolder)
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	_ = db.Migrate()
+	_ = db.UpsertRelease(*meta)
+}
