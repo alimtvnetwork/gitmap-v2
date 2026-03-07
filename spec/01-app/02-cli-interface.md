@@ -326,10 +326,16 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `release-pending`| `rp`  |
 | `changelog`      | `cl`  |
 | `latest-branch`  | `lb`  |
+| `list`           | `ls`  |
+| `group`          | `g`   |
+| `list-versions`  | `lv`  |
+| `list-releases`  | `lr`  |
 | `version`        | `v`   |
 | `update`         | —     |
 | `update-cleanup` | —     |
 | `doctor`         | —     |
+| `db-reset`       | —     |
+| `revert`         | —     |
 
 ---
 
