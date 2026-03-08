@@ -4,6 +4,7 @@
 - Added `Source` column to the `Releases` table: tracks whether each release was created via `gitmap release` (`release`) or imported from `.release/` files (`import`).
 - Added `--source` flag to `gitmap list-releases` (`lr`): filter releases by origin (`--source release` or `--source import`).
 - Added `--source` flag to `gitmap list-versions` (`lv`): cross-references git tags with the Releases DB to filter by source and display source metadata.
+- Added `--source` flag to `gitmap changelog` (`cl`): filter changelog entries by release source.
 - Terminal and JSON output for `list-releases` and `list-versions` now includes the Source field.
 
 ## v2.16.0
