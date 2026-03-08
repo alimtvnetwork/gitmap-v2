@@ -148,6 +148,48 @@ each template is inserted with a generated UUID.
 | `--files`       | —             | Glob pattern to select specific files for staging       |
 | `--rotate-file` | —             | File to modify during rotation mode (default: auto-detect HTML/txt) |
 | `--dry-run`     | false         | Preview commit messages without executing               |
+| `--template <path>` | —        | Load templates from a custom JSON file instead of the database seed |
+| `--create-template` | false    | Generate a sample `seo-templates.json` in the current directory and exit |
+
+Alias for `--create-template`: `ct` (e.g. `gitmap sw ct`).
+
+### `--template <path>`
+
+Loads title/description templates from the specified JSON file instead of
+the default `data/seo-templates.json` seed. The file must follow the same
+schema as the seed file (see Seed File section). Templates from the custom
+file are used directly at runtime — they are **not** inserted into the
+database.
+
+### `--create-template` / `ct`
+
+Generates a sample `seo-templates.json` file in the current working
+directory with all supported placeholders documented, then exits. This
+gives users a starting point to craft their own template library.
+
+```
+gitmap sw --create-template
+gitmap sw ct
+```
+
+Output file (`./seo-templates.json`):
+```json
+{
+  "titles": [
+    "Top {service} in {area} — {url}",
+    "{company}: Trusted {service} Provider in {area}",
+    "Best {service} Near {area} | Visit {url}"
+  ],
+  "descriptions": [
+    "Looking for reliable {service} in {area}? {company} provides top-rated solutions. Visit {url} or call {phone}.",
+    "{company} is the leading {service} provider serving {area}. Learn more at {url}. Contact us at {email}."
+  ],
+  "placeholders": ["{service}", "{area}", "{url}", "{company}", "{phone}", "{email}", "{address}"]
+}
+```
+
+The `placeholders` key is informational only — it is ignored at runtime
+but helps authors remember which tokens are available.
 
 ## Rotation Mode (Detail)
 
@@ -194,6 +236,11 @@ a total.
    table on first run.
 8. Every commit message prominently includes the `--url` value.
 9. `--files "*.html"` restricts commits to matching files only.
+10. `--template custom.json` loads templates from the given file at runtime
+    without touching the database.
+11. `gitmap sw --create-template` writes a sample `seo-templates.json` to
+    the current directory and exits with a success message.
+12. `gitmap sw ct` is equivalent to `--create-template`.
 
 ## File Layout
 
@@ -202,6 +249,7 @@ a total.
 | `cmd/seowrite.go`          | Flag parsing, orchestration                |
 | `cmd/seowriteloop.go`      | Commit loop, rotation, interval timing     |
 | `cmd/seowritetemplate.go`  | Template loading, placeholder substitution |
+| `cmd/seowritecreate.go`    | `--create-template` / `ct` scaffold logic  |
 | `cmd/seowritecsv.go`       | CSV parsing                                |
 | `store/template.go`        | CommitTemplates CRUD                       |
 | `data/seo-templates.json`  | Pre-seeded title/description templates     |
