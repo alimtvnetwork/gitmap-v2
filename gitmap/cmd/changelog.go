@@ -50,12 +50,13 @@ func handleChangelogOpen(latest bool, version string) {
 }
 
 // dispatchChangelogOutput prints the appropriate changelog entries.
-func dispatchChangelogOutput(version string, latest bool, limit int) {
+func dispatchChangelogOutput(version string, latest bool, limit int, source string) {
 	entries, err := release.ReadChangelog()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogRead, err)
 		os.Exit(1)
 	}
+	entries = filterChangelogBySource(entries, source)
 	if latest {
 		printChangelogEntries(entries, 1)
 
@@ -67,6 +68,45 @@ func dispatchChangelogOutput(version string, latest bool, limit int) {
 		return
 	}
 	printChangelogEntries(entries, limit)
+}
+
+// filterChangelogBySource keeps only entries whose version exists in the DB with the given source.
+func filterChangelogBySource(entries []release.ChangelogEntry, source string) []release.ChangelogEntry {
+	if source == "" {
+		return entries
+	}
+
+	sources := loadChangelogSourceMap()
+	var filtered []release.ChangelogEntry
+	for _, e := range entries {
+		tag := release.NormalizeVersion(e.Version)
+		if sources[tag] == source {
+			filtered = append(filtered, e)
+		}
+	}
+
+	return filtered
+}
+
+// loadChangelogSourceMap reads the Releases table to build a tag→source map.
+func loadChangelogSourceMap() map[string]string {
+	db, err := openDB()
+	if err != nil {
+		return map[string]string{}
+	}
+	defer db.Close()
+
+	releases, err := db.ListReleases()
+	if err != nil {
+		return map[string]string{}
+	}
+
+	m := make(map[string]string, len(releases))
+	for _, r := range releases {
+		m[r.Tag] = r.Source
+	}
+
+	return m
 }
 
 // printSingleVersion finds and prints one version's changelog.
