@@ -17,15 +17,18 @@ gitmap lv [flags]
 |------------|-------|---------|------------------------------------|
 | `--json`   |       | false   | Output as JSON array               |
 | `--limit`  |       | 0       | Show only the top N versions (0 = all) |
+| `--source` |       | (all)   | Filter by source: `release` or `import` |
 
 ## Behavior
 
 1. Run `git tag --list "v*"` to collect all version tags.
 2. Parse each tag with `release.Parse()`. Skip unparseable tags silently.
 3. Sort descending by semantic version (highest first).
-4. Print each version on its own line, v-prefixed (e.g. `v2.11.0`).
-5. If `--json` is set, output a JSON array of version strings.
-6. If no tags are found, print an error and exit 1.
+4. Cross-reference tags with the `Releases` database table to attach `source` metadata.
+5. If `--source` is set, keep only versions matching that source value.
+6. Print each version on its own line, v-prefixed (e.g. `v2.11.0`). Append `[source]` when available.
+7. If `--json` is set, output a JSON array of version objects with `source` field.
+8. If no tags are found (after filtering), print an error and exit 1.
 
 ## Terminal Output Example
 

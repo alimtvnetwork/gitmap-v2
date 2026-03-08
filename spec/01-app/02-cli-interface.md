@@ -489,6 +489,7 @@ activates whenever existing repos are detected during a clone operation.
 |------------|------------------------------------------|---------|
 | `--json`   | Output as JSON array                     | `false` |
 | `--limit`  | Show only the top N versions (0 = all)   | `0`     |
+| `--source` | Filter by source: `release` or `import`  | (all)   |
 
 ## List-Releases Flags
 
@@ -667,6 +668,8 @@ gitmap lv                        # alias
 gitmap lv --limit 5              # top 5 versions
 gitmap lv --json                 # JSON output
 gitmap lv --limit 3 --json       # top 3 as JSON
+gitmap lv --source release       # only versions from gitmap release
+gitmap lv --source import        # only versions imported from .release/ files
 
 # List releases (from database)
 gitmap list-releases

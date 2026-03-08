@@ -13,17 +13,20 @@ import (
 	"github.com/user/gitmap/release"
 )
 
-// versionEntry pairs a parsed version with its changelog notes.
+// versionEntry pairs a parsed version with its changelog notes and source.
 type versionEntry struct {
 	Version release.Version
 	Notes   []string
+	Source  string
 }
 
 // runListVersions handles the "list-versions" command.
 func runListVersions(args []string) {
 	asJSON := hasListVersionsJSONFlag(args)
 	limit := parseListVersionsLimit(args)
+	source := parseListVersionsSource(args)
 	entries := collectVersionEntries()
+	entries = filterVersionsBySource(entries, source)
 	entries = applyVersionLimit(entries, limit)
 
 	if asJSON {
@@ -33,6 +36,33 @@ func runListVersions(args []string) {
 	}
 
 	printVersionEntriesTerminal(entries)
+}
+
+// parseListVersionsSource extracts the --source value from args.
+func parseListVersionsSource(args []string) string {
+	for i, arg := range args {
+		if arg == constants.FlagSource && i+1 < len(args) {
+			return args[i+1]
+		}
+	}
+
+	return ""
+}
+
+// filterVersionsBySource keeps only entries matching the given source (empty = all).
+func filterVersionsBySource(entries []versionEntry, source string) []versionEntry {
+	if source == "" {
+		return entries
+	}
+
+	var filtered []versionEntry
+	for _, e := range entries {
+		if e.Source == source {
+			filtered = append(filtered, e)
+		}
+	}
+
+	return filtered
 }
 
 // hasListVersionsJSONFlag checks if --json is present in args.
@@ -69,17 +99,39 @@ func applyVersionLimit(entries []versionEntry, n int) []versionEntry {
 	return entries[:n]
 }
 
-// collectVersionEntries reads tags, parses, sorts, and attaches changelog.
+// collectVersionEntries reads tags, parses, sorts, and attaches changelog + source.
 func collectVersionEntries() []versionEntry {
 	versions := collectVersionTags()
 	changelog := loadChangelogMap()
+	sources := loadVersionSourceMap()
 
 	entries := make([]versionEntry, len(versions))
 	for i, v := range versions {
-		entries[i] = versionEntry{Version: v, Notes: changelog[v.String()]}
+		entries[i] = versionEntry{Version: v, Notes: changelog[v.String()], Source: sources[v.String()]}
 	}
 
 	return entries
+}
+
+// loadVersionSourceMap reads the Releases table to build a tag→source map.
+func loadVersionSourceMap() map[string]string {
+	db, err := openDB()
+	if err != nil {
+		return map[string]string{}
+	}
+	defer db.Close()
+
+	releases, err := db.ListReleases()
+	if err != nil {
+		return map[string]string{}
+	}
+
+	m := make(map[string]string, len(releases))
+	for _, r := range releases {
+		m[r.Tag] = r.Source
+	}
+
+	return m
 }
 
 // collectVersionTags reads git tags, parses, sorts descending.
@@ -140,10 +192,14 @@ func loadChangelogMap() map[string][]string {
 	return m
 }
 
-// printVersionEntriesTerminal prints versions with changelog sub-points.
+// printVersionEntriesTerminal prints versions with source and changelog sub-points.
 func printVersionEntriesTerminal(entries []versionEntry) {
 	for _, e := range entries {
-		fmt.Println(e.Version.String())
+		if e.Source != "" {
+			fmt.Printf("%s  [%s]\n", e.Version.String(), e.Source)
+		} else {
+			fmt.Println(e.Version.String())
+		}
 		for _, note := range e.Notes {
 			fmt.Printf("  - %s\n", note)
 		}
@@ -153,14 +209,15 @@ func printVersionEntriesTerminal(entries []versionEntry) {
 // lvJSONEntry is the JSON output shape for list-versions.
 type lvJSONEntry struct {
 	Version   string   `json:"version"`
+	Source    string   `json:"source,omitempty"`
 	Changelog []string `json:"changelog,omitempty"`
 }
 
-// printVersionEntriesJSON prints versions with changelog as JSON.
+// printVersionEntriesJSON prints versions with source and changelog as JSON.
 func printVersionEntriesJSON(entries []versionEntry) {
 	out := make([]lvJSONEntry, len(entries))
 	for i, e := range entries {
-		out[i] = lvJSONEntry{Version: e.Version.String(), Changelog: e.Notes}
+		out[i] = lvJSONEntry{Version: e.Version.String(), Source: e.Source, Changelog: e.Notes}
 	}
 
 	data, _ := json.MarshalIndent(out, "", constants.JSONIndent)
