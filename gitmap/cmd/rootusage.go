@@ -15,6 +15,7 @@ func printUsage() {
 	printUsageScanFlags()
 	printUsageCloneFlags()
 	printUsageReleaseFlags()
+	printUsageSEOFlags()
 }
 
 // printUsageCommands prints the available commands section.
@@ -43,6 +44,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpListVersions)
 	fmt.Println(constants.HelpListReleases)
 	fmt.Println(constants.HelpRevert)
+	fmt.Println(constants.HelpSEOWrite)
 	fmt.Println(constants.HelpHelp)
 }
 
@@ -79,4 +81,25 @@ func printUsageReleaseFlags() {
 	fmt.Println(constants.HelpBump)
 	fmt.Println(constants.HelpDraft)
 	fmt.Println(constants.HelpDryRun)
+}
+
+// printUsageSEOFlags prints the seo-write flags section.
+func printUsageSEOFlags() {
+	fmt.Println()
+	fmt.Println(constants.HelpSEOWriteFlags)
+	fmt.Println(constants.HelpSEOCSV)
+	fmt.Println(constants.HelpSEOURL)
+	fmt.Println(constants.HelpSEOService)
+	fmt.Println(constants.HelpSEOArea)
+	fmt.Println(constants.HelpSEOCompany)
+	fmt.Println(constants.HelpSEOPhone)
+	fmt.Println(constants.HelpSEOEmail)
+	fmt.Println(constants.HelpSEOAddress)
+	fmt.Println(constants.HelpSEOMaxCommits)
+	fmt.Println(constants.HelpSEOInterval)
+	fmt.Println(constants.HelpSEOFilesFlag)
+	fmt.Println(constants.HelpSEORotate)
+	fmt.Println(constants.HelpSEODryRunFlag)
+	fmt.Println(constants.HelpSEOTemplateF)
+	fmt.Println(constants.HelpSEOCreateTpl)
 }

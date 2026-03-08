@@ -191,6 +191,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdSEOWrite || command == constants.CmdSEOWriteAlias {
+		runSEOWrite(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
