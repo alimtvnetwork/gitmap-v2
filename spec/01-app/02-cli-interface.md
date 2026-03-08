@@ -668,6 +668,8 @@ gitmap lv                        # alias
 gitmap lv --limit 5              # top 5 versions
 gitmap lv --json                 # JSON output
 gitmap lv --limit 3 --json       # top 3 as JSON
+gitmap lv --source release       # only versions from gitmap release
+gitmap lv --source import        # only versions imported from .release/ files
 
 # List releases (from database)
 gitmap list-releases
