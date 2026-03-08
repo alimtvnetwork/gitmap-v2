@@ -6,7 +6,7 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 
 ## Current Version
 
-**v2.16.0** (defined in `gitmap/constants/constants.go`)
+**v2.17.0** (defined in `gitmap/constants/constants.go`)
 
 ## Tech Stack
 
@@ -45,8 +45,8 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 | `latest-branch` | `lb` | Find most recently updated remote branch | ✅ Done |
 | `list` | `ls` | Show all tracked repos with slugs | ✅ Done |
 | `group <sub>` | `g` | Manage repo groups | ✅ Done |
-| `list-versions` | `lv` | Show all release tags with changelog | ✅ Done |
-| `list-releases` | `lr` | Show stored releases from database | ✅ Done |
+| `list-versions` | `lv` | Show all release tags with changelog, filterable by `--source` | ✅ Done |
+| `list-releases` | `lr` | Show stored releases from database, filterable by `--source` | ✅ Done |
 | `revert <ver>` | — | Revert to a specific release version | ✅ Done |
 | `doctor` | — | Diagnose PATH, deploy, and version issues | ✅ Done |
 | `update` | — | Self-update via copy-and-handoff + auto-cleanup | ✅ Done |
@@ -62,7 +62,7 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 | `Repos` | Discovered Git repositories |
 | `Groups` | Named collections of repos |
 | `GroupRepos` | Join table linking repos to groups |
-| `Releases` | Release metadata with changelog |
+| `Releases` | Release metadata with changelog and source tracking (`release` or `import`) |
 
 ## Output Files (per scan)
 
