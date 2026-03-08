@@ -622,6 +622,8 @@ gitmap cl --latest           # most recent only
 gitmap changelog v2.3.0      # specific version
 gitmap changelog --open      # open CHANGELOG.md
 gitmap changelog.md          # shorthand for --open
+gitmap cl --source release   # only changelog entries from gitmap release
+gitmap cl --source import    # only changelog entries from imported releases
 
 # Diagnose environment issues
 gitmap doctor

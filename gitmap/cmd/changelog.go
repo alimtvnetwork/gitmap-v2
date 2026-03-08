@@ -120,11 +120,12 @@ func printSingleVersion(entries []release.ChangelogEntry, version string) {
 }
 
 // parseChangelogFlags parses flags for the changelog command.
-func parseChangelogFlags(args []string) (version string, latest bool, limit int, openFile bool) {
+func parseChangelogFlags(args []string) (version string, latest bool, limit int, openFile bool, source string) {
 	fs := flag.NewFlagSet(constants.CmdChangelog, flag.ExitOnError)
 	latestFlag := fs.Bool("latest", false, constants.FlagDescLatest)
 	limitFlag := fs.Int("limit", 5, constants.FlagDescLimit)
 	openFlag := fs.Bool("open", false, constants.FlagDescOpenChangelog)
+	sourceFlag := fs.String("source", "", constants.FlagDescSource)
 	fs.Parse(args)
 
 	version = ""
@@ -135,7 +136,7 @@ func parseChangelogFlags(args []string) (version string, latest bool, limit int,
 		*limitFlag = 1
 	}
 
-	return version, *latestFlag, *limitFlag, *openFlag
+	return version, *latestFlag, *limitFlag, *openFlag, *sourceFlag
 }
 
 // printChangelogEntries prints the newest N changelog entries.

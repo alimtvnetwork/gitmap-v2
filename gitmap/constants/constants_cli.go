@@ -87,7 +87,7 @@ const (
 	HelpRelease       = "  release (r) [ver]   Create release branch, tag, and push"
 	HelpReleaseBr     = "  release-branch (rb) Complete release from existing release branch"
 	HelpReleasePend   = "  release-pending (rp) Release all pending branches without tags"
-	HelpChangelog     = "  changelog (cl) [ver] Show concise release notes (use --open or changelog.md)"
+	HelpChangelog     = "  changelog (cl) [ver] Show concise release notes (use --open, --source)"
 	HelpDoctor        = "  doctor [--fix-path] Diagnose PATH, deploy, and version issues"
 	HelpLatestBr      = "  latest-branch (lb)  Find most recently updated remote branch"
 	HelpList          = "  list (ls)           Show all tracked repos with slugs"
