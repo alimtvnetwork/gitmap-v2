@@ -16,7 +16,7 @@ import (
 
 // runChangelog handles the 'changelog' command.
 func runChangelog(args []string) {
-	version, latest, limit, openFile := parseChangelogFlags(args)
+	version, latest, limit, openFile, source := parseChangelogFlags(args)
 	version, openFile = resolveChangelogAlias(version, openFile)
 	if openFile {
 		handleChangelogOpen(latest, version)
@@ -25,7 +25,7 @@ func runChangelog(args []string) {
 		return
 	}
 
-	dispatchChangelogOutput(version, latest, limit)
+	dispatchChangelogOutput(version, latest, limit, source)
 }
 
 // resolveChangelogAlias detects if the version arg is actually a file-open alias.
@@ -50,12 +50,13 @@ func handleChangelogOpen(latest bool, version string) {
 }
 
 // dispatchChangelogOutput prints the appropriate changelog entries.
-func dispatchChangelogOutput(version string, latest bool, limit int) {
+func dispatchChangelogOutput(version string, latest bool, limit int, source string) {
 	entries, err := release.ReadChangelog()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogRead, err)
 		os.Exit(1)
 	}
+	entries = filterChangelogBySource(entries, source)
 	if latest {
 		printChangelogEntries(entries, 1)
 
@@ -69,6 +70,45 @@ func dispatchChangelogOutput(version string, latest bool, limit int) {
 	printChangelogEntries(entries, limit)
 }
 
+// filterChangelogBySource keeps only entries whose version exists in the DB with the given source.
+func filterChangelogBySource(entries []release.ChangelogEntry, source string) []release.ChangelogEntry {
+	if source == "" {
+		return entries
+	}
+
+	sources := loadChangelogSourceMap()
+	var filtered []release.ChangelogEntry
+	for _, e := range entries {
+		tag := release.NormalizeVersion(e.Version)
+		if sources[tag] == source {
+			filtered = append(filtered, e)
+		}
+	}
+
+	return filtered
+}
+
+// loadChangelogSourceMap reads the Releases table to build a tag→source map.
+func loadChangelogSourceMap() map[string]string {
+	db, err := openDB()
+	if err != nil {
+		return map[string]string{}
+	}
+	defer db.Close()
+
+	releases, err := db.ListReleases()
+	if err != nil {
+		return map[string]string{}
+	}
+
+	m := make(map[string]string, len(releases))
+	for _, r := range releases {
+		m[r.Tag] = r.Source
+	}
+
+	return m
+}
+
 // printSingleVersion finds and prints one version's changelog.
 func printSingleVersion(entries []release.ChangelogEntry, version string) {
 	entry, found := release.FindChangelogEntry(entries, version)
@@ -80,11 +120,12 @@ func printSingleVersion(entries []release.ChangelogEntry, version string) {
 }
 
 // parseChangelogFlags parses flags for the changelog command.
-func parseChangelogFlags(args []string) (version string, latest bool, limit int, openFile bool) {
+func parseChangelogFlags(args []string) (version string, latest bool, limit int, openFile bool, source string) {
 	fs := flag.NewFlagSet(constants.CmdChangelog, flag.ExitOnError)
 	latestFlag := fs.Bool("latest", false, constants.FlagDescLatest)
 	limitFlag := fs.Int("limit", 5, constants.FlagDescLimit)
 	openFlag := fs.Bool("open", false, constants.FlagDescOpenChangelog)
+	sourceFlag := fs.String("source", "", constants.FlagDescSource)
 	fs.Parse(args)
 
 	version = ""
@@ -95,7 +136,7 @@ func parseChangelogFlags(args []string) (version string, latest bool, limit int,
 		*limitFlag = 1
 	}
 
-	return version, *latestFlag, *limitFlag, *openFlag
+	return version, *latestFlag, *limitFlag, *openFlag, *sourceFlag
 }
 
 // printChangelogEntries prints the newest N changelog entries.

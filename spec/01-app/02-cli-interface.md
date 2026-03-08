@@ -461,6 +461,7 @@ activates whenever existing repos are detected during a clone operation.
 | `--latest`        | Show only the most recent version        | `false` |
 | `--limit <n>`     | Max number of versions to display        | `5`     |
 | `--open`          | Open CHANGELOG.md in default application | `false` |
+| `--source`        | Filter by source: `release` or `import`  | (all)   |
 
 ## Latest-Branch Flags
 
@@ -621,6 +622,8 @@ gitmap cl --latest           # most recent only
 gitmap changelog v2.3.0      # specific version
 gitmap changelog --open      # open CHANGELOG.md
 gitmap changelog.md          # shorthand for --open
+gitmap cl --source release   # only changelog entries from gitmap release
+gitmap cl --source import    # only changelog entries from imported releases
 
 # Diagnose environment issues
 gitmap doctor
