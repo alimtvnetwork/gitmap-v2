@@ -209,6 +209,7 @@ func printVersionEntriesTerminal(entries []versionEntry) {
 // lvJSONEntry is the JSON output shape for list-versions.
 type lvJSONEntry struct {
 	Version   string   `json:"version"`
+	Source    string   `json:"source,omitempty"`
 	Changelog []string `json:"changelog,omitempty"`
 }
 
