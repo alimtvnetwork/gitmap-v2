@@ -192,10 +192,14 @@ func loadChangelogMap() map[string][]string {
 	return m
 }
 
-// printVersionEntriesTerminal prints versions with changelog sub-points.
+// printVersionEntriesTerminal prints versions with source and changelog sub-points.
 func printVersionEntriesTerminal(entries []versionEntry) {
 	for _, e := range entries {
-		fmt.Println(e.Version.String())
+		if e.Source != "" {
+			fmt.Printf("%s  [%s]\n", e.Version.String(), e.Source)
+		} else {
+			fmt.Println(e.Version.String())
+		}
 		for _, note := range e.Notes {
 			fmt.Printf("  - %s\n", note)
 		}
