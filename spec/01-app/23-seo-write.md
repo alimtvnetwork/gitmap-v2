@@ -236,6 +236,11 @@ a total.
    table on first run.
 8. Every commit message prominently includes the `--url` value.
 9. `--files "*.html"` restricts commits to matching files only.
+10. `--template custom.json` loads templates from the given file at runtime
+    without touching the database.
+11. `gitmap sw --create-template` writes a sample `seo-templates.json` to
+    the current directory and exits with a success message.
+12. `gitmap sw ct` is equivalent to `--create-template`.
 
 ## File Layout
 
@@ -244,6 +249,7 @@ a total.
 | `cmd/seowrite.go`          | Flag parsing, orchestration                |
 | `cmd/seowriteloop.go`      | Commit loop, rotation, interval timing     |
 | `cmd/seowritetemplate.go`  | Template loading, placeholder substitution |
+| `cmd/seowritecreate.go`    | `--create-template` / `ct` scaffold logic  |
 | `cmd/seowritecsv.go`       | CSV parsing                                |
 | `store/template.go`        | CommitTemplates CRUD                       |
 | `data/seo-templates.json`  | Pre-seeded title/description templates     |
