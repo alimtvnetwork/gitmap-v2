@@ -15,6 +15,7 @@ func printUsage() {
 	printUsageScanFlags()
 	printUsageCloneFlags()
 	printUsageReleaseFlags()
+	printUsageSEOFlags()
 }
 
 // printUsageCommands prints the available commands section.
