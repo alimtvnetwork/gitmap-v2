@@ -16,7 +16,7 @@ import (
 
 // runChangelog handles the 'changelog' command.
 func runChangelog(args []string) {
-	version, latest, limit, openFile := parseChangelogFlags(args)
+	version, latest, limit, openFile, source := parseChangelogFlags(args)
 	version, openFile = resolveChangelogAlias(version, openFile)
 	if openFile {
 		handleChangelogOpen(latest, version)
@@ -25,7 +25,7 @@ func runChangelog(args []string) {
 		return
 	}
 
-	dispatchChangelogOutput(version, latest, limit)
+	dispatchChangelogOutput(version, latest, limit, source)
 }
 
 // resolveChangelogAlias detects if the version arg is actually a file-open alias.
