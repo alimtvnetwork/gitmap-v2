@@ -24,7 +24,9 @@ type versionEntry struct {
 func runListVersions(args []string) {
 	asJSON := hasListVersionsJSONFlag(args)
 	limit := parseListVersionsLimit(args)
+	source := parseListVersionsSource(args)
 	entries := collectVersionEntries()
+	entries = filterVersionsBySource(entries, source)
 	entries = applyVersionLimit(entries, limit)
 
 	if asJSON {
@@ -34,6 +36,33 @@ func runListVersions(args []string) {
 	}
 
 	printVersionEntriesTerminal(entries)
+}
+
+// parseListVersionsSource extracts the --source value from args.
+func parseListVersionsSource(args []string) string {
+	for i, arg := range args {
+		if arg == constants.FlagSource && i+1 < len(args) {
+			return args[i+1]
+		}
+	}
+
+	return ""
+}
+
+// filterVersionsBySource keeps only entries matching the given source (empty = all).
+func filterVersionsBySource(entries []versionEntry, source string) []versionEntry {
+	if source == "" {
+		return entries
+	}
+
+	var filtered []versionEntry
+	for _, e := range entries {
+		if e.Source == source {
+			filtered = append(filtered, e)
+		}
+	}
+
+	return filtered
 }
 
 // hasListVersionsJSONFlag checks if --json is present in args.
