@@ -59,3 +59,35 @@ See [06-config.md](./06-config.md).
 
 See [16-database.md](./16-database.md) for schema details and
 [17-repo-grouping.md](./17-repo-grouping.md) for CLI commands.
+
+## AmendmentRecord
+
+| Field          | Type          | Required | Default | Notes                              |
+|----------------|---------------|----------|---------|------------------------------------|
+| id             | string        | yes      | UUID    | Unique amendment identifier        |
+| timestamp      | string        | yes      | now     | ISO 8601 UTC timestamp             |
+| branch         | string        | yes      | —       | Target branch name                 |
+| fromCommit     | string        | yes      | —       | First commit SHA in range          |
+| toCommit       | string        | yes      | —       | Last commit SHA (HEAD at amend)    |
+| totalCommits   | int           | yes      | —       | Number of commits rewritten        |
+| previousAuthor | AuthorInfo    | yes      | —       | Original author name/email         |
+| newAuthor      | AuthorInfo    | yes      | —       | Replacement author name/email      |
+| mode           | string        | yes      | —       | `all`, `range`, or `head`          |
+| forcePushed    | bool          | yes      | false   | Whether force-push was executed    |
+| commits        | []CommitEntry | yes      | —       | List of amended commits            |
+
+## AuthorInfo
+
+| Field | Type   | Description        |
+|-------|--------|--------------------|
+| name  | string | Author name        |
+| email | string | Author email       |
+
+## CommitEntry
+
+| Field   | Type   | Description              |
+|---------|--------|--------------------------|
+| sha     | string | Full commit SHA          |
+| message | string | Commit message (subject) |
+
+See [24-amend-author.md](./24-amend-author.md) for the amend command spec.

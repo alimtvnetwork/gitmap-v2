@@ -157,10 +157,13 @@ If the HTTPS URL is empty, fall back to `repoName`.
 | `store/repo.go` | Repo CRUD (upsert, list, find by slug/path) |
 | `store/group.go` | Group CRUD (create, add, remove, list, show, delete) |
 | `store/release.go` | Release CRUD (upsert, list, find by tag) |
+| `store/amendment.go` | Amendment CRUD (insert, list all, list by branch) |
 | `constants/constants_store.go` | DB path, table names, SQL statements, error messages |
+| `constants/constants_amend.go` | Amendments table SQL, amend command constants |
 | `model/record.go` | ScanRecord, Config, CloneResult, CloneSummary, ScanCache |
 | `model/group.go` | Group, GroupRepo |
 | `model/release.go` | ReleaseRecord |
+| `model/amendment.go` | AmendmentRecord, AuthorInfo, CommitEntry |
 
 ---
 
