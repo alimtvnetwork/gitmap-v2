@@ -22,10 +22,11 @@
 - ✅ Changelog in release metadata JSON
 - ✅ Releases table in SQLite database
 - ✅ PascalCase for all DB table/column names
+- ✅ `seo-write` command with templates, CSV, rotation, and dry-run
+- ✅ Unit test infrastructure with PowerShell runner (`run.ps1 -t`)
 
 ## Pending Suggestions
 
 - ⬜ **Build documentation site**: Replace placeholder React frontend with actual gitmap docs
 - ⬜ **Add Linux/macOS support**: Shell scripts alongside PowerShell, cross-compile binary
-- ⬜ **Add `list-releases` command**: Show releases from database with filtering
 - ⬜ **Add progress bar for clone**: Show progress during multi-repo clone operations

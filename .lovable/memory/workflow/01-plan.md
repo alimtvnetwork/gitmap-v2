@@ -37,8 +37,14 @@
 - ✅ Converted all DB table/column names from snake_case to PascalCase
 - ✅ Release workflow auto-persists to database after successful releases
 
+### v2.18.0 — SEO-Write & Test Infrastructure
+- ✅ `seo-write` (`sw`) command with CSV and template input modes
+- ✅ `CommitTemplates` SQLite table with 25 titles and 20 descriptions seed
+- ✅ Placeholder substitution, rotation mode, dry-run, and graceful shutdown
+- ✅ Unit test suite (50+ tests) across cmd, store, and constants packages
+- ✅ PowerShell test runner (`run.ps1 -t`) with report output to `data/unit-test-reports/`
+
 ## Pending Work
 
 - ⬜ **Frontend documentation site**: Currently a placeholder React app
 - ⬜ **Cross-platform support**: Currently Windows-only (PowerShell scripts)
-- ⬜ **Add `list-releases` command**: Query Releases table from database
