@@ -48,7 +48,7 @@ func runCommitLoop(flags seoWriteFlags, messages []commitMessage, minSec, maxSec
 func commitOne(flags seoWriteFlags, files []string, m commitMessage, idx, count, total int) {
 	file := pickFile(files, idx)
 	gitStage(file)
-	gitCommit(m.title, m.description)
+	gitCommitWithAuthor(m.title, m.description, flags.authorName, flags.authorEmail)
 	gitPush()
 	printCommitLine(flags.maxCommits, count+1, total, m.title, file)
 }
@@ -80,7 +80,7 @@ func rotateLoop(flags seoWriteFlags, msgs []commitMessage, file string, stop <-c
 		m := msgs[*count%len(msgs)]
 		appendToFile(file, m.description)
 		gitStage(file)
-		gitCommit(m.title, m.description)
+		gitCommitWithAuthor(m.title, m.description, flags.authorName, flags.authorEmail)
 		gitPush()
 		printRotationLine(flags.maxCommits, *count+1, file)
 		*count++
@@ -221,11 +221,42 @@ func gitStage(file string) {
 
 // gitCommit creates a commit with title and description.
 func gitCommit(title, description string) {
+	gitCommitWithAuthor(title, description, "", "")
+}
+
+// gitCommitWithAuthor creates a commit with optional author override.
+func gitCommitWithAuthor(title, description, authorName, authorEmail string) {
 	msg := title + "\n\n" + description
+
+	if authorName != "" || authorEmail != "" {
+		author := resolveAuthorFlag(authorName, authorEmail)
+		cmd := exec.Command("git", "commit", "-m", msg, "--author", author)
+		if err := cmd.Run(); err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrSEOGitCommit, err)
+		}
+
+		return
+	}
+
 	cmd := exec.Command("git", "commit", "-m", msg)
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSEOGitCommit, err)
 	}
+}
+
+// resolveAuthorFlag builds the --author "Name <email>" string.
+func resolveAuthorFlag(name, email string) string {
+	if name == "" {
+		out, _ := exec.Command("git", "config", "user.name").Output()
+		name = strings.TrimSpace(string(out))
+	}
+
+	if email == "" {
+		out, _ := exec.Command("git", "config", "user.email").Output()
+		email = strings.TrimSpace(string(out))
+	}
+
+	return name + " <" + email + ">"
 }
 
 // gitPush pushes to the remote.
