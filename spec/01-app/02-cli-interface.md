@@ -342,7 +342,22 @@ Git tag and rebuilding.
 
 ### `gitmap version` (alias: `v`)
 
-Prints the current version number (e.g., `gitmap v2.18.0`) and exits.
+Prints the current version number (e.g., `gitmap v2.19.0`) and exits.
+
+### `gitmap amend [commit-hash]` (alias: `am`)
+
+Rewrite author name/email on existing commits. The optional **commit hash**
+is always the **first positional argument** (before any flags). If omitted,
+all commits on the target branch are rewritten.
+
+Three modes:
+- **All**: no SHA → rewrites every commit on the branch.
+- **Range**: SHA provided → rewrites from that commit to HEAD.
+- **HEAD**: literal `HEAD` → amends only the latest commit.
+
+Uses `git filter-branch` for all/range modes, `git commit --amend` for HEAD mode.
+Every operation writes an audit JSON to `.gitmap/amendments/` and persists a record
+to the `Amendments` SQLite table. See [24-amend-author.md](./24-amend-author.md).
 
 ### `gitmap help`
 
