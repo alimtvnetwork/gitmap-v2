@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.24.0
+- Added `gitmap import` (`im`) command: restore database from a `gitmap-export.json` backup file.
+- Merge semantics: upserts repos/releases, INSERT OR IGNORE for history/bookmarks/groups.
+- Group members re-linked by resolving `repoSlugs` against the Repos table.
+- Requires `--confirm` flag to prevent accidental data changes.
+
 ## v2.23.0
 - Added `gitmap export` (`ex`) command: export the full database as a portable JSON file.
 - Exports all tables: repos, groups (with member repo slugs), releases, command history, and bookmarks.
