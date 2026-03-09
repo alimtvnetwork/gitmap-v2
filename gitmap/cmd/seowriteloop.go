@@ -80,7 +80,7 @@ func rotateLoop(flags seoWriteFlags, msgs []commitMessage, file string, stop <-c
 		m := msgs[*count%len(msgs)]
 		appendToFile(file, m.description)
 		gitStage(file)
-		gitCommit(m.title, m.description)
+		gitCommitWithAuthor(m.title, m.description, flags.authorName, flags.authorEmail)
 		gitPush()
 		printRotationLine(flags.maxCommits, *count+1, file)
 		*count++
