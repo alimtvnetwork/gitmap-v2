@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.21.0
+- Added `gitmap stats` (`ss`) command: aggregated usage statistics from command history.
+- Shows most-used commands, success/fail counts, failure rates, and avg/min/max durations.
+- Supports `--command <name>` filter and `--json` output.
+- Summary row displays overall totals across all commands.
+
 ## v2.20.0
 - Added `gitmap history` (`hi`) command: queryable audit trail of all CLI command executions.
 - Three detail levels: `--detail basic` (command + timestamp), `--detail standard` (+ flags + duration), `--detail detailed` (+ args + repos + summary).

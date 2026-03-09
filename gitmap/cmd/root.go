@@ -224,6 +224,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdStats || command == constants.CmdStatsAlias {
+		runStats(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

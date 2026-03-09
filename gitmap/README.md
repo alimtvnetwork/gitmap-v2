@@ -237,6 +237,22 @@ gitmap history --json --limit 5
 gitmap history-reset --confirm
 ```
 
+## Usage Statistics
+
+View aggregated command usage patterns:
+
+```bash
+# Show all command stats
+gitmap stats
+gitmap ss
+
+# Stats for a specific command
+gitmap stats --command scan
+
+# JSON output
+gitmap stats --json
+```
+
 ## Specs
 
 See [spec/01-app/](../spec/01-app/) for detailed specifications.
