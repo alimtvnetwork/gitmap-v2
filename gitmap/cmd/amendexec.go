@@ -182,20 +182,15 @@ func runForcePush() {
 }
 
 // printAmendHeader outputs the operation header.
-func printAmendHeader(f amendFlags, commits []model.CommitEntry, branch string) {
+func printAmendHeader(f amendFlags, commits []model.CommitEntry, branch, prevName, prevEmail string) {
 	if f.commitHash == "" {
 		fmt.Printf(constants.MsgAmendHeaderAll, len(commits), branch)
 	} else {
 		fmt.Printf(constants.MsgAmendHeader, len(commits), commits[0].SHA[:7], commits[len(commits)-1].SHA[:7], branch)
 	}
 
-	oldAuthor := ""
+	oldAuthor := prevName + " <" + prevEmail + ">"
 	newAuthor := buildAuthorString(f)
-	if len(commits) > 0 {
-		pn, pe := detectPreviousAuthor(commits)
-		oldAuthor = pn + " <" + pe + ">"
-	}
-
 	fmt.Printf(constants.MsgAmendAuthor, oldAuthor, newAuthor)
 }
 
