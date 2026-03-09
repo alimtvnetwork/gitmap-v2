@@ -140,9 +140,10 @@ const SQLCreateCommitTemplates = `CREATE TABLE IF NOT EXISTS CommitTemplates (
 )`
 
 const (
-	SQLInsertTemplate      = "INSERT INTO CommitTemplates (Id, Kind, Template) VALUES (?, ?, ?)"
+	SQLInsertTemplate        = "INSERT INTO CommitTemplates (Id, Kind, Template) VALUES (?, ?, ?)"
 	SQLSelectTemplatesByKind = "SELECT Id, Kind, Template, CreatedAt FROM CommitTemplates WHERE Kind = ? ORDER BY CreatedAt"
-	SQLCountTemplates      = "SELECT COUNT(*) FROM CommitTemplates"
+	SQLCountTemplates        = "SELECT COUNT(*) FROM CommitTemplates"
+	SQLDropCommitTemplates   = "DROP TABLE IF EXISTS CommitTemplates"
 )
 
 // Template kinds.

@@ -207,7 +207,7 @@ func printAmendProgress(commits []model.CommitEntry) {
 }
 
 // printAmendDryRun outputs dry-run preview.
-func printAmendDryRun(commits []model.CommitEntry, f amendFlags) {
+func printAmendDryRun(commits []model.CommitEntry, f amendFlags, prevName, prevEmail string) {
 	fmt.Printf(constants.MsgAmendDryHeader, len(commits))
 
 	for i, c := range commits {
@@ -216,8 +216,7 @@ func printAmendDryRun(commits []model.CommitEntry, f amendFlags) {
 			sha = sha[:7]
 		}
 
-		pn, pe := detectPreviousAuthor([]model.CommitEntry{c})
-		fmt.Printf(constants.MsgAmendDryLine, i+1, sha, c.Message, pn, pe)
+		fmt.Printf(constants.MsgAmendDryLine, i+1, sha, c.Message, prevName, prevEmail)
 	}
 
 	fmt.Print(constants.MsgAmendDrySkip)
