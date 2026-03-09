@@ -65,7 +65,7 @@ func executeSEOWrite(flags seoWriteFlags) {
 	}
 
 	if flags.dryRun {
-		printDryRun(messages)
+		printDryRun(messages, flags)
 
 		return
 	}
@@ -89,7 +89,12 @@ func resolveMessages(flags seoWriteFlags) []commitMessage {
 }
 
 // printDryRun outputs all planned commit messages without executing.
-func printDryRun(messages []commitMessage) {
+func printDryRun(messages []commitMessage, flags seoWriteFlags) {
+	if flags.authorName != "" || flags.authorEmail != "" {
+		author := resolveAuthorFlag(flags.authorName, flags.authorEmail)
+		fmt.Printf(constants.MsgSEODryAuthor, author)
+	}
+
 	for i, m := range messages {
 		fmt.Printf(constants.MsgSEODryTitle, i+1, m.title)
 		fmt.Printf(constants.MsgSEODryDesc, m.description)

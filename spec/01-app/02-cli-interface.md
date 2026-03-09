@@ -342,7 +342,22 @@ Git tag and rebuilding.
 
 ### `gitmap version` (alias: `v`)
 
-Prints the current version number (e.g., `gitmap v2.18.0`) and exits.
+Prints the current version number (e.g., `gitmap v2.19.0`) and exits.
+
+### `gitmap amend [commit-hash]` (alias: `am`)
+
+Rewrite author name/email on existing commits. The optional **commit hash**
+is always the **first positional argument** (before any flags). If omitted,
+all commits on the target branch are rewritten.
+
+Three modes:
+- **All**: no SHA → rewrites every commit on the branch.
+- **Range**: SHA provided → rewrites from that commit to HEAD.
+- **HEAD**: literal `HEAD` → amends only the latest commit.
+
+Uses `git filter-branch` for all/range modes, `git commit --amend` for HEAD mode.
+Every operation writes an audit JSON to `.gitmap/amendments/` and persists a record
+to the `Amendments` SQLite table. See [24-amend-author.md](./24-amend-author.md).
 
 ### `gitmap help`
 
@@ -374,6 +389,7 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `list-releases`  | `lr`  |
 | `version`        | `v`   |
 | `seo-write`      | `sw`  |
+| `amend`          | `am`  |
 | `update`         | —     |
 | `update-cleanup` | —     |
 | `doctor`         | —     |
@@ -556,6 +572,18 @@ activates whenever existing repos are detected during a clone operation.
 | `--dry-run`                | Preview commit messages without executing          | `false`    |
 | `--template <path>`        | Load templates from a custom JSON file             | (none)     |
 | `--create-template`        | Write starter `seo-templates.json` to current dir  | `false`    |
+| `--author-name <name>`     | Git author name for commits                        | (git config) |
+| `--author-email <email>`   | Git author email for commits                       | (git config) |
+
+## Amend Flags
+
+| Flag                   | Description                                        | Default              |
+|------------------------|----------------------------------------------------|----------------------|
+| `--name <name>`        | New author name for commits                        | (none)               |
+| `--email <email>`      | New author email for commits                       | (none)               |
+| `--branch <branch>`    | Target branch (default: current branch)            | current branch       |
+| `--dry-run`            | Preview which commits would be amended             | `false`              |
+| `--force-push`         | Auto-run `git push --force-with-lease` after amend | `false`              |
 
 ## Examples
 
@@ -770,4 +798,36 @@ gitmap sw --url example.com --service HVAC --area York --rotate-file index.html 
 gitmap sw --url example.com --service "Pest Control" --area "Edinburgh" \
   --company "BugFree Ltd" --phone "0800 123 456" --email info@bugfree.com \
   --address "10 High Street, Edinburgh"
+
+# SEO-write — custom author
+gitmap sw --url example.com --service SEO --area Bristol \
+  --author-name "Marketing Bot" --author-email "bot@example.com"
+
+# SEO-write — only override name (email stays from git config)
+gitmap sw --url example.com --service SEO --area Bristol --author-name "CI Bot"
+
+# Amend all commits on current branch
+gitmap amend --name "John Smith" --email "john@company.com"
+gitmap am --name "John Smith" --email "john@company.com"
+
+# Amend all commits on a specific branch
+gitmap amend --branch develop --name "John Smith" --email "john@company.com"
+
+# Amend from a specific SHA onwards (SHA is first positional arg)
+gitmap amend a1b2c3d --name "John Smith" --email "john@company.com"
+
+# Amend from SHA on a specific branch
+gitmap amend a1b2c3d --branch main --name "John Smith" --email "john@company.com"
+
+# Amend only HEAD
+gitmap amend HEAD --name "John Smith" --email "john@company.com"
+
+# Preview what would change (dry-run, no audit saved)
+gitmap amend --name "John Smith" --email "john@company.com" --dry-run
+
+# Amend and auto force-push
+gitmap amend a1b2c3d --name "John Smith" --email "john@company.com" --force-push
+
+# Only change email (keep existing author name)
+gitmap amend --email "newemail@company.com"
 ```
