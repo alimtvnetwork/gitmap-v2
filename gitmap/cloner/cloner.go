@@ -88,19 +88,47 @@ func parseCloneLine(line string) model.ScanRecord {
 	return rec
 }
 
-// cloneAll iterates records and clones each one.
-func cloneAll(records []model.ScanRecord, targetDir string, safePull bool) model.CloneSummary {
+// cloneAll iterates records and clones each one with progress tracking.
+func cloneAll(records []model.ScanRecord, targetDir string, safePull, quiet bool) model.CloneSummary {
 	if !safePull && hasExistingRepos(records, targetDir) {
 		safePull = true
 		fmt.Print(constants.MsgAutoSafePull)
 	}
+
+	progress := NewProgress(len(records), quiet)
 	summary := model.CloneSummary{}
+
 	for _, rec := range records {
+		progress.Begin(repoDisplayName(rec))
 		result := cloneOrPullOne(rec, targetDir, safePull)
+		trackResult(progress, result, rec, targetDir, safePull)
 		summary = updateSummary(summary, result)
 	}
 
+	progress.PrintSummary()
+
 	return summary
+}
+
+// repoDisplayName returns a display name for progress output.
+func repoDisplayName(rec model.ScanRecord) string {
+	if len(rec.RepoName) > 0 {
+		return rec.RepoName
+	}
+
+	return rec.RelativePath
+}
+
+// trackResult updates progress based on clone/pull outcome.
+func trackResult(p *Progress, result model.CloneResult, rec model.ScanRecord, targetDir string, safePull bool) {
+	if result.Success {
+		pulled := safePull && isGitRepo(filepath.Join(targetDir, rec.RelativePath))
+		p.Done(result, pulled)
+
+		return
+	}
+
+	p.Fail(result)
 }
 
 // hasExistingRepos checks if any target repo directories already exist.
