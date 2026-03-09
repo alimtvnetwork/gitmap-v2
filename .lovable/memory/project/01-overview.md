@@ -54,7 +54,7 @@ gitmap is a portable Go CLI tool that scans directory trees for Git repositories
 | `db-reset` | — | Clear all repos, groups, releases from database | ✅ Done |
 | `version` | `v` | Print version string and exit | ✅ Done |
 | `help` | — | Show usage information | ✅ Done |
-| `seo-write` | `sw` | Automated commit scheduler with SEO-rich messages | 📋 Spec |
+| `seo-write` | `sw` | Automated commit scheduler with SEO-rich messages | ✅ Done |
 
 ## Database Tables (PascalCase)
 
