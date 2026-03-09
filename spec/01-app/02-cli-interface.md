@@ -389,6 +389,7 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `list-releases`  | `lr`  |
 | `version`        | `v`   |
 | `seo-write`      | `sw`  |
+| `amend`          | `am`  |
 | `update`         | —     |
 | `update-cleanup` | —     |
 | `doctor`         | —     |
