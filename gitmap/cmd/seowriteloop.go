@@ -48,7 +48,7 @@ func runCommitLoop(flags seoWriteFlags, messages []commitMessage, minSec, maxSec
 func commitOne(flags seoWriteFlags, files []string, m commitMessage, idx, count, total int) {
 	file := pickFile(files, idx)
 	gitStage(file)
-	gitCommit(m.title, m.description)
+	gitCommitWithAuthor(m.title, m.description, flags.authorName, flags.authorEmail)
 	gitPush()
 	printCommitLine(flags.maxCommits, count+1, total, m.title, file)
 }
