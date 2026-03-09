@@ -57,6 +57,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpProfile)
 	fmt.Println(constants.HelpCD)
 	fmt.Println(constants.HelpDiffProfiles)
+	fmt.Println(constants.HelpWatch)
 	fmt.Println(constants.HelpHelp)
 }
 
