@@ -25,6 +25,7 @@ const App = () => (
           <Route path="/getting-started" element={<GettingStarted />} />
           <Route path="/config" element={<Config />} />
           <Route path="/architecture" element={<Architecture />} />
+          <Route path="/watch" element={<Watch />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

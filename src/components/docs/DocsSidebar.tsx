@@ -31,6 +31,7 @@ const navItems = [
   { title: "Getting Started", url: "/getting-started", icon: Rocket },
   { title: "Configuration", url: "/config", icon: Settings },
   { title: "Architecture", url: "/architecture", icon: Boxes },
+  { title: "Watch", url: "/watch", icon: Monitor },
 ];
 
 export function DocsSidebar() {
