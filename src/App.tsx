@@ -8,6 +8,7 @@ import Commands from "./pages/Commands";
 import GettingStarted from "./pages/GettingStarted";
 import Config from "./pages/Config";
 import Architecture from "./pages/Architecture";
+import Watch from "./pages/Watch";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
