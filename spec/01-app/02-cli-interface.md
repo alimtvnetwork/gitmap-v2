@@ -537,6 +537,26 @@ activates whenever existing repos are detected during a clone operation.
 | `--limit`  | Show only the top N releases (0 = all)   | `0`     |
 | `--source` | Filter by source: `release` or `import`  | (all)   |
 
+## SEO-Write Flags
+
+| Flag                       | Description                                        | Default    |
+|----------------------------|----------------------------------------------------|------------|
+| `--csv <path>`             | Read title/description pairs from a CSV file       | (none)     |
+| `--url <url>`              | Target website URL (required in template mode)     | (none)     |
+| `--service <name>`         | Service name for `{service}` placeholder           | `""`       |
+| `--area <name>`            | Area/location for `{area}` placeholder             | `""`       |
+| `--company <name>`         | Company name for `{company}` placeholder           | `""`       |
+| `--phone <number>`         | Phone number for `{phone}` placeholder             | `""`       |
+| `--email <address>`        | Email for `{email}` placeholder                    | `""`       |
+| `--address <text>`         | Address for `{address}` placeholder                | `""`       |
+| `--max-commits <n>`        | Stop after N commits (0 = unlimited)               | `0`        |
+| `--interval <min-max>`     | Random delay range in seconds between commits      | `60-120`   |
+| `--files <glob>`           | Glob pattern to select files to stage              | (auto)     |
+| `--rotate-file <path>`     | File to use for rotation mode                      | (auto)     |
+| `--dry-run`                | Preview commit messages without executing          | `false`    |
+| `--template <path>`        | Load templates from a custom JSON file             | (none)     |
+| `--create-template`        | Write starter `seo-templates.json` to current dir  | `false`    |
+
 ## Examples
 
 ```bash
