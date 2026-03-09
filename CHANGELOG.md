@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.27.0
+- Added `gitmap cd` (`go`) command: jump to any tracked repo by slug or partial name.
+- Subcommands: `cd repos`, `cd set-default`, `cd clear-default`; supports `--group` and `--pick` flags.
+- Added `gitmap watch` (`w`) command: live terminal dashboard monitoring repo status.
+- Supports `--interval`, `--group`, `--no-fetch`, and `--json` snapshot mode.
+- Added `gitmap diff-profiles` (`dp`) command: compare two profiles side-by-side.
+- Supports `--all` and `--json` output flags.
+- Added clone progress bars with retry logic and Windows long-path warnings.
+- Built documentation site with interactive terminal preview for the watch command.
+
 ## v2.26.0
 - Version bump to v2.26.0 following `gitmap profile` command addition.
 - All profile subcommands (`create`, `list`, `switch`, `delete`, `show`) fully integrated and documented.
