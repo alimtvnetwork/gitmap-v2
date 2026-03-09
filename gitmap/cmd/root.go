@@ -19,15 +19,23 @@ func Run() {
 	dispatch(command)
 }
 
-// dispatch routes to the correct subcommand handler.
+// dispatch routes to the correct subcommand handler with audit tracking.
 func dispatch(command string) {
+	auditID, auditStart := recordAuditStart(command, os.Args[2:])
+
 	if dispatchCore(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 	if dispatchRelease(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 	if dispatchUtility(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 
