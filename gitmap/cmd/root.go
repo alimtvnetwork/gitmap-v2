@@ -249,6 +249,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdCDCmd || command == constants.CmdCDCmdAlias {
+		runCD(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
