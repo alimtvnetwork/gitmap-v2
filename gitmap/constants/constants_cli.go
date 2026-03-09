@@ -58,6 +58,8 @@ const (
 	CmdAmendAlias          = "am"
 	CmdAmendList           = "amend-list"
 	CmdAmendListAlias      = "al"
+	CmdCDCmd               = "cd"
+	CmdCDCmdAlias          = "go"
 )
 
 // Clone shorthands.
