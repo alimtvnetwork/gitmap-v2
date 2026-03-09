@@ -9,6 +9,7 @@ import GettingStarted from "./pages/GettingStarted";
 import Config from "./pages/Config";
 import Architecture from "./pages/Architecture";
 import Watch from "./pages/Watch";
+import MakefilePage from "./pages/Makefile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
