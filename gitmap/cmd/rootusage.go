@@ -104,4 +104,17 @@ func printUsageSEOFlags() {
 	fmt.Println(constants.HelpSEODryRunFlag)
 	fmt.Println(constants.HelpSEOTemplateF)
 	fmt.Println(constants.HelpSEOCreateTpl)
+	fmt.Println(constants.HelpSEOAuthorName)
+	fmt.Println(constants.HelpSEOAuthorEmail)
+}
+
+// printUsageAmendFlags prints the amend flags section.
+func printUsageAmendFlags() {
+	fmt.Println()
+	fmt.Println(constants.HelpAmendFlags)
+	fmt.Println(constants.HelpAmendName)
+	fmt.Println(constants.HelpAmendEmail)
+	fmt.Println(constants.HelpAmendBr)
+	fmt.Println(constants.HelpAmendDry)
+	fmt.Println(constants.HelpAmendForce)
 }

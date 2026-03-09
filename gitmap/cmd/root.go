@@ -196,6 +196,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdAmend || command == constants.CmdAmendAlias {
+		runAmend(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

@@ -65,6 +65,7 @@ func (db *DB) Reset() error {
 		constants.SQLDropGroupRepos,
 		constants.SQLDropGroups,
 		constants.SQLDropReleases,
+		constants.SQLDropAmendments,
 		constants.SQLDropRepos,
 	}
 
