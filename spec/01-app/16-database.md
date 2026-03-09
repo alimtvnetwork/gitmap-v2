@@ -116,6 +116,26 @@ cleared to 0 first.
 **Insert only:** Each amend operation inserts a new row. No upsert — every
 operation is a unique audit record.
 
+### CommandHistory Table
+
+| Column     | Type    | Constraints               | Notes                              |
+|------------|---------|---------------------------|------------------------------------|
+| Id         | TEXT    | PRIMARY KEY               | Timestamp-based unique ID          |
+| Command    | TEXT    | NOT NULL                  | CLI command name                   |
+| Alias      | TEXT    | DEFAULT ''                | Alias if used                      |
+| Args       | TEXT    | DEFAULT ''                | Positional arguments               |
+| Flags      | TEXT    | DEFAULT ''                | Flags passed                       |
+| StartedAt  | TEXT    | NOT NULL                  | RFC3339 start timestamp            |
+| FinishedAt | TEXT    | DEFAULT ''                | RFC3339 end timestamp              |
+| DurationMs | INTEGER | DEFAULT 0                 | Execution time in milliseconds     |
+| ExitCode   | INTEGER | DEFAULT 0                 | 0 = success                        |
+| Summary    | TEXT    | DEFAULT ''                | Result summary                     |
+| RepoCount  | INTEGER | DEFAULT 0                 | Repos affected                     |
+| CreatedAt  | TEXT    | DEFAULT CURRENT_TIMESTAMP |                                    |
+
+**Insert + update strategy:** A record is inserted at command start, then
+updated with completion details (duration, exit code, summary) at end.
+
 ---
 
 ## Slug Generation

@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.20.0
+- Added `gitmap history` (`hi`) command: queryable audit trail of all CLI command executions.
+- Three detail levels: `--detail basic` (command + timestamp), `--detail standard` (+ flags + duration), `--detail detailed` (+ args + repos + summary).
+- Supports `--command <name>` filter, `--limit N`, and `--json` output.
+- Added `gitmap history-reset` (`hr`) command: clears audit history (requires `--confirm`).
+- New `CommandHistory` SQLite table auto-records every command with start/end timestamps, duration, exit code, and affected repo count.
+- `db-reset --confirm` now also clears the CommandHistory table.
+
 ## v2.19.0
 - Added `gitmap amend` (`am`) command: rewrite author name/email on existing commits with three modes (all, range, HEAD).
 - Supports `--branch` flag to operate on a specific branch (auto-switches back to original branch after completion).

@@ -215,6 +215,28 @@ gitmap/
 └── go.mod
 ```
 
+## Command History
+
+Every CLI command is automatically logged to the SQLite database. View the audit trail:
+
+```bash
+# Show recent history
+gitmap history
+gitmap hi
+
+# Basic view (just command + time + status)
+gitmap history --detail basic
+
+# Detailed view filtered to scan commands
+gitmap history --detail detailed --command scan
+
+# Last 5 entries as JSON
+gitmap history --json --limit 5
+
+# Clear all history
+gitmap history-reset --confirm
+```
+
 ## Specs
 
 See [spec/01-app/](../spec/01-app/) for detailed specifications.

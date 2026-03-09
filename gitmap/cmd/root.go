@@ -19,15 +19,23 @@ func Run() {
 	dispatch(command)
 }
 
-// dispatch routes to the correct subcommand handler.
+// dispatch routes to the correct subcommand handler with audit tracking.
 func dispatch(command string) {
+	auditID, auditStart := recordAuditStart(command, os.Args[2:])
+
 	if dispatchCore(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 	if dispatchRelease(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 	if dispatchUtility(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
 		return
 	}
 
@@ -203,6 +211,16 @@ func dispatchMisc(command string) bool {
 	}
 	if command == constants.CmdAmendList || command == constants.CmdAmendListAlias {
 		runAmendList(os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdHistory || command == constants.CmdHistoryAlias {
+		runHistory(os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdHistoryReset || command == constants.CmdHistoryResetAlias {
+		runHistoryReset(os.Args[2:])
 
 		return true
 	}

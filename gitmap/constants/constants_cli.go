@@ -52,6 +52,12 @@ const (
 	CmdRevertRunner        = "revert-runner"
 	CmdListReleases        = "list-releases"
 	CmdListReleasesAlias   = "lr"
+	CmdSEOWrite            = "seo-write"
+	CmdSEOWriteAlias       = "sw"
+	CmdAmend               = "amend"
+	CmdAmendAlias          = "am"
+	CmdAmendList           = "amend-list"
+	CmdAmendListAlias      = "al"
 )
 
 // Clone shorthands.
