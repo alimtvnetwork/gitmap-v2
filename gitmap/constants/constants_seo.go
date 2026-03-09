@@ -45,6 +45,8 @@ const (
 	FlagDescSEODryRun         = "Preview commit messages without executing"
 	FlagDescSEOTemplate       = "Load templates from a custom JSON file"
 	FlagDescSEOCreateTemplate = "Generate a sample seo-templates.json and exit"
+	FlagDescSEOAuthorName     = "Git author name for commits"
+	FlagDescSEOAuthorEmail    = "Git author email for commits"
 )
 
 // SEO-write defaults.
