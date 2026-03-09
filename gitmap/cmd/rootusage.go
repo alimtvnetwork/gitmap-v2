@@ -47,6 +47,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpRevert)
 	fmt.Println(constants.HelpSEOWrite)
 	fmt.Println(constants.HelpAmend)
+	fmt.Println(constants.HelpAmendList)
 	fmt.Println(constants.HelpHelp)
 }
 

@@ -2,8 +2,10 @@ package constants
 
 // Amend command.
 const (
-	CmdAmend      = "amend"
-	CmdAmendAlias = "am"
+	CmdAmend          = "amend"
+	CmdAmendAlias     = "am"
+	CmdAmendList      = "amend-list"
+	CmdAmendListAlias = "al"
 )
 
 // Amend flag names.
@@ -71,6 +73,7 @@ const (
 // Amend help text.
 const (
 	HelpAmend      = "  amend (am) [hash]   Rewrite author name/email on commits"
+	HelpAmendList  = "  amend-list (al)     Show stored amendments from database (--limit N, --json, --branch)"
 	HelpAmendFlags = "Amend flags:"
 	HelpAmendName  = "  --name <name>       New author name"
 	HelpAmendEmail = "  --email <email>     New author email"
@@ -78,6 +81,21 @@ const (
 	HelpAmendDry   = "  --dry-run           Preview which commits would be amended"
 	HelpAmendForce = "  --force-push        Auto force-push after amend"
 )
+
+// Amend-list flag.
+const FlagAmendListBranch = "--branch"
+
+// Amend-list terminal messages.
+const (
+	MsgAmendListEmpty     = "No amendments found."
+	MsgAmendListHeader    = "Amendments: %d record(s)\n"
+	MsgAmendListSeparator = "──────────────────────────────────────────────────────────────────────────────────"
+	MsgAmendListColumns   = "BRANCH          MODE    COMMITS  PREV AUTHOR              NEW AUTHOR               PUSHED  DATE"
+	MsgAmendListRowFmt    = "%-15s %-7s %7d  %-12s %-12s %-12s %-12s %-6s  %s\n"
+)
+
+// Amend-list error messages.
+const ErrAmendListFailed = "error: failed to list amendments: %v\n"
 
 // Amendments table.
 const TableAmendments = "Amendments"
