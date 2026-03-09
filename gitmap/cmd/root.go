@@ -239,6 +239,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdImport || command == constants.CmdImportAlias {
+		runImport(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
