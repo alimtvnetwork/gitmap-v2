@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.19.0
+- Added `gitmap amend` (`am`) command: rewrite author name/email on existing commits with three modes (all, range, HEAD).
+- Supports `--branch` flag to operate on a specific branch (auto-switches back to original branch after completion).
+- SHA as first positional argument: `gitmap amend <sha> --name "Name"` rewrites from that commit to HEAD.
+- `--dry-run` previews affected commits without modifying history or writing audit records.
+- `--force-push` auto-runs `git push --force-with-lease` after amend.
+- Audit trail: every amend operation writes a JSON log to `.gitmap/amendments/amend-<timestamp>.json` with full details.
+- Database persistence: amendment records saved to `Amendments` SQLite table for queryable history.
+- `db-reset --confirm` now also clears the `Amendments` table.
+- Added `--author-name` and `--author-email` flags to `gitmap seo-write` (`sw`): set custom author on each commit.
+- SEO-write dry-run now displays the author that would be used when author flags are set.
+
 ## v2.18.0
 - Added `gitmap seo-write` (`sw`) command: automated SEO commit scheduler that stages, commits, and pushes files on a randomized interval.
 - Supports CSV input mode (`--csv`) for user-provided title/description pairs.

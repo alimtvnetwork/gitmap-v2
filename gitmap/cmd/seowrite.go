@@ -65,7 +65,7 @@ func executeSEOWrite(flags seoWriteFlags) {
 	}
 
 	if flags.dryRun {
-		printDryRun(messages)
+		printDryRun(messages, flags)
 
 		return
 	}

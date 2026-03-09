@@ -798,4 +798,36 @@ gitmap sw --url example.com --service HVAC --area York --rotate-file index.html 
 gitmap sw --url example.com --service "Pest Control" --area "Edinburgh" \
   --company "BugFree Ltd" --phone "0800 123 456" --email info@bugfree.com \
   --address "10 High Street, Edinburgh"
+
+# SEO-write — custom author
+gitmap sw --url example.com --service SEO --area Bristol \
+  --author-name "Marketing Bot" --author-email "bot@example.com"
+
+# SEO-write — only override name (email stays from git config)
+gitmap sw --url example.com --service SEO --area Bristol --author-name "CI Bot"
+
+# Amend all commits on current branch
+gitmap amend --name "John Smith" --email "john@company.com"
+gitmap am --name "John Smith" --email "john@company.com"
+
+# Amend all commits on a specific branch
+gitmap amend --branch develop --name "John Smith" --email "john@company.com"
+
+# Amend from a specific SHA onwards (SHA is first positional arg)
+gitmap amend a1b2c3d --name "John Smith" --email "john@company.com"
+
+# Amend from SHA on a specific branch
+gitmap amend a1b2c3d --branch main --name "John Smith" --email "john@company.com"
+
+# Amend only HEAD
+gitmap amend HEAD --name "John Smith" --email "john@company.com"
+
+# Preview what would change (dry-run, no audit saved)
+gitmap amend --name "John Smith" --email "john@company.com" --dry-run
+
+# Amend and auto force-push
+gitmap amend a1b2c3d --name "John Smith" --email "john@company.com" --force-push
+
+# Only change email (keep existing author name)
+gitmap amend --email "newemail@company.com"
 ```

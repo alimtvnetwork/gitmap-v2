@@ -80,6 +80,7 @@ const (
 	MsgSEODone          = "  Done: %d commits pushed in %s\n"
 	MsgSEODryTitle      = "  [%d] title: %s\n"
 	MsgSEODryDesc       = "        desc:  %s\n"
+	MsgSEODryAuthor     = "  author: %s\n"
 	MsgSEOCreated       = "Created %s with sample templates\n"
 	MsgSEOSeeded        = "Seeded %d templates into database\n"
 	MsgSEOGraceful      = "\nGraceful shutdown: finishing current commit...\n"
