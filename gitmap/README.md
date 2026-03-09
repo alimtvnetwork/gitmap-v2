@@ -300,6 +300,28 @@ gitmap im --confirm
 gitmap import backup-2026-03.json --confirm
 ```
 
+## Database Profiles
+
+Manage multiple separate database environments:
+
+```bash
+# Create a new profile
+gitmap profile create work
+gitmap pf create personal
+
+# List all profiles
+gitmap profile list
+
+# Switch active profile
+gitmap profile switch work
+
+# Show current profile
+gitmap profile show
+
+# Delete a profile
+gitmap profile delete personal
+```
+
 ## Specs
 
 See [spec/01-app/](../spec/01-app/) for detailed specifications.

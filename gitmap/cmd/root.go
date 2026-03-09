@@ -244,6 +244,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdProfile || command == constants.CmdProfileAlias {
+		runProfile(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

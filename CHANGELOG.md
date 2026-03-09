@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.25.0
+- Added `gitmap profile` (`pf`) command: manage multiple database profiles (work, personal, etc.).
+- Subcommands: `create`, `list`, `switch`, `delete`, `show`.
+- Each profile has its own SQLite database file (`gitmap-{name}.db`).
+- Default profile uses existing `gitmap.db` for full backward compatibility.
+- Profile config stored in `gitmap-output/data/profiles.json`.
+- All commands automatically use the active profile's database.
+
 ## v2.24.0
 - Added `gitmap import` (`im`) command: restore database from a `gitmap-export.json` backup file.
 - Merge semantics: upserts repos/releases, INSERT OR IGNORE for history/bookmarks/groups.
