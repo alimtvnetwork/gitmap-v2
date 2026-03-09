@@ -287,6 +287,19 @@ gitmap ex
 gitmap export backup-2026-03.json
 ```
 
+## Database Import
+
+Restore a database from a backup file:
+
+```bash
+# Import from default file
+gitmap import --confirm
+gitmap im --confirm
+
+# Import from custom path
+gitmap import backup-2026-03.json --confirm
+```
+
 ## Specs
 
 See [spec/01-app/](../spec/01-app/) for detailed specifications.
