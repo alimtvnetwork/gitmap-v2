@@ -9,6 +9,10 @@
 - Supports `--all` and `--json` output flags.
 - Added clone progress bars with retry logic and Windows long-path warnings.
 - Built documentation site with interactive terminal preview for the watch command.
+- Added `run.sh` cross-platform build script: Bash equivalent of `run.ps1` for Linux and macOS.
+  - Full pipeline: pull, tidy, build, deploy with `-ldflags` version embedding.
+  - Reads config from `powershell.json` via `jq` or `python3` fallback.
+  - Supports `-t` (test with report), `-n` (no-pull), `-d` (no-deploy), and `-u` (update) flags.
 
 ## v2.26.0
 - Version bump to v2.26.0 following `gitmap profile` command addition.
