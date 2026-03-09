@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.26.0
+- Version bump to v2.26.0 following `gitmap profile` command addition.
+- All profile subcommands (`create`, `list`, `switch`, `delete`, `show`) fully integrated and documented.
+
 ## v2.25.0
 - Added `gitmap profile` (`pf`) command: manage multiple database profiles (work, personal, etc.).
 - Subcommands: `create`, `list`, `switch`, `delete`, `show`.
