@@ -40,6 +40,7 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateGroupRepos,
 		constants.SQLCreateReleases,
 		constants.SQLCreateCommitTemplates,
+		constants.SQLCreateAmendments,
 	}
 
 	for _, stmt := range statements {
