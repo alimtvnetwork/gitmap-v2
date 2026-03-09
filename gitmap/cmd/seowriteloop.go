@@ -221,11 +221,42 @@ func gitStage(file string) {
 
 // gitCommit creates a commit with title and description.
 func gitCommit(title, description string) {
+	gitCommitWithAuthor(title, description, "", "")
+}
+
+// gitCommitWithAuthor creates a commit with optional author override.
+func gitCommitWithAuthor(title, description, authorName, authorEmail string) {
 	msg := title + "\n\n" + description
+
+	if authorName != "" || authorEmail != "" {
+		author := resolveAuthorFlag(authorName, authorEmail)
+		cmd := exec.Command("git", "commit", "-m", msg, "--author", author)
+		if err := cmd.Run(); err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrSEOGitCommit, err)
+		}
+
+		return
+	}
+
 	cmd := exec.Command("git", "commit", "-m", msg)
 	if err := cmd.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSEOGitCommit, err)
 	}
+}
+
+// resolveAuthorFlag builds the --author "Name <email>" string.
+func resolveAuthorFlag(name, email string) string {
+	if name == "" {
+		out, _ := exec.Command("git", "config", "user.name").Output()
+		name = strings.TrimSpace(string(out))
+	}
+
+	if email == "" {
+		out, _ := exec.Command("git", "config", "user.email").Output()
+		email = strings.TrimSpace(string(out))
+	}
+
+	return name + " <" + email + ">"
 }
 
 // gitPush pushes to the remote.
