@@ -472,6 +472,91 @@ function Resolve-RunArgs {
     return $resolved
 }
 
+# -- Run tests -------------------------------------------------
+function Invoke-Tests {
+    Write-Step "TEST" "Running unit tests"
+
+    $reportDir = Join-Path $GitMapDir "data" "unit-test-reports"
+    if (-not (Test-Path $reportDir)) {
+        New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+        Write-Info "Created report directory: $reportDir"
+    }
+
+    $overallLog = Join-Path $reportDir "overall.log.txt"
+    $failingLog = Join-Path $reportDir "failingTest.log.txt"
+
+    Push-Location $GitMapDir
+    try {
+        $prevPref = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+
+        Write-Info "Running: go test ./..."
+        $testOutput = go test ./... -v -count=1 2>&1
+        $testExit = $LASTEXITCODE
+        $ErrorActionPreference = $prevPref
+
+        # Write overall report
+        $testOutput | Out-File -FilePath $overallLog -Encoding UTF8
+        Write-Info "Overall report: $overallLog"
+
+        # Extract failing tests
+        $failLines = @()
+        $currentTest = ""
+        $inFail = $false
+        foreach ($line in $testOutput) {
+            $text = "$line"
+            if ($text -match "^--- FAIL:") {
+                $inFail = $true
+                $currentTest = $text
+                $failLines += ""
+                $failLines += $text
+            } elseif ($text -match "^--- PASS:" -or $text -match "^=== RUN") {
+                $inFail = $false
+            } elseif ($text -match "^FAIL\s") {
+                $failLines += $text
+            } elseif ($inFail) {
+                $failLines += $text
+            }
+        }
+
+        if ($failLines.Count -gt 0) {
+            $failLines | Out-File -FilePath $failingLog -Encoding UTF8
+            Write-Fail "Some tests failed. See: $failingLog"
+        } else {
+            "No failing tests." | Out-File -FilePath $failingLog -Encoding UTF8
+            Write-Success "All tests passed"
+        }
+
+        # Print summary
+        $passCount = ($testOutput | Where-Object { "$_" -match "^--- PASS:" }).Count
+        $failCount = ($testOutput | Where-Object { "$_" -match "^--- FAIL:" }).Count
+        $skipCount = ($testOutput | Where-Object { "$_" -match "^--- SKIP:" }).Count
+        Write-Info "Results: $passCount passed, $failCount failed, $skipCount skipped"
+
+        # Show test output in terminal
+        foreach ($line in $testOutput) {
+            $text = "$line".Trim()
+            if ($text -match "^--- FAIL:") {
+                Write-Host "  $text" -ForegroundColor Red
+            } elseif ($text -match "^--- PASS:") {
+                Write-Host "  $text" -ForegroundColor Green
+            } elseif ($text -match "^FAIL") {
+                Write-Host "  $text" -ForegroundColor Red
+            } elseif ($text -match "^ok\s") {
+                Write-Host "  $text" -ForegroundColor Green
+            } elseif ($text.Length -gt 0) {
+                Write-Host "  $text" -ForegroundColor Gray
+            }
+        }
+
+        if ($testExit -ne 0) {
+            Write-Fail "Tests failed (exit code $testExit)"
+        }
+    } finally {
+        Pop-Location
+    }
+}
+
 # -- Main ------------------------------------------------------
 Show-Banner
 $config = Load-Config
