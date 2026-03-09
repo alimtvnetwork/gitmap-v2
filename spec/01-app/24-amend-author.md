@@ -132,12 +132,92 @@ git filter-branch -f --env-filter '
 ```
 
 4. If `--branch` was used, switch back to the original branch.
+5. Write an audit record to `.gitmap/` and persist to the `Amendments` database table.
+
+### Audit Trail (`.gitmap/` folder)
+
+Every amend operation writes a JSON file to `.gitmap/amendments/` in the repository root:
+
+**File naming**: `.gitmap/amendments/amend-<timestamp>.json`
+
+Example: `.gitmap/amendments/amend-2026-03-09T14-30-00.json`
+
+**JSON structure**:
+
+```json
+{
+  "timestamp": "2026-03-09T14:30:00Z",
+  "branch": "develop",
+  "fromCommit": "a1b2c3d",
+  "toCommit": "9z8y7x6",
+  "totalCommits": 15,
+  "previousAuthor": {
+    "name": "Old Name",
+    "email": "old@email.com"
+  },
+  "newAuthor": {
+    "name": "New Name",
+    "email": "new@email.com"
+  },
+  "mode": "range",
+  "forcePushed": false,
+  "commits": [
+    { "sha": "a1b2c3d", "message": "Fix login page" },
+    { "sha": "def5678", "message": "Add dashboard" }
+  ]
+}
+```
+
+**`mode` values**: `"all"` (every commit), `"range"` (from SHA onwards), `"head"` (single HEAD commit).
+
+The `.gitmap/` folder is created automatically if it doesn't exist. These files serve as a local audit log that can be reviewed, diffed, or committed.
+
+### Database Persistence (`Amendments` table)
+
+Each amend operation is also persisted to the SQLite database for queryable history.
+
+**Table schema** (PascalCase, following project convention):
+
+```sql
+CREATE TABLE IF NOT EXISTS Amendments (
+    Id            TEXT PRIMARY KEY,
+    Branch        TEXT NOT NULL,
+    FromCommit    TEXT NOT NULL,
+    ToCommit      TEXT NOT NULL,
+    TotalCommits  INTEGER NOT NULL,
+    PreviousName  TEXT DEFAULT '',
+    PreviousEmail TEXT DEFAULT '',
+    NewName       TEXT DEFAULT '',
+    NewEmail      TEXT DEFAULT '',
+    Mode          TEXT NOT NULL,
+    ForcePushed   INTEGER DEFAULT 0,
+    CreatedAt     TEXT DEFAULT CURRENT_TIMESTAMP
+)
+```
+
+**SQL operations**:
+
+```sql
+-- Insert
+INSERT INTO Amendments (Id, Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+-- Query all (most recent first)
+SELECT Id, Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed, CreatedAt
+FROM Amendments ORDER BY CreatedAt DESC
+
+-- Query by branch
+SELECT Id, Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed, CreatedAt
+FROM Amendments WHERE Branch = ? ORDER BY CreatedAt DESC
+```
+
+The table is added to the `Migrate()` call in `store.go` and reset in `db-reset`.
 
 ### Safety
 
 - **Warning prompt**: Before executing, print a warning that this rewrites history and requires force-push. Proceed automatically (no interactive prompt — follows project convention).
 - **Backup ref**: Git automatically creates `refs/original/` backup refs during filter-branch.
-- **Dry-run**: List all commits that would be affected with their current author and the new author.
+- **Dry-run**: List all commits that would be affected with their current author and the new author. No audit file or DB record is written in dry-run mode.
 
 ### Terminal Output
 
@@ -151,6 +231,8 @@ amend: rewriting 15 commits from abc1234..HEAD (branch: develop)
   [15/15] 9z8y7x6 - Update README
 
 Done: 15 commits amended
+  Audit log: .gitmap/amendments/amend-2026-03-09T14-30-00.json
+  Database:  1 record saved to Amendments table
 Warning: Run 'git push --force-with-lease' to update the remote
 ```
 
@@ -173,7 +255,7 @@ gitmap amend a1b2c3d --branch main --name "John Smith" --email "john@company.com
 # Amend only HEAD
 gitmap amend HEAD --name "John Smith" --email "john@company.com"
 
-# Preview what would change (dry-run)
+# Preview what would change (dry-run, no audit saved)
 gitmap amend --name "John Smith" --email "john@company.com" --dry-run
 gitmap amend a1b2c3d --branch develop --name "John Smith" --dry-run
 
@@ -193,14 +275,48 @@ gitmap amend --branch feature/auth --name "CI Bot"
 
 | File | Purpose |
 |------|---------|
-| `constants/constants_amend.go` | Command/flag/message constants |
+| `constants/constants_amend.go` | Command/flag/message/SQL constants |
 | `cmd/amend.go` | Flag parsing, orchestration |
 | `cmd/amendexec.go` | Git filter-branch execution and output |
+| `cmd/amendaudit.go` | Audit JSON file writing and DB persistence |
+| `store/amendment.go` | Amendment CRUD operations |
+| `model/amendment.go` | AmendmentRecord struct |
 
 SEO-write changes modify existing files:
 - `constants/constants_seo.go` — add `FlagSEOAuthorName`, `FlagSEOAuthorEmail`
 - `cmd/seowrite.go` — add fields to `seoWriteFlags`
 - `cmd/seowriteloop.go` — pass author to `gitCommit`
+
+Store migration changes:
+- `constants/constants_store.go` — add `TableAmendments`, `SQLCreateAmendments`, SQL operations
+- `store/store.go` — add `SQLCreateAmendments` to `Migrate()`, `SQLDropAmendments` to `Reset()`
+
+---
+
+## Database Updates
+
+### New Table
+
+| Table | Purpose |
+|-------|---------|
+| `Amendments` | Audit log of author rewrite operations |
+
+### Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `Id` | TEXT PK | UUID |
+| `Branch` | TEXT | Target branch name |
+| `FromCommit` | TEXT | First commit SHA in range (or first commit if all) |
+| `ToCommit` | TEXT | Last commit SHA (HEAD at time of amend) |
+| `TotalCommits` | INTEGER | Number of commits rewritten |
+| `PreviousName` | TEXT | Original author name |
+| `PreviousEmail` | TEXT | Original author email |
+| `NewName` | TEXT | New author name |
+| `NewEmail` | TEXT | New author email |
+| `Mode` | TEXT | `all`, `range`, or `head` |
+| `ForcePushed` | INTEGER | 0 or 1 |
+| `CreatedAt` | TEXT | Timestamp |
 
 ---
 
@@ -226,8 +342,11 @@ Add to `dispatchMisc` in `root.go`.
 - [ ] `gitmap amend abc123 --name "X" --email "x@y.com"` rewrites from abc123 to HEAD
 - [ ] `gitmap amend abc123 --branch main --name "X"` rewrites from abc123 on main branch
 - [ ] `gitmap amend HEAD --name "X" --email "x@y.com"` amends only the latest commit
-- [ ] `--dry-run` shows affected commits without modifying anything
+- [ ] `--dry-run` shows affected commits without modifying or saving anything
 - [ ] `--force-push` runs `git push --force-with-lease` after amend
 - [ ] At least one of `--name` or `--email` is required
 - [ ] Terminal output shows progress per commit and target branch
 - [ ] When `--branch` is used, switches back to original branch after completion
+- [ ] Audit JSON written to `.gitmap/amendments/amend-<timestamp>.json` after each operation
+- [ ] Amendment record persisted to `Amendments` SQLite table
+- [ ] `db-reset` clears the `Amendments` table along with other tables
