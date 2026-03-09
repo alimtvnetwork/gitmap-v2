@@ -20,9 +20,22 @@ const GettingStartedPage = () => {
             title="Terminal"
           />
           <p className="text-sm text-muted-foreground mt-2">
-            Or clone the repo and build with the PowerShell script:
+            Or clone the repo and build with the platform-appropriate script:
           </p>
-          <CodeBlock code={`git clone https://github.com/user/gitmap.git\ncd gitmap\n./run.ps1`} title="PowerShell" />
+          <CodeBlock code={`# Windows (PowerShell)\ngit clone https://github.com/user/gitmap.git\ncd gitmap\n./run.ps1`} title="PowerShell" />
+          <CodeBlock code={`# Linux / macOS (Bash)\ngit clone https://github.com/user/gitmap.git\ncd gitmap\nchmod +x run.sh\n./run.sh`} title="Bash" />
+          <CodeBlock code={`# Or use Make (requires run.sh)\ncd gitmap\nmake build`} title="Makefile" />
+
+          <div className="mt-4 p-4 rounded-lg border border-border bg-muted/30">
+            <h3 className="text-sm font-mono font-semibold text-foreground mb-2">Build script flags</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm text-muted-foreground">
+              <div><code className="font-mono text-primary">run.ps1 -NoPull</code> / <code className="font-mono text-primary">run.sh -n</code> — skip git pull</div>
+              <div><code className="font-mono text-primary">run.ps1 -NoDeploy</code> / <code className="font-mono text-primary">run.sh -d</code> — build only</div>
+              <div><code className="font-mono text-primary">run.ps1 -Update</code> / <code className="font-mono text-primary">run.sh -u</code> — full update pipeline</div>
+              <div><code className="font-mono text-primary">run.ps1 -R list</code> / <code className="font-mono text-primary">run.sh -r list</code> — build &amp; run</div>
+              <div><code className="font-mono text-primary">run.sh -t</code> / <code className="font-mono text-primary">make test</code> — run tests</div>
+            </div>
+          </div>
         </div>
 
         <div>
