@@ -26,6 +26,8 @@ type seoWriteFlags struct {
 	dryRun         bool
 	templatePath   string
 	createTemplate bool
+	authorName     string
+	authorEmail    string
 }
 
 // runSEOWrite is the entry point for the seo-write command.
