@@ -33,6 +33,7 @@ const navItems = [
   { title: "Configuration", url: "/config", icon: Settings },
   { title: "Architecture", url: "/architecture", icon: Boxes },
   { title: "Watch", url: "/watch", icon: Monitor },
+  { title: "Makefile", url: "/makefile", icon: Hammer },
 ];
 
 export function DocsSidebar() {
