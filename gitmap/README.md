@@ -274,6 +274,19 @@ gitmap stats --command scan
 gitmap stats --json
 ```
 
+## Database Export
+
+Export the full database for backup or sharing:
+
+```bash
+# Export to default file (gitmap-export.json)
+gitmap export
+gitmap ex
+
+# Export to custom path
+gitmap export backup-2026-03.json
+```
+
 ## Specs
 
 See [spec/01-app/](../spec/01-app/) for detailed specifications.
