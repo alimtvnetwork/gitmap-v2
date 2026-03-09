@@ -116,6 +116,8 @@ func parseSEOWriteFlags(args []string) seoWriteFlags {
 	fs.BoolVar(&f.dryRun, constants.FlagSEODryRun, false, constants.FlagDescSEODryRun)
 	fs.StringVar(&f.templatePath, constants.FlagSEOTemplate, "", constants.FlagDescSEOTemplate)
 	fs.BoolVar(&f.createTemplate, constants.FlagSEOCreateTemplate, false, constants.FlagDescSEOCreateTemplate)
+	fs.StringVar(&f.authorName, constants.FlagSEOAuthorName, "", constants.FlagDescSEOAuthorName)
+	fs.StringVar(&f.authorEmail, constants.FlagSEOAuthorEmail, "", constants.FlagDescSEOAuthorEmail)
 
 	_ = fs.Parse(args)
 
