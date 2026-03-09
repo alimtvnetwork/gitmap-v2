@@ -24,6 +24,8 @@ const (
 	FlagSEODryRun         = "dry-run"
 	FlagSEOTemplate       = "template"
 	FlagSEOCreateTemplate = "create-template"
+	FlagSEOAuthorName     = "author-name"
+	FlagSEOAuthorEmail    = "author-email"
 )
 
 // SEO-write flag descriptions.
