@@ -229,6 +229,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdBookmark || command == constants.CmdBookmarkAlias {
+		runBookmark(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
