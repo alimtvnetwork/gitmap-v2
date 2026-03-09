@@ -296,6 +296,42 @@ source, date).
 
 See [21-list-releases.md](./21-list-releases.md) for full details.
 
+### `gitmap seo-write [flags]` (alias: `sw`)
+
+Auto-commit and push SEO-optimized messages to a Git repository on a
+randomized schedule. Designed for populating commit history with
+service/location-specific content.
+
+**Input modes:**
+
+1. **CSV mode** (`--csv <path>`) — reads title/description pairs from a
+   two-column CSV file and commits them in order.
+2. **Template mode** (default) — loads title and description templates
+   from the `CommitTemplates` SQLite table (auto-seeded from
+   `data/seo-templates.json` on first run), substitutes placeholders,
+   and pairs them randomly. Supports 7 placeholders: `{service}`,
+   `{area}`, `{url}`, `{company}`, `{phone}`, `{email}`, `{address}`.
+
+**Workflow:**
+
+1. Resolve commit messages (CSV rows or generated template pairs).
+2. Detect pending files (`--files` glob or `git ls-files --others --modified`).
+3. Round-robin stage → commit → push each file with a random delay.
+4. When pending files are exhausted and commits remain, enter **rotation
+   mode**: pick a target file (`--rotate-file` or auto-detect first
+   `.html`/`.txt`), append text → commit → revert → commit in a cycle.
+5. Stop at `--max-commits` or on Ctrl+C (graceful shutdown).
+
+**Template management:**
+
+- `gitmap seo-write --create-template` or `gitmap seo-write ct` —
+  writes a starter `seo-templates.json` to the current directory for
+  customization.
+- `--template <path>` — load templates from a custom JSON file instead
+  of the database.
+
+See [23-seo-write.md](./23-seo-write.md) for full details.
+
 ### `gitmap revert <version>`
 
 Revert to a specific release version by checking out the corresponding
@@ -306,7 +342,7 @@ Git tag and rebuilding.
 
 ### `gitmap version` (alias: `v`)
 
-Prints the current version number (e.g., `gitmap v2.16.0`) and exits.
+Prints the current version number (e.g., `gitmap v2.18.0`) and exits.
 
 ### `gitmap help`
 
@@ -337,6 +373,7 @@ All aliases are single-letter or short abbreviations for faster usage:
 | `list-versions`  | `lv`  |
 | `list-releases`  | `lr`  |
 | `version`        | `v`   |
+| `seo-write`      | `sw`  |
 | `update`         | —     |
 | `update-cleanup` | —     |
 | `doctor`         | —     |
@@ -499,6 +536,26 @@ activates whenever existing repos are detected during a clone operation.
 | `--json`   | Output as JSON array                     | `false` |
 | `--limit`  | Show only the top N releases (0 = all)   | `0`     |
 | `--source` | Filter by source: `release` or `import`  | (all)   |
+
+## SEO-Write Flags
+
+| Flag                       | Description                                        | Default    |
+|----------------------------|----------------------------------------------------|------------|
+| `--csv <path>`             | Read title/description pairs from a CSV file       | (none)     |
+| `--url <url>`              | Target website URL (required in template mode)     | (none)     |
+| `--service <name>`         | Service name for `{service}` placeholder           | `""`       |
+| `--area <name>`            | Area/location for `{area}` placeholder             | `""`       |
+| `--company <name>`         | Company name for `{company}` placeholder           | `""`       |
+| `--phone <number>`         | Phone number for `{phone}` placeholder             | `""`       |
+| `--email <address>`        | Email for `{email}` placeholder                    | `""`       |
+| `--address <text>`         | Address for `{address}` placeholder                | `""`       |
+| `--max-commits <n>`        | Stop after N commits (0 = unlimited)               | `0`        |
+| `--interval <min-max>`     | Random delay range in seconds between commits      | `60-120`   |
+| `--files <glob>`           | Glob pattern to select files to stage              | (auto)     |
+| `--rotate-file <path>`     | File to use for rotation mode                      | (auto)     |
+| `--dry-run`                | Preview commit messages without executing          | `false`    |
+| `--template <path>`        | Load templates from a custom JSON file             | (none)     |
+| `--create-template`        | Write starter `seo-templates.json` to current dir  | `false`    |
 
 ## Examples
 
@@ -687,4 +744,30 @@ gitmap db-reset --confirm
 
 # Revert to a previous version
 gitmap revert v2.9.0
+
+# SEO-write — template mode with placeholders
+gitmap seo-write --url example.com --service "Web Design" --area "London" --company "Acme Ltd"
+gitmap sw --url example.com --service Plumbing --area Manchester --max-commits 50
+
+# SEO-write — CSV mode
+gitmap seo-write --csv ./commits.csv
+gitmap sw --csv ./commits.csv --interval 30-90
+
+# SEO-write — dry run (preview without committing)
+gitmap sw --url example.com --service SEO --area Bristol --dry-run
+
+# SEO-write — custom template file
+gitmap sw --url example.com --template ./my-templates.json --service Roofing --area Leeds
+
+# SEO-write — create starter template
+gitmap seo-write --create-template
+gitmap seo-write ct                    # shorthand
+
+# SEO-write — rotation mode with explicit file
+gitmap sw --url example.com --service HVAC --area York --rotate-file index.html --max-commits 100
+
+# SEO-write — all placeholders
+gitmap sw --url example.com --service "Pest Control" --area "Edinburgh" \
+  --company "BugFree Ltd" --phone "0800 123 456" --email info@bugfree.com \
+  --address "10 High Street, Edinburgh"
 ```
