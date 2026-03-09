@@ -572,6 +572,18 @@ activates whenever existing repos are detected during a clone operation.
 | `--dry-run`                | Preview commit messages without executing          | `false`    |
 | `--template <path>`        | Load templates from a custom JSON file             | (none)     |
 | `--create-template`        | Write starter `seo-templates.json` to current dir  | `false`    |
+| `--author-name <name>`     | Git author name for commits                        | (git config) |
+| `--author-email <email>`   | Git author email for commits                       | (git config) |
+
+## Amend Flags
+
+| Flag                   | Description                                        | Default              |
+|------------------------|----------------------------------------------------|----------------------|
+| `--name <name>`        | New author name for commits                        | (none)               |
+| `--email <email>`      | New author email for commits                       | (none)               |
+| `--branch <branch>`    | Target branch (default: current branch)            | current branch       |
+| `--dry-run`            | Preview which commits would be amended             | `false`              |
+| `--force-push`         | Auto-run `git push --force-with-lease` after amend | `false`              |
 
 ## Examples
 
