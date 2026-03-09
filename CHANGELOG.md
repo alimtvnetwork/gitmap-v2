@@ -11,6 +11,7 @@
 - Built documentation site with interactive terminal preview for the watch command.
 - Added `gitmap/Makefile` as a thin wrapper around `run.sh` for standard `make` workflows.
   - Targets: `build`, `run` (with `ARGS=`), `test`, `update`, `no-pull`, `no-deploy`, `clean`, `help`.
+- Added Makefile documentation page to the docs site with target reference, examples, and argument-passing guide.
 - Added `run.sh` cross-platform build script: Bash equivalent of `run.ps1` for Linux and macOS.
   - Full pipeline: pull, tidy, build, deploy with `-ldflags` version embedding.
   - Reads config from `powershell.json` via `jq` or `python3` fallback.
