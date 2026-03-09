@@ -51,6 +51,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpHistory)
 	fmt.Println(constants.HelpHistoryReset)
 	fmt.Println(constants.HelpStats)
+	fmt.Println(constants.HelpBookmark)
 	fmt.Println(constants.HelpHelp)
 }
 

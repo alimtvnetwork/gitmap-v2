@@ -237,6 +237,27 @@ gitmap history --json --limit 5
 gitmap history-reset --confirm
 ```
 
+## Bookmarks
+
+Save and replay frequently-used command+flag combinations:
+
+```bash
+# Save a bookmark
+gitmap bookmark save ssh-scan scan --mode ssh
+gitmap bk save quick-status status
+
+# List all bookmarks
+gitmap bookmark list
+gitmap bk list --json
+
+# Replay a saved bookmark
+gitmap bookmark run ssh-scan
+gitmap bk run quick-status
+
+# Delete a bookmark
+gitmap bookmark delete ssh-scan
+```
+
 ## Usage Statistics
 
 View aggregated command usage patterns:

@@ -70,6 +70,7 @@ func (db *DB) Reset() error {
 		constants.SQLDropAmendments,
 		constants.SQLDropCommitTemplates,
 		constants.SQLDropCommandHistory,
+		constants.SQLDropBookmarks,
 		constants.SQLDropRepos,
 	}
 

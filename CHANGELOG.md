@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.22.0
+- Added `gitmap bookmark` (`bk`) command: save and replay frequently-used command+flag combinations.
+- Subcommands: `save`, `list`, `run`, `delete` — full CRUD for saved bookmarks.
+- `bookmark run <name>` replays the saved command through standard dispatch (appears in audit history).
+- `bookmark list --json` outputs bookmarks as JSON.
+- New `Bookmarks` SQLite table with unique name constraint.
+- `db-reset --confirm` now also clears the Bookmarks table.
+
 ## v2.21.0
 - Added `gitmap stats` (`ss`) command: aggregated usage statistics from command history.
 - Shows most-used commands, success/fail counts, failure rates, and avg/min/max durations.
