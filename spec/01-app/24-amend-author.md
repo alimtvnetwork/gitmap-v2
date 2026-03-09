@@ -47,30 +47,38 @@ gitmap sw --url example.com --service SEO --area Bristol \
 ### Synopsis
 
 ```
-gitmap amend [commit-hash] --name <name> --email <email>
+gitmap amend [commit-hash] --name <name> --email <email> [--branch <branch>]
 ```
 
 Alias: `gitmap am`
 
-### Behavior
+The **commit hash** (SHA) is always the **first positional argument** (before any flags).
+If omitted, all commits on the target branch are rewritten.
 
-Rewrites the author name and/or email on existing commits using `git filter-branch` or `git rebase --exec`.
+### Branch Resolution
 
-#### Mode 1: All Commits
+- `--branch <name>` — operate on a specific branch (checks it out first).
+- No `--branch` — operates on the **current branch** (whatever `HEAD` points to).
+
+### Modes
+
+#### Mode 1: All Commits on Branch
 
 ```bash
 gitmap amend --name "New Name" --email "new@email.com"
+gitmap amend --branch develop --name "New Name" --email "new@email.com"
 ```
 
-Rewrites **every commit** in the current branch to use the new author identity.
+Rewrites **every commit** on the target branch.
 
 #### Mode 2: From a Specific Commit Onwards
 
 ```bash
-gitmap amend abc123 --name "New Name" --email "new@email.com"
+gitmap amend a1b2c3d --name "New Name" --email "new@email.com"
+gitmap amend a1b2c3d --branch main --name "New Name" --email "new@email.com"
 ```
 
-Rewrites all commits **from `abc123` (inclusive) to HEAD** to use the new author identity. Commits before `abc123` are left untouched.
+The SHA is the **first argument**. Rewrites all commits **from `a1b2c3d` (inclusive) to HEAD** of the target branch. Commits before `a1b2c3d` are left untouched.
 
 #### Mode 3: Single Commit (HEAD only)
 
@@ -78,23 +86,35 @@ Rewrites all commits **from `abc123` (inclusive) to HEAD** to use the new author
 gitmap amend HEAD --name "New Name" --email "new@email.com"
 ```
 
-Amends only the most recent commit.
+Amends only the most recent commit on the current (or specified) branch.
+
+### Argument Order
+
+```
+gitmap amend [SHA] [--flags...]
+              ^
+              first positional arg = commit hash (optional)
+              everything else = named flags
+```
 
 ### Flags
 
-| Flag              | Description                              | Required |
-|-------------------|------------------------------------------|----------|
-| `--name <name>`   | New author name                          | Yes (at least one of name/email) |
-| `--email <email>` | New author email                         | Yes (at least one of name/email) |
-| `--dry-run`       | Preview which commits would be amended   | No       |
-| `--force-push`    | Auto-run `git push --force-with-lease` after amend | No |
+| Flag                | Description                              | Required |
+|---------------------|------------------------------------------|----------|
+| `--name <name>`     | New author name                          | Yes (at least one of name/email) |
+| `--email <email>`   | New author email                         | Yes (at least one of name/email) |
+| `--branch <branch>` | Target branch (default: current branch)  | No       |
+| `--dry-run`         | Preview which commits would be amended   | No       |
+| `--force-push`      | Auto-run `git push --force-with-lease` after amend | No |
 
 ### Implementation Approach
 
-The amend command generates and executes a `git filter-branch` command:
+1. If `--branch` is provided, run `git checkout <branch>` first.
+2. Resolve the commit range (all, from SHA, or HEAD).
+3. Execute `git filter-branch`:
 
 ```bash
-# All commits
+# All commits on branch
 git filter-branch -f --env-filter '
   export GIT_AUTHOR_NAME="New Name"
   export GIT_AUTHOR_EMAIL="new@email.com"
@@ -102,7 +122,7 @@ git filter-branch -f --env-filter '
   export GIT_COMMITTER_EMAIL="new@email.com"
 ' -- HEAD
 
-# From specific commit onwards
+# From specific SHA onwards
 git filter-branch -f --env-filter '
   export GIT_AUTHOR_NAME="New Name"
   export GIT_AUTHOR_EMAIL="new@email.com"
@@ -110,6 +130,8 @@ git filter-branch -f --env-filter '
   export GIT_COMMITTER_EMAIL="new@email.com"
 ' <commit-hash>^..HEAD
 ```
+
+4. If `--branch` was used, switch back to the original branch.
 
 ### Safety
 
