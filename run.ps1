@@ -28,6 +28,8 @@ param(
     [string]$DeployPath = "",
     [switch]$Update,
     [switch]$R,
+    [Alias("t")]
+    [switch]$Test,
     [Parameter(ValueFromRemainingArguments=$true)]
     [string[]]$RunArgs
 )
