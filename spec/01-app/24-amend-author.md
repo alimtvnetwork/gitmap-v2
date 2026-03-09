@@ -142,7 +142,7 @@ git filter-branch -f --env-filter '
 ### Terminal Output
 
 ```
-amend: rewriting 15 commits from abc1234..HEAD
+amend: rewriting 15 commits from abc1234..HEAD (branch: develop)
   author: "Old Name <old@email.com>" -> "New Name <new@email.com>"
 
   [1/15] abc1234 - Fix login page
@@ -157,20 +157,34 @@ Warning: Run 'git push --force-with-lease' to update the remote
 ### Examples
 
 ```bash
-# Amend all commits in current branch
+# Amend all commits on current branch
 gitmap amend --name "John Smith" --email "john@company.com"
+gitmap am --name "John Smith" --email "john@company.com"
 
-# Amend from a specific commit onwards
+# Amend all commits on a specific branch
+gitmap amend --branch develop --name "John Smith" --email "john@company.com"
+
+# Amend from a specific SHA onwards (SHA is first positional arg)
 gitmap amend a1b2c3d --name "John Smith" --email "john@company.com"
+
+# Amend from SHA on a specific branch
+gitmap amend a1b2c3d --branch main --name "John Smith" --email "john@company.com"
 
 # Amend only HEAD
 gitmap amend HEAD --name "John Smith" --email "john@company.com"
 
-# Preview what would change
+# Preview what would change (dry-run)
 gitmap amend --name "John Smith" --email "john@company.com" --dry-run
+gitmap amend a1b2c3d --branch develop --name "John Smith" --dry-run
 
 # Amend and auto force-push
 gitmap amend a1b2c3d --name "John Smith" --email "john@company.com" --force-push
+
+# Only change email (keep existing author name)
+gitmap amend --email "newemail@company.com"
+
+# Only change name on a specific branch
+gitmap amend --branch feature/auth --name "CI Bot"
 ```
 
 ---
@@ -207,10 +221,13 @@ Add to `dispatchMisc` in `root.go`.
 ## Acceptance Criteria
 
 - [ ] `gitmap sw --author-name "Bot" --author-email "bot@co.com"` sets author on each commit
-- [ ] `gitmap amend --name "X" --email "x@y.com"` rewrites all commits
+- [ ] `gitmap amend --name "X" --email "x@y.com"` rewrites all commits on current branch
+- [ ] `gitmap amend --branch develop --name "X" --email "x@y.com"` rewrites all commits on develop
 - [ ] `gitmap amend abc123 --name "X" --email "x@y.com"` rewrites from abc123 to HEAD
+- [ ] `gitmap amend abc123 --branch main --name "X"` rewrites from abc123 on main branch
 - [ ] `gitmap amend HEAD --name "X" --email "x@y.com"` amends only the latest commit
 - [ ] `--dry-run` shows affected commits without modifying anything
 - [ ] `--force-push` runs `git push --force-with-lease` after amend
 - [ ] At least one of `--name` or `--email` is required
-- [ ] Terminal output shows progress per commit
+- [ ] Terminal output shows progress per commit and target branch
+- [ ] When `--branch` is used, switches back to original branch after completion
