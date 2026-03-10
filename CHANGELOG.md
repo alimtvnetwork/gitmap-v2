@@ -16,6 +16,11 @@
   - Full pipeline: pull, tidy, build, deploy with `-ldflags` version embedding.
   - Reads config from `powershell.json` via `jq` or `python3` fallback.
   - Supports `-t` (test with report), `-n` (no-pull), `-d` (no-deploy), and `-u` (update) flags.
+- Added `gitmap gomod` (`gm`) command: rename Go module path across an entire repo with branch safety.
+  - Reads `go.mod`, replaces module directive and all `.go` import paths in one pass.
+  - Creates `backup/before-replace-<slug>` and `feature/replace-<slug>` branches automatically.
+  - Commits changes on the feature branch and merges back to the original branch.
+  - Supports `--dry-run`, `--no-merge`, `--no-tidy`, and `--verbose` flags.
 
 ## v2.26.0
 - Version bump to v2.26.0 following `gitmap profile` command addition.
