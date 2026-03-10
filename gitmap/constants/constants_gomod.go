@@ -72,7 +72,7 @@ const (
 
 // GoMod error messages.
 const (
-	ErrGoModUsage         = "usage: gitmap gomod <new-module-path> [--dry-run] [--no-merge] [--no-tidy] [--verbose]\n"
+	ErrGoModUsage         = "usage: gitmap gomod <new-module-path> [--ext *.go,*.md] [--dry-run] [--no-merge] [--no-tidy] [--verbose]\n"
 	ErrGoModNoFile        = "error: go.mod not found in current directory\n"
 	ErrGoModNoModule      = "error: no module directive found in go.mod\n"
 	ErrGoModNotRepo       = "error: not inside a git repository\n"
