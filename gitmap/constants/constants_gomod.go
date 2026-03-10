@@ -65,7 +65,7 @@ const (
 	MsgGoModDryNew        = "  New: %s\n"
 	MsgGoModDryFiles      = "  Files that would change: %d\n"
 	MsgGoModDryFile       = "  %s\n"
-	MsgGoModNoImports     = "Warning: no import paths found to replace (only go.mod updated)\n"
+	MsgGoModNoImports     = "Warning: no files found containing the old path to replace (only go.mod updated)\n"
 	MsgGoModTidyWarn      = "Warning: go mod tidy failed: %v (continuing)\n"
 	MsgGoModNothingRename = "module path is already %s, nothing to rename\n"
 )
