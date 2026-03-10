@@ -69,7 +69,9 @@ func validateGoModPreconditions(oldPath, newPath string) {
 		os.Exit(0)
 	}
 
-	if gitutil.IsInsideWorkTree() == false {
+	if gitutil.IsInsideWorkTree() {
+		// inside a work tree — OK
+	} else {
 		fmt.Fprint(os.Stderr, constants.ErrGoModNotRepo)
 		os.Exit(1)
 	}
