@@ -38,24 +38,24 @@ func parseModuleLine(content string) string {
 }
 
 // replaceModulePath replaces all occurrences of oldPath with newPath across the repo.
-func replaceModulePath(oldPath, newPath string, verbose bool) int {
+func replaceModulePath(oldPath, newPath string, verbose bool, exts []string) int {
 	replaceInGoMod(oldPath, newPath)
-	goFiles := findGoFilesWithPath(oldPath)
+	files := findFilesWithPath(oldPath, exts)
 
-	if len(goFiles) == 0 {
+	if len(files) == 0 {
 		fmt.Print(constants.MsgGoModNoImports)
 
 		return 0
 	}
 
-	for _, f := range goFiles {
+	for _, f := range files {
 		replaceInFile(f, oldPath, newPath)
 		if verbose {
 			fmt.Printf(constants.MsgGoModVerboseFile, f)
 		}
 	}
 
-	return len(goFiles)
+	return len(files)
 }
 
 // replaceInGoMod replaces the module line in go.mod.
@@ -70,8 +70,11 @@ func replaceInGoMod(oldPath, newPath string) {
 	writeFileContent(constants.GoModFile, updated)
 }
 
-// findGoFilesWithPath walks the repo and returns .go files containing oldPath.
-func findGoFilesWithPath(oldPath string) []string {
+// findFilesWithPath walks the repo and returns files containing oldPath.
+// If exts is empty, all files are considered. Otherwise only files matching
+// the given extensions (e.g. ".go", ".md") are checked.
+// go.mod itself is excluded since it is handled separately.
+func findFilesWithPath(oldPath string, exts []string) []string {
 	var matches []string
 
 	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
@@ -81,16 +84,58 @@ func findGoFilesWithPath(oldPath string) []string {
 		if info.IsDir() && isExcludedDir(info.Name()) {
 			return filepath.SkipDir
 		}
-		if filepath.Ext(path) == constants.GoFileExt {
-			if fileContains(path, oldPath) {
-				matches = append(matches, path)
-			}
+		if info.IsDir() {
+			return nil
+		}
+		if path == constants.GoModFile {
+			return nil
+		}
+		if matchesExtFilter(path, exts) && fileContains(path, oldPath) {
+			matches = append(matches, path)
 		}
 
 		return nil
 	})
 
 	return matches
+}
+
+// matchesExtFilter returns true if the file matches the extension filter.
+// An empty exts slice means all files match.
+func matchesExtFilter(path string, exts []string) bool {
+	if len(exts) == 0 {
+		return true
+	}
+
+	ext := filepath.Ext(path)
+	for _, e := range exts {
+		if ext == e {
+			return true
+		}
+	}
+
+	return false
+}
+
+// parseExtFlag parses a comma-separated extension string like "*.go,*.md"
+// into a slice of extensions like [".go", ".md"].
+func parseExtFlag(raw string) []string {
+	if len(raw) == 0 {
+		return nil
+	}
+
+	parts := strings.Split(raw, ",")
+	var exts []string
+
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		p = strings.TrimPrefix(p, "*")
+		if len(p) > 0 {
+			exts = append(exts, p)
+		}
+	}
+
+	return exts
 }
 
 // isExcludedDir checks if a directory should be skipped.
