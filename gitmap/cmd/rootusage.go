@@ -131,3 +131,13 @@ func printUsageAmendFlags() {
 	fmt.Println(constants.HelpAmendDry)
 	fmt.Println(constants.HelpAmendForce)
 }
+
+// printUsageGoModFlags prints the gomod flags section.
+func printUsageGoModFlags() {
+	fmt.Println()
+	fmt.Println(constants.HelpGoModFlags)
+	fmt.Println(constants.HelpGoModDry)
+	fmt.Println(constants.HelpGoModNoMrg)
+	fmt.Println(constants.HelpGoModNoTdy)
+	fmt.Println(constants.HelpGoModVerb)
+}
