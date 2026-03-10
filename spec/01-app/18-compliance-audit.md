@@ -565,9 +565,9 @@ Total: **22 files**, **~580+ constants** + **~11 vars** across 26+ categories.
 | Category | Constants |
 |----------|-----------|
 | Commands | `CmdGoMod`, `CmdGoModAlias` |
-| Help text | `HelpGoMod`, `HelpGoModFlags`, `HelpGoModDry`, `HelpGoModNoMrg`, `HelpGoModNoTdy`, `HelpGoModVerb` |
-| Flag names | `FlagGoModDryRun`, `FlagGoModNoMerge`, `FlagGoModNoTidy` |
-| Flag descriptions | `FlagDescGoModDryRun`, `FlagDescGoModNoMerge`, `FlagDescGoModNoTidy` |
+| Help text | `HelpGoMod`, `HelpGoModFlags`, `HelpGoModDry`, `HelpGoModNoMrg`, `HelpGoModNoTdy`, `HelpGoModVerb`, `HelpGoModExt` |
+| Flag names | `FlagGoModDryRun`, `FlagGoModNoMerge`, `FlagGoModNoTidy`, `FlagGoModExt` |
+| Flag descriptions | `FlagDescGoModDryRun`, `FlagDescGoModNoMerge`, `FlagDescGoModNoTidy`, `FlagDescGoModExt` |
 | File constants | `GoModFile`, `GoModModuleLine`, `GoFileExt` |
 | Excluded dirs | `GoModExcludeDirs` (var) |
 | Branch prefixes | `GoModFeaturePrefix`, `GoModBackupPrefix` |
