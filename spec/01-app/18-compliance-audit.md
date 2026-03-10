@@ -91,6 +91,9 @@ Last updated: 2026-03-10
 | `watch.go` | ~60 | ✅ Pass | Watch dashboard entry |
 | `watchformat.go` | ~80 | ✅ Pass | Watch display formatting |
 | `watchops.go` | ~60 | ✅ Pass | Watch refresh loop |
+| `gomod.go` | ~125 | ✅ Pass | GoMod entry point, flag parsing, orchestration |
+| `gomodreplace.go` | ~140 | ✅ Pass | File walking, go.mod parsing, path replacement |
+| `gomodbranch.go` | ~140 | ✅ Pass | Branch creation, merge, slug derivation, git ops |
 | `flags_test.go` | ~40 | ✅ Pass | |
 
 ## Package: `constants`
@@ -118,6 +121,7 @@ Last updated: 2026-03-10
 | `constants_watch.go` | ~52 | ✅ Pass | Watch commands, display, flags |
 | `constants_diffprofile.go` | ~28 | ✅ Pass | Diff-profiles commands and messages |
 | `constants_clone.go` | ~10 | ✅ Pass | Clone progress format strings |
+| `constants_gomod.go` | ~100 | ✅ Pass | GoMod commands, flags, messages, git args |
 
 ## Package: `release`
 
@@ -264,8 +268,8 @@ Last updated: 2026-03-10
 
 | Metric | Count |
 |--------|-------|
-| Total files audited | 165 |
-| Passing | 165 |
+| Total files audited | 169 |
+| Passing | 169 |
 | Pending | 0 |
 
 ## Recent Fixes
@@ -289,7 +293,7 @@ Last updated: 2026-03-10
 
 ## Constants Inventory
 
-Total: **21 files**, **~550+ constants** + **~10 vars** across 25+ categories.
+Total: **22 files**, **~580+ constants** + **~11 vars** across 26+ categories.
 
 ### `constants.go` — Core Defaults (111 lines)
 
@@ -555,3 +559,19 @@ Total: **21 files**, **~550+ constants** + **~10 vars** across 25+ categories.
 | Revert PS script | `RevertPSHeader`, `RevertPSBuild`, `RevertPSPostActions` |
 | Backup glob | `OldBackupGlob` |
 | PowerShell args | `PSBin`, `PSExecPolicy`, `PSBypass`, `PSNoProfile`, `PSNoLogo`, `PSFile`, `PSNonInteractive`, `PSCommand` |
+
+### `constants_gomod.go` — GoMod Rename (~100 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Commands | `CmdGoMod`, `CmdGoModAlias` |
+| Help text | `HelpGoMod`, `HelpGoModFlags`, `HelpGoModDry`, `HelpGoModNoMrg`, `HelpGoModNoTdy`, `HelpGoModVerb` |
+| Flag names | `FlagGoModDryRun`, `FlagGoModNoMerge`, `FlagGoModNoTidy` |
+| Flag descriptions | `FlagDescGoModDryRun`, `FlagDescGoModNoMerge`, `FlagDescGoModNoTidy` |
+| File constants | `GoModFile`, `GoModModuleLine`, `GoFileExt` |
+| Excluded dirs | `GoModExcludeDirs` (var) |
+| Branch prefixes | `GoModFeaturePrefix`, `GoModBackupPrefix` |
+| Messages | `MsgGoModSummary`, `MsgGoModOld`, `MsgGoModNew`, `MsgGoModFiles`, `MsgGoModBackupBranch`, `MsgGoModFeatureBranch`, `MsgGoModMergedInto`, `MsgGoModLeftOn`, `MsgGoModVerboseFile`, `MsgGoModDryHeader`, `MsgGoModDryOld`, `MsgGoModDryNew`, `MsgGoModDryFiles`, `MsgGoModDryFile`, `MsgGoModNoImports`, `MsgGoModTidyWarn`, `MsgGoModNothingRename` |
+| Errors | `ErrGoModUsage`, `ErrGoModNoFile`, `ErrGoModNoModule`, `ErrGoModNotRepo`, `ErrGoModDirtyTree`, `ErrGoModBranchExists`, `ErrGoModMergeConflict`, `ErrGoModReadFailed`, `ErrGoModWriteFailed`, `ErrGoModCommitFailed` |
+| Git args | `GitAdd`, `GitAddAll`, `GitCommit`, `GitCommitMsg`, `GitMerge`, `GitMergeNoFF`, `GitStatusShort`, `GitStatus` |
+| Commit format | `GoModCommitMsgFmt`, `GoModMergeMsgFmt` |
