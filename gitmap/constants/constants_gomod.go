@@ -97,7 +97,7 @@ const (
 )
 
 // GoMod commit message format.
-const GoModCommitMsgFmt = "refactor: rename go module path\n\nOld: %s\nNew: %s\n\nReplaced module directive in go.mod and all import paths\nacross %d .go files."
+const GoModCommitMsgFmt = "refactor: rename go module path\n\nOld: %s\nNew: %s\n\nReplaced module directive in go.mod and all matching paths\nacross %d files."
 
 // GoMod merge message format.
 const GoModMergeMsgFmt = "merge: module rename to %s"
