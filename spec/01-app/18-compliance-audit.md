@@ -559,3 +559,19 @@ Total: **22 files**, **~580+ constants** + **~11 vars** across 26+ categories.
 | Revert PS script | `RevertPSHeader`, `RevertPSBuild`, `RevertPSPostActions` |
 | Backup glob | `OldBackupGlob` |
 | PowerShell args | `PSBin`, `PSExecPolicy`, `PSBypass`, `PSNoProfile`, `PSNoLogo`, `PSFile`, `PSNonInteractive`, `PSCommand` |
+
+### `constants_gomod.go` — GoMod Rename (~100 lines)
+
+| Category | Constants |
+|----------|-----------|
+| Commands | `CmdGoMod`, `CmdGoModAlias` |
+| Help text | `HelpGoMod`, `HelpGoModFlags`, `HelpGoModDry`, `HelpGoModNoMrg`, `HelpGoModNoTdy`, `HelpGoModVerb` |
+| Flag names | `FlagGoModDryRun`, `FlagGoModNoMerge`, `FlagGoModNoTidy` |
+| Flag descriptions | `FlagDescGoModDryRun`, `FlagDescGoModNoMerge`, `FlagDescGoModNoTidy` |
+| File constants | `GoModFile`, `GoModModuleLine`, `GoFileExt` |
+| Excluded dirs | `GoModExcludeDirs` (var) |
+| Branch prefixes | `GoModFeaturePrefix`, `GoModBackupPrefix` |
+| Messages | `MsgGoModSummary`, `MsgGoModOld`, `MsgGoModNew`, `MsgGoModFiles`, `MsgGoModBackupBranch`, `MsgGoModFeatureBranch`, `MsgGoModMergedInto`, `MsgGoModLeftOn`, `MsgGoModVerboseFile`, `MsgGoModDryHeader`, `MsgGoModDryOld`, `MsgGoModDryNew`, `MsgGoModDryFiles`, `MsgGoModDryFile`, `MsgGoModNoImports`, `MsgGoModTidyWarn`, `MsgGoModNothingRename` |
+| Errors | `ErrGoModUsage`, `ErrGoModNoFile`, `ErrGoModNoModule`, `ErrGoModNotRepo`, `ErrGoModDirtyTree`, `ErrGoModBranchExists`, `ErrGoModMergeConflict`, `ErrGoModReadFailed`, `ErrGoModWriteFailed`, `ErrGoModCommitFailed` |
+| Git args | `GitAdd`, `GitAddAll`, `GitCommit`, `GitCommitMsg`, `GitMerge`, `GitMergeNoFF`, `GitStatusShort`, `GitStatus` |
+| Commit format | `GoModCommitMsgFmt`, `GoModMergeMsgFmt` |
