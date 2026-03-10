@@ -6,6 +6,7 @@ import {
   Boxes,
   Monitor,
   Hammer,
+  GitBranch,
   Sun,
   Moon,
 } from "lucide-react";
