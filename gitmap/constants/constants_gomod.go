@@ -14,6 +14,7 @@ const (
 	HelpGoModNoMrg = "  --no-merge          Commit on feature branch but do not merge back"
 	HelpGoModNoTdy = "  --no-tidy           Skip go mod tidy after replacement"
 	HelpGoModVerb  = "  --verbose           Print each file path as it is modified"
+	HelpGoModExt   = "  --ext <exts>        Comma-separated extensions to filter (e.g. *.go,*.md); default: all files"
 )
 
 // GoMod flag names.
