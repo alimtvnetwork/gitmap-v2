@@ -7,6 +7,7 @@ import {
   Monitor,
   Hammer,
   GitBranch,
+  Tag,
   Sun,
   Moon,
 } from "lucide-react";
