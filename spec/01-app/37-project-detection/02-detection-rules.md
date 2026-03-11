@@ -102,6 +102,24 @@ the filename. Fall back to directory name.
 **False positive prevention:** Ignore `bin/`, `obj/`, and `packages/`
 directories.
 
+### Solution vs Project Scope
+
+When a `.sln` file is found at the repo root (or any directory), it
+defines a **single** `DetectedProject` entry at that path. The `.sln`
+is the `PrimaryIndicator`. Individual `.csproj` files beneath it are
+**not** recorded as separate `DetectedProject` rows — they are stored
+as `CSharpProjectFiles` child records under the solution's metadata.
+
+A standalone `.csproj` (no parent `.sln` in any ancestor directory) is
+recorded as its own `DetectedProject` with the `.csproj` as the
+`PrimaryIndicator`.
+
+**Precedence rule:** `.sln` takes priority. When walking the tree,
+if a `.sln` is found, mark that directory as a C# project and skip
+creating separate project entries for `.csproj` files anywhere below
+that `.sln` directory. If no `.sln` exists, each `.csproj` becomes
+its own detected project.
+
 ---
 
 ## Detection Scope
