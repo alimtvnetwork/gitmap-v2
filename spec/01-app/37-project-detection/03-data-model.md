@@ -61,6 +61,23 @@ On each scan, after upserting all detected projects for a repo, delete
 any `DetectedProjects` rows for that `RepoId` that were **not**
 upserted in the current scan. This handles removed projects.
 
+Because `GoProjectMetadata`, `CSharpProjectMetadata`, and their child
+tables use `ON DELETE CASCADE` from `DetectedProjects`, deleting a
+stale `DetectedProjects` row automatically removes all associated
+metadata, runnables, project files, and key files.
+
+### Orphaned Child Record Cleanup
+
+When a parent project **still exists** but child records change
+(e.g., a Go `cmd/` subdirectory is deleted, or a C# `.csproj` is
+removed), the cleanup works per-table:
+
+- **GoRunnableFiles:** After upserting all runnables for a
+  `GoMetadataId`, delete rows for that `GoMetadataId` whose `Id` was
+  **not** in the current upsert batch.
+- **CSharpProjectFiles:** Same pattern per `CSharpMetadataId`.
+- **CSharpKeyFiles:** Same pattern per `CSharpMetadataId`.
+
 ---
 
 ## SQL Statements
