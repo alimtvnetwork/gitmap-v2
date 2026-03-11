@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Commands from "./pages/Commands";
 import GoMod from "./pages/GoMod";
+import Projects from "./pages/Projects";
 import GettingStarted from "./pages/GettingStarted";
 import Config from "./pages/Config";
 import Architecture from "./pages/Architecture";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/watch" element={<Watch />} />
           <Route path="/release" element={<Release />} />
           <Route path="/gomod" element={<GoMod />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/makefile" element={<MakefilePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

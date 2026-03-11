@@ -10,6 +10,7 @@ import {
   Tag,
   Sun,
   Moon,
+  FolderGit2,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -37,6 +38,7 @@ const navItems = [
   { title: "Watch", url: "/watch", icon: Monitor },
   { title: "Release", url: "/release", icon: Tag },
   { title: "GoMod", url: "/gomod", icon: GitBranch },
+  { title: "Projects", url: "/projects", icon: FolderGit2 },
   { title: "Makefile", url: "/makefile", icon: Hammer },
 ];
 
