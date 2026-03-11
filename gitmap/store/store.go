@@ -85,6 +85,13 @@ func (db *DB) migrateSourceColumn() {
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
+		constants.SQLDropGoRunnableFiles,
+		constants.SQLDropGoProjectMetadata,
+		constants.SQLDropCSharpKeyFiles,
+		constants.SQLDropCSharpProjectFiles,
+		constants.SQLDropCSharpProjectMeta,
+		constants.SQLDropDetectedProjects,
+		constants.SQLDropProjectTypes,
 		constants.SQLDropGroupRepos,
 		constants.SQLDropGroups,
 		constants.SQLDropReleases,
