@@ -27,7 +27,8 @@
 | `model/projecttype.go`            | ProjectType struct                          |
 | `model/gometadata.go`             | GoProjectMetadata + GoRunnableFile structs  |
 | `model/csharpmetadata.go`         | CSharpProjectMetadata + related structs     |
-| `constants/constants_project.go`  | Project detection constants                 |
+| `constants/constants_project.go`  | IDs, keys, table names, indicators, commands, messages, errors |
+| `constants/constants_project_sql.go` | All SQL statements (create, upsert, query, cleanup, drop) |
 
 ---
 
