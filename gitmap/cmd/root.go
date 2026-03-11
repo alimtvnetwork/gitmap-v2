@@ -38,6 +38,11 @@ func dispatch(command string) {
 
 		return
 	}
+	if dispatchProjectRepos(command) {
+		recordAuditEnd(auditID, auditStart, 0, "", 0)
+
+		return
+	}
 
 	fmt.Fprintf(os.Stderr, constants.ErrUnknownCommand, command)
 	printUsage()
@@ -266,6 +271,37 @@ func dispatchMisc(command string) bool {
 	}
 	if command == constants.CmdGoMod || command == constants.CmdGoModAlias {
 		runGoMod(os.Args[2:])
+
+		return true
+	}
+
+	return false
+}
+
+// dispatchProjectRepos routes project type query commands.
+func dispatchProjectRepos(command string) bool {
+	if command == constants.CmdGoRepos || command == constants.CmdGoReposAlias {
+		runProjectRepos(constants.ProjectKeyGo, os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdNodeRepos || command == constants.CmdNodeReposAlias {
+		runProjectRepos(constants.ProjectKeyNode, os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdReactRepos || command == constants.CmdReactReposAlias {
+		runProjectRepos(constants.ProjectKeyReact, os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdCppRepos || command == constants.CmdCppReposAlias {
+		runProjectRepos(constants.ProjectKeyCpp, os.Args[2:])
+
+		return true
+	}
+	if command == constants.CmdCSharpRepos || command == constants.CmdCSharpAlias {
+		runProjectRepos(constants.ProjectKeyCSharp, os.Args[2:])
 
 		return true
 	}

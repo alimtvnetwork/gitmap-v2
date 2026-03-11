@@ -10,6 +10,7 @@ import (
 	"github.com/user/gitmap/config"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
+	"github.com/user/gitmap/detector"
 	"github.com/user/gitmap/mapper"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/scanner"
@@ -48,8 +49,11 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
 	writeAllOutputs(records, outputDir, outFile, quiet)
+	detected := detectAllProjects(records)
+	writeProjectJSONFiles(detected, outputDir)
 	saveScanCache(outputDir, cache)
 	upsertToDB(records, outputDir)
+	upsertProjectsToDB(detected, records, outputDir)
 	importReleases(absDir, outputDir)
 	addToDesktop(records, ghDesktop)
 	openOutputFolder(outputDir, openFolder)

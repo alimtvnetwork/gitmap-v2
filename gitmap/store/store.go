@@ -57,6 +57,13 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateAmendments,
 		constants.SQLCreateCommandHistory,
 		constants.SQLCreateBookmarks,
+		constants.SQLCreateProjectTypes,
+		constants.SQLCreateDetectedProjects,
+		constants.SQLCreateGoProjectMetadata,
+		constants.SQLCreateGoRunnableFiles,
+		constants.SQLCreateCSharpProjectMeta,
+		constants.SQLCreateCSharpProjectFiles,
+		constants.SQLCreateCSharpKeyFiles,
 	}
 
 	for _, stmt := range statements {
@@ -67,7 +74,7 @@ func (db *DB) Migrate() error {
 
 	db.migrateSourceColumn()
 
-	return nil
+	return db.SeedProjectTypes()
 }
 
 // migrateSourceColumn adds the Source column to existing Releases tables.
@@ -78,6 +85,13 @@ func (db *DB) migrateSourceColumn() {
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
+		constants.SQLDropGoRunnableFiles,
+		constants.SQLDropGoProjectMetadata,
+		constants.SQLDropCSharpKeyFiles,
+		constants.SQLDropCSharpProjectFiles,
+		constants.SQLDropCSharpProjectMeta,
+		constants.SQLDropDetectedProjects,
+		constants.SQLDropProjectTypes,
 		constants.SQLDropGroupRepos,
 		constants.SQLDropGroups,
 		constants.SQLDropReleases,

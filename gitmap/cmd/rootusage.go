@@ -60,6 +60,11 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpDiffProfiles)
 	fmt.Println(constants.HelpWatch)
 	fmt.Println(constants.HelpGoMod)
+	fmt.Println(constants.HelpGoRepos)
+	fmt.Println(constants.HelpNodeRepos)
+	fmt.Println(constants.HelpReactRepos)
+	fmt.Println(constants.HelpCppRepos)
+	fmt.Println(constants.HelpCSharpRepos)
 	fmt.Println(constants.HelpHelp)
 }
 
