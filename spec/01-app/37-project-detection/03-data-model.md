@@ -3,11 +3,14 @@
 ## Table Relationships
 
 ```
-ProjectTypes (1) ──── (N) DetectedProjects (1) ──── (N) GoProjectMetadata
-                              │                              │
-                              │                    (1) ──── (N) GoRunnableFiles
+ProjectTypes (1) ──── (N) DetectedProjects (1) ──── (0..1) GoProjectMetadata
+                              │                                │
+                              │                      (1) ──── (N) GoRunnableFiles
                               │
-                              ├──── (N) CSharpProjectMetadata
+                              ├──── (0..1) CSharpProjectMetadata
+                              │               │
+                              │     (1) ──── (N) CSharpProjectFiles
+                              │     (1) ──── (N) CSharpKeyFiles
                               │
 Repos (1) ─────────── (N) DetectedProjects
 ```
