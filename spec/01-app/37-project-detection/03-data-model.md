@@ -157,7 +157,14 @@ WHERE RepoId = ? AND Id NOT IN (?, ?, ...)
 
 ### Drop Tables
 
+Drop order must respect foreign key dependencies (children first):
+
 ```sql
+DROP TABLE IF EXISTS GoRunnableFiles
+DROP TABLE IF EXISTS GoProjectMetadata
+DROP TABLE IF EXISTS CSharpKeyFiles
+DROP TABLE IF EXISTS CSharpProjectFiles
+DROP TABLE IF EXISTS CSharpProjectMetadata
 DROP TABLE IF EXISTS DetectedProjects
 DROP TABLE IF EXISTS ProjectTypes
 ```
