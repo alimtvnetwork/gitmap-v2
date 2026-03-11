@@ -3,11 +3,14 @@
 ## Table Relationships
 
 ```
-ProjectTypes (1) ──── (N) DetectedProjects (1) ──── (N) GoProjectMetadata
-                              │                              │
-                              │                    (1) ──── (N) GoRunnableFiles
+ProjectTypes (1) ──── (N) DetectedProjects (1) ──── (0..1) GoProjectMetadata
+                              │                                │
+                              │                      (1) ──── (N) GoRunnableFiles
                               │
-                              ├──── (N) CSharpProjectMetadata
+                              ├──── (0..1) CSharpProjectMetadata
+                              │               │
+                              │     (1) ──── (N) CSharpProjectFiles
+                              │     (1) ──── (N) CSharpKeyFiles
                               │
 Repos (1) ─────────── (N) DetectedProjects
 ```
@@ -26,7 +29,8 @@ A reference table for all supported project types.
 | Description | TEXT    | DEFAULT ''        | Human-readable description     |
 
 **Seeding:** This table is seeded during migration with all supported
-project types. The `Id` values are stable UUIDs defined in constants.
+project types. The `Id` values are stable UUIDs (v4) defined in
+constants. Example: `"b3f1a2c4-..."` — never short strings like `"pt-go"`.
 
 ---
 
@@ -57,6 +61,23 @@ On each scan, after upserting all detected projects for a repo, delete
 any `DetectedProjects` rows for that `RepoId` that were **not**
 upserted in the current scan. This handles removed projects.
 
+Because `GoProjectMetadata`, `CSharpProjectMetadata`, and their child
+tables use `ON DELETE CASCADE` from `DetectedProjects`, deleting a
+stale `DetectedProjects` row automatically removes all associated
+metadata, runnables, project files, and key files.
+
+### Orphaned Child Record Cleanup
+
+When a parent project **still exists** but child records change
+(e.g., a Go `cmd/` subdirectory is deleted, or a C# `.csproj` is
+removed), the cleanup works per-table:
+
+- **GoRunnableFiles:** After upserting all runnables for a
+  `GoMetadataId`, delete rows for that `GoMetadataId` whose `Id` was
+  **not** in the current upsert batch.
+- **CSharpProjectFiles:** Same pattern per `CSharpMetadataId`.
+- **CSharpKeyFiles:** Same pattern per `CSharpMetadataId`.
+
 ---
 
 ## SQL Statements
@@ -76,11 +97,11 @@ CREATE TABLE IF NOT EXISTS ProjectTypes (
 
 ```sql
 INSERT OR IGNORE INTO ProjectTypes (Id, Key, Name, Description) VALUES
-    ('pt-go',     'go',     'Go',      'Go modules and packages'),
-    ('pt-node',   'node',   'Node.js', 'Node.js projects'),
-    ('pt-react',  'react',  'React',   'React applications'),
-    ('pt-cpp',    'cpp',    'C++',     'C and C++ projects'),
-    ('pt-csharp', 'csharp', 'C#',      '.NET and C# projects')
+    ('b3f1a2c4-5d6e-4f7a-8b9c-0d1e2f3a4b5c', 'go',     'Go',      'Go modules and packages'),
+    ('c4d2b3e5-6f7a-4e8b-9c0d-1e2f3a4b5c6d', 'node',   'Node.js', 'Node.js projects'),
+    ('d5e3c4f6-7a8b-4f9c-0d1e-2f3a4b5c6d7e', 'react',  'React',   'React applications'),
+    ('e6f4d5a7-8b9c-4a0d-1e2f-3a4b5c6d7e8f', 'cpp',    'C++',     'C and C++ projects'),
+    ('f7a5e6b8-9c0d-4b1e-2f3a-4b5c6d7e8f9a', 'csharp', 'C#',      '.NET and C# projects')
 ```
 
 ### Create DetectedProjects
@@ -136,7 +157,14 @@ WHERE RepoId = ? AND Id NOT IN (?, ?, ...)
 
 ### Drop Tables
 
+Drop order must respect foreign key dependencies (children first):
+
 ```sql
+DROP TABLE IF EXISTS GoRunnableFiles
+DROP TABLE IF EXISTS GoProjectMetadata
+DROP TABLE IF EXISTS CSharpKeyFiles
+DROP TABLE IF EXISTS CSharpProjectFiles
+DROP TABLE IF EXISTS CSharpProjectMetadata
 DROP TABLE IF EXISTS DetectedProjects
 DROP TABLE IF EXISTS ProjectTypes
 ```
