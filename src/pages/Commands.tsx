@@ -75,12 +75,14 @@ const CommandsPage = () => {
             const cmds = filtered.filter((c) => c.category === cat.key);
             if (cmds.length === 0) return null;
             return (
-              <CommandCategoryGroup
-                key={cat.key}
-                label={cat.label}
-                description={cat.description}
-                commands={cmds}
-              />
+              <div key={cat.key} ref={(el) => { categoryRefs.current[cat.key] = el; }}>
+                <CommandCategoryGroup
+                  label={cat.label}
+                  description={cat.description}
+                  commands={cmds}
+                  forceOpen={forceOpen === cat.key}
+                />
+              </div>
             );
           })
         )}

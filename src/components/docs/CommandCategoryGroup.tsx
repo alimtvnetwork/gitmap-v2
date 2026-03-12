@@ -9,10 +9,15 @@ interface Props {
   description: string;
   commands: CommandDef[];
   defaultOpen?: boolean;
+  forceOpen?: boolean;
 }
 
-const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true }: Props) => {
+const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen }: Props) => {
   const [open, setOpen] = useState(defaultOpen);
+
+  if (forceOpen && !open) {
+    setOpen(true);
+  }
 
   return (
     <div className="rounded-lg border border-border overflow-hidden">
