@@ -179,7 +179,7 @@ gitmap go-repos
 gitmap csharp-repos --json
 ```
 
-→ Full details: [go-repos](gitmap/help/go-repos.md) · [node-repos](gitmap/help/node-repos.md) · [react-repos](gitmap/help/react-repos.md) · [cpp-repos](gitmap/help/cpp-repos.md) · [csharp-repos](gitmap/help/csharp-repos.md)
+→ Full details: [go-repos](gitmap/helptext/go-repos.md) · [node-repos](gitmap/helptext/node-repos.md) · [react-repos](gitmap/helptext/react-repos.md) · [cpp-repos](gitmap/helptext/cpp-repos.md) · [csharp-repos](gitmap/helptext/csharp-repos.md)
 
 ### Data & Profiles
 
