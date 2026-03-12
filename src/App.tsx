@@ -41,6 +41,7 @@ const App = () => (
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/project-detection" element={<ProjectDetectionPage />} />
+          <Route path="/generic-cli" element={<GenericCLIPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

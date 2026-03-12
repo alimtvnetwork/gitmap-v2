@@ -47,6 +47,7 @@ const navItems = [
   { title: "History", url: "/history", icon: Clock },
   { title: "Stats", url: "/stats", icon: BarChart3 },
   { title: "Detection", url: "/project-detection", icon: Search },
+  { title: "Generic CLI", url: "/generic-cli", icon: Terminal },
 ];
 
 export function DocsSidebar() {
