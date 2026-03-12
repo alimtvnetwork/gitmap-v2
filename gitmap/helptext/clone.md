@@ -32,8 +32,6 @@ c
 
     Cloning from gitmap-output/gitmap.json...
     [1/12] Cloning my-api... done
-    [2/12] Cloning web-app... done
-    [3/12] Cloning shared-lib... done
     ✓ 12 repositories cloned
 
 ### Example 2: Clone with safe-pull for existing repos
@@ -42,7 +40,6 @@ c
 
 **Output:**
 
-    Cloning from gitmap-output/gitmap.csv...
-    [1/8] my-api already exists, pulling... done
+    [1/8] my-api exists, pulling... done
     [2/8] Cloning web-app... done
     ✓ 8 repositories processed

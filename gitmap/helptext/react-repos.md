@@ -28,9 +28,8 @@ rr
 
 **Output:**
 
-    Repository        Package Name         React Version
-    web-app           @user/web-app        18.2.0
-    docs-site         docs-site            18.2.0
+    web-app    @user/web-app  18.2.0
+    docs-site  docs-site      18.2.0
     2 React projects detected
 
 ### Example 2: JSON output

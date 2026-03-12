@@ -26,12 +26,8 @@ None.
 
 **Output:**
 
-    GitMap Setup
-    ─────────────
     Applying global Git configuration...
-    ✓ core.autocrlf = true
-    ✓ push.default = current
-    ✓ pull.rebase = true
+    ✓ 3 settings applied
     Setup complete.
 
 ### Example 2: Re-run setup (safe to repeat)
@@ -40,7 +36,5 @@ None.
 
 **Output:**
 
-    GitMap Setup
-    ─────────────
     All settings already applied.
     Setup complete.

@@ -28,9 +28,8 @@ nr
 
 **Output:**
 
-    Repository        Package Name         Node Version
-    web-app           @user/web-app        18.x
-    docs-site         docs-site            20.x
+    web-app    @user/web-app  18.x
+    docs-site  docs-site      20.x
     2 Node.js projects detected
 
 ### Example 2: JSON output

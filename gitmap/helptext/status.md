@@ -29,10 +29,8 @@ st
 
 **Output:**
 
-    Repository        Branch   Status   Ahead  Behind
-    my-api            main     clean    0      0
-    web-app           develop  dirty    2      1
-    shared-lib        main     clean    0      3
+    my-api       main     clean   0/0
+    web-app      develop  dirty   2/1
     ✓ 3 repos (1 dirty, 2 clean)
 
 ### Example 2: Status of a group
@@ -41,7 +39,6 @@ st
 
 **Output:**
 
-    Repository        Branch   Status   Ahead  Behind
-    billing-svc       main     clean    0      0
-    auth-gateway      main     dirty    1      0
+    billing-svc  main  clean  0/0
+    auth-gateway main  dirty  1/0
     ✓ 2 repos (group: work)

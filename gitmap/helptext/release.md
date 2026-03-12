@@ -34,10 +34,8 @@ r
 
 **Output:**
 
-    Current version: v2.3.9
-    New version: v2.3.10
+    v2.3.9 → v2.3.10
     Creating tag v2.3.10... done
-    Pushing to origin... done
     ✓ Released v2.3.10
 
 ### Example 2: Dry-run preview
@@ -46,10 +44,8 @@ r
 
 **Output:**
 
-    [DRY RUN] Current version: v2.3.10
-    [DRY RUN] New version: v2.4.0
-    [DRY RUN] Would create tag v2.4.0
-    [DRY RUN] Would push to origin
+    [DRY RUN] v2.3.10 → v2.4.0
+    [DRY RUN] Would create tag and push
     No changes made.
 
 ### Example 3: Release with assets
@@ -60,5 +56,4 @@ r
 
     Creating tag v3.0.0... done
     Attaching assets... done
-    Pushing to origin... done
     ✓ Released v3.0.0

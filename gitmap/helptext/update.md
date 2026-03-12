@@ -27,12 +27,8 @@ None.
 
 **Output:**
 
-    Checking for updates...
-    Current: v2.5.0
-    Latest:  v2.8.0
-    Pulling latest... done
-    Building... done
-    Deploying to E:\bin-run... done
+    v2.5.0 → v2.8.0
+    Building and deploying... done
     ✓ Updated to v2.8.0
 
 ### Example 2: Already up to date
@@ -41,6 +37,5 @@ None.
 
 **Output:**
 
-    Checking for updates...
     Current: v2.8.0
     ✓ Already up to date.

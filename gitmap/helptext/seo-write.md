@@ -45,8 +45,7 @@ sw
 **Output:**
 
     Loading SEO data from data.csv...
-    [1/5] Committing: "Best plumber in Seattle"... done
-    [2/5] Committing: "Emergency plumbing 24/7"... done
+    [1/5] "Best plumber in Seattle"... done
     ✓ 5 commits created
 
 ### Example 2: Dry-run preview
@@ -55,6 +54,6 @@ sw
 
 **Output:**
 
-    [DRY RUN] Would commit: "Best plumber in Seattle"
-    [DRY RUN] Would commit: "Emergency plumbing 24/7"
+    [DRY RUN] "Best plumber in Seattle"
+    [DRY RUN] "Emergency plumbing 24/7"
     No changes made.

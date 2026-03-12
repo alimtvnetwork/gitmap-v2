@@ -28,7 +28,6 @@ None.
 **Output:**
 
     Reverting to v2.5.0...
-    Checked out tag v2.5.0
     Rebuilding... done
     ✓ Reverted to v2.5.0
 
@@ -39,6 +38,5 @@ None.
 **Output:**
 
     Reverting to v2.3.7...
-    Checked out tag v2.3.7
     Rebuilding... done
     ✓ Reverted to v2.3.7

@@ -28,10 +28,8 @@ rp
 
 **Output:**
 
-    Unreleased commits since v2.3.10:
+    Unreleased since v2.3.10:
     abc1234 Add user auth endpoint
-    def5678 Fix pagination bug
-    ghi9012 Update README
     3 commits pending release
 
 ### Example 2: JSON output

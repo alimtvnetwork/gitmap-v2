@@ -34,9 +34,8 @@ None.
 
 **Output:**
 
-    Name          Command
-    daily-scan    scan ~/projects --quiet
-    work-pull     pull --group work
+    daily-scan  scan ~/projects --quiet
+    work-pull   pull --group work
     2 bookmarks
 
 ### Example 3: Run a bookmark
@@ -45,6 +44,6 @@ None.
 
 **Output:**
 
-    Running bookmark 'daily-scan': scan ~/projects --quiet
-    Scanning ~/projects...
+    Running 'daily-scan'...
     Found 42 repositories
+    ✓ Scan complete

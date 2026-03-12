@@ -40,9 +40,8 @@ g
 
 **Output:**
 
-    Group     Repos  Description
-    work      5      Work repositories
-    personal  3      Personal projects
+    work      5 repos   Work repositories
+    personal  3 repos   Personal projects
     2 groups
 
 ### Example 3: Show group details
@@ -52,7 +51,5 @@ g
 **Output:**
 
     Group: work (5 repos)
-    Description: Work repositories
-      billing-svc       ~/work/billing-svc
-      auth-gateway      ~/work/auth-gateway
-      web-app           ~/projects/web-app
+    billing-svc   ~/work/billing-svc
+    auth-gateway  ~/work/auth-gateway

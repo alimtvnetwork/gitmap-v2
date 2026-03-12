@@ -32,12 +32,8 @@ gm
 
 **Output:**
 
-    Old module: github.com/oldorg/myproject
-    New module: github.com/neworg/myproject
-    Creating branch gomod-rename... done
     Replacing in 24 files... done
     Running go mod tidy... done
-    Merging to main... done
     ✓ Module renamed
 
 ### Example 2: Dry-run with specific extensions
@@ -46,8 +42,7 @@ gm
 
 **Output:**
 
-    [DRY RUN] Would replace in 18 .go files
-    [DRY RUN] Would replace in 3 .md files
+    [DRY RUN] 18 .go files, 3 .md files
     No changes made.
 
 ### Example 3: Rename without merge
@@ -57,6 +52,5 @@ gm
 **Output:**
 
     Replacing in cmd/root.go... done
-    Replacing in main.go... done
-    Committed on branch gomod-rename (not merged)
+    Committed on gomod-rename (not merged)
     ✓ 24 files updated

@@ -29,11 +29,9 @@ hi
 
 **Output:**
 
-    #   Command                    Time
-    1   scan ~/projects            2025-03-10 14:30
-    2   clone json                 2025-03-10 14:32
-    3   status --all               2025-03-10 15:00
-    3 entries
+    1  scan ~/projects       2025-03-10 14:30
+    2  clone json            2025-03-10 14:32
+    3  status --all          2025-03-10 15:00
 
 ### Example 2: Last 5 entries as JSON
 

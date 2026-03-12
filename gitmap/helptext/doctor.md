@@ -28,13 +28,9 @@ None
 
 **Output:**
 
-    GitMap Doctor
-    ─────────────
     ✓ Git installed (v2.43.0)
-    ✓ gitmap binary found at E:\bin-run\gitmap.exe
-    ✓ PATH includes E:\bin-run
-    ✗ Stale binary detected in C:\old\gitmap.exe
-    1 issue found
+    ✓ Binary at E:\bin-run\gitmap.exe
+    ✗ Stale binary in C:\old\ — 1 issue
 
 ### Example 2: Fix PATH issues
 
@@ -42,8 +38,6 @@ None
 
 **Output:**
 
-    GitMap Doctor
-    ─────────────
     ✓ Git installed (v2.43.0)
-    ✓ Fixed: removed stale binary from C:\old\
+    ✓ Fixed: removed stale binary
     All checks passed.

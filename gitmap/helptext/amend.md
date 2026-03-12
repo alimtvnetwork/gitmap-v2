@@ -42,7 +42,6 @@ am
 
 **Output:**
 
-    [DRY RUN] Would amend commit abc1234
-    [DRY RUN] Old: Old Name <old@email.com>
-    [DRY RUN] New: Jane <jane@co.com>
+    [DRY RUN] abc1234: Old Name → Jane
+    [DRY RUN] old@email.com → jane@co.com
     No changes made.

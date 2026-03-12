@@ -28,9 +28,8 @@ al
 
 **Output:**
 
-    #   Commit    Old Author             New Author             Date
-    1   abc1234   old@email.com          john@example.com       2025-03-10
-    2   def5678   other@email.com        jane@co.com            2025-03-09
+    1  abc1234  old@email.com → john@example.com  2025-03-10
+    2  def5678  other@email.com → jane@co.com     2025-03-09
     2 amendments
 
 ### Example 2: JSON output

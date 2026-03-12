@@ -28,7 +28,6 @@ None.
 
     Importing from gitmap-export.json...
     [1/42] my-api... added
-    [2/42] web-app... added
     ✓ 42 repos imported
 
 ### Example 2: Import using alias
@@ -38,4 +37,4 @@ None.
 **Output:**
 
     Importing from backup.json...
-    ✓ 15 repos imported (3 skipped, already exist)
+    ✓ 15 repos imported (3 skipped)

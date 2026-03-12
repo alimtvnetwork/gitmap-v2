@@ -28,9 +28,8 @@ csr
 
 **Output:**
 
-    Repository        Solution           Target Framework
-    billing-svc       BillingSvc.sln     net8.0
-    auth-api          AuthApi.sln        net7.0
+    billing-svc  BillingSvc.sln  net8.0
+    auth-api     AuthApi.sln     net7.0
     2 C# projects detected
 
 ### Example 2: JSON output

@@ -29,7 +29,6 @@ None.
 
     Syncing 42 repos to GitHub Desktop...
     [1/42] my-api... added
-    [2/42] web-app... already registered
     ✓ 42 repos synced (15 new, 27 existing)
 
 ### Example 2: Using alias
@@ -38,5 +37,5 @@ None.
 
 **Output:**
 
-    Syncing 42 repos to GitHub Desktop...
+    Syncing 42 repos...
     ✓ 42 repos synced

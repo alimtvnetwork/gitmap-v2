@@ -28,10 +28,8 @@ gr
 
 **Output:**
 
-    Repository        Module Path                    Go Version
-    my-api            github.com/user/my-api         1.22
-    shared-lib        github.com/user/shared-lib     1.21
-    gitmap            github.com/user/gitmap         1.22
+    my-api      github.com/user/my-api      1.22
+    shared-lib  github.com/user/shared-lib  1.21
     3 Go projects detected
 
 ### Example 2: JSON output

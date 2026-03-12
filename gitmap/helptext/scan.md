@@ -36,10 +36,7 @@ s
 
     Scanning ~/projects...
     Found 42 repositories
-    Output written to ./gitmap-output/
-    ✓ gitmap-repos.csv
-    ✓ gitmap-repos.json
-    ✓ terminal summary
+    ✓ Output written to ./gitmap-output/
 
 ### Example 2: JSON output with SSH URLs
 
@@ -49,7 +46,6 @@ s
 
     Scanning ~/work...
     Found 18 repositories
-    Output written to ./gitmap-output/
     ✓ gitmap-repos.json (SSH URLs)
 
 ### Example 3: Scan and open output folder
@@ -58,6 +54,6 @@ s
 
 **Output:**
 
-    Scanning current directory...
     Found 7 repositories
-    Opening ./gitmap-output/
+    ✓ Output written to ./gitmap-output/
+    Opening folder...

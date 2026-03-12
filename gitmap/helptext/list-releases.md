@@ -29,10 +29,8 @@ lr
 
 **Output:**
 
-    Version   Date         Source   Commits
-    v2.8.0    2025-03-10   manual   12
-    v2.5.0    2025-03-01   scan     8
-    v2.4.0    2025-02-20   scan     15
+    v2.8.0  2025-03-10  manual  12 commits
+    v2.5.0  2025-03-01  scan     8 commits
     3 releases found
 
 ### Example 2: Filter by source
@@ -41,4 +39,4 @@ lr
 
 **Output:**
 
-    [{"version":"v2.5.0","date":"2025-03-01","source":"scan","commits":8}]
+    [{"version":"v2.5.0","date":"2025-03-01","source":"scan"}]

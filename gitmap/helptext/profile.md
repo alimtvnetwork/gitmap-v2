@@ -36,10 +36,8 @@ None.
 
 **Output:**
 
-    Profile     Repos   Active
-    default     42      
-    work        18      ✓
-    personal    7       
+    default  42 repos
+    work     18 repos  ✓ active
     3 profiles
 
 ### Example 3: Show current profile

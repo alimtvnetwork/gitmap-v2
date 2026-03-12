@@ -28,9 +28,8 @@ cr
 
 **Output:**
 
-    Repository        Build System   Path
-    game-engine       CMake          ~/projects/game-engine
-    codec-lib         Makefile       ~/work/codec-lib
+    game-engine  CMake     ~/projects/game-engine
+    codec-lib    Makefile  ~/work/codec-lib
     2 C++ projects detected
 
 ### Example 2: JSON output
@@ -39,4 +38,4 @@ cr
 
 **Output:**
 
-    [{"repo":"game-engine","build_system":"CMake","path":"~/projects/game-engine"}]
+    [{"repo":"game-engine","build_system":"CMake"}]

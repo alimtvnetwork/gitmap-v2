@@ -28,7 +28,6 @@ None (all arguments are passed directly to git).
 
     [my-api] git fetch --prune... done
     [web-app] git fetch --prune... done
-    [shared-lib] git fetch --prune... done
     ✓ 3 repos processed
 
 ### Example 2: Check remote URLs
@@ -37,6 +36,6 @@ None (all arguments are passed directly to git).
 
 **Output:**
 
-    [my-api] origin  https://github.com/user/my-api.git (fetch)
-    [web-app] origin  https://github.com/user/web-app.git (fetch)
+    [my-api] origin https://github.com/user/my-api.git
+    [web-app] origin https://github.com/user/web-app.git
     ✓ 2 repos processed

@@ -29,10 +29,8 @@ dp
 
 **Output:**
 
-    Only in 'home':
-      personal-blog     ~/home/personal-blog
-    Only in 'work':
-      billing-svc       ~/work/billing-svc
+    Only in 'home': personal-blog
+    Only in 'work': billing-svc
     Common: 12 repos
 
 ### Example 2: Full comparison as JSON
@@ -41,4 +39,4 @@ dp
 
 **Output:**
 
-    {"only_a":["personal-blog"],"only_b":["billing-svc"],"common":["my-api","web-app"]}
+    {"only_a":["personal-blog"],"only_b":["billing-svc"],"common":12}

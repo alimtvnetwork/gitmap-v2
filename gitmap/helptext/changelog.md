@@ -33,7 +33,6 @@ cl
     v2.3.10 — 2025-03-10
     - Add user auth endpoint
     - Fix pagination bug
-    - Update README
 
 ### Example 2: Show changelog for a specific version
 

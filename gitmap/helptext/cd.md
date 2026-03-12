@@ -39,10 +39,8 @@ go
 
 **Output:**
 
-    Select a repository:
-      1. my-api          ~/projects/my-api
-      2. web-app         ~/projects/web-app
-      3. shared-lib      ~/work/shared-lib
+    1. my-api      ~/projects/my-api
+    2. web-app     ~/projects/web-app
     Enter number: _
 
 ### Example 3: Pick from a specific group
@@ -51,7 +49,6 @@ go
 
 **Output:**
 
-    Select a repository (group: work):
-      1. billing-svc     ~/work/billing-svc
-      2. auth-gateway    ~/work/auth-gateway
+    1. billing-svc   ~/work/billing-svc
+    2. auth-gateway  ~/work/auth-gateway
     Enter number: _

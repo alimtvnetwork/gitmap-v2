@@ -31,11 +31,8 @@ w
 
 **Output:**
 
-    Watching 42 repos (interval: 30s)  Press Ctrl+C to stop
-    ─────────────────────────────────────────────
-    Repository        Branch   Status   Behind
-    my-api            main     clean    0
-    web-app           develop  dirty    2
+    Watching 42 repos (30s) — Ctrl+C to stop
+    my-api  main  clean | web-app  develop  dirty
     Refreshing in 28s...
 
 ### Example 2: Watch a group with fast refresh
@@ -44,10 +41,9 @@ w
 
 **Output:**
 
-    Watching 5 repos (group: work, interval: 10s)
-    ─────────────────────────────────────────────
-    billing-svc       main     clean    0
-    auth-gateway      main     clean    0
+    Watching 5 repos (group: work, 10s)
+    billing-svc  main  clean
+    auth-gateway main  clean
 
 ### Example 3: Single JSON snapshot
 
@@ -55,4 +51,4 @@ w
 
 **Output:**
 
-    [{"name":"my-api","branch":"main","status":"clean","behind":0}]
+    [{"name":"my-api","branch":"main","status":"clean"}]

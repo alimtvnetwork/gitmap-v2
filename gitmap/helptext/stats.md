@@ -28,10 +28,8 @@ ss
 
 **Output:**
 
-    Command          Runs   Avg Time   Last Run
-    scan             15     2.3s       2025-03-10
-    clone            8      12.1s      2025-03-09
-    status           42     0.8s       2025-03-10
+    scan   15 runs  2.3s avg
+    clone   8 runs  12.1s avg
     Total: 65 executions
 
 ### Example 2: Stats as JSON
@@ -40,4 +38,4 @@ ss
 
 **Output:**
 
-    [{"command":"scan","runs":15,"avg_ms":2300,"last":"2025-03-10"}]
+    [{"command":"scan","runs":15,"avg_ms":2300}]

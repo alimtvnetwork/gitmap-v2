@@ -29,10 +29,8 @@ ls
 
 **Output:**
 
-    Slug              Path
-    my-api            ~/projects/my-api
-    web-app           ~/projects/web-app
-    shared-lib        ~/work/shared-lib
+    my-api       ~/projects/my-api
+    web-app      ~/projects/web-app
     3 repos tracked
 
 ### Example 2: List repos in a group
@@ -41,7 +39,6 @@ ls
 
 **Output:**
 
-    Slug              Path                        Branch   Remote
-    billing-svc       ~/work/billing-svc          main     origin
-    auth-gateway      ~/work/auth-gateway         main     origin
+    billing-svc   ~/work/billing-svc   main  origin
+    auth-gateway  ~/work/auth-gateway  main  origin
     2 repos in group 'work'

@@ -41,8 +41,6 @@ p
 
     Pulling 5 repos in group 'work'...
     [1/5] billing-svc... updated (3 commits)
-    [2/5] auth-gateway... already up to date
-    [3/5] web-app... updated (1 commit)
     ✓ 5 repos pulled
 
 ### Example 3: Pull all tracked repos
@@ -52,6 +50,5 @@ p
 **Output:**
 
     Pulling 42 tracked repos...
-    [1/42] my-api (~/projects/my-api)... updated
-    [2/42] web-app (~/projects/web-app)... up to date
+    [1/42] my-api... updated
     ✓ 42 repos pulled (12 updated, 30 up to date)
