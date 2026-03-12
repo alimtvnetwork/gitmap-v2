@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         sans: ["Poppins", "system-ui", "sans-serif"],
         heading: ["Ubuntu", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        mono: ["Ubuntu Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
