@@ -11,6 +11,7 @@ interface Props {
   defaultOpen?: boolean;
   forceOpen?: boolean;
   onNavigate?: (commandName: string) => void;
+  commandRefs?: React.MutableRefObject<Record<string, HTMLDivElement | null>>;
 }
 
 const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen, onNavigate }: Props) => {
