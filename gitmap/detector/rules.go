@@ -51,7 +51,7 @@ func detectCSharpSln(name, dir, repoPath, repoID, repoName string, results *[]De
 	projName := strings.TrimSuffix(name, constants.ExtSln)
 	result := buildBaseResult(dir, repoPath, repoID, repoName,
 		constants.ProjectTypeCSharpID, constants.ProjectKeyCSharp, projName, name)
-	meta := parseCSharpProject(dir, repoPath)
+	meta := parseCSharpProject(dir, repoPath, result.Project.ID)
 	result.CSharp = meta
 	*results = append(*results, result)
 }
