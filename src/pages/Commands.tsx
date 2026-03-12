@@ -132,11 +132,11 @@ const commands = [
     usage: "gitmap bookmark <save|list|run|delete> [args]",
   },
   {
-    name: "export", alias: "exp", description: "Export database to file",
+    name: "export", alias: "ex", description: "Export database to file",
     usage: "gitmap export [--json]",
   },
   {
-    name: "import", alias: "imp", description: "Import repos from file",
+    name: "import", alias: "im", description: "Import repos from file",
     usage: "gitmap import <file>",
   },
   {
@@ -159,6 +159,86 @@ const commands = [
       { command: 'gitmap gomod "github.com/new/name" --dry-run', description: "Preview what would change" },
       { command: 'gitmap gomod "github.com/new/name" --no-merge', description: "Replace but stay on feature branch" },
     ],
+  },
+  {
+    name: "rescan", alias: "rs", description: "Re-scan previously scanned directories",
+    usage: "gitmap rescan [--output csv|json|terminal]",
+  },
+  {
+    name: "setup", alias: undefined, description: "Interactive first-time configuration wizard",
+    usage: "gitmap setup",
+  },
+  {
+    name: "desktop-sync", alias: "ds", description: "Sync tracked repos with GitHub Desktop",
+    usage: "gitmap desktop-sync",
+  },
+  {
+    name: "release-branch", alias: "rb", description: "Create a release branch without tagging",
+    usage: "gitmap release-branch [version] [--bump major|minor|patch]",
+  },
+  {
+    name: "release-pending", alias: "rp", description: "Show unreleased commits since last tag",
+    usage: "gitmap release-pending [--json]",
+  },
+  {
+    name: "db-reset", alias: undefined, description: "Reset the local SQLite database",
+    usage: "gitmap db-reset [--confirm]",
+  },
+  {
+    name: "list-versions", alias: "lv", description: "List all available Git release tags",
+    usage: "gitmap list-versions [--json] [--limit N]",
+    flags: [
+      { flag: "--json", description: "Output as structured JSON" },
+      { flag: "--limit N", description: "Show only the top N versions (0 = all)" },
+    ],
+  },
+  {
+    name: "list-releases", alias: "lr", description: "List release metadata from the database",
+    usage: "gitmap list-releases [--json] [--source manual|scan]",
+    flags: [
+      { flag: "--json", description: "Output as structured JSON" },
+      { flag: "--source <type>", description: "Filter by release source" },
+    ],
+  },
+  {
+    name: "amend-list", alias: "al", description: "List previous author amendments",
+    usage: "gitmap amend-list [--json]",
+  },
+  {
+    name: "history", alias: "hi", description: "Show CLI command execution history",
+    usage: "gitmap history [--limit N] [--json]",
+    flags: [
+      { flag: "--limit N", description: "Number of entries to show" },
+      { flag: "--json", description: "Output as structured JSON" },
+    ],
+  },
+  {
+    name: "history-reset", alias: "hr", description: "Clear command execution history",
+    usage: "gitmap history-reset [--confirm]",
+  },
+  {
+    name: "stats", alias: "ss", description: "Show aggregated usage and performance metrics",
+    usage: "gitmap stats [--json]",
+  },
+  {
+    name: "go-repos", alias: "gr", description: "List detected Go projects",
+    usage: "gitmap go-repos [--json]",
+  },
+  {
+    name: "node-repos", alias: "nr", description: "List detected Node.js projects",
+    usage: "gitmap node-repos [--json]",
+  },
+  {
+    name: "react-repos", alias: "rr", description: "List detected React projects",
+    usage: "gitmap react-repos [--json]",
+  },
+  {
+    name: "cpp-repos", alias: "cr", description: "List detected C++ projects",
+    usage: "gitmap cpp-repos [--json]",
+  },
+  {
+    name: "csharp-repos", alias: "csr", description: "List detected C# projects",
+    usage: "gitmap csharp-repos [--json]",
   },
 ];
 
