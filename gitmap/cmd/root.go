@@ -157,6 +157,7 @@ func dispatchUtility(command string) bool {
 // dispatchMisc routes remaining miscellaneous commands.
 func dispatchMisc(command string) bool {
 	if command == constants.CmdDesktopSync || command == constants.CmdDesktopSyncAlias {
+		checkHelp("desktop-sync", os.Args[2:])
 		runDesktopSync()
 
 		return true
