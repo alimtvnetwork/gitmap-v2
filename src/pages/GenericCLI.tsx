@@ -81,6 +81,7 @@ const sections = [
   { id: "checklist", label: "Implementation Checklist" },
   { id: "dates", label: "Date Formatting" },
   { id: "constants", label: "Constants Reference" },
+  { id: "verbose", label: "Verbose Logging" },
 ];
 
 const GenericCLIPage = () => {
