@@ -11,6 +11,9 @@ import {
   Sun,
   Moon,
   FolderGit2,
+  Clock,
+  BarChart3,
+  Search,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -40,6 +43,9 @@ const navItems = [
   { title: "GoMod", url: "/gomod", icon: GitBranch },
   { title: "Projects", url: "/projects", icon: FolderGit2 },
   { title: "Makefile", url: "/makefile", icon: Hammer },
+  { title: "History", url: "/history", icon: Clock },
+  { title: "Stats", url: "/stats", icon: BarChart3 },
+  { title: "Detection", url: "/project-detection", icon: Search },
 ];
 
 export function DocsSidebar() {

@@ -13,6 +13,9 @@ import Architecture from "./pages/Architecture";
 import Watch from "./pages/Watch";
 import Release from "./pages/Release";
 import MakefilePage from "./pages/Makefile";
+import HistoryPage from "./pages/History";
+import StatsPage from "./pages/Stats";
+import ProjectDetectionPage from "./pages/ProjectDetection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +37,9 @@ const App = () => (
           <Route path="/gomod" element={<GoMod />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/makefile" element={<MakefilePage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/stats" element={<StatsPage />} />
+          <Route path="/project-detection" element={<ProjectDetectionPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
