@@ -51,7 +51,7 @@ func detectCSharpSln(name, dir, repoPath, repoID, repoName string, results *[]De
 	projName := strings.TrimSuffix(name, constants.ExtSln)
 	result := buildBaseResult(dir, repoPath, repoID, repoName,
 		constants.ProjectTypeCSharpID, constants.ProjectKeyCSharp, projName, name)
-	meta := parseCSharpProject(dir, repoPath)
+	meta := parseCSharpProject(dir, repoPath, result.Project.ID)
 	result.CSharp = meta
 	*results = append(*results, result)
 }
@@ -100,10 +100,11 @@ func addResult(dir, repoPath, repoID, repoName, typeID, typeKey, projName, indic
 // buildBaseResult creates a DetectionResult with the project fields populated.
 func buildBaseResult(dir, repoPath, repoID, repoName, typeID, typeKey, projName, indicator string) DetectionResult {
 	relPath := buildRelativePath(dir, repoPath)
+	id := projectID(repoID, typeID, relPath)
 
 	return DetectionResult{
 		Project: model.DetectedProject{
-			ID:               newUUID(),
+			ID:               id,
 			RepoID:           repoID,
 			RepoName:         repoName,
 			ProjectTypeID:    typeID,
