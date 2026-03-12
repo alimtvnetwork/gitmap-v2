@@ -43,6 +43,7 @@ concrete examples. Adapt syntax to your target language.
 | `13-checklist.md` | Step-by-step implementation checklist for AI |
 | `14-date-formatting.md` | Centralized date display format |
 | `15-constants-reference.md` | Every constant category with naming patterns |
+| `16-verbose-logging.md` | Verbose/debug logging pattern with `--verbose` flag |
 
 ---
 
