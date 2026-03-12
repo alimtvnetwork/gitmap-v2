@@ -241,9 +241,17 @@ export const commands: CommandDef[] = [
     category: "release",
     name: "revert", alias: undefined, description: "Revert to a specific release version",
     usage: "gitmap revert <version>",
+    examples: [
+      { command: "gitmap revert v2.9.0", description: "Checkout tag v2.9.0 and rebuild/deploy" },
+      { command: "gitmap revert 2.8.0", description: "Version auto-prefixed with v" },
+    ],
+    flags: [
+      { flag: "<version>", description: "Release tag to revert to (e.g. v2.9.0). Auto-prefixed with 'v' if missing. Must exist as a local tag." },
+    ],
     seeAlso: [
       { name: "list-versions", description: "List available versions" },
-      { name: "release", description: "Create a new release" },
+      { name: "update", description: "Self-update to latest" },
+      { name: "update-cleanup", description: "Remove artifacts after revert" },
       { name: "changelog", description: "View release notes" },
     ],
   },
