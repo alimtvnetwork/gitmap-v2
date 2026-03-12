@@ -18,6 +18,15 @@ func (db *DB) UpsertDetectedProject(p model.DetectedProject) error {
 	return err
 }
 
+// SelectDetectedProjectID returns the persisted ID for a project identity tuple.
+func (db *DB) SelectDetectedProjectID(repoID, projectTypeID, relativePath string) (string, error) {
+	var id string
+	err := db.conn.QueryRow(constants.SQLSelectDetectedProjectID,
+		repoID, projectTypeID, relativePath).Scan(&id)
+
+	return id, err
+}
+
 // SelectProjectsByTypeKey returns all detected projects of a given type.
 func (db *DB) SelectProjectsByTypeKey(key string) ([]model.DetectedProject, error) {
 	rows, err := db.conn.Query(constants.SQLSelectProjectsByTypeKey, key)

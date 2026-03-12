@@ -148,6 +148,11 @@ const SQLUpsertCSharpKeyFile = `INSERT INTO CSharpKeyFiles
 		FileType=excluded.FileType,
 		FilePath=excluded.FilePath`
 
+// SQL: query detected project ID by identity tuple.
+const SQLSelectDetectedProjectID = `SELECT Id
+	FROM DetectedProjects
+	WHERE RepoId = ? AND ProjectTypeId = ? AND RelativePath = ?`
+
 // SQL: query projects by type key.
 const SQLSelectProjectsByTypeKey = `SELECT dp.Id, dp.RepoId, pt.Key, dp.ProjectName,
 	dp.AbsolutePath, dp.RepoPath, dp.RelativePath,

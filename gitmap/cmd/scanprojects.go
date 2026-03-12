@@ -52,18 +52,39 @@ func upsertProjectsToDB(results []detector.DetectionResult, records []model.Scan
 func upsertProjectRecords(db *store.DB, results []detector.DetectionResult, records []model.ScanRecord) {
 	count := 0
 	repoIDs := collectRepoIDs(results)
-	for _, r := range results {
+	for i := range results {
+		r := &results[i]
 		err := db.UpsertDetectedProject(r.Project)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, constants.ErrProjectUpsert, err)
 
 			continue
 		}
+		if err := resolveDetectedProjectID(db, r); err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrProjectUpsert, err)
+
+			continue
+		}
 		count++
-		upsertProjectMetadata(db, r)
+		upsertProjectMetadata(db, *r)
 	}
 	cleanStaleProjects(db, repoIDs, results)
 	fmt.Printf(constants.MsgProjectUpsertDone, count)
+}
+
+// resolveDetectedProjectID syncs the project ID with the persisted DB row.
+func resolveDetectedProjectID(db *store.DB, r *detector.DetectionResult) error {
+	id, err := db.SelectDetectedProjectID(
+		r.Project.RepoID,
+		r.Project.ProjectTypeID,
+		r.Project.RelativePath,
+	)
+	if err != nil {
+		return err
+	}
+	r.Project.ID = id
+
+	return nil
 }
 
 // upsertProjectMetadata persists Go or C# metadata for a detection result.
@@ -84,6 +105,13 @@ func upsertGoProjectMeta(db *store.DB, r detector.DetectionResult) {
 
 		return
 	}
+	saved, err := db.SelectGoMetadata(r.Project.ID)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrGoMetadataUpsert, err)
+
+		return
+	}
+	r.GoMeta.ID = saved.ID
 	runnableIDs := upsertGoRunnables(db, r.GoMeta)
 	_ = db.DeleteStaleGoRunnables(r.GoMeta.ID, runnableIDs)
 }
@@ -112,6 +140,13 @@ func upsertCSharpProjectMeta(db *store.DB, r detector.DetectionResult) {
 
 		return
 	}
+	saved, err := db.SelectCSharpMetadata(r.Project.ID)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrCSharpMetaUpsert, err)
+
+		return
+	}
+	r.CSharp.ID = saved.ID
 	fileIDs := upsertCSharpFiles(db, r.CSharp)
 	keyIDs := upsertCSharpKeyFiles(db, r.CSharp)
 	_ = db.DeleteStaleCSharpFiles(r.CSharp.ID, fileIDs)
