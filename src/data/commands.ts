@@ -487,6 +487,7 @@ export const commands: CommandDef[] = [
     name: "update", alias: undefined, description: "Self-update from source repo",
     usage: "gitmap update",
     seeAlso: [
+      { name: "update-cleanup", description: "Remove update artifacts" },
       { name: "version", description: "Show current version" },
       { name: "doctor", description: "Diagnose issues after update" },
     ],
