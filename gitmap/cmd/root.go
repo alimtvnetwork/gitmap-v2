@@ -114,6 +114,7 @@ func dispatchRelease(command string) bool {
 // dispatchUtility routes setup, update, doctor, and other utility commands.
 func dispatchUtility(command string) bool {
 	if command == constants.CmdUpdate {
+		checkHelp("update", os.Args[2:])
 		runUpdate()
 
 		return true
