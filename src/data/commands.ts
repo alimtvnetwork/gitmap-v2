@@ -90,7 +90,11 @@ export const commands: CommandDef[] = [
   {
     category: "scanning",
     name: "rescan", alias: "rs", description: "Re-scan previously scanned directories",
-    usage: "gitmap rescan [--output csv|json|terminal]",
+    usage: "gitmap rescan",
+    examples: [
+      { command: "gitmap rescan", description: "Re-run the last scan with the same flags" },
+      { command: "gitmap rs", description: "Alias shorthand" },
+    ],
     seeAlso: [
       { name: "scan", description: "Initial directory scan" },
       { name: "status", description: "View repo statuses" },
@@ -101,6 +105,10 @@ export const commands: CommandDef[] = [
     category: "scanning",
     name: "desktop-sync", alias: "ds", description: "Sync tracked repos with GitHub Desktop",
     usage: "gitmap desktop-sync",
+    examples: [
+      { command: "gitmap desktop-sync", description: "Sync existing scan output to GitHub Desktop" },
+      { command: "gitmap ds", description: "Alias shorthand" },
+    ],
     seeAlso: [
       { name: "scan", description: "Scan directories first" },
       { name: "clone", description: "Clone repos from scan output" },
