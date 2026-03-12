@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import DocsLayout from "@/components/docs/DocsLayout";
 import CommandCard from "@/components/docs/CommandCard";
 import CommandCategoryGroup from "@/components/docs/CommandCategoryGroup";
