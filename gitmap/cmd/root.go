@@ -174,6 +174,7 @@ func dispatchMisc(command string) bool {
 		return true
 	}
 	if command == constants.CmdDoctor {
+		checkHelp("doctor", os.Args[2:])
 		runDoctor()
 
 		return true
