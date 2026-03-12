@@ -16,6 +16,7 @@ import MakefilePage from "./pages/Makefile";
 import HistoryPage from "./pages/History";
 import StatsPage from "./pages/Stats";
 import ProjectDetectionPage from "./pages/ProjectDetection";
+import GenericCLIPage from "./pages/GenericCLI";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
