@@ -159,7 +159,7 @@ gitmap stats --json
 gitmap amend --name "John Doe" --email "john@example.com"
 ```
 
-→ Full details: [history](gitmap/help/history.md) · [history-reset](gitmap/help/history-reset.md) · [stats](gitmap/help/stats.md) · [amend](gitmap/help/amend.md) · [amend-list](gitmap/help/amend-list.md)
+→ Full details: [history](gitmap/helptext/history.md) · [history-reset](gitmap/helptext/history-reset.md) · [stats](gitmap/helptext/stats.md) · [amend](gitmap/helptext/amend.md) · [amend-list](gitmap/helptext/amend-list.md)
 
 ### Project Detection
 
