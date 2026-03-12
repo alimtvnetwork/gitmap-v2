@@ -110,7 +110,7 @@ gitmap release-pending
 gitmap list-versions --json --limit 5
 ```
 
-→ Full details: [release](gitmap/help/release.md) · [release-branch](gitmap/help/release-branch.md) · [release-pending](gitmap/help/release-pending.md) · [changelog](gitmap/help/changelog.md) · [list-versions](gitmap/help/list-versions.md) · [list-releases](gitmap/help/list-releases.md) · [revert](gitmap/help/revert.md)
+→ Full details: [release](gitmap/helptext/release.md) · [release-branch](gitmap/helptext/release-branch.md) · [release-pending](gitmap/helptext/release-pending.md) · [changelog](gitmap/helptext/changelog.md) · [list-versions](gitmap/helptext/list-versions.md) · [list-releases](gitmap/helptext/list-releases.md) · [revert](gitmap/helptext/revert.md)
 
 ### Navigation & Organization
 
