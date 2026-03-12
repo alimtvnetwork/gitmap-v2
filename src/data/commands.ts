@@ -342,6 +342,15 @@ export const commands: CommandDef[] = [
     category: "navigation",
     name: "list", alias: "ls", description: "Show all tracked repos with slugs",
     usage: "gitmap list [--group <name>] [--verbose]",
+    flags: [
+      { flag: "--group <name>", description: "Filter by group name" },
+      { flag: "--verbose", description: "Show full paths and URLs" },
+    ],
+    examples: [
+      { command: "gitmap list", description: "List all tracked repos" },
+      { command: "gitmap ls --group backend", description: "Filter by group" },
+      { command: "gitmap list --verbose", description: "Show full paths" },
+    ],
     seeAlso: [
       { name: "cd", description: "Navigate to a tracked repo" },
       { name: "scan", description: "Scan directories to populate data" },
@@ -353,6 +362,16 @@ export const commands: CommandDef[] = [
     category: "navigation",
     name: "group", alias: "g", description: "Manage repo groups",
     usage: "gitmap group <create|add|remove|list|show|delete> [args]",
+    flags: [
+      { flag: "--description <text>", description: "Group description (for create)" },
+      { flag: "--color <name>", description: "Terminal color for the group (for create)" },
+    ],
+    examples: [
+      { command: "gitmap group create backend --description \"Backend services\"", description: "Create a group" },
+      { command: "gitmap group add backend my-api my-worker", description: "Add repos to a group" },
+      { command: "gitmap group list", description: "Show all groups with counts" },
+      { command: "gitmap group show backend", description: "Show repos in a group" },
+    ],
     seeAlso: [
       { name: "list", description: "List all tracked repos" },
       { name: "cd", description: "Navigate to repos" },
@@ -364,6 +383,14 @@ export const commands: CommandDef[] = [
     category: "navigation",
     name: "diff-profiles", alias: "dp", description: "Compare repos across two profiles",
     usage: "gitmap diff-profiles <profileA> <profileB> [--all] [--json]",
+    flags: [
+      { flag: "--all", description: "Include identical repos in the output" },
+      { flag: "--json", description: "Output as structured JSON" },
+    ],
+    examples: [
+      { command: "gitmap diff-profiles default work", description: "Compare default and work profiles" },
+      { command: "gitmap dp work personal --json", description: "JSON diff output" },
+    ],
     seeAlso: [
       { name: "profile", description: "Manage database profiles" },
       { name: "list", description: "List tracked repos" },
