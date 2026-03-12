@@ -10,9 +10,11 @@ interface Props {
   commands: CommandDef[];
   defaultOpen?: boolean;
   forceOpen?: boolean;
+  onNavigate?: (commandName: string) => void;
+  commandRefs?: React.MutableRefObject<Record<string, HTMLDivElement | null>>;
 }
 
-const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen }: Props) => {
+const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen, onNavigate, commandRefs }: Props) => {
   const [open, setOpen] = useState(defaultOpen);
 
   useEffect(() => {
@@ -48,7 +50,9 @@ const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true
           >
             <div className="p-2 space-y-1.5">
               {commands.map((cmd) => (
-                <CommandCard key={cmd.name} {...cmd} />
+                <div key={cmd.name} ref={(el) => { if (commandRefs) commandRefs.current[cmd.name] = el; }}>
+                  <CommandCard {...cmd} onNavigate={onNavigate} />
+                </div>
               ))}
             </div>
           </motion.div>
