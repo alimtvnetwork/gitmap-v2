@@ -176,7 +176,7 @@ Each command entry in the README includes:
 - One-line description
 - 1–2 inline examples with sample output
 
-For full details, each entry links to `gitmap/help/<command>.md`.
+For full details, each entry links to `gitmap/helptext/<command>.md`.
 
 ---
 
