@@ -80,6 +80,12 @@ export const commands: CommandDef[] = [
       { flag: "--all", description: "Pull all tracked repos" },
       { flag: "--verbose", description: "Enable verbose logging" },
     ],
+    examples: [
+      { command: "gitmap pull my-api-service", description: "Pull a single repo by name" },
+      { command: "gitmap p my-api", description: "Partial match works" },
+      { command: "gitmap pull --group backend", description: "Pull all repos in a group" },
+      { command: "gitmap pull --all", description: "Pull every tracked repo" },
+    ],
     seeAlso: [
       { name: "scan", description: "Scan directories to populate the database" },
       { name: "clone", description: "Clone repos from structured file" },
