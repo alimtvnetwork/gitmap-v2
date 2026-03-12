@@ -10,6 +10,7 @@ interface Props {
   commands: CommandDef[];
   defaultOpen?: boolean;
   forceOpen?: boolean;
+  onNavigate?: (commandName: string) => void;
 }
 
 const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen }: Props) => {
