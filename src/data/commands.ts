@@ -121,6 +121,15 @@ export const commands: CommandDef[] = [
     category: "monitoring",
     name: "status", alias: "st", description: "Show repo status dashboard",
     usage: "gitmap status [--group <name>] [--all]",
+    flags: [
+      { flag: "--group <name>", description: "Show status for repos in a specific group" },
+      { flag: "--all", description: "Show status for every repo in the database" },
+    ],
+    examples: [
+      { command: "gitmap status", description: "Show status dashboard" },
+      { command: "gitmap st --group backend", description: "Status for a specific group" },
+      { command: "gitmap status --all", description: "Status for all tracked repos" },
+    ],
     seeAlso: [
       { name: "watch", description: "Live-refresh status dashboard" },
       { name: "scan", description: "Scan directories to populate data" },
@@ -158,7 +167,24 @@ export const commands: CommandDef[] = [
   {
     category: "monitoring",
     name: "latest-branch", alias: "lb", description: "Find most recently updated remote branch",
-    usage: "gitmap latest-branch [--top N] [--format json|csv|terminal]",
+    usage: "gitmap latest-branch [--top N] [--format json|csv|terminal] [--filter <pattern>]",
+    flags: [
+      { flag: "--remote <name>", description: "Remote to filter branches against (default: origin)" },
+      { flag: "--all-remotes", description: "Include branches from all remotes" },
+      { flag: "--contains-fallback", description: "Fall back to --contains if --points-at is empty" },
+      { flag: "--top <n>", description: "Show top N most recently updated branches" },
+      { flag: "--format <fmt>", description: "Output format: terminal, json, csv" },
+      { flag: "--json", description: "Shorthand for --format json" },
+      { flag: "--no-fetch", description: "Skip git fetch, use existing remote refs" },
+      { flag: "--sort <order>", description: "Sort order: date (descending) or name (A-Z)" },
+      { flag: "--filter <pattern>", description: "Filter branches by glob or substring pattern" },
+    ],
+    examples: [
+      { command: "gitmap lb", description: "Latest branch (single)" },
+      { command: "gitmap lb --top 5 --json", description: "Top 5 as JSON" },
+      { command: "gitmap lb --filter 'feature/*'", description: "Only feature branches" },
+      { command: "gitmap lb 3 --no-fetch --json", description: "Fast: no fetch, top 3 as JSON" },
+    ],
     seeAlso: [
       { name: "status", description: "View repo statuses" },
       { name: "watch", description: "Live-refresh dashboard" },
