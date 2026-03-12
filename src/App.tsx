@@ -13,6 +13,9 @@ import Architecture from "./pages/Architecture";
 import Watch from "./pages/Watch";
 import Release from "./pages/Release";
 import MakefilePage from "./pages/Makefile";
+import HistoryPage from "./pages/History";
+import StatsPage from "./pages/Stats";
+import ProjectDetectionPage from "./pages/ProjectDetection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
