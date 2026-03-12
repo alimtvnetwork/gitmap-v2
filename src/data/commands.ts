@@ -487,8 +487,24 @@ export const commands: CommandDef[] = [
     name: "update", alias: undefined, description: "Self-update from source repo",
     usage: "gitmap update",
     seeAlso: [
+      { name: "update-cleanup", description: "Remove update artifacts" },
       { name: "version", description: "Show current version" },
       { name: "doctor", description: "Diagnose issues after update" },
+    ],
+  },
+  {
+    category: "utilities",
+    name: "update-cleanup", alias: undefined, description: "Remove leftover update artifacts",
+    usage: "gitmap update-cleanup",
+    examples: [
+      {
+        command: "gitmap update-cleanup",
+        description: "Remove temp binaries and .old backups from previous updates",
+      },
+    ],
+    seeAlso: [
+      { name: "update", description: "Self-update to latest version" },
+      { name: "revert", description: "Revert to a previous version" },
     ],
   },
   {
