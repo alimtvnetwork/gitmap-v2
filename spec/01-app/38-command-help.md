@@ -19,17 +19,17 @@ section showing every command with examples.
 Each command has a dedicated Markdown file under:
 
 ```
-gitmap/help/<command-name>.md
+gitmap/helptext/<command-name>.md
 ```
 
 Example files:
 
 ```
-gitmap/help/scan.md
-gitmap/help/clone.md
-gitmap/help/cd.md
-gitmap/help/go-repos.md
-gitmap/help/release.md
+gitmap/helptext/scan.md
+gitmap/helptext/clone.md
+gitmap/helptext/cd.md
+gitmap/helptext/go-repos.md
+gitmap/helptext/release.md
 ...
 ```
 
