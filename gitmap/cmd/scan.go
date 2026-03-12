@@ -49,10 +49,11 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)
 	outputDir := resolveOutputDir(cfg.OutputDir, absDir)
 	writeAllOutputs(records, outputDir, outFile, quiet)
-	detected := detectAllProjects(records)
-	writeProjectJSONFiles(detected, outputDir)
 	saveScanCache(outputDir, cache)
 	upsertToDB(records, outputDir)
+	records = alignRecordsWithDB(records, outputDir)
+	detected := detectAllProjects(records)
+	writeProjectJSONFiles(detected, outputDir)
 	upsertProjectsToDB(detected, records, outputDir)
 	importReleases(absDir, outputDir)
 	addToDesktop(records, ghDesktop)
@@ -78,6 +79,35 @@ func upsertToDB(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	fmt.Printf(constants.MsgDBUpsertDone, len(records))
+}
+
+// alignRecordsWithDB rewrites record IDs to match persisted repo IDs by path.
+func alignRecordsWithDB(records []model.ScanRecord, outputDir string) []model.ScanRecord {
+	db, err := store.Open(outputDir)
+	if err != nil {
+		return records
+	}
+	defer db.Close()
+
+	repos, err := db.ListRepos()
+	if err != nil {
+		return records
+	}
+
+	idsByPath := make(map[string]string, len(repos))
+	for _, repo := range repos {
+		idsByPath[repo.AbsolutePath] = repo.ID
+	}
+
+	aligned := make([]model.ScanRecord, 0, len(records))
+	for _, rec := range records {
+		if id, ok := idsByPath[rec.AbsolutePath]; ok {
+			rec.ID = id
+		}
+		aligned = append(aligned, rec)
+	}
+
+	return aligned
 }
 
 // addToDesktop registers repos with GitHub Desktop if requested.
