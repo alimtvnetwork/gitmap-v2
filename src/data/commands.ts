@@ -425,7 +425,16 @@ export const commands: CommandDef[] = [
   {
     category: "history",
     name: "stats", alias: "ss", description: "Show aggregated usage and performance metrics",
-    usage: "gitmap stats [--json]",
+    usage: "gitmap stats [--command <name>] [--json]",
+    flags: [
+      { flag: "--command <name>", description: "Show stats for a specific command only" },
+      { flag: "--json", description: "Output as JSON" },
+    ],
+    examples: [
+      { command: "gitmap stats", description: "Show usage stats for all commands" },
+      { command: "gitmap stats --command scan", description: "Stats for scan only" },
+      { command: "gitmap ss --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "history", description: "View command history" },
       { name: "scan", description: "Scan directories" },
