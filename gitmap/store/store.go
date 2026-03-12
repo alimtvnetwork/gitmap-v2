@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 
 	"github.com/user/gitmap/constants"
+
+	_ "modernc.org/sqlite"
 )
 
 // DB wraps the SQLite database connection.
