@@ -24,8 +24,11 @@ func detectGo(dir, repoPath, repoID, repoName string, results *[]DetectionResult
 
 	result := buildBaseResult(dir, repoPath, repoID, repoName,
 		constants.ProjectTypeGoID, constants.ProjectKeyGo, projName, constants.IndicatorGoMod)
-	meta.ID = newUUID()
+	meta.ID = goMetadataID(result.Project.ID)
 	meta.DetectedProjectID = result.Project.ID
+	for i := range meta.Runnables {
+		meta.Runnables[i].ID = goRunnableID(meta.ID, meta.Runnables[i].RelativePath)
+	}
 	result.GoMeta = meta
 	*results = append(*results, result)
 }
@@ -94,7 +97,6 @@ func checkCmdSubdir(cmdDir, subName, projectDir string, runnables []model.GoRunn
 		rel := buildRelativePath(filepath.Dir(mainPath), projectDir)
 
 		return append(runnables, model.GoRunnableFile{
-			ID:           newUUID(),
 			RunnableName: subName,
 			FilePath:     mainPath,
 			RelativePath: filepath.Join(rel, constants.GoMainFile),
@@ -105,7 +107,6 @@ func checkCmdSubdir(cmdDir, subName, projectDir string, runnables []model.GoRunn
 		rel := buildRelativePath(filepath.Dir(nestedPath), projectDir)
 
 		return append(runnables, model.GoRunnableFile{
-			ID:           newUUID(),
 			RunnableName: subName,
 			FilePath:     nestedPath,
 			RelativePath: filepath.Join(rel, constants.GoMainFile),
@@ -120,7 +121,6 @@ func findRootRunnable(projectDir string, runnables []model.GoRunnableFile) []mod
 	rootMain := filepath.Join(projectDir, constants.GoMainFile)
 	if fileExists(rootMain) {
 		return append(runnables, model.GoRunnableFile{
-			ID:           newUUID(),
 			RunnableName: filepath.Base(projectDir),
 			FilePath:     rootMain,
 			RelativePath: constants.GoMainFile,
@@ -139,3 +139,4 @@ func fileExists(path string) bool {
 
 	return info.Mode().IsRegular()
 }
+

@@ -100,10 +100,11 @@ func addResult(dir, repoPath, repoID, repoName, typeID, typeKey, projName, indic
 // buildBaseResult creates a DetectionResult with the project fields populated.
 func buildBaseResult(dir, repoPath, repoID, repoName, typeID, typeKey, projName, indicator string) DetectionResult {
 	relPath := buildRelativePath(dir, repoPath)
+	id := projectID(repoID, typeID, relPath)
 
 	return DetectionResult{
 		Project: model.DetectedProject{
-			ID:               newUUID(),
+			ID:               id,
 			RepoID:           repoID,
 			RepoName:         repoName,
 			ProjectTypeID:    typeID,

@@ -13,14 +13,15 @@ import (
 )
 
 // parseCSharpProject collects C# metadata from a solution directory.
-func parseCSharpProject(dir, repoPath string) *model.CSharpProjectMetadata {
+func parseCSharpProject(dir, repoPath, detectedProjectID string) *model.CSharpProjectMetadata {
 	meta := &model.CSharpProjectMetadata{
-		ID: newUUID(),
+		ID:                csharpMetadataID(detectedProjectID),
+		DetectedProjectID: detectedProjectID,
 	}
 	findSlnFile(dir, meta)
 	findGlobalJSON(dir, meta)
-	meta.ProjectFiles = findCsprojFiles(dir, repoPath)
-	meta.KeyFiles = findKeyFiles(dir, repoPath)
+	meta.ProjectFiles = findCsprojFiles(dir, repoPath, meta.ID)
+	meta.KeyFiles = findKeyFiles(dir, repoPath, meta.ID)
 
 	return meta
 }
@@ -83,7 +84,7 @@ type csprojXML struct {
 }
 
 // findCsprojFiles walks the tree for .csproj and .fsproj files.
-func findCsprojFiles(dir, repoPath string) []model.CSharpProjectFile {
+func findCsprojFiles(dir, repoPath, metadataID string) []model.CSharpProjectFile {
 	var files []model.CSharpProjectFile
 	_ = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -93,7 +94,7 @@ func findCsprojFiles(dir, repoPath string) []model.CSharpProjectFile {
 			return filepath.SkipDir
 		}
 		if isCsprojFile(info.Name()) {
-			f := parseCsprojFile(path, dir)
+			f := parseCsprojFile(path, dir, metadataID)
 			files = append(files, f)
 		}
 
@@ -113,14 +114,15 @@ func isCsprojFile(name string) bool {
 }
 
 // parseCsprojFile extracts metadata from a .csproj XML file.
-func parseCsprojFile(path, baseDir string) model.CSharpProjectFile {
+func parseCsprojFile(path, baseDir, metadataID string) model.CSharpProjectFile {
 	rel := buildRelativePath(filepath.Dir(path), baseDir)
 	name := filepath.Base(path)
+	relPath := filepath.Join(rel, name)
 	projName := strings.TrimSuffix(name, filepath.Ext(name))
 	f := model.CSharpProjectFile{
-		ID:           newUUID(),
+		ID:           csharpProjectFileID(metadataID, relPath),
 		FilePath:     path,
-		RelativePath: filepath.Join(rel, name),
+		RelativePath: relPath,
 		FileName:     name,
 		ProjectName:  projName,
 	}
@@ -152,7 +154,7 @@ func parseCsprojXML(path string, f *model.CSharpProjectFile) {
 }
 
 // findKeyFiles collects known C# key files in the project tree.
-func findKeyFiles(dir, repoPath string) []model.CSharpKeyFile {
+func findKeyFiles(dir, repoPath, metadataID string) []model.CSharpKeyFile {
 	var files []model.CSharpKeyFile
 	_ = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -163,11 +165,12 @@ func findKeyFiles(dir, repoPath string) []model.CSharpKeyFile {
 		}
 		if isKeyFile(info.Name()) {
 			rel := buildRelativePath(filepath.Dir(path), dir)
+			relPath := filepath.Join(rel, info.Name())
 			files = append(files, model.CSharpKeyFile{
-				ID:           newUUID(),
+				ID:           csharpKeyFileID(metadataID, relPath),
 				FileType:     info.Name(),
 				FilePath:     path,
-				RelativePath: filepath.Join(rel, info.Name()),
+				RelativePath: relPath,
 			})
 		}
 
@@ -190,3 +193,4 @@ func isKeyFile(name string) bool {
 
 	return strings.HasSuffix(name, ".targets")
 }
+
