@@ -28,6 +28,22 @@ const CommandsPage = () => {
         All {commands.length} gitmap commands organized by category.
       </p>
 
+      {/* Category summary banner */}
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
+        {categories.map((cat) => {
+          const count = commands.filter((c) => c.category === cat.key).length;
+          return (
+            <div
+              key={cat.key}
+              className="rounded-lg border border-border bg-card px-3 py-2 text-center"
+            >
+              <div className="text-lg font-mono font-bold text-primary">{count}</div>
+              <div className="text-[10px] text-muted-foreground font-mono leading-tight truncate">{cat.label}</div>
+            </div>
+          );
+        })}
+      </div>
+
       <SearchBar value={search} onChange={setSearch} />
 
       <div className="mt-6 space-y-3">
