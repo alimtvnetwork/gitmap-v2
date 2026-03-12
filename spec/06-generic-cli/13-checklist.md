@@ -10,11 +10,14 @@ All constraints from `08-code-style.md` apply to every file you write.
 
 ## Phase 1: Scaffold (Do First)
 
+- [ ] Run `go mod init <module-path>`
 - [ ] Create `main.go` with minimal entry point calling `cmd.Run()`
 - [ ] Create `constants/constants.go` with `Version`, tool name
 - [ ] Create `constants/constants_cli.go` with all command names + aliases
 - [ ] Create `constants/constants_messages.go` with error messages
+- [ ] Create `constants/constants_terminal.go` with ANSI color codes
 - [ ] Create `cmd/root.go` with `Run()` and `dispatch()`
+- [ ] Create `cmd/rootflags.go` with flag registration helpers
 - [ ] Create `cmd/rootusage.go` with `printUsage()` help text
 - [ ] Implement `version` command (print version, exit 0)
 - [ ] Implement `help` command (print usage, exit 0)
@@ -39,85 +42,100 @@ All constraints from `08-code-style.md` apply to every file you write.
 - [ ] Create `scanner/scanner.go` (or domain-specific logic package)
 - [ ] Create `mapper/mapper.go` for data transformation
 - [ ] Implement first real command (e.g., `scan`) with flag parsing
-- [ ] Create `cmd/helpcheck.go` with `checkHelp()` function
-- [ ] Add `checkHelp` call to command handler
 
-**Verify:** `./toolname scan <input> && ./toolname scan --help`
+**Verify:** `./toolname scan <input>` produces correct data
 
 ---
 
 ## Phase 4: Output Formatting
 
-- [ ] Create `formatter/terminal.go` with colored output
-- [ ] Create `formatter/csv.go` with CSV writer
-- [ ] Create `formatter/json.go` with JSON writer
-- [ ] Create `formatter/structure.go` with Markdown tree
+- [ ] Create `formatter/terminal.go` with colored banner + item list
+- [ ] Create `formatter/csv.go` with header row + CSV writer
+- [ ] Create `formatter/json.go` with 2-space indented JSON writer
+- [ ] Create `formatter/structure.go` with Markdown tree visualization
+- [ ] Create `formatter/template.go` with shared template loading
+- [ ] Create `formatter/templates/` directory with embedded `.tmpl` files
+- [ ] Create output directory structure (`toolname-output/`)
 - [ ] Add `--output` flag to main command
+- [ ] Create date formatting utility function (see `14-date-formatting.md`)
 
-**Verify:** Each format produces correct output
+**Verify:** Each format produces correct output; dates display consistently
 
 ---
 
 ## Phase 5: Database
 
-- [ ] Create `store/store.go` with DB init and migration
-- [ ] Create `store/repo.go` (or domain CRUD file)
-- [ ] Create `constants/constants_store.go` with SQL + paths
+- [ ] Create `store/store.go` with DB init, open, close, and migration
+- [ ] Create `store/repo.go` (or domain CRUD file) with upsert logic
+- [ ] Create `constants/constants_store.go` with SQL statements, DB paths, table names
 - [ ] Wire DB upsert into main command's output flow
 - [ ] Implement `db-reset` command
 
-**Verify:** Data persists across runs, reset clears it
+**Verify:** Data persists across runs, `db-reset --confirm` clears it
 
 ---
 
 ## Phase 6: Additional Commands
 
 - [ ] Implement each remaining command in its own file
-- [ ] Add flag parsing per command
-- [ ] Add `checkHelp` to every handler
-- [ ] Create help files in `helptext/*.md`
-- [ ] Wire commands into dispatch
+- [ ] Add flag parsing function per command
+- [ ] Wire all commands into dispatch (split into multi-layer if 15+ cases)
 
-**Verify:** Each command works with `--help` and normal execution
+**Verify:** Each command executes correctly with valid input
 
 ---
 
 ## Phase 7: Help System
 
-- [ ] Create `helptext/print.go` with `go:embed` and `Print()`
-- [ ] Create one `.md` file per command (see `09-help-system.md`)
-- [ ] Ensure every handler calls `checkHelp` as first line
+- [ ] Create `helptext/print.go` with `go:embed` and `Print()` function
+- [ ] Create one `.md` file per command (see `09-help-system.md` for format)
+- [ ] Create `cmd/helpcheck.go` with `checkHelp()` function
+- [ ] Add `checkHelp` call as the **first line** of every command handler
 - [ ] Verify `--help` and `-h` both work on every command
+
+**Verify:** `./toolname scan --help` prints help and exits 0; `./toolname cd -h` works
 
 ---
 
 ## Phase 8: Build & Deploy
 
-- [ ] Create build script (`run.ps1` or `Makefile`)
-- [ ] Add `-ldflags` for embedded variables
-- [ ] Add deploy step with retry logic
-- [ ] Add version verification after build
-- [ ] Implement `update` command with self-update
+- [ ] Create build script (`run.ps1` and/or `Makefile`)
+- [ ] Add `-ldflags` for compile-time embedded variables (e.g., repo path)
+- [ ] Add deploy step with nested directory structure
+- [ ] Add retry-on-lock logic for Windows deploy
+- [ ] Add version verification after build (run binary with `version`)
+- [ ] Implement `update` command with copy-and-handoff self-update
+- [ ] Implement `update-cleanup` command for artifact removal
+
+**Verify:** `./run.ps1` builds, deploys, and prints correct version; `./toolname update` works
 
 ---
 
 ## Phase 9: Testing
 
-- [ ] Add unit tests for `mapper`, `config`, `formatter`
-- [ ] Add integration tests under `tests/`
+- [ ] Add unit tests for `mapper` (table-driven, input/output pairs)
+- [ ] Add unit tests for `config` (merge priority verification)
+- [ ] Add unit tests for `formatter` (capture output via `io.Writer`)
+- [ ] Add unit tests for `store` (in-memory SQLite)
+- [ ] Add integration tests under `tests/` for command flag parsing
 - [ ] Verify all tests pass: `go test ./...`
+
+**Verify:** `go test ./...` — zero failures
 
 ---
 
 ## Phase 10: Polish
 
-- [ ] Update `README.md` with grouped command reference
-- [ ] Verify all files ≤ 200 lines
-- [ ] Verify all functions ≤ 15 lines
+- [ ] Update `README.md` with grouped command reference + examples
+- [ ] Verify all files ≤ 200 lines (split if exceeded)
+- [ ] Verify all functions ≤ 15 lines (extract helpers if exceeded)
 - [ ] Verify no magic strings (all in `constants`)
-- [ ] Verify positive conditionals only
+- [ ] Verify positive conditionals only (no `!`, no `!=`)
 - [ ] Verify blank line before every `return`
+- [ ] Verify no circular imports between packages
 - [ ] Final version bump
+
+**Verify:** Full `go build && go vet ./... && go test ./...` passes clean
 
 ---
 
@@ -125,15 +143,32 @@ All constraints from `08-code-style.md` apply to every file you write.
 
 | Phase | Files Created |
 |-------|--------------|
-| Scaffold | ~6 |
+| Scaffold | ~8 |
 | Configuration | ~3 |
-| Core Command | ~4 |
-| Formatting | ~5 |
+| Core Command | ~3 |
+| Formatting | ~7 |
 | Database | ~4 |
 | Commands | 1 per command |
-| Help | 1 per command + print.go |
-| Build | 1-2 scripts |
+| Help | 1 per command + `print.go` + `helpcheck.go` |
+| Build | 1–2 scripts |
 | Tests | 1 per testable package |
+
+---
+
+## Dependency Graph
+
+```
+Phase 1 (Scaffold)
+  └─► Phase 2 (Config)
+       └─► Phase 3 (Core Command)
+            ├─► Phase 4 (Formatting)
+            │    └─► Phase 5 (Database)
+            │         └─► Phase 6 (More Commands)
+            │              └─► Phase 7 (Help System)
+            └──────────────────────► Phase 8 (Build & Deploy)
+                                         └─► Phase 9 (Testing)
+                                              └─► Phase 10 (Polish)
+```
 
 ## Contributors
 
