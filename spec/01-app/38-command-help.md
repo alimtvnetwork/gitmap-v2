@@ -233,7 +233,7 @@ For full details, each entry links to `gitmap/helptext/<command>.md`.
 | Rule | Detail |
 |------|--------|
 | Examples per command | 2–3, each with sample output |
-| Sample output | 3–8 lines, realistic but anonymized |
+| Sample output | Max 3 lines, realistic but anonymized |
 | Prerequisites | Explicitly list commands that must run first |
 | Cross-references | Link to prerequisite command's help file |
 | Flags table | Include default values and type hints |
