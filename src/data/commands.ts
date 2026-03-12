@@ -536,7 +536,11 @@ export const commands: CommandDef[] = [
   {
     category: "data",
     name: "export", alias: "ex", description: "Export database to file",
-    usage: "gitmap export [--json]",
+    usage: "gitmap export [file]",
+    examples: [
+      { command: "gitmap export", description: "Export to gitmap-export.json" },
+      { command: "gitmap ex backup.json", description: "Export to custom file" },
+    ],
     seeAlso: [
       { name: "import", description: "Import repos from file" },
       { name: "profile", description: "Manage database profiles" },
@@ -546,7 +550,14 @@ export const commands: CommandDef[] = [
   {
     category: "data",
     name: "import", alias: "im", description: "Import repos from file",
-    usage: "gitmap import <file>",
+    usage: "gitmap import [file] --confirm",
+    flags: [
+      { flag: "--confirm", description: "Confirm the import (required, prevents accidents)" },
+    ],
+    examples: [
+      { command: "gitmap import --confirm", description: "Import from gitmap-export.json" },
+      { command: "gitmap im backup.json --confirm", description: "Import from custom file" },
+    ],
     seeAlso: [
       { name: "export", description: "Export database to file" },
       { name: "scan", description: "Scan directories" },
@@ -557,6 +568,12 @@ export const commands: CommandDef[] = [
     category: "data",
     name: "profile", alias: "pf", description: "Manage database profiles",
     usage: "gitmap profile <create|list|switch|delete|show> [name]",
+    examples: [
+      { command: "gitmap profile create work", description: "Create a new profile" },
+      { command: "gitmap pf list", description: "List all profiles" },
+      { command: "gitmap profile switch work", description: "Switch active profile" },
+      { command: "gitmap profile show", description: "Show current profile" },
+    ],
     seeAlso: [
       { name: "diff-profiles", description: "Compare repos across profiles" },
       { name: "export", description: "Export database" },
@@ -567,6 +584,12 @@ export const commands: CommandDef[] = [
     category: "data",
     name: "bookmark", alias: "bk", description: "Save and run bookmarked commands",
     usage: "gitmap bookmark <save|list|run|delete> [args]",
+    examples: [
+      { command: "gitmap bookmark save ssh-scan scan --mode ssh", description: "Save a command bookmark" },
+      { command: "gitmap bk list", description: "List all bookmarks" },
+      { command: "gitmap bookmark run ssh-scan", description: "Replay a saved bookmark" },
+      { command: "gitmap bk delete ssh-scan", description: "Remove a bookmark" },
+    ],
     seeAlso: [
       { name: "history", description: "View command execution history" },
       { name: "scan", description: "Scan directories (common bookmark target)" },
@@ -576,7 +599,13 @@ export const commands: CommandDef[] = [
   {
     category: "data",
     name: "db-reset", alias: undefined, description: "Reset the local SQLite database",
-    usage: "gitmap db-reset [--confirm]",
+    usage: "gitmap db-reset --confirm",
+    flags: [
+      { flag: "--confirm", description: "Required flag to confirm destructive reset" },
+    ],
+    examples: [
+      { command: "gitmap db-reset --confirm", description: "Reset the database" },
+    ],
     seeAlso: [
       { name: "history-reset", description: "Clear command history only" },
       { name: "scan", description: "Re-scan after reset" },
