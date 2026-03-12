@@ -82,6 +82,7 @@ const sections = [
   { id: "dates", label: "Date Formatting" },
   { id: "constants", label: "Constants Reference" },
   { id: "verbose", label: "Verbose Logging" },
+  { id: "progress", label: "Progress Tracking" },
 ];
 
 const GenericCLIPage = () => {
