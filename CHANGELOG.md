@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.28.0
+- Removed unused `detector` import from `cmd/scan.go` that caused build failure.
+- Updated documentation site fonts: Ubuntu for headings, Poppins for body text, Ubuntu Mono for code blocks.
+
 ## v2.27.0
 - Added `gitmap cd` (`go`) command: jump to any tracked repo by slug or partial name.
 - Subcommands: `cd repos`, `cd set-default`, `cd clear-default`; supports `--group` and `--pick` flags.
