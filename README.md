@@ -205,7 +205,7 @@ gitmap bookmark save "daily" "scan ~/projects --quiet"
 gitmap bookmark run daily
 ```
 
-→ Full details: [export](gitmap/help/export.md) · [import](gitmap/help/import.md) · [profile](gitmap/help/profile.md) · [bookmark](gitmap/help/bookmark.md) · [db-reset](gitmap/help/db-reset.md)
+→ Full details: [export](gitmap/helptext/export.md) · [import](gitmap/helptext/import.md) · [profile](gitmap/helptext/profile.md) · [bookmark](gitmap/helptext/bookmark.md) · [db-reset](gitmap/helptext/db-reset.md)
 
 ### Utilities
 
