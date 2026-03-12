@@ -77,7 +77,12 @@ Every help file follows this structure:
 
 **Output:**
 
-    <sample terminal output, 3-8 lines>
+    <sample terminal output, max 3 lines>
+
+## See Also
+
+- [related-command](related-command.md) — One-line description
+- [other-command](other-command.md) — One-line description
 ```
 
 ### Embedding
