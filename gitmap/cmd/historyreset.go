@@ -10,6 +10,7 @@ import (
 
 // runHistoryReset handles the "history-reset" subcommand.
 func runHistoryReset(args []string) {
+	checkHelp("history-reset", args)
 	confirm := parseHistoryResetFlags(args)
 	if confirm {
 		executeHistoryReset()

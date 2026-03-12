@@ -114,6 +114,7 @@ func dispatchRelease(command string) bool {
 // dispatchUtility routes setup, update, doctor, and other utility commands.
 func dispatchUtility(command string) bool {
 	if command == constants.CmdUpdate {
+		checkHelp("update", os.Args[2:])
 		runUpdate()
 
 		return true
@@ -139,6 +140,7 @@ func dispatchUtility(command string) bool {
 		return true
 	}
 	if command == constants.CmdVersion || command == constants.CmdVersionAlias {
+		checkHelp("version", os.Args[2:])
 		fmt.Printf(constants.MsgVersionFmt, constants.Version)
 
 		return true
@@ -155,11 +157,13 @@ func dispatchUtility(command string) bool {
 // dispatchMisc routes remaining miscellaneous commands.
 func dispatchMisc(command string) bool {
 	if command == constants.CmdDesktopSync || command == constants.CmdDesktopSyncAlias {
+		checkHelp("desktop-sync", os.Args[2:])
 		runDesktopSync()
 
 		return true
 	}
 	if command == constants.CmdRescan || command == constants.CmdRescanAlias {
+		checkHelp("rescan", os.Args[2:])
 		runRescan()
 
 		return true
@@ -170,6 +174,7 @@ func dispatchMisc(command string) bool {
 		return true
 	}
 	if command == constants.CmdDoctor {
+		checkHelp("doctor", os.Args[2:])
 		runDoctor()
 
 		return true

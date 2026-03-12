@@ -13,6 +13,7 @@ import (
 
 // runDiffProfiles handles the "diff-profiles" command.
 func runDiffProfiles(args []string) {
+	checkHelp("diff-profiles", args)
 	nameA, nameB, showAll, jsonMode := parseDPFlags(args)
 	validateDPProfiles(nameA, nameB)
 

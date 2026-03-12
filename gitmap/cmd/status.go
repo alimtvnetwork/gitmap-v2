@@ -14,6 +14,7 @@ import (
 
 // runStatus handles the "status" subcommand.
 func runStatus(args []string) {
+	checkHelp("status", args)
 	groupName, all := parseStatusFlags(args)
 	records := loadStatusByScope(groupName, all)
 

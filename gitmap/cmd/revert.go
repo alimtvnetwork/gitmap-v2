@@ -11,6 +11,7 @@ import (
 
 // runRevert handles the "revert" command.
 func runRevert(args []string) {
+	checkHelp("revert", args)
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrRevertUsage)
 		os.Exit(1)

@@ -11,6 +11,7 @@ import (
 
 // runExport handles the "export" subcommand.
 func runExport(args []string) {
+	checkHelp("export", args)
 	outFile := resolveExportFile(args)
 	export := loadExportData()
 

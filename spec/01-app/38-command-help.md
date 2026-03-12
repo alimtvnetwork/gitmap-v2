@@ -19,17 +19,17 @@ section showing every command with examples.
 Each command has a dedicated Markdown file under:
 
 ```
-gitmap/help/<command-name>.md
+gitmap/helptext/<command-name>.md
 ```
 
 Example files:
 
 ```
-gitmap/help/scan.md
-gitmap/help/clone.md
-gitmap/help/cd.md
-gitmap/help/go-repos.md
-gitmap/help/release.md
+gitmap/helptext/scan.md
+gitmap/helptext/clone.md
+gitmap/helptext/cd.md
+gitmap/helptext/go-repos.md
+gitmap/helptext/release.md
 ...
 ```
 
@@ -90,7 +90,7 @@ package helptext
 import "embed"
 
 //go:embed *.md
-var Files embed.FS
+var files embed.FS
 ```
 
 ### Runtime Behavior
@@ -176,7 +176,7 @@ Each command entry in the README includes:
 - One-line description
 - 1–2 inline examples with sample output
 
-For full details, each entry links to `gitmap/help/<command>.md`.
+For full details, each entry links to `gitmap/helptext/<command>.md`.
 
 ---
 
@@ -244,8 +244,8 @@ For full details, each entry links to `gitmap/help/<command>.md`.
 
 ## Implementation Checklist
 
-1. Create `gitmap/help/` directory with all 40 `.md` files
-2. Create `gitmap/helptext/` package with `embed.go` and `print.go`
+1. Create `gitmap/helptext/` directory with all 41 `.md` files
+2. Create `gitmap/helptext/print.go` with `go:embed` and `Print` function
 3. Create `gitmap/cmd/helpcheck.go` with `checkHelp` function
 4. Add `checkHelp` call to every command handler
 5. Update root `README.md` with grouped command reference

@@ -25,6 +25,7 @@ type latestBranchConfig struct {
 
 // runLatestBranch handles the 'latest-branch' / 'lb' command.
 func runLatestBranch(args []string) {
+	checkHelp("latest-branch", args)
 	cfg := parseLatestBranchFlags(args)
 	validateLatestBranchRepo()
 	fetchLatestBranchRefs(cfg)

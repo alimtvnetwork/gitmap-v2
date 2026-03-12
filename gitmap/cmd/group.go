@@ -9,6 +9,7 @@ import (
 
 // runGroup handles the "group" subcommand and routes to sub-handlers.
 func runGroup(args []string) {
+	checkHelp("group", args)
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrGroupUsage)
 		os.Exit(1)

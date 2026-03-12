@@ -9,6 +9,7 @@ import (
 
 // runBookmark handles the "bookmark" subcommand routing.
 func runBookmark(args []string) {
+	checkHelp("bookmark", args)
 	if len(args) < 1 {
 		fmt.Fprint(os.Stderr, constants.ErrBookmarkUsage)
 		os.Exit(1)

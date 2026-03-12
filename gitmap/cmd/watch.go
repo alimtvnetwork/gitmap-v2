@@ -14,6 +14,7 @@ import (
 
 // runWatch handles the "watch" subcommand.
 func runWatch(args []string) {
+	checkHelp("watch", args)
 	interval, groupName, noFetch, jsonMode := parseWatchFlags(args)
 	records := loadWatchRecords(groupName)
 

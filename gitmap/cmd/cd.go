@@ -9,6 +9,7 @@ import (
 
 // runCD handles the "cd" subcommand routing.
 func runCD(args []string) {
+	checkHelp("cd", args)
 	if len(args) < 1 {
 		fmt.Fprint(os.Stderr, constants.ErrCDUsage)
 		os.Exit(1)

@@ -12,6 +12,7 @@ import (
 
 // runListReleases handles the "list-releases" command.
 func runListReleases(args []string) {
+	checkHelp("list-releases", args)
 	asJSON := hasListReleasesJSONFlag(args)
 	limit := parseListReleasesLimit(args)
 	source := parseListReleasesSource(args)

@@ -10,6 +10,7 @@ import (
 
 // runDBReset handles the "db-reset" subcommand.
 func runDBReset(args []string) {
+	checkHelp("db-reset", args)
 	confirm := parseDBResetFlags(args)
 	if confirm {
 		executeDBReset()

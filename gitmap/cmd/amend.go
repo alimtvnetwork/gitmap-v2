@@ -21,6 +21,7 @@ type amendFlags struct {
 
 // runAmend is the entry point for the amend command.
 func runAmend(args []string) {
+	checkHelp("amend", args)
 	flags := parseAmendFlags(args)
 	validateAmendFlags(flags)
 	executeAmend(flags)

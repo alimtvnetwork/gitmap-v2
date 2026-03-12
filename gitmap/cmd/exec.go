@@ -15,6 +15,7 @@ import (
 
 // runExec handles the "exec" subcommand.
 func runExec(args []string) {
+	checkHelp("exec", args)
 	groupName, all, gitArgs := parseExecFlags(args)
 	if len(gitArgs) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrExecUsage)

@@ -20,6 +20,7 @@ type goModOpts struct {
 
 // runGoMod is the entry point for the gomod command.
 func runGoMod(args []string) {
+	checkHelp("gomod", args)
 	opts := parseGoModFlags(args)
 
 	if len(opts.newPath) == 0 {

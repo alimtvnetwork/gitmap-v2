@@ -9,6 +9,7 @@ import (
 
 // runProfile handles the "profile" subcommand routing.
 func runProfile(args []string) {
+	checkHelp("profile", args)
 	if len(args) < 1 {
 		fmt.Fprint(os.Stderr, constants.ErrProfileUsage)
 		os.Exit(1)

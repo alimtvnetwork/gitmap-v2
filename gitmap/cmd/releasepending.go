@@ -12,6 +12,7 @@ import (
 
 // runReleasePending handles the 'release-pending' command.
 func runReleasePending(args []string) {
+	checkHelp("release-pending", args)
 	assets, draft, dryRun, verbose := parseReleasePendingFlags(args)
 	_ = verbose
 

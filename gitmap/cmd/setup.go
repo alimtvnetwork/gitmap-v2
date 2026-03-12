@@ -12,6 +12,7 @@ import (
 
 // runSetup handles the "setup" subcommand.
 func runSetup(args []string) {
+	checkHelp("setup", args)
 	configPath, dryRun := parseSetupFlags(args)
 	cfg, err := setup.LoadConfig(configPath)
 	if err != nil {

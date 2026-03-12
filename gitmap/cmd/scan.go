@@ -19,6 +19,7 @@ import (
 
 // runScan handles the "scan" subcommand.
 func runScan(args []string) {
+	checkHelp("scan", args)
 	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder, quiet := parseScanFlags(args)
 	cfg, err := config.LoadFromFile(cfgPath)
 	if err != nil {

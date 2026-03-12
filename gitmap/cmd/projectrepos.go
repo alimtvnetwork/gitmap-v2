@@ -12,6 +12,7 @@ import (
 
 // runProjectRepos handles go-repos, node-repos, react-repos, cpp-repos, csharp-repos.
 func runProjectRepos(typeKey string, args []string) {
+	checkHelp(typeKey+"-repos", args)
 	jsonOut, countOnly := parseProjectReposFlags(args)
 	outputDir := resolveDefaultOutputDir()
 	db, err := store.Open(outputDir)

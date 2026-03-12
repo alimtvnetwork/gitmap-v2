@@ -12,6 +12,7 @@ import (
 
 // runReleaseBranch handles the 'release-branch' command.
 func runReleaseBranch(args []string) {
+	checkHelp("release-branch", args)
 	branch, assets, draft, dryRun, verbose := parseReleaseBranchFlags(args)
 	_ = verbose
 

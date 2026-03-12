@@ -13,6 +13,7 @@ import (
 
 // runAmendList handles the "amend-list" command.
 func runAmendList(args []string) {
+	checkHelp("amend-list", args)
 	asJSON := hasAmendListJSONFlag(args)
 	limit := parseAmendListLimit(args)
 	branch := parseAmendListBranch(args)

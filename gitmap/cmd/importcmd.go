@@ -12,6 +12,7 @@ import (
 
 // runImport handles the "import" subcommand.
 func runImport(args []string) {
+	checkHelp("import", args)
 	inFile, confirm := parseImportFlags(args)
 	if !confirm {
 		fmt.Fprint(os.Stderr, constants.ErrImportNoConfirm)

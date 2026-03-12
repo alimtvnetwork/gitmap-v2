@@ -12,6 +12,7 @@ import (
 
 // runList handles the "list" subcommand.
 func runList(args []string) {
+	checkHelp("list", args)
 	groupFilter, verboseMode := parseListFlags(args)
 	db, err := openDB()
 	if err != nil {

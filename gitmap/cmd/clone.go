@@ -15,6 +15,7 @@ import (
 
 // runClone handles the "clone" subcommand.
 func runClone(args []string) {
+	checkHelp("clone", args)
 	source, targetDir, safePull, ghDesktop, verboseMode := parseCloneFlags(args)
 	if len(source) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrSourceRequired)

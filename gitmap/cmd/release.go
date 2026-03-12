@@ -14,6 +14,7 @@ import (
 
 // runRelease handles the 'release' command.
 func runRelease(args []string) {
+	checkHelp("release", args)
 	version, assets, commit, branch, bump, draft, dryRun, verbose := parseReleaseFlags(args)
 	_ = verbose
 	validateReleaseFlags(version, bump, commit, branch)

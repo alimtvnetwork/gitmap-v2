@@ -13,6 +13,7 @@ import (
 
 // runHistory handles the "history" subcommand.
 func runHistory(args []string) {
+	checkHelp("history", args)
 	detail, cmdFilter, limit, jsonOut := parseHistoryFlags(args)
 	records := loadHistory(cmdFilter)
 	records = applyHistoryLimit(records, limit)

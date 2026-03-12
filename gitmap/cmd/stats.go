@@ -12,6 +12,7 @@ import (
 
 // runStats handles the "stats" subcommand.
 func runStats(args []string) {
+	checkHelp("stats", args)
 	cmdFilter, jsonOut := parseStatsFlags(args)
 	overall, commands := loadStats(cmdFilter)
 

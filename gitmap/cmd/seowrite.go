@@ -32,6 +32,7 @@ type seoWriteFlags struct {
 
 // runSEOWrite is the entry point for the seo-write command.
 func runSEOWrite(args []string) {
+	checkHelp("seo-write", args)
 	if isCreateTemplateShorthand(args) {
 		createTemplateFile()
 

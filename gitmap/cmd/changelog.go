@@ -16,6 +16,7 @@ import (
 
 // runChangelog handles the 'changelog' command.
 func runChangelog(args []string) {
+	checkHelp("changelog", args)
 	version, latest, limit, openFile, source := parseChangelogFlags(args)
 	version, openFile = resolveChangelogAlias(version, openFile)
 	if openFile {
