@@ -81,6 +81,7 @@ const sections = [
   { id: "checklist", label: "Implementation Checklist" },
   { id: "dates", label: "Date Formatting" },
   { id: "constants", label: "Constants Reference" },
+  { id: "verbose", label: "Verbose Logging" },
 ];
 
 const GenericCLIPage = () => {
@@ -480,6 +481,156 @@ func FormatDisplayDate(t time.Time) string {
             "Business logic → domain packages",
             "Template content → go:embed in formatter/templates/",
             "Test data strings → local in test files",
+          ]} />
+        </Section>
+
+        {/* 16 - Verbose Logging */}
+        <Section id="verbose" title="16 — Verbose Logging">
+          <P>A shared --verbose flag enables detailed debug logging to a timestamped file. Normal runs produce clean user-facing output only. Verbose runs capture full diagnostics without polluting stdout.</P>
+          <Table
+            headers={["Rule", "Detail"]}
+            rows={[
+              ["Off by default", "No log file created unless --verbose is passed"],
+              ["File + stderr", "Every verbose entry writes to both the log file and stderr"],
+              ["Timestamped entries", "Each line prefixed with [HH:MM:SS.mmm]"],
+              ["Timestamped filenames", "Log file named toolname-verbose-YYYY-MM-DD_HH-mm-ss.log"],
+              ["Output directory", "Logs written to the tool's default output folder"],
+              ["Dim on stderr", "Verbose stderr output uses dim/gray ANSI color"],
+              ["No stdout pollution", "Verbose output never mixes with normal command output"],
+              ["Global singleton", "One logger instance shared across all packages"],
+            ]}
+          />
+          <H3>Package Structure</H3>
+          <CodeBlock code={`verbose/
+└── verbose.go     Logger type, Init, Close, Log, IsEnabled, Get`} />
+          <H3>Logger API</H3>
+          <CodeBlock code={`// Init creates the log file and enables verbose logging.
+func Init() (*Logger, error)
+
+// Close flushes and closes the log file.
+func (l *Logger) Close()
+
+// Log writes a formatted message to the log file and stderr.
+func (l *Logger) Log(format string, args ...interface{})
+
+// IsEnabled returns true if verbose mode is active.
+func IsEnabled() bool
+
+// Get returns the global logger (may be nil).
+func Get() *Logger`} />
+          <H3>Logger Type</H3>
+          <CodeBlock code={`type Logger struct {
+    file    *os.File
+    enabled bool
+}
+
+var global *Logger`} />
+          <H3>Init Flow</H3>
+          <CodeBlock code={`func Init() (*Logger, error) {
+    logDir := constants.DefaultOutputFolder
+    _ = os.MkdirAll(logDir, constants.DirPermission)
+
+    timestamp := time.Now().Format("2006-01-02_15-04-05")
+    logPath := filepath.Join(logDir, fmt.Sprintf(constants.VerboseLogFileFmt, timestamp))
+
+    file, err := os.Create(logPath)
+    if err != nil {
+        return nil, err
+    }
+
+    l := &Logger{file: file, enabled: true}
+    global = l
+    fmt.Printf(constants.MsgVerboseLogFile, logPath)
+
+    return l, nil
+}`} />
+          <H3>Log Entry Format</H3>
+          <CodeBlock code={`func writeLogEntry(l *Logger, format string, args ...interface{}) {
+    line := fmt.Sprintf(format, args...)
+    ts := time.Now().Format("15:04:05.000")
+    entry := fmt.Sprintf("[%s] %s\\n", ts, line)
+    l.file.WriteString(entry)
+    fmt.Fprint(os.Stderr, constants.ColorDim+entry+constants.ColorReset)
+}
+
+// Example output:
+// [14:32:07.123] git clone https://github.com/user/repo.git
+// [14:32:09.456] clone completed in 2.3s
+// [14:32:09.460] retry attempt 1/4 for locked file`} />
+          <H3>Command Handler Pattern</H3>
+          <CodeBlock code={`func runPull(args []string) {
+    checkHelp("pull", args)
+    slug, group, all, verboseFlag := parsePullFlags(args)
+
+    if verboseFlag {
+        initVerboseLog()       // Init + defer Close
+    }
+    // ... command logic ...
+}
+
+func initVerboseLog() {
+    logger, err := verbose.Init()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, constants.ErrVerboseInit, err)
+        return                 // Non-fatal — continue without logging
+    }
+    defer logger.Close()
+}`} />
+          <BulletList items={[
+            "Verbose init failure is non-fatal — warn and continue",
+            "defer Close() in the same function that calls Init()",
+            "Never pass the logger as a parameter — use verbose.Get() or verbose.IsEnabled()",
+          ]} />
+          <H3>What to Log</H3>
+          <Table
+            headers={["Category", "Examples"]}
+            rows={[
+              ["Git operations", "Clone/pull commands, remote URLs, branch names"],
+              ["Retry attempts", "Attempt number, delay, reason for retry"],
+              ["File I/O", "Paths read/written, file sizes, permissions"],
+              ["External processes", "Command lines, exit codes, stdout/stderr"],
+              ["Timing", "Operation durations, elapsed time"],
+              ["Environment", "OS, paths, config values loaded"],
+              ["Errors (detailed)", "Full error chains, stack context"],
+            ]}
+          />
+          <H3>What NOT to Log</H3>
+          <BulletList items={[
+            "Secrets, tokens, or credentials",
+            "Routine success paths that add no diagnostic value",
+            "Data that duplicates normal stdout output",
+          ]} />
+          <H3>Constants</H3>
+          <CodeBlock code={`// constants/constants.go
+const VerboseLogFileFmt = "toolname-verbose-%s.log"
+
+// constants/constants_cli.go
+const FlagVerbose    = "verbose"
+const FlagDescVerbose = "Enable verbose debug logging to file"
+
+// constants/constants_messages.go
+const MsgVerboseLogFile = "Verbose log: %s\\n"
+const ErrVerboseInit    = "Warning: could not initialize verbose log: %v\\n"`} />
+          <H3>Conditional Logging in Libraries</H3>
+          <CodeBlock code={`func safePullOne(repo model.Record) error {
+    logger := verbose.Get()
+
+    if logger != nil {
+        logger.Log("pulling %s at %s", repo.Name, repo.Path)
+    }
+
+    // ... pull logic ...
+
+    if logger != nil {
+        logger.Log("pull complete for %s (%.1fs)", repo.Name, elapsed.Seconds())
+    }
+
+    return nil
+}`} />
+          <BulletList items={[
+            "Always nil-check verbose.Get() — verbose may not be active",
+            "Keep log calls outside hot loops to avoid performance overhead",
+            "Use fmt.Sprintf-style formatting — no structured logging libraries",
           ]} />
         </Section>
       </div>
