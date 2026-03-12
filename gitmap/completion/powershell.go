@@ -1,0 +1,45 @@
+package completion
+
+// generatePowerShell returns the PowerShell completion script.
+func generatePowerShell() string {
+	return `Register-ArgumentCompleter -CommandName gitmap -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $elems = $commandAst.CommandElements | Select-Object -Skip 1
+    $cmd = if ($elems.Count -gt 0) { $elems[0].ToString() } else { "" }
+    $prev = if ($elems.Count -gt 1) { $elems[$elems.Count - 1].ToString() } else { "" }
+
+    if ($cmd -eq "cd" -or $cmd -eq "go") {
+        if ($prev -eq "--group" -or $prev -eq "-g") {
+            $items = gitmap completion --list-groups
+        } else {
+            $items = @(gitmap completion --list-repos) + @("repos", "set-default", "clear-default")
+        }
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "pull") {
+        gitmap completion --list-repos | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "exec" -and ($prev -eq "--group")) {
+        gitmap completion --list-groups | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "group") {
+        @("create", "add", "remove", "list", "show", "delete") |
+            Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    gitmap completion --list-commands | Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+}
+`
+}

@@ -279,6 +279,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdCompletion || command == constants.CmdCompletionAlias {
+		runCompletion(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

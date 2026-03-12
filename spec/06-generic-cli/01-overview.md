@@ -46,6 +46,7 @@ concrete examples. Adapt syntax to your target language.
 | `16-verbose-logging.md` | Verbose/debug logging pattern with `--verbose` flag |
 | `17-progress-tracking.md` | Progress reporting pattern for batch operations |
 | `18-batch-execution.md` | Exec command pattern for running commands across repos |
+| `19-shell-completion.md` | Shell tab-completion for PowerShell, Bash, and Zsh |
 
 ---
 

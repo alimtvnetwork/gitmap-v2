@@ -84,6 +84,7 @@ const sections = [
   { id: "verbose", label: "Verbose Logging" },
   { id: "progress", label: "Progress Tracking" },
   { id: "batch", label: "Batch Execution" },
+  { id: "completion", label: "Shell Completion" },
 ];
 
 const GenericCLIPage = () => {
@@ -967,6 +968,136 @@ const SummaryJoinSep    = " · "`} />
           <CodeBlock code={`cmd/
 └── exec.go          Handler, flag parsing, execution, output`} />
           <P>All exec logic fits in a single file. If it exceeds 200 lines, extract execformat.go for output functions.</P>
+        </Section>
+
+        {/* Section 19: Shell Completion */}
+        <Section id="completion" title="19 — Shell Completion">
+          <P>CLI tools should provide tab-completion for all major shells. Completions cover subcommand names, dynamic values (repo slugs, group names), and per-command flags.</P>
+
+          <H3>Design Rules</H3>
+          <Table headers={["Rule", "Detail"]} rows={[
+            ["Dynamic data", "Completions invoke hidden --list-* flags that query the DB and print one value per line"],
+            ["No decoration", "List output has no color, no banners, no headers — just raw values"],
+            ["Three shells", "PowerShell (Register-ArgumentCompleter), Bash (complete -F), Zsh (#compdef)"],
+            ["Idempotent install", "Setup writes source line to profile only if absent"],
+            ["Fast execution", "List flags open DB, query, print, exit — no formatting overhead"],
+          ]} />
+
+          <H3>Completion Subcommand</H3>
+          <CodeBlock code={`toolname completion <powershell|bash|zsh>   # print script to stdout
+toolname completion --list-repos             # one slug per line
+toolname completion --list-groups            # one group name per line
+toolname completion --list-commands          # one command per line`} />
+          <P>The completion subcommand serves two purposes: printing the full script for manual sourcing, and providing machine-readable lists for the scripts to call at tab-time.</P>
+
+          <H3>What Gets Completed</H3>
+          <Table headers={["Context", "Completed Values"]} rows={[
+            ["toolname <tab>", "All subcommand names and aliases"],
+            ["toolname cd <tab>", "Repo slugs + cd subcommands (repos, set-default, clear-default)"],
+            ["toolname pull <tab>", "Repo slugs from database"],
+            ["toolname cd repos --group <tab>", "Group names from database"],
+            ["toolname exec --group <tab>", "Group names from database"],
+            ["toolname group <tab>", "Subcommands: create, add, remove, list, show, delete"],
+          ]} />
+
+          <H3>PowerShell Script Pattern</H3>
+          <CodeBlock code={`Register-ArgumentCompleter -CommandName toolname -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $elems = $commandAst.CommandElements | Select-Object -Skip 1
+    $cmd = if ($elems.Count -gt 0) { $elems[0].ToString() } else { "" }
+
+    if ($cmd -eq "cd" -or $cmd -eq "go") {
+        $items = @(toolname completion --list-repos) + @("repos", "set-default")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    toolname completion --list-commands | Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+}`} />
+
+          <H3>Bash Script Pattern</H3>
+          <CodeBlock code={`_toolname_completions() {
+    local cur prev cmd
+    cur="\${COMP_WORDS[COMP_CWORD]}"
+    cmd="\${COMP_WORDS[1]}"
+
+    if [[ \${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=($(compgen -W "$(toolname completion --list-commands)" -- "$cur"))
+        return
+    fi
+
+    case "$cmd" in
+        cd|go)
+            COMPREPLY=($(compgen -W "$(toolname completion --list-repos) repos" -- "$cur"))
+            ;;
+        pull)
+            COMPREPLY=($(compgen -W "$(toolname completion --list-repos)" -- "$cur"))
+            ;;
+    esac
+}
+complete -F _toolname_completions toolname`} />
+
+          <H3>Setup Integration</H3>
+          <Table headers={["Shell", "Script Location", "Profile"]} rows={[
+            ["PowerShell", "$env:APPDATA/toolname/completions.ps1", "$PROFILE"],
+            ["Bash", "~/.local/share/toolname/completions.bash", "~/.bashrc"],
+            ["Zsh", "~/.local/share/toolname/completions.zsh", "~/.zshrc"],
+          ]} />
+          <P>The setup command detects the current shell, generates the completion script, writes it to the appropriate location, and appends a source line to the user's profile. Re-running setup does not duplicate the source line.</P>
+
+          <H3>Install Logic</H3>
+          <CodeBlock code={`func Install(shell string) error {
+    script, err := Generate(shell)
+    if err != nil {
+        return err
+    }
+
+    scriptPath, profilePath := resolvePaths(shell)
+
+    return writeAndSource(script, scriptPath, profilePath, shell)
+}
+
+func addSourceLine(scriptPath, profilePath, shell string) error {
+    sourceLine := buildSourceLine(scriptPath, shell)
+    existing, _ := os.ReadFile(profilePath)
+    if strings.Contains(string(existing), sourceLine) {
+        return nil  // already installed
+    }
+
+    f, _ := os.OpenFile(profilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+    defer f.Close()
+    fmt.Fprintf(f, "\\n# toolname shell completion\\n%s\\n", sourceLine)
+    return nil
+}`} />
+
+          <H3>Constants</H3>
+          <CodeBlock code={`// Shells
+const ShellPowerShell = "powershell"
+const ShellBash       = "bash"
+const ShellZsh        = "zsh"
+
+// List flags
+const CompListRepos    = "--list-repos"
+const CompListGroups   = "--list-groups"
+const CompListCommands = "--list-commands"
+
+// File names
+const CompFilePS   = "completions.ps1"
+const CompFileBash = "completions.bash"
+const CompFileZsh  = "completions.zsh"`} />
+
+          <H3>File Organization</H3>
+          <CodeBlock code={`cmd/
+  completion.go        Subcommand handler + list printers
+completion/
+  completion.go        Generate() + AllCommands()
+  powershell.go        PowerShell script generator
+  bash.go              Bash script generator
+  zsh.go               Zsh script generator
+  install.go           Profile detection + source-line insertion`} />
+          <P>Each shell generator is its own file. The install logic is separate from generation. All files stay under 200 lines.</P>
         </Section>
       </div>
     </DocsLayout>

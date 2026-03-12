@@ -65,6 +65,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpReactRepos)
 	fmt.Println(constants.HelpCppRepos)
 	fmt.Println(constants.HelpCSharpRepos)
+	fmt.Println(constants.HelpCompletion)
 	fmt.Println(constants.HelpHelp)
 }
 
