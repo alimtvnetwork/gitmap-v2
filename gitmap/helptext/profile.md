@@ -49,3 +49,10 @@ None.
     Active profile: work
     Repos: 18
     Created: 2025-03-01
+
+## See Also
+
+- [diff-profiles](diff-profiles.md) — Compare repos across profiles
+- [export](export.md) — Export current profile data
+- [import](import.md) — Import data into a profile
+- [db-reset](db-reset.md) — Reset the current profile database

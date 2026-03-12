@@ -39,3 +39,8 @@ ss
 **Output:**
 
     [{"command":"scan","runs":15,"avg_ms":2300}]
+
+## See Also
+
+- [history](history.md) — View command execution history
+- [history-reset](history-reset.md) — Clear history data

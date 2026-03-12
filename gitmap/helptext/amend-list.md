@@ -39,3 +39,8 @@ al
 **Output:**
 
     [{"commit":"abc1234","old_email":"old@email.com","new_email":"john@example.com"}]
+
+## See Also
+
+- [amend](amend.md) — Rewrite commit author information
+- [history](history.md) — View command history

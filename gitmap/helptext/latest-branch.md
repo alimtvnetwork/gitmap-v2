@@ -53,3 +53,9 @@ lb
 **Output:**
 
     {"branch":"feature/auth-redesign","last_commit":"2h ago","author":"dev@example.com"}
+
+## See Also
+
+- [status](status.md) — View repo branch and status info
+- [release-branch](release-branch.md) — Create a release branch
+- [watch](watch.md) — Live-refresh status dashboard

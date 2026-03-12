@@ -43,3 +43,9 @@ c
     [1/8] my-api exists, pulling... done
     [2/8] Cloning web-app... done
     ✓ 8 repositories processed
+
+## See Also
+
+- [scan](scan.md) — Scan directories to generate output files
+- [pull](pull.md) — Pull individual or grouped repos
+- [desktop-sync](desktop-sync.md) — Sync repos to GitHub Desktop

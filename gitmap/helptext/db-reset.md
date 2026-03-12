@@ -38,3 +38,9 @@ None
 **Output:**
 
     ✓ Database reset (42 repos, 3 groups removed)
+
+## See Also
+
+- [scan](scan.md) — Re-scan to rebuild the database
+- [history-reset](history-reset.md) — Clear command history only
+- [profile](profile.md) — Manage profiles (reset affects current profile)

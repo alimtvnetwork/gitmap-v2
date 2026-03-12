@@ -38,3 +38,9 @@ hr
 **Output:**
 
     ✓ History cleared (42 entries removed)
+
+## See Also
+
+- [history](history.md) — View command history
+- [db-reset](db-reset.md) — Reset the entire database
+- [stats](stats.md) — View usage metrics

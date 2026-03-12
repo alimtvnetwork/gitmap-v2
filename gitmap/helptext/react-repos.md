@@ -39,3 +39,10 @@ rr
 **Output:**
 
     [{"repo":"web-app","package":"@user/web-app","react_version":"18.2.0"}]
+
+## See Also
+
+- [scan](scan.md) — Scan directories to detect projects
+- [node-repos](node-repos.md) — List Node.js projects
+- [go-repos](go-repos.md) — List Go projects
+- [csharp-repos](csharp-repos.md) — List C# projects

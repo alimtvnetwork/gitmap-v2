@@ -40,3 +40,9 @@ rb
 
     Creating branch release/v3.0.0... done
     Switched to branch 'release/v3.0.0'
+
+## See Also
+
+- [release](release.md) — Create a full release with tag and push
+- [release-pending](release-pending.md) — Show unreleased commits
+- [latest-branch](latest-branch.md) — Find most recently updated branch

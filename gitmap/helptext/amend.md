@@ -45,3 +45,8 @@ am
     [DRY RUN] abc1234: Old Name → Jane
     [DRY RUN] old@email.com → jane@co.com
     No changes made.
+
+## See Also
+
+- [amend-list](amend-list.md) — View previous amendment records
+- [history](history.md) — View command history

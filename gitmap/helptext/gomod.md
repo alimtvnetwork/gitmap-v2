@@ -54,3 +54,8 @@ gm
     Replacing in cmd/root.go... done
     Committed on gomod-rename (not merged)
     ✓ 24 files updated
+
+## See Also
+
+- [go-repos](go-repos.md) — List detected Go projects
+- [scan](scan.md) — Scan directories to detect Go projects

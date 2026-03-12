@@ -35,3 +35,8 @@ None.
 **Output:**
 
     gitmap v2.8.0
+
+## See Also
+
+- [update](update.md) — Update gitmap to the latest version
+- [doctor](doctor.md) — Diagnose installation issues

@@ -40,3 +40,9 @@ hi
 **Output:**
 
     [{"id":1,"command":"scan ~/projects","timestamp":"2025-03-10T14:30:00Z"}]
+
+## See Also
+
+- [history-reset](history-reset.md) — Clear command history
+- [stats](stats.md) — View aggregated usage metrics
+- [bookmark](bookmark.md) — Save commands for re-execution

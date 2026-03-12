@@ -39,3 +39,9 @@ None.
 
     Syncing 42 repos...
     ✓ 42 repos synced
+
+## See Also
+
+- [scan](scan.md) — Scan directories to populate the database
+- [clone](clone.md) — Clone repos from output files
+- [list](list.md) — View tracked repos

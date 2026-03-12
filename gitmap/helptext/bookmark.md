@@ -47,3 +47,9 @@ None.
     Running 'daily-scan'...
     Found 42 repositories
     ✓ Scan complete
+
+## See Also
+
+- [history](history.md) — View command execution history
+- [scan](scan.md) — Scan directories (common bookmark target)
+- [pull](pull.md) — Pull repos (common bookmark target)

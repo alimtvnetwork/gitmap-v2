@@ -39,3 +39,10 @@ csr
 **Output:**
 
     [{"repo":"billing-svc","solution":"BillingSvc.sln","target":"net8.0"}]
+
+## See Also
+
+- [scan](scan.md) — Scan directories to detect projects
+- [cpp-repos](cpp-repos.md) — List C++ projects
+- [go-repos](go-repos.md) — List Go projects
+- [node-repos](node-repos.md) — List Node.js projects

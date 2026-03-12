@@ -57,3 +57,12 @@ r
     Creating tag v3.0.0... done
     Attaching assets... done
     ✓ Released v3.0.0
+
+## See Also
+
+- [release-branch](release-branch.md) — Create a release branch without tagging
+- [release-pending](release-pending.md) — Show unreleased commits
+- [changelog](changelog.md) — View release notes
+- [list-versions](list-versions.md) — List release tags
+- [list-releases](list-releases.md) — List stored release metadata
+- [revert](revert.md) — Revert to a previous release
