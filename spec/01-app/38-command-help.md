@@ -90,7 +90,7 @@ package helptext
 import "embed"
 
 //go:embed *.md
-var Files embed.FS
+var files embed.FS
 ```
 
 ### Runtime Behavior
