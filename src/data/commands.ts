@@ -422,7 +422,13 @@ export const commands: CommandDef[] = [
   {
     category: "history",
     name: "history-reset", alias: "hr", description: "Clear command execution history",
-    usage: "gitmap history-reset [--confirm]",
+    usage: "gitmap history-reset --confirm",
+    flags: [
+      { flag: "--confirm", description: "Required flag to confirm destructive reset" },
+    ],
+    examples: [
+      { command: "gitmap history-reset --confirm", description: "Clear all command history" },
+    ],
     seeAlso: [
       { name: "history", description: "View command history" },
       { name: "db-reset", description: "Reset entire database" },
