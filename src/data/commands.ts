@@ -459,9 +459,14 @@ export const commands: CommandDef[] = [
   // --- Utilities ---
   {
     category: "utilities",
-    name: "setup", alias: undefined, description: "Interactive first-time configuration wizard",
-    usage: "gitmap setup",
+    name: "setup", alias: undefined, description: "Configure Git settings and install shell completions",
+    usage: "gitmap setup [--config <path>] [--dry-run]",
+    flags: [
+      { flag: "--config <path>", description: "Path to git-setup.json config file" },
+      { flag: "--dry-run", description: "Preview changes without applying" },
+    ],
     seeAlso: [
+      { name: "completion", description: "Generate completion scripts manually" },
       { name: "doctor", description: "Diagnose issues" },
       { name: "scan", description: "Scan directories after setup" },
       { name: "update", description: "Self-update to latest version" },
@@ -524,6 +529,26 @@ export const commands: CommandDef[] = [
     seeAlso: [
       { name: "go-repos", description: "List detected Go projects" },
       { name: "scan", description: "Scan directories" },
+    ],
+  },
+  {
+    category: "utilities",
+    name: "completion", alias: "cmp", description: "Generate or install shell tab-completion scripts",
+    usage: "gitmap completion <powershell|bash|zsh> [--list-repos] [--list-groups] [--list-commands]",
+    flags: [
+      { flag: "--list-repos", description: "Print repo slugs, one per line (for script use)" },
+      { flag: "--list-groups", description: "Print group names, one per line (for script use)" },
+      { flag: "--list-commands", description: "Print all command names, one per line (for script use)" },
+    ],
+    examples: [
+      { command: "gitmap completion powershell", description: "Print PowerShell completion script" },
+      { command: "gitmap completion bash", description: "Print Bash completion script" },
+      { command: "gitmap completion --list-repos", description: "List repo slugs for scripting" },
+    ],
+    seeAlso: [
+      { name: "setup", description: "Auto-installs completions during setup" },
+      { name: "cd", description: "Navigate to repos using tab-completed slugs" },
+      { name: "group", description: "Group names are also tab-completed" },
     ],
   },
 ];
