@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, ArrowRight } from "lucide-react";
 import CodeBlock from "./CodeBlock";
+import type { CommandSeeAlso } from "@/data/commands";
 
 interface CommandCardProps {
   name: string;
@@ -9,9 +10,11 @@ interface CommandCardProps {
   usage?: string;
   flags?: { flag: string; description: string }[];
   examples?: { command: string; description?: string }[];
+  seeAlso?: CommandSeeAlso[];
+  onNavigate?: (commandName: string) => void;
 }
 
-const CommandCard = ({ name, alias, description, usage, flags, examples }: CommandCardProps) => {
+const CommandCard = ({ name, alias, description, usage, flags, examples, seeAlso, onNavigate }: CommandCardProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -61,6 +64,28 @@ const CommandCard = ({ name, alias, description, usage, flags, examples }: Comma
                   <CodeBlock code={ex.command} />
                 </div>
               ))}
+            </div>
+          )}
+
+          {seeAlso && seeAlso.length > 0 && (
+            <div>
+              <h4 className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider mb-2">See Also</h4>
+              <div className="flex flex-wrap gap-2">
+                {seeAlso.map((ref) => (
+                  <button
+                    key={ref.name}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate?.(ref.name);
+                    }}
+                    className="group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-card text-sm font-mono text-foreground hover:border-primary/60 hover:bg-primary/5 transition-colors"
+                    title={ref.description}
+                  >
+                    <span>{ref.name}</span>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
