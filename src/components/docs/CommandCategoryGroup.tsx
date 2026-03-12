@@ -13,7 +13,7 @@ interface Props {
   onNavigate?: (commandName: string) => void;
 }
 
-const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen }: Props) => {
+const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true, forceOpen, onNavigate }: Props) => {
   const [open, setOpen] = useState(defaultOpen);
 
   useEffect(() => {
