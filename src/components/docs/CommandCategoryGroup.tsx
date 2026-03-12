@@ -49,7 +49,7 @@ const CommandCategoryGroup = ({ label, description, commands, defaultOpen = true
           >
             <div className="p-2 space-y-1.5">
               {commands.map((cmd) => (
-                <CommandCard key={cmd.name} {...cmd} />
+                <CommandCard key={cmd.name} {...cmd} onNavigate={onNavigate} />
               ))}
             </div>
           </motion.div>
