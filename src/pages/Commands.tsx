@@ -44,9 +44,10 @@ const CommandsPage = () => {
         {categories.map((cat) => {
           const count = commands.filter((c) => c.category === cat.key).length;
           return (
-            <div
+            <button
               key={cat.key}
-              className="rounded-lg border border-border bg-card px-3 py-2 text-center"
+              onClick={() => handleCategoryClick(cat.key)}
+              className="rounded-lg border border-border bg-card px-3 py-2 text-center hover:bg-muted/50 hover:border-primary/40 transition-colors cursor-pointer"
             >
               <div className="text-lg font-mono font-bold text-primary">{count}</div>
               <div className="text-[10px] text-muted-foreground font-mono leading-tight truncate">{cat.label}</div>
