@@ -459,9 +459,14 @@ export const commands: CommandDef[] = [
   // --- Utilities ---
   {
     category: "utilities",
-    name: "setup", alias: undefined, description: "Interactive first-time configuration wizard",
-    usage: "gitmap setup",
+    name: "setup", alias: undefined, description: "Configure Git settings and install shell completions",
+    usage: "gitmap setup [--config <path>] [--dry-run]",
+    flags: [
+      { flag: "--config <path>", description: "Path to git-setup.json config file" },
+      { flag: "--dry-run", description: "Preview changes without applying" },
+    ],
     seeAlso: [
+      { name: "completion", description: "Generate completion scripts manually" },
       { name: "doctor", description: "Diagnose issues" },
       { name: "scan", description: "Scan directories after setup" },
       { name: "update", description: "Self-update to latest version" },
