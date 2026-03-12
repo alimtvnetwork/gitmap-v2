@@ -57,3 +57,11 @@ s
     Found 7 repositories
     ✓ Output written to ./gitmap-output/
     Opening folder...
+
+## See Also
+
+- [rescan](rescan.md) — Re-scan using cached parameters
+- [clone](clone.md) — Clone repos from scan output
+- [status](status.md) — View repo statuses after scanning
+- [desktop-sync](desktop-sync.md) — Sync scanned repos to GitHub Desktop
+- [export](export.md) — Export scanned data

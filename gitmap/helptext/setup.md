@@ -30,6 +30,12 @@ None.
     ✓ 3 settings applied
     Setup complete.
 
+## See Also
+
+- [scan](scan.md) — Scan directories after setup
+- [doctor](doctor.md) — Diagnose installation issues
+- [update](update.md) — Update gitmap to the latest version
+
 ### Example 2: Re-run setup (safe to repeat)
 
     gitmap setup

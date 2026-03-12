@@ -42,3 +42,10 @@ ls
     billing-svc   ~/work/billing-svc   main  origin
     auth-gateway  ~/work/auth-gateway  main  origin
     2 repos in group 'work'
+
+## See Also
+
+- [cd](cd.md) — Navigate to a tracked repo
+- [group](group.md) — Manage repo groups
+- [scan](scan.md) — Scan directories to populate the database
+- [status](status.md) — View repo statuses

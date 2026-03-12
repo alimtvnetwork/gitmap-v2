@@ -38,3 +38,9 @@ None.
 
     Importing from backup.json...
     ✓ 15 repos imported (3 skipped)
+
+## See Also
+
+- [export](export.md) — Export the database to a file
+- [scan](scan.md) — Scan directories as an alternative to import
+- [profile](profile.md) — Manage database profiles

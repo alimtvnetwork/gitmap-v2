@@ -52,3 +52,9 @@ w
 **Output:**
 
     [{"name":"my-api","branch":"main","status":"clean"}]
+
+## See Also
+
+- [status](status.md) — One-time status snapshot
+- [scan](scan.md) — Scan directories to populate the database
+- [group](group.md) — Manage repo groups for filtered watching

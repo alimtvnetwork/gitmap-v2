@@ -39,3 +39,9 @@ rp
 **Output:**
 
     [{"hash":"abc1234","message":"Add user auth endpoint","date":"2025-03-10"}]
+
+## See Also
+
+- [release](release.md) — Create a release from pending commits
+- [release-branch](release-branch.md) — Create a release branch
+- [changelog](changelog.md) — View release notes

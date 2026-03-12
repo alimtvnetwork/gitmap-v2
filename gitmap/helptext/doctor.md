@@ -41,3 +41,9 @@ None
     ✓ Git installed (v2.43.0)
     ✓ Fixed: removed stale binary
     All checks passed.
+
+## See Also
+
+- [setup](setup.md) — Run first-time configuration
+- [update](update.md) — Update gitmap to the latest version
+- [version](version.md) — Check current version

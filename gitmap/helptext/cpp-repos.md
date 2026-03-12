@@ -39,3 +39,10 @@ cr
 **Output:**
 
     [{"repo":"game-engine","build_system":"CMake"}]
+
+## See Also
+
+- [scan](scan.md) — Scan directories to detect projects
+- [csharp-repos](csharp-repos.md) — List C# projects
+- [go-repos](go-repos.md) — List Go projects
+- [node-repos](node-repos.md) — List Node.js projects

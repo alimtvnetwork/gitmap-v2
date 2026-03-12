@@ -39,3 +39,10 @@ gr
 **Output:**
 
     [{"repo":"my-api","module":"github.com/user/my-api","go_version":"1.22"}]
+
+## See Also
+
+- [scan](scan.md) — Scan directories to detect projects
+- [node-repos](node-repos.md) — List Node.js projects
+- [react-repos](react-repos.md) — List React projects
+- [gomod](gomod.md) — Rename Go module paths

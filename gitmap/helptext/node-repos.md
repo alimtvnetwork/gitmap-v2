@@ -39,3 +39,10 @@ nr
 **Output:**
 
     [{"repo":"web-app","package":"@user/web-app","node_version":"18.x"}]
+
+## See Also
+
+- [scan](scan.md) — Scan directories to detect projects
+- [react-repos](react-repos.md) — List React projects
+- [go-repos](go-repos.md) — List Go projects
+- [cpp-repos](cpp-repos.md) — List C++ projects

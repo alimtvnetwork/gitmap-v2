@@ -39,3 +39,9 @@ None (all arguments are passed directly to git).
     [my-api] origin https://github.com/user/my-api.git
     [web-app] origin https://github.com/user/web-app.git
     ✓ 2 repos processed
+
+## See Also
+
+- [scan](scan.md) — Scan directories to populate the database
+- [pull](pull.md) — Pull repos (built-in alternative to exec fetch)
+- [status](status.md) — View repo statuses

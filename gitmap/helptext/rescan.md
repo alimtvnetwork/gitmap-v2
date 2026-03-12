@@ -41,3 +41,9 @@ rs
     Re-scanning ~/projects (cached)...
     Found 44 repositories
     ✓ gitmap-repos.json
+
+## See Also
+
+- [scan](scan.md) — Initial directory scan
+- [status](status.md) — View repo statuses
+- [clone](clone.md) — Clone from scan output

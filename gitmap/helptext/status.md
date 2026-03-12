@@ -42,3 +42,10 @@ st
     billing-svc  main  clean  0/0
     auth-gateway main  dirty  1/0
     ✓ 2 repos (group: work)
+
+## See Also
+
+- [watch](watch.md) — Live-refresh status dashboard
+- [scan](scan.md) — Scan directories to populate the database
+- [group](group.md) — Manage repo groups
+- [pull](pull.md) — Pull repos to sync changes

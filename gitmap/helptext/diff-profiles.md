@@ -40,3 +40,9 @@ dp
 **Output:**
 
     {"only_a":["personal-blog"],"only_b":["billing-svc"],"common":12}
+
+## See Also
+
+- [profile](profile.md) — Create and manage profiles
+- [list](list.md) — View repos in the current profile
+- [group](group.md) — Organize repos within a profile

@@ -39,3 +39,9 @@ None.
 
     Current: v2.8.0
     ✓ Already up to date.
+
+## See Also
+
+- [version](version.md) — Check current version
+- [doctor](doctor.md) — Diagnose installation issues
+- [changelog](changelog.md) — View release notes for new version

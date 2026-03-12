@@ -53,3 +53,11 @@ g
     Group: work (5 repos)
     billing-svc   ~/work/billing-svc
     auth-gateway  ~/work/auth-gateway
+
+## See Also
+
+- [list](list.md) — View all tracked repos
+- [cd](cd.md) — Navigate to a repo with group filtering
+- [status](status.md) — View status by group
+- [pull](pull.md) — Pull repos by group
+- [diff-profiles](diff-profiles.md) — Compare repos across profiles

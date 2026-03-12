@@ -40,3 +40,9 @@ None.
     Reverting to v2.3.7...
     Rebuilding... done
     ✓ Reverted to v2.3.7
+
+## See Also
+
+- [list-versions](list-versions.md) — List available versions to revert to
+- [release](release.md) — Create a new release
+- [changelog](changelog.md) — View release notes before reverting

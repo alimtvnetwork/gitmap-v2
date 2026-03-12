@@ -57,3 +57,8 @@ sw
     [DRY RUN] "Best plumber in Seattle"
     [DRY RUN] "Emergency plumbing 24/7"
     No changes made.
+
+## See Also
+
+- [scan](scan.md) — Scan directories to find target repos
+- [history](history.md) — View command execution history
