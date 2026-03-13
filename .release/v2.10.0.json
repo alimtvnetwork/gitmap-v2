@@ -1,0 +1,16 @@
+{
+  "version": "2.10.0",
+  "branch": "release/v2.10.0",
+  "sourceBranch": "main",
+  "commit": "",
+  "tag": "v2.10.0",
+  "assets": [],
+  "draft": false,
+  "preRelease": false,
+  "createdAt": "2026-03-13T00:00:00Z",
+  "isLatest": true,
+  "changelog": [
+    "Added .release/v2.9.0.json with full release metadata and changelog array for the v2.9.0 documentation milestone.",
+    "Updated .release/latest.json to point to v2.9.0."
+  ]
+}
