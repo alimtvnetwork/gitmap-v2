@@ -29,8 +29,11 @@ func generateBash() string {
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-groups)" -- "$cur"))
             fi
             ;;
-        group)
-            COMPREPLY=($(compgen -W "create add remove list show delete" -- "$cur"))
+        group|g)
+            COMPREPLY=($(compgen -W "create add remove list show delete pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
+            ;;
+        multi-group|mg)
+            COMPREPLY=($(compgen -W "pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
             ;;
     esac
 }

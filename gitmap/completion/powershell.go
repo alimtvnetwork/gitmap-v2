@@ -31,9 +31,20 @@ func generatePowerShell() string {
         return
     }
 
-    if ($cmd -eq "group") {
-        @("create", "add", "remove", "list", "show", "delete") |
-            Where-Object { $_ -like "$wordToComplete*" } |
+    if ($cmd -eq "group" -or $cmd -eq "g") {
+        $subs = @("create", "add", "remove", "list", "show", "delete", "pull", "status", "exec", "clear")
+        $groups = @(gitmap completion --list-groups)
+        $items = $subs + $groups
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "multi-group" -or $cmd -eq "mg") {
+        $subs = @("pull", "status", "exec", "clear")
+        $groups = @(gitmap completion --list-groups)
+        $items = $subs + $groups
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
     }

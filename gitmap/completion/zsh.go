@@ -34,8 +34,16 @@ _gitmap() {
                 _describe 'group' groups
             fi
             ;;
-        group)
-            local -a subs=(create add remove list show delete)
+        group|g)
+            local -a subs=(create add remove list show delete pull status exec clear)
+            groups=($(gitmap completion --list-groups))
+            subs+=("${groups[@]}")
+            _describe 'subcommand' subs
+            ;;
+        multi-group|mg)
+            local -a subs=(pull status exec clear)
+            groups=($(gitmap completion --list-groups))
+            subs+=("${groups[@]}")
             _describe 'subcommand' subs
             ;;
     esac
