@@ -17,6 +17,9 @@ import HistoryPage from "./pages/History";
 import StatsPage from "./pages/Stats";
 import ProjectDetectionPage from "./pages/ProjectDetection";
 import GenericCLIPage from "./pages/GenericCLI";
+import ChangelogPage from "./pages/Changelog";
+import FlagReferencePage from "./pages/FlagReference";
+import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
