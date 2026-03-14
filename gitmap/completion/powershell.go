@@ -56,6 +56,20 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "release" -or $cmd -eq "r") {
+        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--verbose")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "release-branch" -or $cmd -eq "rb") {
+        $items = @("--assets", "--draft", "--dry-run", "--compress")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     gitmap completion --list-commands | Where-Object { $_ -like "$wordToComplete*" } |
         ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
 }
