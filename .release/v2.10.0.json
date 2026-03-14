@@ -10,7 +10,6 @@
   "createdAt": "2026-03-13T00:00:00Z",
   "isLatest": true,
   "changelog": [
-    "Added .release/v2.9.0.json with full release metadata and changelog array for the v2.9.0 documentation milestone.",
-    "Updated .release/latest.json to point to v2.9.0."
+    "Version bump for next development cycle."
   ]
 }
