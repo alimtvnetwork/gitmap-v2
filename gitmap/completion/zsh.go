@@ -51,11 +51,11 @@ _gitmap() {
             _describe 'subcommand' subs
             ;;
         release|r)
-            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --verbose)
+            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --verbose)
             _describe 'flag' flags
             ;;
         release-branch|rb)
-            local -a flags=(--assets --draft --dry-run --compress)
+            local -a flags=(--assets --draft --dry-run --compress --checksums)
             _describe 'flag' flags
             ;;
     esac

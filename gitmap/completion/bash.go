@@ -39,10 +39,10 @@ func generateBash() string {
             COMPREPLY=($(compgen -W "pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
             ;;
         release|r)
-            COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --verbose" -- "$cur"))
+            COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --checksums --verbose" -- "$cur"))
             ;;
         release-branch|rb)
-            COMPREPLY=($(compgen -W "--assets --draft --dry-run --compress" -- "$cur"))
+            COMPREPLY=($(compgen -W "--assets --draft --dry-run --compress --checksums" -- "$cur"))
             ;;
     esac
 }

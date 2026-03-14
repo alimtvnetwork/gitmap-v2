@@ -57,14 +57,14 @@ func generatePowerShell() string {
     }
 
     if ($cmd -eq "release" -or $cmd -eq "r") {
-        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--verbose")
+        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--verbose")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
     }
 
     if ($cmd -eq "release-branch" -or $cmd -eq "rb") {
-        $items = @("--assets", "--draft", "--dry-run", "--compress")
+        $items = @("--assets", "--draft", "--dry-run", "--compress", "--checksums")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
