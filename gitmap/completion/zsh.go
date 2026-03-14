@@ -50,6 +50,14 @@ _gitmap() {
             subs+=("${groups[@]}")
             _describe 'subcommand' subs
             ;;
+        release|r)
+            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --verbose)
+            _describe 'flag' flags
+            ;;
+        release-branch|rb)
+            local -a flags=(--assets --draft --dry-run --compress)
+            _describe 'flag' flags
+            ;;
     esac
 }
 
