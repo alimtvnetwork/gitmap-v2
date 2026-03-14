@@ -2,6 +2,7 @@ package release
 
 import (
 	"fmt"
+	"path/filepath"
 	"time"
 
 	"github.com/user/gitmap/constants"
@@ -19,6 +20,18 @@ func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options
 	fmt.Print(constants.MsgReleasePushed)
 
 	assets := CollectAssets(opts.Assets)
+
+	if opts.Compress && len(assets) > 0 {
+		compressed, compErr := CompressAssets(assets)
+		if compErr == nil && len(compressed) > 0 {
+			for _, a := range compressed {
+				fmt.Printf(constants.MsgCompressArchive, filepath.Base(a), filepath.Base(a))
+			}
+
+			assets = compressed
+		}
+	}
+
 	for _, a := range assets {
 		fmt.Printf(constants.MsgReleaseAttach, a)
 	}
@@ -103,7 +116,7 @@ func updateLatestIfStable(v Version) error {
 // printDryRun shows what would happen without executing.
 func printDryRun(v Version, branchName, tag, sourceName string, opts Options) error {
 	printDryRunSteps(branchName, tag, sourceName)
-	printDryRunAssets(opts.Assets)
+	printDryRunAssets(opts.Assets, opts.Compress)
 	printDryRunMeta(v)
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
 
@@ -127,8 +140,16 @@ func printDryRunSteps(branchName, tag, sourceName string) {
 }
 
 // printDryRunAssets prints asset attachments in dry-run mode.
-func printDryRunAssets(assetsPath string) {
+func printDryRunAssets(assetsPath string, compress bool) {
 	userAssets := CollectAssets(assetsPath)
+
+	if compress && len(userAssets) > 0 {
+		archiveNames := DescribeCompression(userAssets)
+		for _, name := range archiveNames {
+			fmt.Printf(constants.MsgReleaseDryRun, "Compress → "+name)
+		}
+	}
+
 	for _, a := range userAssets {
 		fmt.Printf(constants.MsgReleaseDryRun, "Attach "+a)
 	}

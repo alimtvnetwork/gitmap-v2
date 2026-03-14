@@ -20,6 +20,7 @@ r
 | --bump major\|minor\|patch | — | Auto-increment version |
 | --draft | false | Create unpublished draft |
 | --dry-run | false | Preview without executing |
+| --compress | false | Wrap assets in .zip (Windows) or .tar.gz archives |
 
 ## Prerequisites
 

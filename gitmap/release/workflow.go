@@ -19,6 +19,7 @@ type Options struct {
 	Draft      bool
 	DryRun     bool
 	Verbose    bool
+	Compress   bool
 }
 
 // Result holds the outcome of a release operation.
