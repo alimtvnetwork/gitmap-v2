@@ -69,7 +69,6 @@ func handleListSpecial(keyword string, args []string) {
 	}
 	typeKey := typeKeywords[lower]
 	runProjectRepos(typeKey, args)
-	printHints(listTypeHints())
 }
 
 // parseListFlags parses flags for the list command.
