@@ -40,6 +40,13 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "list" -or $cmd -eq "ls") {
+        $items = @("go", "node", "nodejs", "react", "cpp", "csharp", "groups", "--group", "--verbose")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     if ($cmd -eq "multi-group" -or $cmd -eq "mg") {
         $subs = @("pull", "status", "exec", "clear")
         $groups = @(gitmap completion --list-groups)

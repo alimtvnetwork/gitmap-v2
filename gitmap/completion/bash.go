@@ -32,6 +32,9 @@ func generateBash() string {
         group|g)
             COMPREPLY=($(compgen -W "create add remove list show delete pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
             ;;
+        list|ls)
+            COMPREPLY=($(compgen -W "go node nodejs react cpp csharp groups --group --verbose" -- "$cur"))
+            ;;
         multi-group|mg)
             COMPREPLY=($(compgen -W "pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
             ;;

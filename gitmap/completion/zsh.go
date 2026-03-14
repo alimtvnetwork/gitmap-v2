@@ -40,6 +40,10 @@ _gitmap() {
             subs+=("${groups[@]}")
             _describe 'subcommand' subs
             ;;
+        list|ls)
+            local -a types=(go node nodejs react cpp csharp groups)
+            _describe 'type' types
+            ;;
         multi-group|mg)
             local -a subs=(pull status exec clear)
             groups=($(gitmap completion --list-groups))
