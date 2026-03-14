@@ -116,7 +116,7 @@ func updateLatestIfStable(v Version) error {
 // printDryRun shows what would happen without executing.
 func printDryRun(v Version, branchName, tag, sourceName string, opts Options) error {
 	printDryRunSteps(branchName, tag, sourceName)
-	printDryRunAssets(opts.Assets)
+	printDryRunAssets(opts.Assets, opts.Compress)
 	printDryRunMeta(v)
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
 
