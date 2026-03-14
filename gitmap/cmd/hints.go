@@ -24,9 +24,9 @@ type hintEntry struct {
 // projectReposHints returns hints shown after go-repos, node-repos, etc.
 func projectReposHints() []hintEntry {
 	return []hintEntry{
-		{constants.HintCDRepo, constants.HintCDRepoDesc},
 		{constants.HintGroupAdd, constants.HintGroupAddDesc},
-		{constants.HintLsType, constants.HintLsTypeDesc},
+		{constants.HintCDRepo, constants.HintCDRepoDesc},
+		{constants.HintPullGroup, constants.HintPullGroupDesc},
 	}
 }
 
