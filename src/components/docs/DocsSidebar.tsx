@@ -15,6 +15,9 @@ import {
   BarChart3,
   Search,
   Terminal,
+  FileText,
+  Flag,
+  PlayCircle,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
