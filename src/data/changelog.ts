@@ -5,6 +5,12 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.12.0",
+    items: [
+      "Added global ⌘K command palette searching across commands, flags, and pages.",
+    ],
+  },
+  {
     version: "v2.11.0",
     items: [
       "Added Changelog page with timeline view and expand/collapse controls.",
