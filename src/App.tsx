@@ -45,6 +45,9 @@ const App = () => (
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/project-detection" element={<ProjectDetectionPage />} />
           <Route path="/generic-cli" element={<GenericCLIPage />} />
+          <Route path="/changelog" element={<ChangelogPage />} />
+          <Route path="/flags" element={<FlagReferencePage />} />
+          <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

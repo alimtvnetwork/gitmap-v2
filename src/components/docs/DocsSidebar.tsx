@@ -51,6 +51,9 @@ const navItems = [
   { title: "Stats", url: "/stats", icon: BarChart3 },
   { title: "Detection", url: "/project-detection", icon: Search },
   { title: "Generic CLI", url: "/generic-cli", icon: Terminal },
+  { title: "Changelog", url: "/changelog", icon: FileText },
+  { title: "Flags", url: "/flags", icon: Flag },
+  { title: "Examples", url: "/examples", icon: PlayCircle },
 ];
 
 export function DocsSidebar() {
