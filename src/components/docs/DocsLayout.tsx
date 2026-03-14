@@ -1,5 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
+import CommandPalette from "@/components/docs/CommandPalette";
 
 interface DocsLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,9 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
           <header className="h-12 flex items-center border-b border-border sticky top-0 bg-background/80 backdrop-blur-sm z-10">
             <SidebarTrigger className="ml-3" />
             <span className="ml-3 text-sm font-mono text-muted-foreground">gitmap documentation</span>
+            <div className="ml-auto mr-3">
+              <CommandPalette />
+            </div>
           </header>
           <main className="flex-1 overflow-auto">
             <div className="max-w-4xl mx-auto px-6 py-8">
