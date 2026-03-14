@@ -14,8 +14,7 @@ const (
 	CmdMGExec   = "exec"
 )
 
-// Multi-group help.
-const HelpMultiGroup = "  multi-group (mg)    Select multiple groups for batch operations"
+// Multi-group help text is declared in constants_cli.go (HelpMultiGroup).
 
 // Multi-group messages.
 const (
