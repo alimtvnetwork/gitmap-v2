@@ -100,6 +100,7 @@ const (
 	MsgProjectNoneFound    = "No %s projects found.\n"
 	MsgProjectCount        = "%d\n"
 	MsgProjectCleanedStale = "Cleaned %d stale project records\n"
+	MsgProjectListCount    = "\n%d projects found.\n"
 )
 
 // Project detection error messages.
