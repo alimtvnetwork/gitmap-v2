@@ -194,6 +194,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdMultiGroup || command == constants.CmdMultiGroupAlias {
+		runMultiGroup(os.Args[2:])
+
+		return true
+	}
 	if command == constants.CmdDBReset {
 		runDBReset(os.Args[2:])
 
