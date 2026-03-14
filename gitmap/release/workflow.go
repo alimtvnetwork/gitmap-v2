@@ -20,6 +20,7 @@ type Options struct {
 	DryRun     bool
 	Verbose    bool
 	Compress   bool
+	Checksums  bool
 }
 
 // Result holds the outcome of a release operation.
