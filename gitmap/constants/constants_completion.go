@@ -25,7 +25,7 @@ const (
 )
 
 // Completion help text.
-const HelpCompletion = "  completion (cmp)    Generate or install shell tab-completion scripts"
+const HelpCompletionLong = "  completion (cmp)    Generate or install shell tab-completion scripts"
 
 // Completion messages.
 const (
