@@ -148,7 +148,7 @@ func printDryRunSteps(branchName, tag, sourceName string) {
 }
 
 // printDryRunAssets prints asset attachments in dry-run mode.
-func printDryRunAssets(assetsPath string, compress bool) {
+func printDryRunAssets(assetsPath string, compress bool, checksums bool) {
 	userAssets := CollectAssets(assetsPath)
 
 	if compress && len(userAssets) > 0 {
@@ -160,6 +160,10 @@ func printDryRunAssets(assetsPath string, compress bool) {
 
 	for _, a := range userAssets {
 		fmt.Printf(constants.MsgReleaseDryRun, "Attach "+a)
+	}
+
+	if checksums && len(userAssets) > 0 {
+		fmt.Printf(constants.MsgReleaseDryRun, "Generate "+constants.ChecksumsFile+" (SHA256)")
 	}
 }
 
