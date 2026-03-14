@@ -117,8 +117,9 @@ gitmap list-versions --json --limit 5
 | Command | Alias | Description |
 |---------|-------|-------------|
 | `cd` | `go` | Navigate to a tracked repo directory |
-| `list` | `ls` | Show all tracked repos with slugs |
-| `group` | `g` | Manage repo groups |
+| `list` | `ls` | Show all tracked repos with slugs (supports type filtering) |
+| `group` | `g` | Manage repo groups / activate a group for batch ops |
+| `multi-group` | `mg` | Select multiple groups for batch operations |
 | `diff-profiles` | `dp` | Compare repos across two profiles |
 
 ```bash
@@ -132,11 +133,28 @@ gitmap cd repos --group work
 gitmap group create work --desc "Work repos"
 gitmap group add work my-api web-app
 
+# Activate a group for batch operations
+gitmap g work                  # activate
+gitmap g pull                  # pull all repos in active group
+gitmap g status                # status for active group
+gitmap g exec fetch --prune    # exec across active group
+gitmap g clear                 # deactivate
+
+# List repos filtered by project type
+gitmap ls go                   # list Go projects
+gitmap ls node                 # list Node.js projects
+gitmap ls groups               # list all groups
+
+# Multi-group batch operations
+gitmap mg backend,frontend     # select multiple groups
+gitmap mg pull                 # pull from all selected groups
+gitmap mg clear                # clear selection
+
 # Compare two profiles
 gitmap diff-profiles home work
 ```
 
-→ Full details: [cd](gitmap/helptext/cd.md) · [list](gitmap/helptext/list.md) · [group](gitmap/helptext/group.md) · [diff-profiles](gitmap/helptext/diff-profiles.md)
+→ Full details: [cd](gitmap/helptext/cd.md) · [list](gitmap/helptext/list.md) · [group](gitmap/helptext/group.md) · [multi-group](gitmap/helptext/multi-group.md) · [diff-profiles](gitmap/helptext/diff-profiles.md)
 
 ### History & Stats
 
