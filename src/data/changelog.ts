@@ -5,6 +5,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.13.0",
+    items: [
+      "Added group activation: `gitmap g <name>` sets a persistent active group for batch pull/status/exec.",
+      "Added `multi-group` (mg) command for selecting and operating on multiple groups at once.",
+      "Added `gitmap ls <type>` filtering: `gitmap ls go`, `gitmap ls node`, `gitmap ls groups`.",
+      "Added contextual helper hints shown after command output to aid discoverability.",
+      "Added Settings table for persistent key-value configuration in SQLite.",
+    ],
+  },
+  {
     version: "v2.12.0",
     items: [
       "Added global ⌘K command palette searching across commands, flags, and pages.",
