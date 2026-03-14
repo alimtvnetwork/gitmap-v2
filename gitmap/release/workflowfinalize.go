@@ -32,6 +32,14 @@ func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options
 		}
 	}
 
+	if opts.Checksums && len(assets) > 0 {
+		checksumPath, csErr := GenerateChecksums(assets)
+		if csErr == nil && len(checksumPath) > 0 {
+			fmt.Printf(constants.MsgChecksumGenerated, constants.ChecksumsFile)
+			assets = append(assets, checksumPath)
+		}
+	}
+
 	for _, a := range assets {
 		fmt.Printf(constants.MsgReleaseAttach, a)
 	}
