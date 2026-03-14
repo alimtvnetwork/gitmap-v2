@@ -103,6 +103,7 @@ func printUsageReleaseFlags() {
 	fmt.Println(constants.HelpBump)
 	fmt.Println(constants.HelpDraft)
 	fmt.Println(constants.HelpDryRun)
+	fmt.Println(constants.HelpCompressFlag)
 }
 
 // printUsageSEOFlags prints the seo-write flags section.
