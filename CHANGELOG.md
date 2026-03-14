@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.12.0
+- Added global ⌘K command palette searching across commands, flags, and pages.
+
 ## v2.11.0
 - Added Changelog page with timeline view and expand/collapse controls.
 - Added Flag Reference page with sortable, searchable table of all flags.
