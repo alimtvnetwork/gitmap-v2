@@ -54,12 +54,3 @@ func DefaultDBPath() string {
 	return filepath.Join(dir, dbFile)
 }
 
-// OpenDefaultProfile opens a named profile's database from the
-// binary's data directory.
-func OpenDefaultProfile(profileName string) (*DB, error) {
-	dir := BinaryDataDir()
-	dbFile := ProfileDBFile(profileName)
-	dbPath := filepath.Join(dir, dbFile)
-
-	return openDBAt(dbPath)
-}
