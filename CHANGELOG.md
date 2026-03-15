@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.16.0
+- Wired real `gitutil.Status()` into TUI dashboard for live dirty/clean indicators.
+- Dashboard now shows ahead/behind counts and stash per repo.
+- Async background refresh on TUI startup; manual refresh via `r` key.
+- Summary bar with aggregate dirty/behind/stash counts and UTC timestamp.
+
 ## v2.15.1
 - **Fixed**: Database now resolves to `<binary-location>/data/gitmap.db` instead of CWD-relative `gitmap-output/data/`.
 - Added `store.OpenDefault()` and `store.OpenDefaultProfile()` for binary-relative database access.

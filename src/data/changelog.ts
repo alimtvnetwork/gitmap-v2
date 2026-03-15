@@ -5,6 +5,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.16.0",
+    items: [
+      "Wired real `gitutil.Status()` into TUI dashboard for live dirty/clean indicators.",
+      "Dashboard now shows ahead/behind counts and stash per repo.",
+      "Async background refresh on TUI startup; manual refresh via `r` key.",
+      "Summary bar with aggregate dirty/behind/stash counts and UTC timestamp.",
+    ],
+  },
+  {
     version: "v2.15.1",
     items: [
       "**Fixed**: Database now resolves to `<binary-location>/data/gitmap.db` instead of CWD-relative `gitmap-output/data/`.",
