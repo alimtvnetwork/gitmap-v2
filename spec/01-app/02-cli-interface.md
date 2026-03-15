@@ -187,6 +187,15 @@ for any that are untagged.
 - Supports `--assets`, `--draft`, `--dry-run`, and `--verbose`.
 - Useful for catching up on releases after manual branch creation.
 
+### `gitmap clear-release-json <version>` (alias: `crj`)
+
+Remove a single `.release/vX.Y.Z.json` metadata file. This is a
+cleanup command — it does not affect Git branches, tags, or the
+database. Only the on-disk JSON file is deleted.
+
+- Accepts any valid semver version (with or without `v` prefix).
+- Exits with an error if the file does not exist.
+
 ### `gitmap changelog [version]` (alias: `cl`)
 
 Display concise, CLI-friendly release notes from `CHANGELOG.md`.
