@@ -28,10 +28,30 @@ func BinaryDataDir() string {
 // OpenDefault opens the database from the binary's data directory.
 func OpenDefault() (*DB, error) {
 	dir := BinaryDataDir()
-	dbFile := ActiveProfileDBFile(dir)
+	baseDir := filepath.Dir(dir) // binary dir without /data
+	dbFile := ActiveProfileDBFile(baseDir)
 	dbPath := filepath.Join(dir, dbFile)
 
 	return openDBAt(dbPath)
+}
+
+// OpenDefaultProfile opens a named profile's database from the
+// binary's data directory.
+func OpenDefaultProfile(profileName string) (*DB, error) {
+	dir := BinaryDataDir()
+	dbFile := ProfileDBFile(profileName)
+	dbPath := filepath.Join(dir, dbFile)
+
+	return openDBAt(dbPath)
+}
+
+// DefaultDBPath returns the resolved database path for diagnostics.
+func DefaultDBPath() string {
+	dir := BinaryDataDir()
+	baseDir := filepath.Dir(dir)
+	dbFile := ActiveProfileDBFile(baseDir)
+
+	return filepath.Join(dir, dbFile)
 }
 
 // OpenDefaultProfile opens a named profile's database from the
