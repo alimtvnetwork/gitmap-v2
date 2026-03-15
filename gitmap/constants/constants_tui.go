@@ -1,5 +1,8 @@
 package constants
 
+// TUI defaults.
+const DefaultDashboardRefresh = 30
+
 // TUI command.
 const (
 	CmdInteractive      = "interactive"

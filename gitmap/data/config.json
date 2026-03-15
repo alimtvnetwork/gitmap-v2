@@ -3,5 +3,6 @@
   "defaultOutput": "terminal",
   "outputDir": "./gitmap-output",
   "excludeDirs": [".cache", "node_modules", "vendor", ".venv"],
+  "dashboardRefresh": 30,
   "notes": ""
 }

@@ -32,23 +32,25 @@ type ReleaseTarget struct {
 
 // Config holds application configuration loaded from JSON and CLI flags.
 type Config struct {
-	DefaultMode   string        `json:"defaultMode"`
-	DefaultOutput string        `json:"defaultOutput"`
-	OutputDir     string        `json:"outputDir"`
-	ExcludeDirs   []string      `json:"excludeDirs"`
-	Notes         string        `json:"notes"`
-	Release       ReleaseConfig `json:"release"`
+	DefaultMode      string        `json:"defaultMode"`
+	DefaultOutput    string        `json:"defaultOutput"`
+	OutputDir        string        `json:"outputDir"`
+	ExcludeDirs      []string      `json:"excludeDirs"`
+	Notes            string        `json:"notes"`
+	Release          ReleaseConfig `json:"release"`
+	DashboardRefresh int           `json:"dashboardRefresh"`
 }
 
 // DefaultConfig returns a Config with sensible built-in defaults.
 func DefaultConfig() Config {
 
 	return Config{
-		DefaultMode:   constants.ModeHTTPS,
-		DefaultOutput: constants.OutputTerminal,
-		OutputDir:     constants.DefaultOutputDir,
-		ExcludeDirs:   []string{},
-		Notes:         "",
+		DefaultMode:      constants.ModeHTTPS,
+		DefaultOutput:    constants.OutputTerminal,
+		OutputDir:        constants.DefaultOutputDir,
+		ExcludeDirs:      []string{},
+		Notes:            "",
+		DashboardRefresh: constants.DefaultDashboardRefresh,
 		Release: ReleaseConfig{
 			Targets:   []ReleaseTarget{},
 			Checksums: false,

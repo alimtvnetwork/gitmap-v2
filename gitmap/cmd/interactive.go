@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/user/gitmap/config"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"
 	"github.com/user/gitmap/tui"
@@ -13,6 +14,8 @@ import (
 func runInteractive() {
 	checkHelp("interactive", os.Args[2:])
 
+	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+
 	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrTUIDBOpen, err)
@@ -20,7 +23,7 @@ func runInteractive() {
 	}
 	defer db.Close()
 
-	if err := tui.Run(db); err != nil {
+	if err := tui.Run(db, cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}

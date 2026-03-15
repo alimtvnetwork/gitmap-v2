@@ -34,17 +34,23 @@ type dashboardModel struct {
 	entries    []statusEntry
 	cursor     int
 	loading    bool
+	interval   time.Duration
 }
 
-func newDashboardModel(repos []model.ScanRecord) dashboardModel {
-	return dashboardModel{repos: repos, loading: true}
+func newDashboardModel(repos []model.ScanRecord, refreshSec int) dashboardModel {
+	if refreshSec <= 0 {
+		refreshSec = constants.DefaultDashboardRefresh
+	}
+
+	return dashboardModel{
+		repos:    repos,
+		loading:  true,
+		interval: time.Duration(refreshSec) * time.Second,
+	}
 }
 
-// refreshStatuses collects live git status for all repos.
-const autoRefreshInterval = 30 * time.Second
-
-func scheduleTick() tea.Cmd {
-	return tea.Tick(autoRefreshInterval, func(_ time.Time) tea.Msg {
+func (m dashboardModel) scheduleTick() tea.Cmd {
+	return tea.Tick(m.interval, func(_ time.Time) tea.Msg {
 		return tickMsg{}
 	})
 }
@@ -81,7 +87,7 @@ func statusLabel(dirty, unreachable bool) string {
 }
 
 func (m dashboardModel) Init() tea.Cmd {
-	return tea.Batch(refreshStatuses(m.repos), scheduleTick())
+	return tea.Batch(refreshStatuses(m.repos), m.scheduleTick())
 }
 
 func (m dashboardModel) Update(msg tea.Msg) (dashboardModel, tea.Cmd) {
@@ -90,7 +96,7 @@ func (m dashboardModel) Update(msg tea.Msg) (dashboardModel, tea.Cmd) {
 		m.entries = msg.entries
 		m.loading = false
 
-		return m, scheduleTick()
+		return m, m.scheduleTick()
 	case tickMsg:
 		m.loading = true
 
