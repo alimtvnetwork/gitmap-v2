@@ -5,6 +5,22 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.15.0",
+    items: [
+      "Added cross-platform build support: `run.sh` (Linux/macOS) with full parity to `run.ps1`.",
+      "Fixed Makefile flags to match `run.sh` argument format.",
+      "Added GitHub Actions CI workflow: test on push, cross-compile 6 OS/arch targets.",
+      "Added GitHub Actions Release workflow: auto-release on `v*` tags with compression and checksums.",
+      "Added interactive TUI mode (`gitmap interactive` / `gitmap i`) built with Bubble Tea.",
+      "TUI repo browser with fuzzy search, multi-select, and keyboard navigation.",
+      "TUI batch actions: pull, exec, status across selected repos.",
+      "TUI group management: browse, create, delete groups interactively.",
+      "TUI status dashboard with live repo status view.",
+      "Added Build System section to Architecture documentation page.",
+      "Added spec documents: `42-cross-platform.md` and `43-interactive-tui.md`.",
+    ],
+  },
+  {
     version: "v2.14.0",
     items: [
       "Added Go release assets: automatic cross-compilation for 6 OS/arch targets (windows/linux/darwin × amd64/arm64).",
