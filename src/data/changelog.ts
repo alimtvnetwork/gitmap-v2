@@ -5,6 +5,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.20.0",
+    items: [
+      "**Fixed**: `OpenDefault()` double-nesting bug where profile config resolved to `<binary>/data/data/profiles.json`.",
+      "Added `DefaultDBPath()` diagnostic helper to `store/location.go`.",
+      "`gitmap ls` now prints resolved DB path when `--verbose` or zero repos found.",
+      "Created path resolution contract spec for database diagnostics.",
+    ],
+  },
+  {
     version: "v2.19.0",
     items: [
       "Bumped compiled version constant to v2.19.0.",

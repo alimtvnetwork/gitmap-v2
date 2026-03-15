@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.20.0
+- **Fixed**: `OpenDefault()` double-nesting bug where profile config resolved to `<binary>/data/data/profiles.json`.
+- Added `DefaultDBPath()` diagnostic helper to `store/location.go`.
+- `gitmap ls` now prints resolved DB path when `--verbose` is passed or when zero repos are found.
+- Created `spec/01-app/44-list-db-diagnostic.md` for path resolution contract.
+
 ## v2.19.0
 - Bumped compiled version constant to v2.19.0.
 
