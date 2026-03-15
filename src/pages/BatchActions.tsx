@@ -61,6 +61,45 @@ const BatchActions = () => {
           Perform git operations across multiple repositories at once from the Interactive TUI's Actions view.
         </p>
 
+        {/* Terminal Demo */}
+        <section className="mb-10 animate-fade-in">
+          <TerminalDemo
+            title="gitmap interactive — batch pull"
+            lines={[
+              { text: "gitmap interactive", type: "input" as const, delay: 800 },
+              { text: "", delay: 200 },
+              { text: "gitmap TUI v2.17.0", type: "header" as const, delay: 150 },
+              { text: "", delay: 100 },
+              { text: "[ Repos ]  Actions  Status", type: "accent" as const, delay: 200 },
+              { text: "", delay: 100 },
+              { text: "  ○ myapp             main      clean", delay: 80 },
+              { text: "  ○ api-server        main      dirty  +2", delay: 80 },
+              { text: "  ○ shared-lib        develop   clean", delay: 80 },
+              { text: "  ○ docs-site         main      clean", delay: 80 },
+              { text: "  ○ cli-tools         main      dirty  +1", delay: 80 },
+              { text: "", delay: 300 },
+              { text: "# Select repos with Space", type: "accent" as const, delay: 400 },
+              { text: "  ● myapp             main      clean", type: "accent" as const, delay: 250 },
+              { text: "  ● api-server        main      dirty  +2", type: "accent" as const, delay: 250 },
+              { text: "  ○ shared-lib        develop   clean", delay: 80 },
+              { text: "  ○ docs-site         main      clean", delay: 80 },
+              { text: "  ● cli-tools         main      dirty  +1", type: "accent" as const, delay: 250 },
+              { text: "", delay: 300 },
+              { text: "# Tab → Actions, press p to pull", type: "accent" as const, delay: 400 },
+              { text: "", delay: 200 },
+              { text: "  Repos  [ Actions ]  Status", type: "accent" as const, delay: 200 },
+              { text: "", delay: 150 },
+              { text: "Pulling 3 selected repos...", type: "header" as const, delay: 400 },
+              { text: "  ✓ myapp             Already up to date", delay: 300 },
+              { text: "  ✓ api-server        Fast-forward  2 commits", type: "accent" as const, delay: 350 },
+              { text: "  ✓ cli-tools         Fast-forward  1 commit", type: "accent" as const, delay: 300 },
+              { text: "", delay: 100 },
+              { text: "3/3 repos pulled successfully", type: "accent" as const },
+            ]}
+            autoPlay
+          />
+        </section>
+
         {/* Workflow */}
         <section className="mb-10">
           <h2 className="text-xl font-mono font-semibold text-foreground mb-4 flex items-center gap-2">
