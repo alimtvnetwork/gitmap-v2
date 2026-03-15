@@ -21,6 +21,7 @@ import ChangelogPage from "./pages/Changelog";
 import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import InteractiveTUIPage from "./pages/InteractiveTUI";
+import BatchActionsPage from "./pages/BatchActions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
