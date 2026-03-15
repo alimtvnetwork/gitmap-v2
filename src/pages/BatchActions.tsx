@@ -1,5 +1,6 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
+import TerminalDemo from "@/components/docs/TerminalDemo";
 import { Zap, Terminal, FolderGit2, Layers } from "lucide-react";
 
 const ACTIONS = [
