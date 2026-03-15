@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.15.1
+- **Fixed**: Database now resolves to `<binary-location>/data/gitmap.db` instead of CWD-relative `gitmap-output/data/`.
+- Added `store.OpenDefault()` and `store.OpenDefaultProfile()` for binary-relative database access.
+- Added `store/location.go` with `BinaryDataDir()` using `os.Executable()` + `filepath.EvalSymlinks()`.
+- Updated all 13 database callers across the codebase to use binary-relative paths.
+- Removed unused `resolveAuditOutputDir()` and `resolveDefaultOutputDir()` helpers.
+
 ## v2.15.0
 - Added cross-platform build support: `run.sh` (Linux/macOS) with full parity to `run.ps1`.
 - Fixed Makefile flags to match `run.sh` argument format (`--no-pull`, `--no-deploy`, `--update`).
