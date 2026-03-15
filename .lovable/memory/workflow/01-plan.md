@@ -47,8 +47,13 @@
 - ✅ Config-driven release targets: `release.targets` in `config.json` overrides default OS/arch matrix
 - ✅ Config-driven `release.checksums` and `release.compress` booleans (CLI flags still win)
 
+### v2.14.0 — Documentation Site
+- ✅ Full documentation site with real gitmap command docs, examples, and architecture pages
+- ✅ Release page with Go cross-compilation pipeline and 12 flags
+- ✅ Config page with three-layer merge priority and `release` schema
+- ✅ Architecture page with all packages including `completion/`, `detector/`, `release/`
+
 ## Pending Work
 
-- ⬜ **Frontend documentation site**: Currently a placeholder React app — needs real gitmap docs
 - ⬜ **Cross-platform support**: Currently Windows-only (PowerShell scripts); add shell scripts, cross-compile binary
 - ⬜ **Version bump to post-v2.14.0**: Next feature set will determine minor/patch

@@ -37,6 +37,6 @@
 
 ## Pending Suggestions
 
-- ⬜ **Build documentation site**: Replace placeholder React frontend with actual gitmap docs (commands, examples, architecture)
+- ✅ **Build documentation site**: Replace placeholder React frontend with actual gitmap docs (commands, examples, architecture)
 - ⬜ **Add Linux/macOS support**: Shell scripts alongside PowerShell, cross-compile binary for CI
 - ⬜ **Add progress bar for clone**: Show progress during multi-repo clone operations
