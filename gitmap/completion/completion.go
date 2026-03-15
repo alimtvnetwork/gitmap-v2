@@ -68,6 +68,7 @@ func AllCommands() []string {
 		"csharp-repos", "csr",
 		"completion", "cmp",
 		"interactive", "i",
+		"clear-release-json", "crj",
 		"help",
 	}
 }
