@@ -214,11 +214,40 @@ func updateLatestIfStable(v Version) error {
 // printDryRun shows what would happen without executing.
 func printDryRun(v Version, branchName, tag, sourceName string, opts Options) error {
 	printDryRunSteps(branchName, tag, sourceName)
+	printDryRunGoAssets(v, opts)
 	printDryRunAssets(opts.Assets, opts.Compress, opts.Checksums)
 	printDryRunMeta(v)
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
 
 	return nil
+}
+
+// printDryRunGoAssets shows Go cross-compile plan in dry-run mode.
+func printDryRunGoAssets(v Version, opts Options) {
+	if opts.NoAssets {
+		fmt.Printf(constants.MsgReleaseDryRun, "Skip Go binary compilation (--no-assets)")
+
+		return
+	}
+
+	if !DetectGoProject() {
+		return
+	}
+
+	binName := resolveBinName()
+	targets, err := ParseTargets(opts.Targets)
+	if err != nil {
+		return
+	}
+
+	names := DescribeTargets(binName, v.String(), targets)
+	fmt.Printf(constants.MsgAssetDryRunHeader, len(names))
+
+	for _, name := range names {
+		fmt.Printf(constants.MsgAssetDryRunBinary, name)
+	}
+
+	fmt.Printf(constants.MsgAssetDryRunUpload, len(names))
 }
 
 // printDryRunSteps prints branch/tag/push dry-run lines.
