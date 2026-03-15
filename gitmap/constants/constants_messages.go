@@ -204,6 +204,14 @@ const (
 	ReleaseGlob           = "v*.json"
 )
 
+// Clear release JSON messages.
+const (
+	MsgClearReleaseDone      = "  ✓ Removed .release/%s.json\n"
+	ErrClearReleaseUsage     = "Usage: gitmap clear-release-json <version>\nExample: gitmap clear-release-json v2.20.0"
+	ErrClearReleaseNotFound  = "Error: no release file found for %s\n"
+	ErrClearReleaseFailed    = "Error: could not remove release file: %v\n"
+)
+
 // Revert messages.
 const (
 	MsgRevertCheckout       = "  → Checking out %s...\n"
