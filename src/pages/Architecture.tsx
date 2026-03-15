@@ -126,6 +126,40 @@ Releases       — Id, Version, Tag, Branch, SourceBranch,
         </div>
 
         <div>
+          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Build System</h2>
+          <p className="text-muted-foreground mb-3">
+            Cross-platform build scripts with feature parity:
+          </p>
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Script</th>
+                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Platform</th>
+                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["run.ps1", "Windows", "PowerShell build pipeline"],
+                  ["run.sh", "Linux / macOS", "Bash build pipeline (reads powershell.json)"],
+                  ["Makefile", "Any (bash)", "Standard interface: build, run, test, update"],
+                ].map(([file, platform, desc]) => (
+                  <tr key={file}>
+                    <td className="px-4 py-2 font-mono text-primary">{file}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{platform}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-muted-foreground mt-3 text-sm">
+            CI/CD via GitHub Actions: test on push, cross-compile 6 targets, auto-release on tags.
+          </p>
+        </div>
+
+        <div>
           <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Code Style</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex gap-2"><span className="text-primary">•</span> All files under 200 lines</li>

@@ -47,13 +47,14 @@
 - ✅ Config-driven release targets: `release.targets` in `config.json` overrides default OS/arch matrix
 - ✅ Config-driven `release.checksums` and `release.compress` booleans (CLI flags still win)
 
-### v2.14.0 — Documentation Site
+### v2.15.0 — Cross-Platform & CI/CD
 - ✅ Full documentation site with real gitmap command docs, examples, and architecture pages
-- ✅ Release page with Go cross-compilation pipeline and 12 flags
-- ✅ Config page with three-layer merge priority and `release` schema
-- ✅ Architecture page with all packages including `completion/`, `detector/`, `release/`
+- ✅ `run.sh` build script with full parity to `run.ps1`
+- ✅ Makefile with corrected flags matching `run.sh`
+- ✅ GitHub Actions CI workflow: test on push, cross-compile 6 targets
+- ✅ GitHub Actions Release workflow: auto-release on `v*` tags with compression and checksums
+- ✅ Spec document: `spec/01-app/42-cross-platform.md`
 
 ## Pending Work
 
-- ⬜ **Cross-platform support**: Currently Windows-only (PowerShell scripts); add shell scripts, cross-compile binary
-- ⬜ **Version bump to post-v2.14.0**: Next feature set will determine minor/patch
+- ⬜ **Version bump to v2.15.0**: Tag and release with cross-platform CI
