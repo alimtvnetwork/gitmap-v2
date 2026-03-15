@@ -63,7 +63,7 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 
 // upsertToDB persists scan results into the SQLite database.
 func upsertToDB(records []model.ScanRecord, outputDir string) {
-	db, err := store.Open(outputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.MsgDBUpsertFailed, err)
 		return
