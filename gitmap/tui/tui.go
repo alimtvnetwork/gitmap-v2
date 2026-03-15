@@ -65,7 +65,7 @@ func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group) 
 }
 
 func (m rootModel) Init() tea.Cmd {
-	return nil
+	return m.dashboard.Init()
 }
 
 func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -75,6 +75,11 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 
 		return m, nil
+	case refreshMsg:
+		dm, cmd := m.dashboard.Update(msg)
+		m.dashboard = dm
+
+		return m, cmd
 	case tea.KeyMsg:
 		if keys.quit(msg) && !m.browser.searching {
 			m.quitting = true
