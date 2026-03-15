@@ -66,7 +66,7 @@ func validateReleaseFlags(version, bump, commit, branch string) {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, draft, dryRun, verbose, compress, checksums, noAssets bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
@@ -79,6 +79,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 	compressFlag := fs.Bool("compress", false, constants.FlagDescCompress)
 	checksumsFlag := fs.Bool("checksums", false, constants.FlagDescChecksums)
 	noAssetsFlag := fs.Bool("no-assets", false, constants.FlagDescNoAssets)
+	listTargetsFlag := fs.Bool("list-targets", false, constants.FlagDescListTargets)
 	fs.Parse(args)
 
 	version = ""
@@ -86,7 +87,40 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag
+}
+
+// printListTargets resolves and prints the target matrix, then returns.
+func printListTargets(flagTargets string) {
+	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+
+	targets, err := release.ResolveTargets(flagTargets, cfg.Release.Targets)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
+		os.Exit(1)
+	}
+
+	source := resolveTargetSource(flagTargets, cfg.Release.Targets)
+
+	fmt.Printf(constants.MsgListTargetsHeader, len(targets))
+	fmt.Printf(constants.MsgListTargetsSource, source)
+
+	for _, t := range targets {
+		fmt.Printf(constants.MsgListTargetsRow, t.GOOS, t.GOARCH)
+	}
+}
+
+// resolveTargetSource returns a human-readable label for the active target source.
+func resolveTargetSource(flagTargets string, configTargets []model.ReleaseTarget) string {
+	if len(flagTargets) > 0 {
+		return "--targets flag"
+	}
+
+	if len(configTargets) > 0 {
+		return "config.json (release.targets)"
+	}
+
+	return "built-in defaults"
 }
 
 // persistReleaseToDB saves the release metadata to SQLite if available.

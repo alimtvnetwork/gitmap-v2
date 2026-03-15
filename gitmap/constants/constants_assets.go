@@ -8,14 +8,23 @@ const (
 
 // Asset flag descriptions.
 const (
-	FlagDescNoAssets = "Skip automatic Go binary cross-compilation"
-	FlagDescTargets  = "Comma-separated cross-compile targets (e.g. windows/amd64,linux/arm64)"
+	FlagDescNoAssets    = "Skip automatic Go binary cross-compilation"
+	FlagDescTargets     = "Comma-separated cross-compile targets (e.g. windows/amd64,linux/arm64)"
+	FlagDescListTargets = "Print resolved target matrix and exit"
 )
 
 // Asset help text.
 const (
 	HelpNoAssets    = "  --no-assets         Skip Go binary cross-compilation"
 	HelpTargets     = "  --targets <list>    Cross-compile targets: windows/amd64,linux/arm64"
+	HelpListTargets = "  --list-targets      Print resolved target matrix and exit"
+)
+
+// List-targets messages.
+const (
+	MsgListTargetsHeader = "Release targets (%d):\n"
+	MsgListTargetsSource = "Source: %s\n\n"
+	MsgListTargetsRow    = "  %s/%s\n"
 )
 
 // Asset messages.
