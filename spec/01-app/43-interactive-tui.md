@@ -54,11 +54,13 @@ current selection count.
 
 ### 4. Status Dashboard
 
-Live-refreshing view (configurable interval, default 30s) showing:
+Live-refreshing view showing:
 - Dirty/clean indicator per repo
 - Current branch with ahead/behind counts
 - Stash count
-- Last commit timestamp
+- Auto-refresh interval configurable via `dashboardRefresh` in
+  `config.json` (seconds, default 30)
+- Manual refresh via `r` key
 
 ---
 
