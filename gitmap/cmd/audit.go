@@ -71,16 +71,6 @@ func openAuditDB() (*store.DB, error) {
 	return db, nil
 }
 
-// resolveAuditOutputDir finds the standard output directory.
-func resolveAuditOutputDir() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "gitmap-output"
-	}
-
-	return cwd + string(os.PathSeparator) + "gitmap-output"
-}
-
 // generateAuditID creates a timestamp-based unique ID.
 func generateAuditID() string {
 	return fmt.Sprintf("hist-%d", time.Now().UnixNano())

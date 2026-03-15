@@ -72,13 +72,3 @@ func printProjectList(db *store.DB, typeKey string, jsonOut bool) {
 	printProjectsTerminal(projects)
 	printProjectsSummary(projects)
 }
-
-// resolveDefaultOutputDir returns the default output directory path.
-func resolveDefaultOutputDir() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		return constants.DefaultOutputFolder
-	}
-
-	return resolveOutputDir(constants.DefaultOutputDir, dir)
-}
