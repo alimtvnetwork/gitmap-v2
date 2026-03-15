@@ -14,7 +14,7 @@ import (
 // printProjectsTerminal prints projects in labeled terminal format.
 func printProjectsTerminal(projects []model.DetectedProject) {
 	for _, p := range projects {
-		slug := deriveSlug(p)
+		slug := deriveProjectSlug(p)
 		fmt.Printf("  %-6s %s\n", p.ProjectType, p.ProjectName)
 		fmt.Printf("         Repo:      %s\n", slug)
 		fmt.Printf("         Path:      %s\n", p.AbsolutePath)
