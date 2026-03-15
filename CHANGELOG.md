@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.19.0
+- Bumped compiled version constant to v2.19.0.
+
+## v2.18.0
+- Added batch status terminal demo to Batch Actions page showing dirty/clean state across repos.
+- Fixed missing `os/exec` import in release asset upload.
+- Resolved `deriveSlug` redeclaration conflict in project repos output.
+- Removed unused `os` import from audit command.
+
 ## v2.17.0
 - Added 30-second auto-refresh timer to TUI dashboard via `tea.Tick`.
 - Dashboard refresh interval configurable via `dashboardRefresh` in `config.json`.
