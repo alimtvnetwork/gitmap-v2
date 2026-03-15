@@ -67,7 +67,7 @@ func loadFromDatabase() ([]string, []string) {
 
 // openSEODatabase opens the gitmap database and migrates tables.
 func openSEODatabase() *store.DB {
-	db, err := store.Open(constants.DefaultOutputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrDBOpen, err)
 		os.Exit(1)

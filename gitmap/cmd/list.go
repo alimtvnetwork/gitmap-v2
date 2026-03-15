@@ -114,9 +114,9 @@ func printListRow(r model.ScanRecord, verbose bool) {
 	fmt.Printf(constants.MsgListRowFmt, r.Slug, r.RepoName)
 }
 
-// openDB opens the gitmap database from the default output folder.
+// openDB opens the gitmap database from the binary's data directory.
 func openDB() (*store.DB, error) {
-	db, err := store.Open(constants.DefaultOutputFolder)
+	db, err := store.OpenDefault()
 	if err != nil {
 		return nil, err
 	}

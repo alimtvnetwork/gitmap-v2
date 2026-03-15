@@ -71,7 +71,7 @@ func buildAuditRecord(f amendFlags, commits []model.CommitEntry, branch, mode, p
 
 // saveAmendToDB persists the amendment record to the SQLite database.
 func saveAmendToDB(f amendFlags, commits []model.CommitEntry, branch, mode, prevName, prevEmail string) {
-	db, err := store.Open(constants.DefaultOutputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		return
 	}

@@ -14,8 +14,7 @@ import (
 func runProjectRepos(typeKey string, args []string) {
 	checkHelp(typeKey+"-repos", args)
 	jsonOut, countOnly := parseProjectReposFlags(args)
-	outputDir := resolveDefaultOutputDir()
-	db, err := store.Open(outputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprint(os.Stderr, constants.MsgProjectNoDB)
 		os.Exit(1)
@@ -72,14 +71,4 @@ func printProjectList(db *store.DB, typeKey string, jsonOut bool) {
 	}
 	printProjectsTerminal(projects)
 	printProjectsSummary(projects)
-}
-
-// resolveDefaultOutputDir returns the default output directory path.
-func resolveDefaultOutputDir() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		return constants.DefaultOutputFolder
-	}
-
-	return resolveOutputDir(constants.DefaultOutputDir, dir)
 }

@@ -61,8 +61,7 @@ func recordAuditEnd(id string, start time.Time, exitCode int, summary string, re
 
 // openAuditDB opens the database silently (no error output).
 func openAuditDB() (*store.DB, error) {
-	outputDir := resolveAuditOutputDir()
-	db, err := store.Open(outputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		return nil, err
 	}
@@ -70,16 +69,6 @@ func openAuditDB() (*store.DB, error) {
 	_ = db.Migrate()
 
 	return db, nil
-}
-
-// resolveAuditOutputDir finds the standard output directory.
-func resolveAuditOutputDir() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "gitmap-output"
-	}
-
-	return cwd + string(os.PathSeparator) + "gitmap-output"
 }
 
 // generateAuditID creates a timestamp-based unique ID.

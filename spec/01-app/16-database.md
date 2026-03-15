@@ -19,11 +19,20 @@ Use a **CGo-free** SQLite driver. The recommended package is
 
 ### Database Location
 
+The database is located relative to the **binary's physical installation
+directory**, not the current working directory. This ensures all commands
+access the same database regardless of where the user invokes gitmap.
+
 | Item | Value |
 |------|-------|
-| Directory | `gitmap-output/data/` (created automatically) |
+| Resolution | `os.Executable()` + `filepath.EvalSymlinks()` |
+| Directory | `<binary-dir>/data/` (created automatically) |
 | File name | `gitmap.db` |
-| Full path | `gitmap-output/data/gitmap.db` |
+| Full path | `<binary-dir>/data/gitmap.db` |
+
+**Important**: Scan output files (CSV, JSON, scripts) still write to the
+user-specified output directory. Only the database is anchored to the
+binary location.
 
 ### Auto-Creation
 

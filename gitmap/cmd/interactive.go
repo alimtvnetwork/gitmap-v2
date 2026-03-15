@@ -13,7 +13,7 @@ import (
 func runInteractive() {
 	checkHelp("interactive", os.Args[2:])
 
-	db, err := store.Open(constants.DefaultDBPath)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrTUIDBOpen, err)
 		os.Exit(1)

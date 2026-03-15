@@ -63,7 +63,7 @@ func saveProfileOrExit(cfg model.ProfileConfig) {
 
 // initProfileDB creates and migrates the database for a new profile.
 func initProfileDB(name string) {
-	db, err := store.OpenProfile(constants.DefaultOutputFolder, name)
+	db, err := store.OpenDefaultProfile(name)
 	if err != nil {
 		return
 	}

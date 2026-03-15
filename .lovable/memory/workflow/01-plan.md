@@ -63,7 +63,13 @@
 - ✅ Spec document: `spec/01-app/43-interactive-tui.md`
 - ✅ Constants in `constants/constants_tui.go`, help text in `helptext/interactive.md`
 
+### v2.15.1 — Database Path Fix
+- ✅ Fixed DB path resolution: database now at `<binary-dir>/data/` instead of CWD-relative
+- ✅ Added `store/location.go` with `BinaryDataDir()`, `OpenDefault()`, `OpenDefaultProfile()`
+- ✅ Updated all 13 database callers across the codebase
+- ✅ Issue post-mortem: `.lovable/memory/issues/04-database-path-resolution.md`
+- ✅ Spec update: `spec/01-app/16-database.md` updated with binary-relative path
+
 ## Pending Work
 
 - ⬜ **Wire real git status** into TUI dashboard (dirty/clean, ahead/behind via gitutil)
-- ⬜ **Version bump to v2.16.0**: Tag and release with TUI feature

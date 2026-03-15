@@ -60,7 +60,7 @@ func validateDPProfiles(nameA, nameB string) {
 
 // loadProfileRepos opens a profile's DB and returns all repos.
 func loadProfileRepos(name string) []model.ScanRecord {
-	db, err := store.OpenProfile(constants.DefaultOutputFolder, name)
+	db, err := store.OpenDefaultProfile(name)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrDPOpenFailed, name, err)
 		os.Exit(1)

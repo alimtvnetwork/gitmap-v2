@@ -130,7 +130,7 @@ func persistReleaseToDB() {
 		return
 	}
 
-	db, err := store.Open(constants.DefaultOutputFolder)
+	db, err := store.OpenDefault()
 	if err != nil {
 		return
 	}

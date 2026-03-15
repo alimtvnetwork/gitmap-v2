@@ -32,7 +32,7 @@ func upsertProjectsToDB(results []detector.DetectionResult, records []model.Scan
 	if len(results) == 0 {
 		return
 	}
-	db, err := store.Open(outputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrProjectUpsert, err)
 

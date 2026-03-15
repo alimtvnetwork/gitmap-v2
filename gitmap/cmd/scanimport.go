@@ -20,7 +20,7 @@ func importReleases(scanDir, outputDir string) {
 		return
 	}
 
-	db, err := store.Open(outputDir)
+	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.MsgDBUpsertFailed, err)
 
