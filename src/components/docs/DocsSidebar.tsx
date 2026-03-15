@@ -54,6 +54,7 @@ const navItems = [
   { title: "Changelog", url: "/changelog", icon: FileText },
   { title: "Flags", url: "/flags", icon: Flag },
   { title: "Examples", url: "/examples", icon: PlayCircle },
+  { title: "Interactive TUI", url: "/interactive", icon: Terminal },
 ];
 
 export function DocsSidebar() {

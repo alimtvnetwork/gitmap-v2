@@ -49,6 +49,7 @@ const App = () => (
           <Route path="/changelog" element={<ChangelogPage />} />
           <Route path="/flags" element={<FlagReferencePage />} />
           <Route path="/examples" element={<InteractiveExamplesPage />} />
+          <Route path="/interactive" element={<InteractiveTUIPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
