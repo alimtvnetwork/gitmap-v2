@@ -51,6 +51,7 @@ const App = () => (
           <Route path="/flags" element={<FlagReferencePage />} />
           <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="/interactive" element={<InteractiveTUIPage />} />
+          <Route path="/batch-actions" element={<BatchActionsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
