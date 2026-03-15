@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -10,11 +11,26 @@ import (
 	"github.com/user/gitmap/tui"
 )
 
+// parseInteractiveFlags parses flags for the interactive command.
+func parseInteractiveFlags(args []string) int {
+	fs := flag.NewFlagSet(constants.CmdInteractive, flag.ExitOnError)
+	refreshFlag := fs.Int(constants.FlagRefresh, 0, constants.FlagDescRefresh)
+	fs.Parse(args)
+
+	return *refreshFlag
+}
+
 // runInteractive launches the full-screen TUI.
 func runInteractive() {
 	checkHelp("interactive", os.Args[2:])
 
+	refresh := parseInteractiveFlags(os.Args[2:])
+
 	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+
+	if refresh > 0 {
+		cfg.DashboardRefresh = refresh
+	}
 
 	db, err := store.OpenDefault()
 	if err != nil {

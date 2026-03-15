@@ -18,6 +18,14 @@ func printUsage() {
 	printUsageSEOFlags()
 	printUsageAmendFlags()
 	printUsageGoModFlags()
+	printUsageInteractiveFlags()
+}
+
+// printUsageInteractiveFlags prints the interactive flags section.
+func printUsageInteractiveFlags() {
+	fmt.Println()
+	fmt.Println(constants.HelpInteractiveFlags)
+	fmt.Println(constants.HelpRefresh)
 }
 
 // printUsageCommands prints the available commands section.

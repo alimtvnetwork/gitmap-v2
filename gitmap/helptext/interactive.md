@@ -5,8 +5,14 @@ and managing repositories.
 
 ## Usage
 
-    gitmap interactive
-    gitmap i
+    gitmap interactive [--refresh <seconds>]
+    gitmap i [--refresh <seconds>]
+
+## Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--refresh` | config or 30 | Dashboard auto-refresh interval in seconds |
 
 ## Views
 
