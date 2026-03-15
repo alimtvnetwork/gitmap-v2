@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/user/gitmap/config"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/release"
