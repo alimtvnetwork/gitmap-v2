@@ -20,6 +20,7 @@ import GenericCLIPage from "./pages/GenericCLI";
 import ChangelogPage from "./pages/Changelog";
 import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
+import InteractiveTUIPage from "./pages/InteractiveTUI";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
