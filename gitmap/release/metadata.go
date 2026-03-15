@@ -142,6 +142,32 @@ func ReadReleaseMeta(path string) (ReleaseMeta, error) {
 	return meta, err
 }
 
+// ListReleaseMetaFiles reads all .release/v*.json files and returns parsed metadata.
+func ListReleaseMetaFiles() ([]ReleaseMeta, error) {
+	pattern := filepath.Join(constants.DefaultReleaseDir, constants.ReleaseGlob)
+	matches, err := filepath.Glob(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	var results []ReleaseMeta
+
+	for _, path := range matches {
+		if filepath.Base(path) == constants.DefaultLatestFile {
+			continue
+		}
+
+		meta, readErr := ReadReleaseMeta(path)
+		if readErr != nil {
+			continue
+		}
+
+		results = append(results, meta)
+	}
+
+	return results, nil
+}
+
 // latestFilePath returns the path to latest.json.
 func latestFilePath() string {
 	return filepath.Join(constants.DefaultReleaseDir, constants.DefaultLatestFile)

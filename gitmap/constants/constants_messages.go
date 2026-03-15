@@ -204,6 +204,14 @@ const (
 	ReleaseGlob           = "v*.json"
 )
 
+// Pending metadata discovery messages.
+const (
+	MsgPendingMetaFound    = "  → Found %d unreleased version(s) from .release/ metadata\n"
+	MsgPendingMetaRelease  = "  → Creating release from metadata: %s (commit: %s)\n"
+	WarnPendingMetaNoCommit = "  ⚠ Skipping %s: commit %s not found in repository\n"
+	WarnPendingMetaNoSHA   = "  ⚠ Skipping %s: no commit SHA in metadata\n"
+)
+
 // Clear release JSON messages.
 const (
 	MsgClearReleaseDone      = "  ✓ Removed .release/%s.json\n"

@@ -79,6 +79,7 @@ func completeBranchRelease(v Version, branchName, assetsPath string, draft bool)
 }
 
 // ExecutePending finds all release branches without tags and releases them.
+// Also discovers unreleased versions from .release/v*.json metadata files.
 func ExecutePending(assetsPath string, draft bool, dryRun bool) error {
 	branches, err := listReleaseBranches()
 	if err != nil {
@@ -86,15 +87,134 @@ func ExecutePending(assetsPath string, draft bool, dryRun bool) error {
 	}
 
 	pending := filterPendingBranches(branches)
-	if len(pending) == 0 {
+	metaPending := discoverMetadataPending(pending)
+
+	total := len(pending) + len(metaPending)
+	if total == 0 {
 		fmt.Println(constants.MsgReleasePendingNone)
 
 		return nil
 	}
 
-	fmt.Printf(constants.MsgReleasePendingFound, len(pending))
+	fmt.Printf(constants.MsgReleasePendingFound, total)
 
-	return releasePendingBranches(pending, assetsPath, draft, dryRun)
+	if len(metaPending) > 0 {
+		fmt.Printf(constants.MsgPendingMetaFound, len(metaPending))
+	}
+
+	err = releasePendingBranches(pending, assetsPath, draft, dryRun)
+	if err != nil {
+		return err
+	}
+
+	return releasePendingFromMetadata(metaPending, assetsPath, draft, dryRun)
+}
+
+// discoverMetadataPending finds .release/v*.json files where neither
+// the Git branch nor the tag exists. Skips versions already in pendingBranches.
+func discoverMetadataPending(pendingBranches []string) []ReleaseMeta {
+	metaFiles, err := ListReleaseMetaFiles()
+	if err != nil {
+		return nil
+	}
+
+	branchSet := make(map[string]bool, len(pendingBranches))
+	for _, b := range pendingBranches {
+		branchSet[b] = true
+	}
+
+	var pending []ReleaseMeta
+
+	for _, meta := range metaFiles {
+		if isMetaPending(meta, branchSet) {
+			pending = append(pending, meta)
+		}
+	}
+
+	return pending
+}
+
+// isMetaPending returns true when the metadata version has no branch/tag
+// and is not already covered by a pending branch.
+func isMetaPending(meta ReleaseMeta, branchSet map[string]bool) bool {
+	if len(meta.Commit) == 0 {
+		return false
+	}
+
+	branchName := constants.ReleaseBranchPrefix + meta.Tag
+	if branchSet[branchName] {
+		return false
+	}
+	if BranchExists(branchName) {
+		return false
+	}
+	if TagExistsLocally(meta.Tag) || TagExistsRemote(meta.Tag) {
+		return false
+	}
+
+	return true
+}
+
+// releasePendingFromMetadata creates branch+tag from stored commit SHA.
+func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath string, draft bool, dryRun bool) error {
+	for _, meta := range pending {
+		err := releaseFromMetadata(meta, assetsPath, draft, dryRun)
+		if err != nil {
+			fmt.Printf(constants.MsgReleasePendingFailed, meta.Tag, err)
+			continue
+		}
+	}
+
+	return nil
+}
+
+// releaseFromMetadata creates a release branch+tag from a metadata file's commit SHA.
+func releaseFromMetadata(meta ReleaseMeta, assetsPath string, draft bool, dryRun bool) error {
+	v, err := Parse(meta.Tag)
+	if err != nil {
+		return fmt.Errorf("invalid version in metadata: %s", meta.Tag)
+	}
+
+	if !CommitExists(meta.Commit) {
+		fmt.Printf(constants.WarnPendingMetaNoCommit, meta.Tag, meta.Commit)
+
+		return nil
+	}
+
+	shortSHA := meta.Commit
+	if len(shortSHA) > 7 {
+		shortSHA = shortSHA[:7]
+	}
+
+	fmt.Printf(constants.MsgPendingMetaRelease, meta.Tag, shortSHA)
+
+	if dryRun {
+		branchName := constants.ReleaseBranchPrefix + v.String()
+		fmt.Printf(constants.MsgReleaseDryRun, "Create branch "+branchName+" from commit "+shortSHA)
+		fmt.Printf(constants.MsgReleaseDryRun, "Create tag "+v.String())
+		fmt.Printf(constants.MsgReleaseDryRun, "Push branch and tag to origin")
+
+		return nil
+	}
+
+	branchName := constants.ReleaseBranchPrefix + v.String()
+
+	err = CreateBranch(branchName, meta.Commit)
+	if err != nil {
+		return fmt.Errorf("create branch from metadata: %w", err)
+	}
+	fmt.Printf(constants.MsgReleaseBranch, branchName)
+
+	tag := v.String()
+	err = CreateTag(tag, constants.ReleaseTagPrefix+tag)
+	if err != nil {
+		return fmt.Errorf("create tag from metadata: %w", err)
+	}
+	fmt.Printf(constants.MsgReleaseTag, tag)
+
+	opts := Options{Assets: assetsPath, Draft: draft}
+
+	return pushAndFinalize(v, branchName, tag, "metadata:"+meta.Commit, opts)
 }
 
 // releasePendingBranches iterates and releases each pending branch.
