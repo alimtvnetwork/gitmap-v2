@@ -24,6 +24,7 @@ r
 | --checksums | false | Generate SHA256 checksums.txt for assets |
 | --no-assets | false | Skip Go binary cross-compilation |
 | --targets \<list\> | all 6 | Cross-compile targets: windows/amd64,linux/arm64 |
+| --list-targets | false | Print resolved target matrix and exit |
 
 ## Prerequisites
 

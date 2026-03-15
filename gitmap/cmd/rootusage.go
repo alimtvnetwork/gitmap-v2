@@ -107,6 +107,7 @@ func printUsageReleaseFlags() {
 	fmt.Println(constants.HelpChecksumsFlag)
 	fmt.Println(constants.HelpNoAssets)
 	fmt.Println(constants.HelpTargets)
+	fmt.Println(constants.HelpListTargets)
 }
 
 // printUsageSEOFlags prints the seo-write flags section.
