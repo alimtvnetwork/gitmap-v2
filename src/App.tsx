@@ -21,6 +21,7 @@ import ChangelogPage from "./pages/Changelog";
 import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import InteractiveTUIPage from "./pages/InteractiveTUI";
+import BatchActionsPage from "./pages/BatchActions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/flags" element={<FlagReferencePage />} />
           <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="/interactive" element={<InteractiveTUIPage />} />
+          <Route path="/batch-actions" element={<BatchActionsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -18,6 +18,7 @@ import {
   FileText,
   Flag,
   PlayCircle,
+  Zap,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -55,6 +56,7 @@ const navItems = [
   { title: "Flags", url: "/flags", icon: Flag },
   { title: "Examples", url: "/examples", icon: PlayCircle },
   { title: "Interactive TUI", url: "/interactive", icon: Terminal },
+  { title: "Batch Actions", url: "/batch-actions", icon: Zap },
 ];
 
 export function DocsSidebar() {
