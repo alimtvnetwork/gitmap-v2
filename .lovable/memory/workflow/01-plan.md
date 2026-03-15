@@ -44,6 +44,8 @@
 - ✅ Shell completion updated for all new flags (bash/zsh/powershell)
 - ✅ Enhanced `list` (`ls`) output with labeled fields and inline `cd` hints
 - ✅ Spec document: `spec/01-app/41-go-release-assets.md`
+- ✅ Config-driven release targets: `release.targets` in `config.json` overrides default OS/arch matrix
+- ✅ Config-driven `release.checksums` and `release.compress` booleans (CLI flags still win)
 
 ## Pending Work
 
