@@ -57,7 +57,7 @@ func generatePowerShell() string {
     }
 
     if ($cmd -eq "release" -or $cmd -eq "r") {
-        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--verbose")
+        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--list-targets", "--verbose")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return

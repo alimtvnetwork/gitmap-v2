@@ -51,7 +51,7 @@ _gitmap() {
             _describe 'subcommand' subs
             ;;
         release|r)
-            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --verbose)
+            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose)
             _describe 'flag' flags
             ;;
         release-branch|rb)
