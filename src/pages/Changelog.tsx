@@ -1,8 +1,32 @@
 import DocsLayout from "@/components/docs/DocsLayout";
+import TerminalDemo from "@/components/docs/TerminalDemo";
 import { changelog } from "@/data/changelog";
 import { Tag, ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const terminalLines = [
+  { text: "gitmap list-versions", type: "input" as const, delay: 800 },
+  { text: "", type: "output" as const },
+  { text: "  VERSION    CHANGES  HIGHLIGHTS", type: "header" as const },
+  { text: "  ───────    ───────  ──────────", type: "output" as const },
+  { text: "  v2.17.0        4   TUI auto-refresh, --refresh flag", type: "accent" as const },
+  { text: "  v2.16.0        4   Live dirty/clean indicators, summary bar", type: "output" as const },
+  { text: "  v2.15.1        5   Binary-relative database paths", type: "output" as const },
+  { text: "  v2.15.0       10   Cross-platform build, interactive TUI", type: "output" as const },
+  { text: "  v2.14.0       11   Go release assets, cross-compilation", type: "output" as const },
+  { text: "  v2.13.0        7   Group activation, multi-group, hints", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  6 versions shown · 41 total changes", type: "accent" as const },
+  { text: "", type: "output" as const },
+  { text: "gitmap changelog v2.17.0", type: "input" as const, delay: 1000 },
+  { text: "", type: "output" as const },
+  { text: "  ## v2.17.0", type: "header" as const },
+  { text: "  • Added 30-second auto-refresh timer via tea.Tick", type: "output" as const },
+  { text: "  • Dashboard refresh configurable via config.json", type: "output" as const },
+  { text: "  • Added --refresh flag for CLI-level override", type: "output" as const },
+  { text: "  • Refresh interval validates with 30s fallback", type: "output" as const },
+];
 
 const ChangelogPage = () => {
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(
