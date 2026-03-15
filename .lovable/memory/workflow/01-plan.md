@@ -55,6 +55,15 @@
 - ✅ GitHub Actions Release workflow: auto-release on `v*` tags with compression and checksums
 - ✅ Spec document: `spec/01-app/42-cross-platform.md`
 
+### v2.16.0 — Interactive TUI
+- ✅ Bubble Tea TUI with 4 views: repo browser, batch actions, group management, status dashboard
+- ✅ Fuzzy search via `sahilm/fuzzy`, multi-select, keyboard navigation
+- ✅ `tui/` package (7 files): tui.go, browser.go, actions.go, groups.go, dashboard.go, keys.go, styles.go
+- ✅ `interactive` (i) command wired into CLI dispatch, help, and shell completion
+- ✅ Spec document: `spec/01-app/43-interactive-tui.md`
+- ✅ Constants in `constants/constants_tui.go`, help text in `helptext/interactive.md`
+
 ## Pending Work
 
-- ⬜ **Version bump to v2.15.0**: Tag and release with cross-platform CI
+- ⬜ **Wire real git status** into TUI dashboard (dirty/clean, ahead/behind via gitutil)
+- ⬜ **Version bump to v2.16.0**: Tag and release with TUI feature

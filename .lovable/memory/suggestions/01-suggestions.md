@@ -43,4 +43,4 @@
 
 ## Pending Suggestions
 
-- ⬜ **Add interactive mode**: TUI-based repo browser with fuzzy search and batch actions
+- ⬜ **Add real git status checks in TUI dashboard**: Wire up `gitutil.WatchStatus` to populate dirty/clean, ahead/behind in the dashboard view

@@ -804,4 +804,18 @@ export const commands: CommandDef[] = [
       { name: "group", description: "Group names are also tab-completed" },
     ],
   },
+  {
+    category: "utilities",
+    name: "interactive", alias: "i", description: "Launch interactive TUI with repo browser, batch actions, and group management",
+    usage: "gitmap interactive",
+    examples: [
+      { command: "gitmap i", description: "Launch the full-screen interactive mode" },
+    ],
+    seeAlso: [
+      { name: "list", description: "Non-interactive repo listing" },
+      { name: "status", description: "Non-interactive status dashboard" },
+      { name: "group", description: "CLI group management" },
+      { name: "exec", description: "CLI batch execution" },
+    ],
+  },
 ];
