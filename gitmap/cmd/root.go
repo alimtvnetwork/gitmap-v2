@@ -289,6 +289,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdInteractive || command == constants.CmdInteractiveAlias {
+		runInteractive()
+
+		return true
+	}
 
 	return false
 }
