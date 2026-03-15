@@ -651,6 +651,20 @@ export const commands: CommandDef[] = [
       { name: "setup", description: "Re-run setup wizard" },
     ],
   },
+  {
+    category: "data",
+    name: "clear-release-json", alias: "crj", description: "Remove a .release/vX.Y.Z.json metadata file",
+    usage: "gitmap clear-release-json <version>",
+    examples: [
+      { command: "gitmap clear-release-json v2.20.0", description: "Remove the v2.20.0 release JSON file" },
+      { command: "gitmap crj v1.0.0", description: "Remove using alias" },
+    ],
+    seeAlso: [
+      { name: "release", description: "Create a release" },
+      { name: "list-releases", description: "Show stored releases" },
+      { name: "db-reset", description: "Reset entire database" },
+    ],
+  },
 
   // --- Utilities ---
   {
