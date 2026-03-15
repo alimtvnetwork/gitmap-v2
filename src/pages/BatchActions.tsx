@@ -123,6 +123,29 @@ const BatchActions = () => {
           />
         </section>
 
+        {/* Terminal Demo 3 — status */}
+        <section className="mb-10 animate-fade-in">
+          <TerminalDemo
+            title="gitmap interactive — batch status"
+            lines={[
+              { text: "# Select repos, Tab → Actions, press s", type: "accent" as const, delay: 600 },
+              { text: "", delay: 200 },
+              { text: "  Repos  [ Actions ]  Status", type: "accent" as const, delay: 200 },
+              { text: "", delay: 150 },
+              { text: "Status for 5 selected repos:", type: "header" as const, delay: 400 },
+              { text: "", delay: 150 },
+              { text: "  ✓ myapp             main      clean", delay: 300 },
+              { text: "  ✗ api-server        main      dirty   +2 -1", type: "accent" as const, delay: 350 },
+              { text: "  ✓ shared-lib        develop   clean   stash:1", delay: 300 },
+              { text: "  ✗ web-client        feature   dirty   +5", type: "accent" as const, delay: 350 },
+              { text: "  ✓ cli-tools         main      clean", delay: 300 },
+              { text: "", delay: 100 },
+              { text: "3 clean  ·  2 dirty  ·  1 stash", type: "accent" as const },
+            ]}
+            autoPlay
+          />
+        </section>
+
         {/* Workflow */}
         <section className="mb-10">
           <h2 className="text-xl font-mono font-semibold text-foreground mb-4 flex items-center gap-2">
