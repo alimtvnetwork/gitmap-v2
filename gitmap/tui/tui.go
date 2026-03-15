@@ -36,7 +36,7 @@ type rootModel struct {
 }
 
 // Run launches the interactive TUI.
-func Run(db *store.DB) error {
+func Run(db *store.DB, cfg model.Config) error {
 	repos, err := db.ListRepos()
 	if err != nil {
 		return fmt.Errorf(constants.ErrTUIDBOpen, err)
@@ -44,14 +44,14 @@ func Run(db *store.DB) error {
 
 	groups, _ := db.ListGroups()
 
-	m := newRootModel(db, repos, groups)
+	m := newRootModel(db, repos, groups, cfg)
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	_, err = p.Run()
 
 	return err
 }
 
-func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group) rootModel {
+func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, cfg model.Config) rootModel {
 	return rootModel{
 		db:        db,
 		repos:     repos,
@@ -60,7 +60,7 @@ func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group) 
 		browser:   newBrowserModel(repos),
 		actions:   newActionsModel(),
 		groupsMgr: newGroupsModel(groups),
-		dashboard: newDashboardModel(repos),
+		dashboard: newDashboardModel(repos, cfg.DashboardRefresh),
 	}
 }
 

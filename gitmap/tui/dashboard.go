@@ -96,7 +96,7 @@ func (m dashboardModel) Update(msg tea.Msg) (dashboardModel, tea.Cmd) {
 		m.entries = msg.entries
 		m.loading = false
 
-		return m, scheduleTick()
+		return m, m.scheduleTick()
 	case tickMsg:
 		m.loading = true
 
