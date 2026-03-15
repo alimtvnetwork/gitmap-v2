@@ -5,6 +5,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.14.0",
+    items: [
+      "Added Go release assets: automatic cross-compilation for 6 OS/arch targets (windows/linux/darwin × amd64/arm64).",
+      "Added GitHub Releases API integration for asset upload — no `gh` CLI needed.",
+      "Added `--compress` flag to wrap release assets in `.zip` (Windows) or `.tar.gz` (Linux/macOS).",
+      "Added `--checksums` flag to generate SHA256 `checksums.txt` for all release assets.",
+      "Added `--no-assets` flag to skip automatic Go binary compilation.",
+      "Added `--targets` flag for custom cross-compile target selection.",
+      "Improved `gitmap ls <type>` output with labeled fields and inline `cd` examples.",
+      "Added shell completion for `release`, `release-branch`, `group`, `multi-group`, and `list` commands.",
+      "Fixed duplicate hints after `gitmap ls <type>` output.",
+    ],
+  },
+  {
     version: "v2.13.0",
     items: [
       "Added group activation: `gitmap g <name>` sets a persistent active group for batch pull/status/exec.",

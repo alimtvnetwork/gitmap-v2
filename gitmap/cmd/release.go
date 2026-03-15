@@ -15,20 +15,21 @@ import (
 // runRelease handles the 'release' command.
 func runRelease(args []string) {
 	checkHelp("release", args)
-	version, assets, commit, branch, bump, draft, dryRun, verbose, compress, checksums := parseReleaseFlags(args)
+	version, assets, commit, branch, bump, targets, draft, dryRun, verbose, compress, checksums, noAssets := parseReleaseFlags(args)
 	_ = verbose
 	validateReleaseFlags(version, bump, commit, branch)
-	executeRelease(version, assets, commit, branch, bump, draft, dryRun, verbose, compress, checksums)
+	executeRelease(version, assets, commit, branch, bump, targets, draft, dryRun, verbose, compress, checksums, noAssets)
 }
 
 // executeRelease builds options and runs the release workflow.
-func executeRelease(version, assets, commit, branch, bump string, draft, dryRun, verbose, compress, checksums bool) {
+func executeRelease(version, assets, commit, branch, bump, targets string, draft, dryRun, verbose, compress, checksums, noAssets bool) {
 	opts := release.Options{
 		Version: version, Assets: assets,
 		Commit: commit, Branch: branch,
-		Bump: bump, Draft: draft,
-		DryRun: dryRun, Verbose: verbose,
-		Compress: compress, Checksums: checksums,
+		Bump: bump, Targets: targets,
+		Draft: draft, DryRun: dryRun,
+		Verbose: verbose, Compress: compress,
+		Checksums: checksums, NoAssets: noAssets,
 	}
 	err := release.Execute(opts)
 	if err != nil {
@@ -52,17 +53,19 @@ func validateReleaseFlags(version, bump, commit, branch string) {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump string, draft, dryRun, verbose, compress, checksums bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, draft, dryRun, verbose, compress, checksums, noAssets bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
 	branchFlag := fs.String("branch", "", constants.FlagDescRelBranch)
 	bumpFlag := fs.String("bump", "", constants.FlagDescBump)
+	targetsFlag := fs.String("targets", "", constants.FlagDescTargets)
 	draftFlag := fs.Bool("draft", false, constants.FlagDescDraft)
 	dryRunFlag := fs.Bool("dry-run", false, constants.FlagDescDryRun)
 	verboseFlag := fs.Bool("verbose", false, constants.FlagDescVerbose)
 	compressFlag := fs.Bool("compress", false, constants.FlagDescCompress)
 	checksumsFlag := fs.Bool("checksums", false, constants.FlagDescChecksums)
+	noAssetsFlag := fs.Bool("no-assets", false, constants.FlagDescNoAssets)
 	fs.Parse(args)
 
 	version = ""
@@ -70,7 +73,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump str
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag
 }
 
 // persistReleaseToDB saves the release metadata to SQLite if available.

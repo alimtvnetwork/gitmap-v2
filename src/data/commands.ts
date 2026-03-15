@@ -210,6 +210,10 @@ export const commands: CommandDef[] = [
       { flag: "--bump major|minor|patch", description: "Auto-increment version" },
       { flag: "--draft", description: "Create unpublished draft" },
       { flag: "--dry-run", description: "Preview without executing" },
+      { flag: "--compress", description: "Wrap assets in .zip (Windows) or .tar.gz archives" },
+      { flag: "--checksums", description: "Generate SHA256 checksums.txt for assets" },
+      { flag: "--no-assets", description: "Skip Go binary cross-compilation" },
+      { flag: "--targets <list>", description: "Cross-compile targets (e.g. windows/amd64,linux/arm64)" },
     ],
     seeAlso: [
       { name: "release-branch", description: "Create branch without tagging" },

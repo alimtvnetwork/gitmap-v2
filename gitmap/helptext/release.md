@@ -22,6 +22,8 @@ r
 | --dry-run | false | Preview without executing |
 | --compress | false | Wrap assets in .zip (Windows) or .tar.gz archives |
 | --checksums | false | Generate SHA256 checksums.txt for assets |
+| --no-assets | false | Skip Go binary cross-compilation |
+| --targets \<list\> | all 6 | Cross-compile targets: windows/amd64,linux/arm64 |
 
 ## Prerequisites
 

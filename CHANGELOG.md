@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.14.0
+- Added Go release assets: automatic cross-compilation for 6 OS/arch targets (windows/linux/darwin × amd64/arm64).
+- Added GitHub Releases API integration for asset upload — no `gh` CLI or external tools needed.
+- Added `--compress` flag to wrap release assets in `.zip` (Windows) or `.tar.gz` (Linux/macOS).
+- Added `--checksums` flag to generate SHA256 `checksums.txt` for all release assets.
+- Added `--no-assets` flag to skip automatic Go binary compilation.
+- Added `--targets` flag for custom cross-compile target selection (e.g. `windows/amd64,linux/arm64`).
+- Improved `gitmap ls <type>` output with labeled fields (Repo, Path, Indicator) and inline `cd` examples.
+- Added shell completion for `release`, `release-branch`, `group`, `multi-group`, and `list` commands.
+- Fixed duplicate hints appearing after `gitmap ls <type>` output.
+
 ## v2.13.0
 - Added group activation: `gitmap g <name>` sets a persistent active group for batch pull/status/exec.
 - Added `multi-group` (mg) command for selecting and operating on multiple groups at once.
