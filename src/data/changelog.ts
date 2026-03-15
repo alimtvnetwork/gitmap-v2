@@ -5,6 +5,12 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.19.0",
+    items: [
+      "Bumped compiled version constant to v2.19.0.",
+    ],
+  },
+  {
     version: "v2.18.0",
     items: [
       "Added batch status terminal demo to Batch Actions page showing dirty/clean state across repos.",
