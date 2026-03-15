@@ -32,12 +32,13 @@ type ReleaseTarget struct {
 
 // Config holds application configuration loaded from JSON and CLI flags.
 type Config struct {
-	DefaultMode   string        `json:"defaultMode"`
-	DefaultOutput string        `json:"defaultOutput"`
-	OutputDir     string        `json:"outputDir"`
-	ExcludeDirs   []string      `json:"excludeDirs"`
-	Notes         string        `json:"notes"`
-	Release       ReleaseConfig `json:"release"`
+	DefaultMode      string        `json:"defaultMode"`
+	DefaultOutput    string        `json:"defaultOutput"`
+	OutputDir        string        `json:"outputDir"`
+	ExcludeDirs      []string      `json:"excludeDirs"`
+	Notes            string        `json:"notes"`
+	Release          ReleaseConfig `json:"release"`
+	DashboardRefresh int           `json:"dashboardRefresh"`
 }
 
 // DefaultConfig returns a Config with sensible built-in defaults.
