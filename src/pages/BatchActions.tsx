@@ -100,6 +100,29 @@ const BatchActions = () => {
           />
         </section>
 
+        {/* Terminal Demo 2 — exec */}
+        <section className="mb-10 animate-fade-in">
+          <TerminalDemo
+            title="gitmap interactive — batch exec"
+            lines={[
+              { text: "# Select repos, Tab → Actions, press x", type: "accent" as const, delay: 600 },
+              { text: "", delay: 200 },
+              { text: "  Repos  [ Actions ]  Status", type: "accent" as const, delay: 200 },
+              { text: "", delay: 150 },
+              { text: "Enter git command: fetch --prune", type: "header" as const, delay: 800 },
+              { text: "", delay: 200 },
+              { text: "Executing `git fetch --prune` across 3 repos...", type: "header" as const, delay: 400 },
+              { text: "", delay: 150 },
+              { text: "  ✓ myapp             pruned 2 stale refs", type: "accent" as const, delay: 350 },
+              { text: "  ✓ api-server        up to date", delay: 300 },
+              { text: "  ✓ cli-tools         pruned 1 stale ref", type: "accent" as const, delay: 350 },
+              { text: "", delay: 100 },
+              { text: "3/3 repos executed successfully", type: "accent" as const },
+            ]}
+            autoPlay
+          />
+        </section>
+
         {/* Workflow */}
         <section className="mb-10">
           <h2 className="text-xl font-mono font-semibold text-foreground mb-4 flex items-center gap-2">
