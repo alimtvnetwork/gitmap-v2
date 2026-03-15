@@ -75,7 +75,7 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 
 		return m, nil
-	case refreshMsg:
+	case refreshMsg, tickMsg:
 		dm, cmd := m.dashboard.Update(msg)
 		m.dashboard = dm
 
