@@ -21,6 +21,10 @@ func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options
 
 	assets := CollectAssets(opts.Assets)
 
+	// Cross-compile Go binaries if applicable.
+	goAssets := buildGoAssetsIfApplicable(v, opts)
+	assets = append(assets, goAssets...)
+
 	if opts.Compress && len(assets) > 0 {
 		compressed, compErr := CompressAssets(assets)
 		if compErr == nil && len(compressed) > 0 {
@@ -44,7 +48,92 @@ func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options
 		fmt.Printf(constants.MsgReleaseAttach, a)
 	}
 
+	// Upload to GitHub if token is available.
+	uploadToGitHub(v, assets, opts)
+
 	return writeMetadata(v, branchName, tag, sourceName, assets, opts.Draft)
+}
+
+// buildGoAssetsIfApplicable cross-compiles Go binaries when a Go project is detected.
+func buildGoAssetsIfApplicable(v Version, opts Options) []string {
+	if opts.NoAssets {
+		fmt.Print(constants.MsgAssetSkipped)
+
+		return nil
+	}
+
+	if !DetectGoProject() {
+		return nil
+	}
+
+	modName, err := ReadModuleName()
+	if err != nil {
+		return nil
+	}
+
+	fmt.Printf(constants.MsgAssetDetected, modName)
+
+	packages := FindMainPackages()
+	if len(packages) == 0 {
+		fmt.Print(constants.MsgAssetNoMain)
+
+		return nil
+	}
+
+	targets, err := ParseTargets(opts.Targets)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Invalid targets: %v\n", err)
+
+		return nil
+	}
+
+	stagingDir, err := EnsureStagingDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Staging dir: %v\n", err)
+
+		return nil
+	}
+
+	fmt.Printf(constants.MsgAssetCrossCompile, len(targets)*len(packages))
+
+	results := CrossCompile(v.String(), targets, packages, stagingDir)
+	successful := CollectSuccessfulBuilds(results)
+
+	fmt.Printf(constants.MsgAssetBuildSummary, len(successful), len(results))
+
+	return successful
+}
+
+// uploadToGitHub creates a GitHub release and uploads assets.
+func uploadToGitHub(v Version, assets []string, opts Options) {
+	token := os.Getenv(constants.GitHubTokenEnv)
+	if len(token) == 0 {
+		if len(assets) > 0 {
+			fmt.Fprint(os.Stderr, constants.ErrAssetNoToken)
+		}
+
+		return
+	}
+
+	owner, repo, err := ParseRemoteOrigin()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrAssetRemoteParse, err)
+
+		return
+	}
+
+	body := DetectChangelog()
+	ghRelease, err := CreateGitHubRelease(owner, repo, v.String(), body, token, opts.Draft)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ GitHub release creation failed: %v\n", err)
+
+		return
+	}
+
+	if len(assets) > 0 {
+		fmt.Printf(constants.MsgAssetUploadStart, len(assets))
+		UploadAllAssets(owner, repo, ghRelease.ID, assets, token)
+	}
 }
 
 // writeMetadata persists release info and updates latest.

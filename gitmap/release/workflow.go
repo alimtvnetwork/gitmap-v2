@@ -16,11 +16,13 @@ type Options struct {
 	Commit     string
 	Branch     string
 	Bump       string
+	Targets    string
 	Draft      bool
 	DryRun     bool
 	Verbose    bool
 	Compress   bool
 	Checksums  bool
+	NoAssets   bool
 }
 
 // Result holds the outcome of a release operation.
