@@ -1,6 +1,6 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
-import { GitBranch, Tag, Upload, Clock, Shield, Eye } from "lucide-react";
+import { GitBranch, Tag, Upload, Clock, Shield, Eye, Package, Target, FileCheck, Archive } from "lucide-react";
 
 const features = [
   { icon: GitBranch, title: "Branch + Tag", desc: "Creates release/vX.Y.Z branch and vX.Y.Z tag in one step." },
@@ -9,6 +9,9 @@ const features = [
   { icon: Clock, title: "Auto Increment", desc: "Use --bump to increment from the latest released version." },
   { icon: Shield, title: "Duplicate Detection", desc: "Aborts if the version tag or metadata file already exists." },
   { icon: Eye, title: "Dry Run", desc: "Preview all steps without executing with --dry-run." },
+  { icon: Package, title: "Go Cross-Compile", desc: "Auto-detect go.mod and build binaries for 6 OS/arch targets." },
+  { icon: Archive, title: "Compress & Checksum", desc: "Wrap assets in .zip/.tar.gz and generate SHA256 checksums." },
+  { icon: Target, title: "Custom Targets", desc: "Override default matrix via --targets flag or config.json." },
 ];
 
 const releaseFlags = [
@@ -18,6 +21,11 @@ const releaseFlags = [
   { flag: "--bump major|minor|patch", description: "Auto-increment from the latest released version" },
   { flag: "--draft", description: "Mark release metadata as draft" },
   { flag: "--dry-run", description: "Preview release steps without executing" },
+  { flag: "--compress", description: "Wrap assets in .zip (Windows) or .tar.gz (Linux/macOS)" },
+  { flag: "--checksums", description: "Generate SHA256 checksums.txt for assets" },
+  { flag: "--no-assets", description: "Skip Go binary cross-compilation" },
+  { flag: "--targets <list>", description: "Cross-compile targets (e.g. windows/amd64,linux/arm64)" },
+  { flag: "--list-targets", description: "Print resolved target matrix and exit" },
   { flag: "--verbose", description: "Write detailed debug log" },
 ];
 
@@ -25,6 +33,10 @@ const branchFlags = [
   { flag: "--assets <path>", description: "Directory or file to record" },
   { flag: "--draft", description: "Mark release metadata as draft" },
   { flag: "--dry-run", description: "Preview steps without executing" },
+  { flag: "--compress", description: "Wrap assets in .zip/.tar.gz" },
+  { flag: "--checksums", description: "Generate SHA256 checksums.txt" },
+  { flag: "--no-assets", description: "Skip Go binary compilation" },
+  { flag: "--targets <list>", description: "Custom cross-compile targets" },
   { flag: "--verbose", description: "Write detailed debug log" },
 ];
 
@@ -39,6 +51,15 @@ const paddingExamples = [
   { input: "v1.2.3", resolved: "v1.2.3", branch: "release/v1.2.3", tag: "v1.2.3" },
 ];
 
+const defaultTargets = [
+  { goos: "windows", goarch: "amd64", suffix: "_windows_amd64.exe" },
+  { goos: "windows", goarch: "arm64", suffix: "_windows_arm64.exe" },
+  { goos: "linux", goarch: "amd64", suffix: "_linux_amd64" },
+  { goos: "linux", goarch: "arm64", suffix: "_linux_arm64" },
+  { goos: "darwin", goarch: "amd64", suffix: "_darwin_amd64" },
+  { goos: "darwin", goarch: "arm64", suffix: "_darwin_arm64" },
+];
+
 const errorScenarios = [
   { scenario: "Invalid version string", behavior: "'abc' is not a valid version." },
   { scenario: "--commit SHA not found", behavior: "commit abc123 not found." },
@@ -47,6 +68,8 @@ const errorScenarios = [
   { scenario: "Version already released", behavior: "Version v1.2.3 is already released." },
   { scenario: "--bump + version argument", behavior: "--bump cannot be used with an explicit version argument." },
   { scenario: "--commit + --branch", behavior: "--commit and --branch are mutually exclusive." },
+  { scenario: "Go build fails for target", behavior: "Logs error, continues with remaining targets." },
+  { scenario: "Asset upload fails", behavior: "Retries once, then logs and continues." },
 ];
 
 const ReleasePage = () => {
@@ -57,9 +80,9 @@ const ReleasePage = () => {
         <div>
           <h1 className="text-3xl font-mono font-bold text-foreground mb-3">Release Command</h1>
           <p className="text-muted-foreground leading-relaxed max-w-2xl">
-            Automate Git release workflows: create branches, tags, push to remote, and track
-            release history. Supports semver, partial versions, pre-release suffixes, draft mode,
-            dry-run preview, and auto-increment.
+            Automate Git release workflows: create branches, tags, push to remote, cross-compile Go binaries,
+            upload to GitHub, and track release history. Supports semver, compression, checksums,
+            config-driven targets, and dry-run preview.
           </p>
         </div>
 
@@ -82,7 +105,7 @@ const ReleasePage = () => {
           <div className="space-y-4">
             <div className="p-4 rounded-lg border border-border bg-card">
               <h3 className="font-mono font-semibold text-foreground mb-1">gitmap release [version] <span className="text-muted-foreground font-normal text-sm">(alias: r)</span></h3>
-              <p className="text-sm text-muted-foreground">Create a release branch, Git tag, and push to remote.</p>
+              <p className="text-sm text-muted-foreground">Create a release branch, Git tag, push to remote, and optionally cross-compile + upload Go binaries.</p>
             </div>
             <div className="p-4 rounded-lg border border-border bg-card">
               <h3 className="font-mono font-semibold text-foreground mb-1">gitmap release-branch &lt;branch&gt; <span className="text-muted-foreground font-normal text-sm">(alias: rb)</span></h3>
@@ -108,13 +131,75 @@ const ReleasePage = () => {
               "5. Create branch release/vX.Y.Z from source",
               "6. Create git tag vX.Y.Z",
               "7. Push branch + tag to origin",
-              "8. Collect --assets contents",
-              "9. Write .release/vX.Y.Z.json",
-              "10. Update .release/latest.json (if highest stable)",
+              "7a. Cross-compile Go binaries (if go.mod detected)",
+              "7b. Compress assets (.zip/.tar.gz) if --compress",
+              "7c. Generate checksums.txt if --checksums",
+              "7d. Upload assets to GitHub Releases API",
+              "8. Write .release/vX.Y.Z.json",
+              "9. Update .release/latest.json (if highest stable)",
             ].map((step) => (
               <p key={step} className="text-foreground/80 pl-2">{step}</p>
             ))}
           </div>
+        </div>
+
+        {/* Go Cross-Compilation */}
+        <div>
+          <h2 className="text-xl font-mono font-bold text-foreground mb-4">Go Cross-Compilation</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            When a <code className="font-mono text-primary">go.mod</code> file is detected, gitmap automatically
+            cross-compiles binaries for all OS/arch targets using <code className="font-mono text-primary">CGO_ENABLED=0</code>.
+            No external tools required — uses Go's native cross-compilation.
+          </p>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mb-3">Default Target Matrix</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">GOOS</th>
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">GOARCH</th>
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Filename Suffix</th>
+                </tr>
+              </thead>
+              <tbody>
+                {defaultTargets.map((t) => (
+                  <tr key={`${t.goos}-${t.goarch}`} className="border-b border-border/50">
+                    <td className="py-2 px-3 font-mono text-primary">{t.goos}</td>
+                    <td className="py-2 px-3 font-mono text-foreground">{t.goarch}</td>
+                    <td className="py-2 px-3 font-mono text-muted-foreground">{t.suffix}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mt-6 mb-3">Target Resolution (Three-Layer)</h3>
+          <div className="bg-card border border-border rounded-lg p-4 space-y-2">
+            <div className="flex items-center gap-3 font-mono text-sm">
+              <span className="bg-primary/20 text-primary px-3 py-1 rounded font-semibold">1. --targets flag</span>
+              <span className="text-muted-foreground">→ Highest priority (always wins)</span>
+            </div>
+            <div className="flex items-center gap-3 font-mono text-sm">
+              <span className="bg-primary/10 text-primary px-3 py-1 rounded">2. config.json</span>
+              <span className="text-muted-foreground">→ release.targets array</span>
+            </div>
+            <div className="flex items-center gap-3 font-mono text-sm">
+              <span className="bg-muted text-muted-foreground px-3 py-1 rounded">3. Built-in defaults</span>
+              <span className="text-muted-foreground">→ All 6 targets</span>
+            </div>
+          </div>
+
+          <p className="text-sm text-muted-foreground mt-4">
+            Use <code className="font-mono text-primary">gitmap release --list-targets</code> to inspect
+            the resolved matrix:
+          </p>
+          <CodeBlock code={`$ gitmap release --list-targets\nRelease targets (6):\nSource: built-in defaults\n\n  windows/amd64\n  windows/arm64\n  linux/amd64\n  linux/arm64\n  darwin/amd64\n  darwin/arm64`} />
+
+          <p className="text-sm text-muted-foreground mt-4">
+            With a <code className="font-mono text-primary">--targets</code> override:
+          </p>
+          <CodeBlock code={`$ gitmap release --list-targets --targets windows/amd64,linux/amd64\nRelease targets (2):\nSource: --targets flag\n\n  windows/amd64\n  linux/amd64`} />
         </div>
 
         {/* Version Resolution */}
@@ -244,20 +329,20 @@ const ReleasePage = () => {
               <CodeBlock code="gitmap release v1.2.3" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-2">Partial version (padded to v1.0.0)</p>
-              <CodeBlock code="gitmap release v1" />
+              <p className="text-sm text-muted-foreground mb-2">Auto-increment with compression and checksums</p>
+              <CodeBlock code="gitmap release --bump patch --compress --checksums" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-2">With assets</p>
-              <CodeBlock code="gitmap release v2.0.0 --assets ./dist" />
+              <p className="text-sm text-muted-foreground mb-2">Custom cross-compile targets</p>
+              <CodeBlock code="gitmap release v2.0.0 --targets windows/amd64,linux/amd64" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-2">From specific commit or branch</p>
-              <CodeBlock code={`gitmap release v1.2.3 --commit abc123def\ngitmap release v1.0.0 --branch develop`} />
+              <p className="text-sm text-muted-foreground mb-2">Inspect resolved target matrix</p>
+              <CodeBlock code="gitmap release --list-targets" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-2">Auto-increment</p>
-              <CodeBlock code={`gitmap release --bump patch\ngitmap release --bump minor --assets ./bin`} />
+              <p className="text-sm text-muted-foreground mb-2">Skip Go binary compilation</p>
+              <CodeBlock code="gitmap release v1.0.0 --no-assets" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Draft and dry-run</p>
@@ -278,6 +363,12 @@ const ReleasePage = () => {
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Create branch release/v1.2.3 from main</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Create tag v1.2.3</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Push branch and tag to origin</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Would cross-compile 6 binaries:</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ gitmap_v1.2.3_windows_amd64.exe</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ gitmap_v1.2.3_linux_amd64</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ gitmap_v1.2.3_darwin_arm64</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;...</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Would upload 6 assets</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Write metadata to .release/v1.2.3.json</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Mark v1.2.3 as latest</p>
           </div>
@@ -291,7 +382,7 @@ const ReleasePage = () => {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Scenario</th>
-                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Error Message</th>
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Behavior</th>
                 </tr>
               </thead>
               <tbody>
@@ -323,7 +414,13 @@ const ReleasePage = () => {
                   { file: "release/metadata.go", desc: "Read/write .release/*.json, latest.json, version.json" },
                   { file: "release/gitops.go", desc: "Branch, tag, push, checkout Git operations" },
                   { file: "release/github.go", desc: "Asset collection, changelog/readme detection" },
-                  { file: "release/workflow.go", desc: "Orchestration: Execute(), ExecuteFromBranch()" },
+                  { file: "release/workflow.go", desc: "Orchestration: Execute(), version resolution" },
+                  { file: "release/workflowfinalize.go", desc: "Push, asset build, upload, metadata" },
+                  { file: "release/assets.go", desc: "Go cross-compilation orchestration" },
+                  { file: "release/assetstargets.go", desc: "Target matrix, config parsing, resolution" },
+                  { file: "release/assetsupload.go", desc: "GitHub API upload with retry" },
+                  { file: "release/compress.go", desc: ".zip/.tar.gz archive creation" },
+                  { file: "release/checksums.go", desc: "SHA256 checksum generation" },
                 ].map((row) => (
                   <tr key={row.file} className="border-b border-border/50">
                     <td className="py-2 px-3 font-mono text-primary">{row.file}</td>
