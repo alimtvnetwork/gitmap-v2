@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FolderGit2, Search, Filter } from "lucide-react";
+import { FolderGit2, Search, Filter, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import DocsLayout from "@/components/docs/DocsLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -98,6 +99,12 @@ const ProjectsPage = () => {
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Projects discovered inside Git repositories during scan. Click any project to see full details.
           </p>
+          <Link
+            to="/project-detection"
+            className="inline-flex items-center gap-1.5 mt-3 text-xs font-mono text-primary hover:underline"
+          >
+            How detection works <ArrowRight className="h-3 w-3" />
+          </Link>
         </motion.div>
 
         <motion.div
