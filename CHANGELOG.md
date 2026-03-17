@@ -5,6 +5,7 @@
 - Refactored `assetsupload.go` into three focused files: `githubapi.go` (API types/helpers), `assetsupload.go` (upload logic), `remoteorigin.go` (git URL parsing).
 - Rebuilt Project Detection docs page with detection pipeline, tabbed type cards, metadata extraction deep-dive, DB schema, JSON output, and package layout sections.
 - Added "How detection works" link from Projects dashboard to Detection page.
+- Added unit tests for `store/location.go` covering symlink resolution, fallback, double-nesting prevention, and profile DB filenames.
 
 ## v2.20.0
 - **Fixed**: `OpenDefault()` double-nesting bug where profile config resolved to `<binary>/data/data/profiles.json`.

@@ -11,6 +11,7 @@ export const changelog: ChangelogEntry[] = [
       "Refactored `assetsupload.go` into three focused files: `githubapi.go`, `assetsupload.go`, `remoteorigin.go`.",
       "Rebuilt Project Detection docs page with pipeline visualization, metadata deep-dive, DB schema, and package layout.",
       "Added detection docs link from Projects dashboard page.",
+      "Added unit tests for `store/location.go` covering symlink resolution, fallback, and double-nesting prevention.",
     ],
   },
   {
