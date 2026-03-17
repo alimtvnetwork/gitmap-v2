@@ -9,6 +9,8 @@ export const changelog: ChangelogEntry[] = [
     items: [
       "Bumped compiled version constant to v2.21.0.",
       "Refactored `assetsupload.go` into three focused files: `githubapi.go`, `assetsupload.go`, `remoteorigin.go`.",
+      "Rebuilt Project Detection docs page with pipeline visualization, metadata deep-dive, DB schema, and package layout.",
+      "Added detection docs link from Projects dashboard page.",
     ],
   },
   {
