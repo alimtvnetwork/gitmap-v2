@@ -53,6 +53,7 @@ const App = () => (
           <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="/interactive" element={<InteractiveTUIPage />} />
           <Route path="/batch-actions" element={<BatchActionsPage />} />
+          <Route path="/clear-release-json" element={<ClearReleaseJSONPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
