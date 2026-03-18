@@ -480,7 +480,8 @@ export const commands: CommandDef[] = [
       { command: "gitmap ss --json", description: "JSON output" },
     ],
     seeAlso: [
-      { name: "history", description: "View command history" },
+      { name: "Spec: stats", description: "Full stats documentation", url: "/stats" },
+      { name: "history", description: "View command history", url: "/history" },
       { name: "scan", description: "Scan directories" },
       { name: "status", description: "View repo statuses" },
     ],
