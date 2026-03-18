@@ -375,6 +375,51 @@ const ReleasePage = () => {
           </div>
         </div>
 
+        {/* Orphaned Metadata Recovery */}
+        <div>
+          <h2 className="text-xl font-mono font-bold text-foreground mb-4">Orphaned Metadata Recovery</h2>
+          <p className="text-sm text-muted-foreground mb-4 max-w-2xl">
+            If a <code className="font-mono text-primary">.release/vX.Y.Z.json</code> file exists but neither the
+            Git tag nor the release branch is found, the release command detects orphaned metadata and prompts
+            for recovery instead of failing with a duplicate error.
+          </p>
+
+          <div className="bg-card border border-border rounded-lg p-5 font-mono text-sm space-y-1 mb-6">
+            <p className="text-muted-foreground">$ gitmap release --bump patch</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;→ Bumped v2.3.9 → v2.3.10</p>
+            <p className="text-yellow-500">&nbsp;&nbsp;⚠ Release metadata exists for v2.3.10 but no tag or branch was found.</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;→ Do you want to remove the release JSON and proceed? (y/N): <span className="text-primary">y</span></p>
+            <p className="text-green-500">&nbsp;&nbsp;✓ Removed orphaned release metadata for v2.3.10</p>
+            <p className="text-foreground/80">&nbsp;</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;Creating release v2.3.10...</p>
+            <p className="text-green-500">&nbsp;&nbsp;✓ Created branch release/v2.3.10</p>
+            <p className="text-green-500">&nbsp;&nbsp;✓ Created tag v2.3.10</p>
+          </div>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mb-3">Detection Logic</h3>
+          <div className="space-y-2 mb-4">
+            {[
+              { step: "1", text: "Release JSON exists for the target version" },
+              { step: "2", text: "Git tag does not exist locally or on remote" },
+              { step: "3", text: "Release branch does not exist" },
+              { step: "→", text: "Prompt user to remove stale JSON and proceed" },
+            ].map((item) => (
+              <div key={item.step} className="flex items-start gap-3 text-sm">
+                <span className="font-mono text-primary font-bold w-5 text-right">{item.step}</span>
+                <span className="text-muted-foreground">{item.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm text-muted-foreground">
+              If the user declines (<code className="font-mono text-primary">n</code> or Enter), the release is aborted.
+              If confirmed (<code className="font-mono text-primary">y</code>), the orphaned JSON file is deleted and
+              the normal release workflow continues from step 5.
+            </p>
+          </div>
+        </div>
+
         {/* Error Scenarios */}
         <div>
           <h2 className="text-xl font-mono font-bold text-foreground mb-4">Error Scenarios</h2>
