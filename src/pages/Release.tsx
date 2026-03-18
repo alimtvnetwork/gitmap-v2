@@ -7,7 +7,7 @@ const features = [
   { icon: Tag, title: "Semver Padding", desc: "Partial versions auto-pad: v1 → v1.0.0, v1.2 → v1.2.0." },
   { icon: Upload, title: "Auto Push", desc: "Pushes branch and tag to origin after creation." },
   { icon: Clock, title: "Auto Increment", desc: "Use --bump to increment from the latest released version." },
-  { icon: Shield, title: "Duplicate Detection", desc: "Aborts if the version tag or metadata file already exists." },
+  { icon: Shield, title: "Duplicate Detection", desc: "Aborts if the version tag or metadata file already exists. Recovers orphaned metadata automatically." },
   { icon: Eye, title: "Dry Run", desc: "Preview all steps without executing with --dry-run." },
   { icon: Package, title: "Go Cross-Compile", desc: "Auto-detect go.mod and build binaries for 6 OS/arch targets." },
   { icon: Archive, title: "Compress & Checksum", desc: "Wrap assets in .zip/.tar.gz and generate SHA256 checksums." },
