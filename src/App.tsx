@@ -22,6 +22,7 @@ import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import InteractiveTUIPage from "./pages/InteractiveTUI";
 import BatchActionsPage from "./pages/BatchActions";
+import ClearReleaseJSONPage from "./pages/ClearReleaseJSON";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
