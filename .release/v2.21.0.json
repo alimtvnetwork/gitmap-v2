@@ -1,11 +1,20 @@
 {
   "version": "2.21.0",
-  "tag": "v2.21.0",
   "branch": "release/v2.21.0",
-  "features": [
-    "Bumped compiled version constant to v2.21.0",
-    "Refactored assetsupload.go into githubapi.go, assetsupload.go, and remoteorigin.go",
-    "Rebuilt Project Detection docs page with pipeline, metadata deep-dive, DB schema, and package layout",
-    "Added unit tests for store/location.go covering symlink resolution and fallback behavior"
-  ]
+  "sourceBranch": "main",
+  "commit": "fbc2c48cce68eed479280cd032b96d75b1d80bca",
+  "tag": "v2.21.0",
+  "assets": [],
+  "changelog": [
+    "Bumped compiled version constant to v2.21.0.",
+    "Refactored `assetsupload.go` into three focused files: `githubapi.go` (API types/helpers), `assetsupload.go` (upload logic), `remoteorigin.go` (git URL parsing).",
+    "Rebuilt Project Detection docs page with detection pipeline, tabbed type cards, metadata extraction deep-dive, DB schema, JSON output, and package layout sections.",
+    "Added \"How detection works\" link from Projects dashboard to Detection page.",
+    "Added unit tests for `store/location.go` covering symlink resolution, fallback, double-nesting prevention, and profile DB filenames.",
+    "Added unit tests for `remoteorigin.go` covering HTTPS, SSH, and invalid URL parsing."
+  ],
+  "draft": false,
+  "preRelease": false,
+  "createdAt": "2026-03-18T09:02:02Z",
+  "isLatest": false
 }
