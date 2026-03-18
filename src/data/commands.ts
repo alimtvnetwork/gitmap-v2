@@ -668,7 +668,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap crj v1.0.0", description: "Remove using alias" },
     ],
     seeAlso: [
-      { name: "release", description: "Create a release" },
+      { name: "release", description: "Create a release", url: "/release" },
       { name: "list-releases", description: "Show stored releases" },
       { name: "db-reset", description: "Reset entire database" },
       { name: "Spec: clear-release-json", description: "Full specification with edge cases and constants", url: "/clear-release-json" },
