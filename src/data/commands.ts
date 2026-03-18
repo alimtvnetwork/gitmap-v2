@@ -351,7 +351,7 @@ export const commands: CommandDef[] = [
       { name: "list", description: "List all tracked repos with slugs" },
       { name: "scan", description: "Scan directories to populate database" },
       { name: "group", description: "Manage repo groups" },
-      { name: "bookmark", description: "Save commands for re-execution" },
+      { name: "bookmark", description: "Save commands for re-execution", url: "/bookmarks" },
     ],
   },
   {
