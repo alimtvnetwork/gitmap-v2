@@ -314,7 +314,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "list-versions", description: "List Git tags" },
-      { name: "release", description: "Create a release" },
+      { name: "release", description: "Create a release", url: "/release" },
       { name: "changelog", description: "View release notes" },
     ],
   },
