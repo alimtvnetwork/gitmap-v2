@@ -41,6 +41,9 @@ const pages = [
   { title: "Changelog", url: "/changelog" },
   { title: "Flag Reference", url: "/flags" },
   { title: "Interactive Examples", url: "/examples" },
+  { title: "Interactive TUI", url: "/interactive" },
+  { title: "Batch Actions", url: "/batch-actions" },
+  { title: "Clear Release JSON", url: "/clear-release-json" },
 ];
 
 const CommandPalette = () => {

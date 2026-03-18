@@ -22,6 +22,7 @@ import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import InteractiveTUIPage from "./pages/InteractiveTUI";
 import BatchActionsPage from "./pages/BatchActions";
+import ClearReleaseJSONPage from "./pages/ClearReleaseJSON";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="/interactive" element={<InteractiveTUIPage />} />
           <Route path="/batch-actions" element={<BatchActionsPage />} />
+          <Route path="/clear-release-json" element={<ClearReleaseJSONPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

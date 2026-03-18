@@ -57,6 +57,7 @@ const navItems = [
   { title: "Examples", url: "/examples", icon: PlayCircle },
   { title: "Interactive TUI", url: "/interactive", icon: Terminal },
   { title: "Batch Actions", url: "/batch-actions", icon: Zap },
+  { title: "Clear Release JSON", url: "/clear-release-json", icon: FileText },
 ];
 
 export function DocsSidebar() {
