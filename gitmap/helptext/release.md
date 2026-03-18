@@ -31,6 +31,17 @@ r
 - Must be inside a Git repository with at least one commit
 - GitHub CLI (`gh`) recommended for publishing
 
+## Orphaned Metadata Recovery
+
+If a `.release/vX.Y.Z.json` file exists but neither the Git tag nor
+the release branch is found, the command warns and prompts:
+
+    ⚠ Release metadata exists for v2.3.10 but no tag or branch was found.
+    → Do you want to remove the release JSON and proceed? (y/N):
+
+Answering `y` removes the stale JSON file and proceeds with the release.
+Answering `n` (or pressing Enter) aborts the release.
+
 ## Examples
 
 ### Example 1: Release with auto-bump

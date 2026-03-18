@@ -36,3 +36,12 @@ const (
 	ReadmeFile              = "README.md"
 	ReleaseTagPrefix        = "Release "
 )
+
+// Release orphaned metadata messages.
+const (
+	MsgReleaseOrphanedMeta    = "  ⚠ Release metadata exists for %s but no tag or branch was found.\n"
+	MsgReleaseOrphanedPrompt  = "  → Do you want to remove the release JSON and proceed? (y/N): "
+	MsgReleaseOrphanedRemoved = "  ✓ Removed orphaned release metadata for %s\n"
+	ErrReleaseOrphanedRemove  = "failed to remove release metadata: %w"
+	ErrReleaseAborted         = "release aborted by user"
+)
