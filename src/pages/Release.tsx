@@ -66,6 +66,7 @@ const errorScenarios = [
   { scenario: "--branch does not exist", behavior: "branch develop does not exist." },
   { scenario: "Push to remote fails", behavior: "failed to push to remote: <detail>" },
   { scenario: "Version already released", behavior: "Version v1.2.3 is already released." },
+  { scenario: "Orphaned metadata (no tag/branch)", behavior: "Prompts to remove stale JSON, then proceeds if confirmed." },
   { scenario: "--bump + version argument", behavior: "--bump cannot be used with an explicit version argument." },
   { scenario: "--commit + --branch", behavior: "--commit and --branch are mutually exclusive." },
   { scenario: "Go build fails for target", behavior: "Logs error, continues with remaining targets." },
