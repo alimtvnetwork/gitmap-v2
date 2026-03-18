@@ -45,6 +45,8 @@ const pages = [
   { title: "Batch Actions", url: "/batch-actions" },
   { title: "Clear Release JSON", url: "/clear-release-json" },
   { title: "Bookmarks", url: "/bookmarks" },
+  { title: "Export", url: "/export" },
+  { title: "Import", url: "/import" },
 ];
 
 const CommandPalette = () => {

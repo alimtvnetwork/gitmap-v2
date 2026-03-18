@@ -605,7 +605,8 @@ export const commands: CommandDef[] = [
       { command: "gitmap im backup.json --confirm", description: "Import from custom file" },
     ],
     seeAlso: [
-      { name: "export", description: "Export database to file" },
+      { name: "Spec: import", description: "Full import specification", url: "/import" },
+      { name: "export", description: "Export database to file", url: "/export" },
       { name: "scan", description: "Scan directories" },
       { name: "profile", description: "Manage database profiles" },
     ],
