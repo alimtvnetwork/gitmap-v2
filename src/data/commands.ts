@@ -622,9 +622,10 @@ export const commands: CommandDef[] = [
       { command: "gitmap profile show", description: "Show current profile" },
     ],
     seeAlso: [
+      { name: "Spec: profile", description: "Full profile specification", url: "/profile" },
       { name: "diff-profiles", description: "Compare repos across profiles" },
-      { name: "export", description: "Export database" },
-      { name: "import", description: "Import repos" },
+      { name: "export", description: "Export database", url: "/export" },
+      { name: "import", description: "Import repos", url: "/import" },
     ],
   },
   {

@@ -26,6 +26,7 @@ import ClearReleaseJSONPage from "./pages/ClearReleaseJSON";
 import BookmarksPage from "./pages/Bookmarks";
 import ExportPage from "./pages/Export";
 import ImportPage from "./pages/Import";
+import ProfilePage from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/export" element={<ExportPage />} />
           <Route path="/import" element={<ImportPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

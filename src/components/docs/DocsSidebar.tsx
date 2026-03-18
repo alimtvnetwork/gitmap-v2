@@ -61,6 +61,7 @@ const navItems = [
   { title: "Bookmarks", url: "/bookmarks", icon: BookOpen },
   { title: "Export", url: "/export", icon: FileText },
   { title: "Import", url: "/import", icon: FileText },
+  { title: "Profile", url: "/profile", icon: FileText },
 ];
 
 export function DocsSidebar() {
