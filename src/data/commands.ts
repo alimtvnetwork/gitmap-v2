@@ -1,6 +1,7 @@
 export interface CommandSeeAlso {
   name: string;
   description: string;
+  url?: string;
 }
 
 export interface CommandDef {
