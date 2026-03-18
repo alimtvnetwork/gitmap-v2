@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronRight, ArrowRight, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import CodeBlock from "./CodeBlock";
 import type { CommandSeeAlso } from "@/data/commands";
 
@@ -71,20 +72,33 @@ const CommandCard = ({ name, alias, description, usage, flags, examples, seeAlso
             <div>
               <h4 className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider mb-2">See Also</h4>
               <div className="flex flex-wrap gap-2">
-                {seeAlso.map((ref) => (
-                  <button
-                    key={ref.name}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate?.(ref.name);
-                    }}
-                    className="group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-card text-sm font-mono text-foreground hover:border-primary/60 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60 transition-colors"
-                    title={ref.description}
-                  >
-                    <span>{ref.name}</span>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </button>
-                ))}
+                {seeAlso.map((ref) =>
+                  ref.url ? (
+                    <Link
+                      key={ref.name}
+                      to={ref.url}
+                      onClick={(e) => e.stopPropagation()}
+                      className="group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-card text-sm font-mono text-foreground hover:border-primary/60 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60 transition-colors"
+                      title={ref.description}
+                    >
+                      <span>{ref.name}</span>
+                      <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </Link>
+                  ) : (
+                    <button
+                      key={ref.name}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigate?.(ref.name);
+                      }}
+                      className="group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-card text-sm font-mono text-foreground hover:border-primary/60 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60 transition-colors"
+                      title={ref.description}
+                    >
+                      <span>{ref.name}</span>
+                      <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </button>
+                  )
+                )}
               </div>
             </div>
           )}
