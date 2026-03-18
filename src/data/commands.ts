@@ -429,9 +429,10 @@ export const commands: CommandDef[] = [
       { command: "gitmap dp work personal --json", description: "JSON diff output" },
     ],
     seeAlso: [
-      { name: "profile", description: "Manage database profiles" },
+      { name: "Spec: diff-profiles", description: "Full diff-profiles specification", url: "/diff-profiles" },
+      { name: "profile", description: "Manage database profiles", url: "/profile" },
       { name: "list", description: "List tracked repos" },
-      { name: "export", description: "Export database" },
+      { name: "export", description: "Export database", url: "/export" },
     ],
   },
 

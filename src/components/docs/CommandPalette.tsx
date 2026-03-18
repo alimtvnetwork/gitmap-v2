@@ -48,6 +48,7 @@ const pages = [
   { title: "Export", url: "/export" },
   { title: "Import", url: "/import" },
   { title: "Profile", url: "/profile" },
+  { title: "Diff Profiles", url: "/diff-profiles" },
 ];
 
 const CommandPalette = () => {
