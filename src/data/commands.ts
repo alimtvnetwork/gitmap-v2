@@ -531,7 +531,7 @@ export const commands: CommandDef[] = [
       { name: "node-repos", description: "List Node.js projects" },
       { name: "react-repos", description: "List React projects" },
       { name: "scan", description: "Scan directories first" },
-      { name: "gomod", description: "Rename Go module paths" },
+      { name: "gomod", description: "Rename Go module paths", url: "/gomod" },
     ],
   },
   {
