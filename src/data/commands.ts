@@ -241,7 +241,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap rb release/v1.2.0", description: "Alias shorthand" },
     ],
     seeAlso: [
-      { name: "release", description: "Full release with tag and push" },
+      { name: "release", description: "Full release with tag and push", url: "/release" },
       { name: "release-pending", description: "Show unreleased commits" },
       { name: "latest-branch", description: "Find most recent branch" },
     ],
