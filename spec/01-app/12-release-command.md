@@ -241,7 +241,8 @@ failed step so the user knows exactly what to clean up.
 ```
  1. Resolve version (CLI → --bump → version.json → error)
  2. Pad partial version to full semver
- 3. Check .release/ and git tags for duplicates → abort if exists
+ 3. Check .release/ and git tags for duplicates
+ 3a. If orphaned metadata detected → prompt to remove and continue
  4. Resolve source commit (--commit / --branch / HEAD)
  5. Create branch release/vX.Y.Z from source
  6. Create git tag vX.Y.Z
