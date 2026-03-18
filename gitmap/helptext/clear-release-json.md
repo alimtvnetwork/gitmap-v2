@@ -30,7 +30,15 @@ crj
 
     ✓ Removed .release/v2.20.0.json
 
-### Example 2: Version not found
+### Example 2: Dry-run preview
+
+    gitmap clear-release-json v2.20.0 --dry-run
+
+**Output:**
+
+    [dry-run] Would remove .release/v2.20.0.json
+
+### Example 3: Version not found
 
     gitmap clear-release-json v9.9.9
 

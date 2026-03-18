@@ -655,9 +655,13 @@ export const commands: CommandDef[] = [
   {
     category: "data",
     name: "clear-release-json", alias: "crj", description: "Remove a .release/vX.Y.Z.json metadata file",
-    usage: "gitmap clear-release-json <version>",
+    usage: "gitmap clear-release-json <version> [--dry-run]",
+    flags: [
+      { flag: "--dry-run", description: "Preview which file would be removed without deleting it" },
+    ],
     examples: [
       { command: "gitmap clear-release-json v2.20.0", description: "Remove the v2.20.0 release JSON file" },
+      { command: "gitmap crj v1.0.0 --dry-run", description: "Preview removal without deleting" },
       { command: "gitmap crj v1.0.0", description: "Remove using alias" },
     ],
     seeAlso: [
