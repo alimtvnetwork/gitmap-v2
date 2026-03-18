@@ -462,7 +462,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap history-reset --confirm", description: "Clear all command history" },
     ],
     seeAlso: [
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
       { name: "db-reset", description: "Reset entire database" },
     ],
   },
