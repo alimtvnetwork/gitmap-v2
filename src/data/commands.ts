@@ -803,6 +803,7 @@ export const commands: CommandDef[] = [
       { command: 'gitmap gomod "github.com/new/name" --no-merge', description: "Replace but stay on feature branch" },
     ],
     seeAlso: [
+      { name: "Spec: gomod", description: "Go module rename documentation", url: "/gomod" },
       { name: "go-repos", description: "List detected Go projects" },
       { name: "scan", description: "Scan directories" },
     ],
