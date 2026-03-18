@@ -367,3 +367,9 @@ gitmap release-pending --assets ./dist
   without matching tags are released.
 - **Given** `gitmap release-pending --dry-run`, **then** pending releases
   are listed but no tags or pushes are created.
+- **Given** `.release/vX.Y.Z.json` exists but no tag or branch, **then**
+  user is prompted to remove the orphaned JSON file.
+- **Given** orphaned metadata prompt answered `y`, **then** the stale
+  JSON is deleted and the release proceeds normally.
+- **Given** orphaned metadata prompt answered `n`, **then** the release
+  is aborted with "release aborted by user".
