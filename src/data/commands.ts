@@ -155,6 +155,7 @@ export const commands: CommandDef[] = [
       { flag: "--json", description: "Output single snapshot as JSON" },
     ],
     seeAlso: [
+      { name: "Spec: watch", description: "Live monitor documentation", url: "/watch" },
       { name: "status", description: "One-time status snapshot" },
       { name: "exec", description: "Run git commands across repos" },
       { name: "group", description: "Filter by group" },
@@ -219,6 +220,7 @@ export const commands: CommandDef[] = [
       { flag: "--verbose", description: "Write detailed debug log" },
     ],
     seeAlso: [
+      { name: "Spec: release", description: "Full release workflow documentation", url: "/release" },
       { name: "release-branch", description: "Create branch without tagging" },
       { name: "release-pending", description: "Show unreleased commits" },
       { name: "changelog", description: "View release notes" },
@@ -801,6 +803,7 @@ export const commands: CommandDef[] = [
       { command: 'gitmap gomod "github.com/new/name" --no-merge', description: "Replace but stay on feature branch" },
     ],
     seeAlso: [
+      { name: "Spec: gomod", description: "Go module rename documentation", url: "/gomod" },
       { name: "go-repos", description: "List detected Go projects" },
       { name: "scan", description: "Scan directories" },
     ],
