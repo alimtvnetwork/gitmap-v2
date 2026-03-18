@@ -284,7 +284,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap cl --source release", description: "Only entries from gitmap release" },
     ],
     seeAlso: [
-      { name: "release", description: "Create a release" },
+      { name: "release", description: "Create a release", url: "/release" },
       { name: "list-versions", description: "List available tags" },
       { name: "list-releases", description: "List stored release metadata" },
     ],
