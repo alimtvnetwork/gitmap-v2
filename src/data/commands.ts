@@ -261,7 +261,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap rp --dry-run", description: "Preview what would be released" },
     ],
     seeAlso: [
-      { name: "release", description: "Create a release" },
+      { name: "release", description: "Create a release", url: "/release" },
       { name: "release-branch", description: "Complete from existing branch" },
       { name: "clear-release-json", description: "Remove a release metadata file" },
       { name: "changelog", description: "View release notes" },
