@@ -26,6 +26,7 @@ import ClearReleaseJSONPage from "./pages/ClearReleaseJSON";
 import BookmarksPage from "./pages/Bookmarks";
 import ExportPage from "./pages/Export";
 import ImportPage from "./pages/Import";
+import ProfilePage from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
