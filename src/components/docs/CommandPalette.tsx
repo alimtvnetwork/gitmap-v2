@@ -44,6 +44,7 @@ const pages = [
   { title: "Interactive TUI", url: "/interactive" },
   { title: "Batch Actions", url: "/batch-actions" },
   { title: "Clear Release JSON", url: "/clear-release-json" },
+  { title: "Bookmarks", url: "/bookmarks" },
 ];
 
 const CommandPalette = () => {

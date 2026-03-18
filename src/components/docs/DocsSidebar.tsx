@@ -58,6 +58,7 @@ const navItems = [
   { title: "Interactive TUI", url: "/interactive", icon: Terminal },
   { title: "Batch Actions", url: "/batch-actions", icon: Zap },
   { title: "Clear Release JSON", url: "/clear-release-json", icon: FileText },
+  { title: "Bookmarks", url: "/bookmarks", icon: BookOpen },
 ];
 
 export function DocsSidebar() {

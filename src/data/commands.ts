@@ -351,7 +351,7 @@ export const commands: CommandDef[] = [
       { name: "list", description: "List all tracked repos with slugs" },
       { name: "scan", description: "Scan directories to populate database" },
       { name: "group", description: "Manage repo groups" },
-      { name: "bookmark", description: "Save commands for re-execution" },
+      { name: "bookmark", description: "Save commands for re-execution", url: "/bookmarks" },
     ],
   },
   {
@@ -445,9 +445,10 @@ export const commands: CommandDef[] = [
       { flag: "--json", description: "Output as structured JSON" },
     ],
     seeAlso: [
+      { name: "Spec: history", description: "Full history documentation", url: "/history" },
       { name: "history-reset", description: "Clear command history" },
-      { name: "stats", description: "View aggregated usage metrics" },
-      { name: "bookmark", description: "Save commands for re-execution" },
+      { name: "stats", description: "View aggregated usage metrics", url: "/stats" },
+      { name: "bookmark", description: "Save commands for re-execution", url: "/bookmarks" },
     ],
   },
   {
@@ -461,7 +462,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap history-reset --confirm", description: "Clear all command history" },
     ],
     seeAlso: [
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
       { name: "db-reset", description: "Reset entire database" },
     ],
   },
@@ -479,7 +480,8 @@ export const commands: CommandDef[] = [
       { command: "gitmap ss --json", description: "JSON output" },
     ],
     seeAlso: [
-      { name: "history", description: "View command history" },
+      { name: "Spec: stats", description: "Full stats documentation", url: "/stats" },
+      { name: "history", description: "View command history", url: "/history" },
       { name: "scan", description: "Scan directories" },
       { name: "status", description: "View repo statuses" },
     ],
@@ -500,7 +502,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "amend-list", description: "List previous amendments" },
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
     ],
   },
   {
@@ -518,7 +520,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "amend", description: "Rewrite commit author info" },
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
     ],
   },
 
@@ -634,7 +636,8 @@ export const commands: CommandDef[] = [
       { command: "gitmap bk delete ssh-scan", description: "Remove a bookmark" },
     ],
     seeAlso: [
-      { name: "history", description: "View command execution history" },
+      { name: "Spec: bookmarks", description: "Full bookmarks documentation", url: "/bookmarks" },
+      { name: "history", description: "View command execution history", url: "/history" },
       { name: "scan", description: "Scan directories (common bookmark target)" },
       { name: "pull", description: "Pull repos (common bookmark target)" },
     ],
@@ -782,7 +785,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "scan", description: "Scan directories" },
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
     ],
   },
   {
