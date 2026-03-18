@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronRight, ArrowRight, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import CodeBlock from "./CodeBlock";
 import type { CommandSeeAlso } from "@/data/commands";
 
