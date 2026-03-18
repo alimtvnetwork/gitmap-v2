@@ -47,6 +47,7 @@ const pages = [
   { title: "Bookmarks", url: "/bookmarks" },
   { title: "Export", url: "/export" },
   { title: "Import", url: "/import" },
+  { title: "Profile", url: "/profile" },
 ];
 
 const CommandPalette = () => {

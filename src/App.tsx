@@ -61,6 +61,7 @@ const App = () => (
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/export" element={<ExportPage />} />
           <Route path="/import" element={<ImportPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
