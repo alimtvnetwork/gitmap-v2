@@ -520,7 +520,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "amend", description: "Rewrite commit author info" },
-      { name: "history", description: "View command history" },
+      { name: "history", description: "View command history", url: "/history" },
     ],
   },
 
