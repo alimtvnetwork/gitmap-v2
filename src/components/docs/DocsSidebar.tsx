@@ -59,6 +59,8 @@ const navItems = [
   { title: "Batch Actions", url: "/batch-actions", icon: Zap },
   { title: "Clear Release JSON", url: "/clear-release-json", icon: FileText },
   { title: "Bookmarks", url: "/bookmarks", icon: BookOpen },
+  { title: "Export", url: "/export", icon: FileText },
+  { title: "Import", url: "/import", icon: FileText },
 ];
 
 export function DocsSidebar() {

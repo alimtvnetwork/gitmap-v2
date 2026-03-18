@@ -58,6 +58,8 @@ const App = () => (
           <Route path="/batch-actions" element={<BatchActionsPage />} />
           <Route path="/clear-release-json" element={<ClearReleaseJSONPage />} />
           <Route path="/bookmarks" element={<BookmarksPage />} />
+          <Route path="/export" element={<ExportPage />} />
+          <Route path="/import" element={<ImportPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
