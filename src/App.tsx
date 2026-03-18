@@ -24,6 +24,8 @@ import InteractiveTUIPage from "./pages/InteractiveTUI";
 import BatchActionsPage from "./pages/BatchActions";
 import ClearReleaseJSONPage from "./pages/ClearReleaseJSON";
 import BookmarksPage from "./pages/Bookmarks";
+import ExportPage from "./pages/Export";
+import ImportPage from "./pages/Import";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
