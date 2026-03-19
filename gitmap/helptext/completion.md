@@ -17,6 +17,8 @@ cmp
 | --list-repos | — | Print repo slugs, one per line (for script use) |
 | --list-groups | — | Print group names, one per line (for script use) |
 | --list-commands | — | Print all command names, one per line (for script use) |
+| --list-aliases | — | Print alias names, one per line (for script use) |
+| --list-zip-groups | — | Print zip group names, one per line (for script use) |
 
 ## Prerequisites
 
