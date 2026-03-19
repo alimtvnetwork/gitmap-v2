@@ -229,9 +229,9 @@ func releaseFromMetadata(meta ReleaseMeta, assetsPath string, draft bool, dryRun
 }
 
 // releasePendingBranches iterates and releases each pending branch.
-func releasePendingBranches(pending []string, assetsPath string, draft bool, dryRun bool) error {
+func releasePendingBranches(pending []string, assetsPath string, draft bool, dryRun bool, noCommit bool) error {
 	for _, branchName := range pending {
-		err := ExecuteFromBranch(branchName, assetsPath, draft, dryRun)
+		err := ExecuteFromBranch(branchName, assetsPath, draft, dryRun, noCommit)
 		if err != nil {
 			fmt.Printf(constants.MsgReleasePendingFailed, branchName, err)
 			continue
