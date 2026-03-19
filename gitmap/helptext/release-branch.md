@@ -15,6 +15,7 @@ rb
 | Flag | Default | Description |
 |------|---------|-------------|
 | --bump major\|minor\|patch | — | Auto-increment version |
+| --no-commit | false | Skip post-release auto-commit and push |
 
 ## Prerequisites
 
