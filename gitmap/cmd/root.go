@@ -304,6 +304,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdAlias || command == constants.CmdAliasShort {
+		runAlias(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
