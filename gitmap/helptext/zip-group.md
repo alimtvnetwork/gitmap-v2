@@ -29,6 +29,10 @@ z
 |------|-------------|
 | --archive \<name\> | Custom output filename (used with create/rename) |
 
+## Prerequisites
+
+- Must be inside a Git repository with release workflow configured (see release.md)
+
 ## Examples
 
 ### Example 1: Create a group and add items

@@ -26,6 +26,10 @@ a
 |------|---------|-------------|
 | --apply | false | Auto-accept all suggestions (with suggest) |
 
+## Prerequisites
+
+- Run `gitmap scan` first to populate the database (see scan.md)
+
 ## Examples
 
 ### Example 1: Create an alias and use it
