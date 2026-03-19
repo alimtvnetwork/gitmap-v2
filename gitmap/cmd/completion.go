@@ -29,7 +29,9 @@ func runCompletion(args []string) {
 // hasListFlag checks if any --list-* flag is present.
 func hasListFlag(args []string) bool {
 	for _, a := range args {
-		if a == constants.CompListRepos || a == constants.CompListGroups || a == constants.CompListCommands {
+		if a == constants.CompListRepos || a == constants.CompListGroups ||
+			a == constants.CompListCommands || a == constants.CompListAliases ||
+			a == constants.CompListZipGroups {
 			return true
 		}
 	}
