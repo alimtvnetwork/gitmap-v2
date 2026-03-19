@@ -14,6 +14,7 @@ go
 
 | Flag | Default | Description |
 |------|---------|-------------|
+| -A, --alias \<name\> | — | Navigate to a repo by its alias |
 | --group \<name\> | — | Filter picker to a specific group |
 | --pick | false | Force interactive picker |
 | --default \<slug\> | — | Set or clear the default repo |
