@@ -229,6 +229,14 @@ const ZipGroupPage = () => (
         </tbody>
       </table>
     </div>
+
+    {/* See Also */}
+    <section className="mt-10">
+      <h2 className="text-xl font-mono font-bold text-foreground mb-4">See Also</h2>
+      <ul className="space-y-1 text-sm font-mono">
+        <li><a href="/release" className="text-primary hover:underline">release</a> — Create a release with zip group assets <span className="text-muted-foreground">↗</span></li>
+      </ul>
+    </section>
   </DocsLayout>
 );
 
