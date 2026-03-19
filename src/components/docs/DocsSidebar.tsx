@@ -19,6 +19,8 @@ import {
   Flag,
   PlayCircle,
   Zap,
+  Archive,
+  Link2,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -63,6 +65,8 @@ const navItems = [
   { title: "Import", url: "/import", icon: FileText },
   { title: "Profile", url: "/profile", icon: FileText },
   { title: "Diff Profiles", url: "/diff-profiles", icon: FileText },
+  { title: "Zip Groups", url: "/zip-group", icon: Archive },
+  { title: "Aliases", url: "/alias", icon: Link2 },
 ];
 
 export function DocsSidebar() {
