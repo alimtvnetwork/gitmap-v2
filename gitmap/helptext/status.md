@@ -14,6 +14,7 @@ st
 
 | Flag | Default | Description |
 |------|---------|-------------|
+| -A, --alias \<name\> | — | Target a repo by its alias |
 | --group \<name\> | — | Show status for repos in a group |
 | --all | false | Show status for all tracked repos |
 
@@ -49,3 +50,4 @@ st
 - [scan](scan.md) — Scan directories to populate the database
 - [group](group.md) — Manage repo groups
 - [pull](pull.md) — Pull repos to sync changes
+- [alias](alias.md) — Manage repo aliases

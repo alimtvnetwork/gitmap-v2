@@ -12,7 +12,11 @@ x
 
 ## Flags
 
-None (all arguments are passed directly to git).
+| Flag | Default | Description |
+|------|---------|-------------|
+| -A, --alias \<name\> | — | Target a repo by its alias |
+
+All other arguments are passed directly to git.
 
 ## Prerequisites
 
@@ -45,3 +49,4 @@ None (all arguments are passed directly to git).
 - [scan](scan.md) — Scan directories to populate the database
 - [pull](pull.md) — Pull repos (built-in alternative to exec fetch)
 - [status](status.md) — View repo statuses
+- [alias](alias.md) — Manage repo aliases

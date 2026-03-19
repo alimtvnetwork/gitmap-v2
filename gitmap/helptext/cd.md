@@ -14,6 +14,7 @@ go
 
 | Flag | Default | Description |
 |------|---------|-------------|
+| -A, --alias \<name\> | — | Navigate to a repo by its alias |
 | --group \<name\> | — | Filter picker to a specific group |
 | --pick | false | Force interactive picker |
 | --default \<slug\> | — | Set or clear the default repo |
@@ -58,3 +59,4 @@ go
 - [list](list.md) — View all tracked repos and paths
 - [group](group.md) — Manage repo groups for filtered navigation
 - [scan](scan.md) — Scan directories to populate the database
+- [alias](alias.md) — Manage repo aliases
