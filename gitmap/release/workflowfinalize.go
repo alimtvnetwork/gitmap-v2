@@ -224,6 +224,7 @@ func updateLatestIfStable(v Version) error {
 func printDryRun(v Version, branchName, tag, sourceName string, opts Options) error {
 	printDryRunSteps(branchName, tag, sourceName)
 	printDryRunGoAssets(v, opts)
+	printDryRunZipGroups(opts)
 	printDryRunAssets(opts.Assets, opts.Compress, opts.Checksums)
 	printDryRunMeta(v)
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
