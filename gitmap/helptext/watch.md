@@ -25,33 +25,50 @@ w
 
 ## Examples
 
-### Example 1: Watch all repos
+### Example 1: Watch all repos with default interval
 
     gitmap watch
 
 **Output:**
 
-    Watching 42 repos (30s) — Ctrl+C to stop
-    my-api  main  clean | web-app  develop  dirty
+    Watching 42 repos (30s refresh) — Ctrl+C to stop
+    ─────────────────────────────────────────────────
+    REPO             BRANCH     STATUS  AHEAD/BEHIND
+    my-api           main       clean   0/0
+    web-app          develop    dirty   2/1
+    billing-svc      main       clean   0/0
+    auth-gateway     feature/x  dirty   5/0
+    ─────────────────────────────────────────────────
     Refreshing in 28s...
 
 ### Example 2: Watch a group with fast refresh
 
-    gitmap w --group work --interval 10
+    gitmap w --group backend --interval 10
 
 **Output:**
 
-    Watching 5 repos (group: work, 10s)
-    billing-svc  main  clean
-    auth-gateway main  clean
+    Watching 5 repos (group: backend, 10s refresh) — Ctrl+C to stop
+    ─────────────────────────────────────────────────
+    REPO             BRANCH   STATUS  AHEAD/BEHIND
+    billing-svc      main     clean   0/0
+    auth-gateway     main     clean   0/0
+    payments-api     main     dirty   1/0
+    user-svc         develop  clean   0/2
+    notification-svc main     clean   0/0
+    ─────────────────────────────────────────────────
+    Refreshing in 8s...
 
-### Example 3: Single JSON snapshot
+### Example 3: Single JSON snapshot (no live mode)
 
     gitmap watch --json --no-fetch
 
 **Output:**
 
-    [{"name":"my-api","branch":"main","status":"clean"}]
+    [
+      {"name":"my-api","branch":"main","status":"clean","ahead":0,"behind":0},
+      {"name":"web-app","branch":"develop","status":"dirty","ahead":2,"behind":1},
+      {"name":"billing-svc","branch":"main","status":"clean","ahead":0,"behind":0}
+    ]
 
 ## See Also
 

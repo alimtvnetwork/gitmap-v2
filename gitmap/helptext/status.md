@@ -30,19 +30,34 @@ st
 
 **Output:**
 
-    my-api       main     clean   0/0
-    web-app      develop  dirty   2/1
-    ✓ 3 repos (1 dirty, 2 clean)
+    REPO             BRANCH     STATUS  AHEAD/BEHIND
+    my-api           main       clean   0/0
+    web-app          develop    dirty   2/1
+    billing-svc      main       clean   0/0
+    auth-gateway     feature/x  dirty   5/0
+    shared-lib       main       clean   0/3
+    ✓ 5 repos (2 dirty, 3 clean)
 
-### Example 2: Status of a group
+### Example 2: Status of a specific group
 
-    gitmap st --group work
+    gitmap st --group backend
 
 **Output:**
 
-    billing-svc  main  clean  0/0
-    auth-gateway main  dirty  1/0
-    ✓ 2 repos (group: work)
+    REPO             BRANCH   STATUS  AHEAD/BEHIND
+    billing-svc      main     clean   0/0
+    auth-gateway     main     dirty   1/0
+    payments-api     main     clean   0/2
+    ✓ 3 repos (group: backend) — 1 dirty, 2 clean
+
+### Example 3: Status of a single repo by alias
+
+    gitmap status -A api
+
+**Output:**
+
+    my-api  main  clean  0/0
+    ✓ Up to date
 
 ## See Also
 

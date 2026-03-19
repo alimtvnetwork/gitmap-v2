@@ -31,28 +31,48 @@ p
 
 **Output:**
 
-    Pulling my-api...
+    Pulling my-api (main)...
+    remote: Enumerating objects: 5, done.
+    remote: Counting objects: 100% (5/5), done.
     Already up to date.
 
 ### Example 2: Pull all repos in a group
 
-    gitmap p --group work
+    gitmap p --group backend
 
 **Output:**
 
-    Pulling 5 repos in group 'work'...
-    [1/5] billing-svc... updated (3 commits)
-    ✓ 5 repos pulled
+    Pulling 5 repos in group 'backend'...
+    [1/5] billing-svc (main)... updated (3 new commits)
+    [2/5] auth-gateway (main)... Already up to date.
+    [3/5] payments-api (main)... updated (1 new commit)
+    [4/5] user-svc (develop)... Already up to date.
+    [5/5] notification-svc (main)... Already up to date.
+    ✓ 5 repos pulled (2 updated, 3 up to date)
 
-### Example 3: Pull all tracked repos
+### Example 3: Pull all tracked repos with verbose logging
 
     gitmap pull --all --verbose
 
 **Output:**
 
+    [verbose] Log file: gitmap-debug-2025-03-10T14-30.log
     Pulling 42 tracked repos...
-    [1/42] my-api... updated
+    [1/42] my-api (main)... updated (7 commits)
+    [2/42] web-app (develop)... Already up to date.
+    [3/42] billing-svc (main)... updated (2 commits)
+    ...
     ✓ 42 repos pulled (12 updated, 30 up to date)
+    [verbose] Debug log written
+
+### Example 4: Pull by alias
+
+    gitmap pull -A api
+
+**Output:**
+
+    Pulling my-api (main)...
+    Already up to date.
 
 ## See Also
 

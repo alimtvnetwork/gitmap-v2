@@ -30,15 +30,20 @@ s
 
 ### Example 1: Scan a directory
 
-    gitmap scan ~/projects
+    gitmap scan D:\wp-work
 
 **Output:**
 
-    Scanning ~/projects...
+    Scanning D:\wp-work...
+    [1/42] github/user/my-api
+    [2/42] github/user/web-app
+    [3/42] github/org/billing-svc
+    ...
     Found 42 repositories
     ✓ Output written to ./gitmap-output/
+    ✓ Database updated (42 repos)
 
-### Example 2: JSON output with SSH URLs
+### Example 2: Scan with JSON output and SSH URLs
 
     gitmap scan ~/work --output json --mode ssh
 
@@ -46,17 +51,33 @@ s
 
     Scanning ~/work...
     Found 18 repositories
-    ✓ gitmap-repos.json (SSH URLs)
+    ✓ gitmap-output/gitmap.json written
+    ✓ gitmap-output/gitmap.csv written
+    ✓ Clone URLs use SSH format (git@github.com:...)
 
-### Example 3: Scan and open output folder
+### Example 3: Scan and register with GitHub Desktop
 
-    gitmap scan . --open --quiet
+    gitmap scan D:\repos --github-desktop
 
 **Output:**
 
-    Found 7 repositories
+    Scanning D:\repos...
+    Found 12 repositories
     ✓ Output written to ./gitmap-output/
-    Opening folder...
+    Registering with GitHub Desktop...
+    [1/12] my-api... added
+    [2/12] web-app... already registered
+    ✓ 12 repos synced to GitHub Desktop (10 new, 2 existing)
+
+### Example 4: Scan current directory quietly
+
+    gitmap s . --quiet --output csv
+
+**Output:**
+
+    Scanning current directory...
+    Found 7 repositories
+    ✓ gitmap-output/gitmap.csv written
 
 ## See Also
 

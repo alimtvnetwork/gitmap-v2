@@ -28,6 +28,7 @@ r
 | --zip-group \<name\> | — | Include a persistent zip group as a release asset |
 | -Z \<path\> | — | Add ad-hoc file or folder to zip as a release asset |
 | --bundle \<name.zip\> | — | Bundle all -Z items into a single named archive |
+| --verbose | false | Write detailed debug log to a timestamped file |
 
 ## Prerequisites
 
@@ -47,34 +48,55 @@ Answering `n` (or pressing Enter) aborts the release.
 
 ## Examples
 
-### Example 1: Release with auto-bump
+### Example 1: Release with auto-bump (patch)
 
     gitmap release --bump patch
 
 **Output:**
 
-    v2.3.9 → v2.3.10
-    Creating tag v2.3.10... done
-    ✓ Released v2.3.10
+    v2.21.0 → v2.21.1
+    Creating branch release/v2.21.1... done
+    Creating tag v2.21.1... done
+    Pushing branch and tag... done
+    Cross-compiling Go binaries...
+      ✓ gitmap_v2.21.1_windows_amd64.exe
+      ✓ gitmap_v2.21.1_windows_arm64.exe
+      ✓ gitmap_v2.21.1_linux_amd64
+      ✓ gitmap_v2.21.1_linux_arm64
+      ✓ gitmap_v2.21.1_darwin_amd64
+      ✓ gitmap_v2.21.1_darwin_arm64
+    Uploading to GitHub... done
+    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Released v2.21.1
 
-### Example 2: Dry-run preview
+### Example 2: Dry-run preview with minor bump
 
     gitmap r --bump minor --dry-run
 
 **Output:**
 
-    [DRY RUN] v2.3.10 → v2.4.0
-    [DRY RUN] Would create tag and push
+    [DRY RUN] v2.21.0 → v2.22.0
+    [DRY RUN] Would create branch release/v2.22.0
+    [DRY RUN] Would create tag v2.22.0
+    [DRY RUN] Would push branch and tag
+    [DRY RUN] Would cross-compile 6 targets
+    [DRY RUN] Would upload assets to GitHub
     No changes made.
 
-### Example 3: Release with assets
+### Example 3: Release with assets and compression
 
-    gitmap release v3.0.0 --assets ./dist/gitmap.exe
+    gitmap release v3.0.0 --assets ./dist/ --compress --checksums
 
 **Output:**
 
+    Creating branch release/v3.0.0... done
     Creating tag v3.0.0... done
-    Attaching assets... done
+    Pushing branch and tag... done
+    Attaching assets from ./dist/...
+      ✓ Compressed gitmap_v3.0.0_windows_amd64.exe → gitmap_v3.0.0_windows_amd64.zip
+      ✓ Compressed gitmap_v3.0.0_linux_amd64 → gitmap_v3.0.0_linux_amd64.tar.gz
+      ✓ Generated checksums.txt (SHA256)
+    Uploading to GitHub... done
     ✓ Released v3.0.0
 
 ### Example 4: Release with a persistent zip group
@@ -83,8 +105,11 @@ Answering `n` (or pressing Enter) aborts the release.
 
 **Output:**
 
+    Creating branch release/v3.0.0... done
     Creating tag v3.0.0... done
+    Pushing branch and tag... done
     ✓ Compressed docs-bundle → docs-bundle_v3.0.0.zip
+    Uploading to GitHub... done
     ✓ Released v3.0.0
 
 ### Example 5: Ad-hoc zip with bundle
@@ -93,9 +118,54 @@ Answering `n` (or pressing Enter) aborts the release.
 
 **Output:**
 
+    Creating branch release/v3.0.0... done
     Creating tag v3.0.0... done
+    Pushing branch and tag... done
     ✓ Compressed 2 items → docs.zip
+    Uploading to GitHub... done
     ✓ Released v3.0.0
+
+### Example 6: Release as a draft from a specific branch
+
+    gitmap release v3.0.0-rc1 --branch develop --draft
+
+**Output:**
+
+    Creating branch release/v3.0.0-rc1 from develop... done
+    Creating tag v3.0.0-rc1... done
+    Pushing branch and tag... done
+    ✓ Draft release created (not published)
+    ✓ Metadata written to .release/v3.0.0-rc1.json
+    ✓ Released v3.0.0-rc1 (draft)
+
+### Example 7: List resolved cross-compile targets
+
+    gitmap release --list-targets
+
+**Output:**
+
+    Resolved 6 target(s):
+    Source: built-in defaults
+      windows/amd64
+      windows/arm64
+      linux/amd64
+      linux/arm64
+      darwin/amd64
+      darwin/arm64
+
+### Example 8: Release without Go binary compilation
+
+    gitmap release --bump patch --no-assets
+
+**Output:**
+
+    v2.21.0 → v2.21.1
+    Creating branch release/v2.21.1... done
+    Creating tag v2.21.1... done
+    Pushing branch and tag... done
+    Skipping Go binary cross-compilation.
+    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Released v2.21.1
 
 ## See Also
 

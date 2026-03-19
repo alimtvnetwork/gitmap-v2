@@ -35,27 +35,49 @@ ls
 
 **Output:**
 
-    my-api       ~/projects/my-api
-    web-app      ~/projects/web-app
-    3 repos tracked
+    REPO             PATH
+    my-api           D:\wp-work\repos\my-api
+    web-app          D:\wp-work\repos\web-app
+    billing-svc      D:\wp-work\repos\billing-svc
+    auth-gateway     D:\wp-work\repos\auth-gateway
+    shared-lib       D:\wp-work\repos\shared-lib
+    5 repos tracked
 
-### Example 2: List only Go projects
+### Example 2: List only Go projects with metadata
 
-    gitmap ls go
+    gitmap ls go --verbose
 
 **Output:**
 
-    go     github.com/user/my-api
-           Path: ~/projects/my-api
+    REPO          MODULE                          GO      PATH
+    my-api        github.com/user/my-api          1.22    D:\wp-work\repos\my-api
+    shared-lib    github.com/user/shared-lib      1.21    D:\wp-work\repos\shared-lib
+    gitmap        github.com/user/gitmap          1.22    D:\wp-work\repos\gitmap
+    3 Go projects detected
 
-### Example 3: List all groups
+### Example 3: List all groups with member counts
 
     gitmap ls groups
 
 **Output:**
 
     GROUP           REPOS   DESCRIPTION
-    backend         3       All backend services
+    backend         5       All backend microservices
+    frontend        3       React frontend applications
+    infra           2       Infrastructure and tooling
+    3 groups defined
+
+### Example 4: List repos in a specific group
+
+    gitmap list --group backend
+
+**Output:**
+
+    REPO             PATH
+    billing-svc      D:\wp-work\repos\billing-svc
+    auth-gateway     D:\wp-work\repos\auth-gateway
+    payments-api     D:\wp-work\repos\payments-api
+    3 repos in group 'backend'
 
 ## See Also
 

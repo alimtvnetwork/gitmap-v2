@@ -31,8 +31,8 @@ go
 
 **Output:**
 
-    Changed directory to ~/projects/my-api
-    Branch: main | Status: clean
+    Changed directory to D:\wp-work\repos\my-api
+    Branch: main | Status: clean | 0 ahead / 0 behind
 
 ### Example 2: Interactive repo picker
 
@@ -40,19 +40,43 @@ go
 
 **Output:**
 
-    1. my-api      ~/projects/my-api
-    2. web-app     ~/projects/web-app
-    Enter number: _
+     #  REPO             BRANCH     PATH
+     1. my-api           main       D:\wp-work\repos\my-api
+     2. web-app          develop    D:\wp-work\repos\web-app
+     3. billing-svc      main       D:\wp-work\repos\billing-svc
+     4. auth-gateway     main       D:\wp-work\repos\auth-gateway
+     5. shared-lib       main       D:\wp-work\repos\shared-lib
+    Enter number (1-5): _
 
 ### Example 3: Pick from a specific group
 
-    gitmap cd repos --group work
+    gitmap cd repos --group backend
 
 **Output:**
 
-    1. billing-svc   ~/work/billing-svc
-    2. auth-gateway  ~/work/auth-gateway
-    Enter number: _
+     #  REPO             BRANCH     PATH
+     1. billing-svc      main       D:\wp-work\repos\billing-svc
+     2. auth-gateway     main       D:\wp-work\repos\auth-gateway
+     3. payments-api     develop    D:\wp-work\repos\payments-api
+    Enter number (1-3): _
+
+### Example 4: Navigate by alias
+
+    gitmap cd -A api
+
+**Output:**
+
+    Changed directory to D:\wp-work\repos\my-api
+    Branch: main | Status: clean
+
+### Example 5: Set a default repo
+
+    gitmap cd --default my-api
+
+**Output:**
+
+    ✓ Default repo set: my-api
+    (Run 'gitmap cd' without args to jump here)
 
 ## See Also
 
