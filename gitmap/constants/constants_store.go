@@ -55,6 +55,7 @@ const SQLCreateReleases = `CREATE TABLE IF NOT EXISTS Releases (
 	SourceBranch TEXT NOT NULL,
 	CommitSha    TEXT NOT NULL,
 	Changelog    TEXT DEFAULT '',
+	Notes        TEXT DEFAULT '',
 	Draft        INTEGER DEFAULT 0,
 	PreRelease   INTEGER DEFAULT 0,
 	IsLatest     INTEGER DEFAULT 0,
