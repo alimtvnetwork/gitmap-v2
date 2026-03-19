@@ -170,11 +170,11 @@ in the docs site:
 | Scanning & Cloning | scan, clone, pull, rescan, desktop-sync |
 | Monitoring & Status | status, watch, exec, latest-branch |
 | Release & Versioning | release, release-branch, release-pending, changelog, list-versions, list-releases, revert, clear-release-json |
-| Navigation & Organization | cd, list, group, diff-profiles |
+| Navigation & Organization | cd, list, group, multi-group, diff-profiles |
 | History & Stats | history, history-reset, stats, amend, amend-list |
 | Project Detection | go-repos, node-repos, react-repos, cpp-repos, csharp-repos |
-| Data & Profiles | export, import, profile, bookmark, db-reset |
-| Utilities | setup, doctor, update, update-cleanup, version, seo-write, gomod |
+| Data & Profiles | export, import, profile, bookmark, alias, db-reset |
+| Utilities | setup, doctor, update, update-cleanup, version, seo-write, gomod, completion, interactive, zip-group |
 
 Each command entry in the README includes:
 - Command name and alias
