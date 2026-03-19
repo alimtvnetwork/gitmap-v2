@@ -320,3 +320,53 @@ func returnToBranch(branch string) error {
 
 	return nil
 }
+
+// buildZipGroupAssets creates archives from persistent zip groups.
+func buildZipGroupAssets(opts Options) []string {
+	if len(opts.ZipGroups) == 0 {
+		return nil
+	}
+
+	db, err := store.OpenDefault()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Cannot open DB for zip groups: %v\n", err)
+
+		return nil
+	}
+	defer db.Close()
+
+	stagingDir, err := EnsureStagingDir()
+	if err != nil {
+		return nil
+	}
+
+	return BuildZipGroupArchives(db, opts.ZipGroups, stagingDir)
+}
+
+// buildAdHocZipAssets creates archives from ad-hoc -Z paths.
+func buildAdHocZipAssets(opts Options) []string {
+	if len(opts.ZipItems) == 0 {
+		return nil
+	}
+
+	stagingDir, err := EnsureStagingDir()
+	if err != nil {
+		return nil
+	}
+
+	return BuildAdHocArchive(opts.ZipItems, opts.BundleName, stagingDir)
+}
+
+// printDryRunZipGroups shows zip group plan in dry-run mode.
+func printDryRunZipGroups(opts Options) {
+	if len(opts.ZipGroups) > 0 {
+		db, err := store.OpenDefault()
+		if err == nil {
+			defer db.Close()
+
+			DryRunZipGroups(db, opts.ZipGroups)
+		}
+	}
+
+	DryRunAdHoc(opts.ZipItems, opts.BundleName)
+}
