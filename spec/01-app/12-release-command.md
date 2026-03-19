@@ -49,6 +49,7 @@ for the full metadata-based discovery spec.
 | `--commit <sha>`             | Create release from a specific commit            | (none)      |
 | `--branch <name>`            | Create release from latest commit of a branch    | (none)      |
 | `--bump major\|minor\|patch` | Auto-increment from the latest released version  | (none)      |
+| `--notes <text>` / `-N`     | Release notes or title for the release           | (none)      |
 | `--draft`                    | Mark release metadata as draft                   | `false`     |
 | `--dry-run`                  | Preview release steps without executing          | `false`     |
 | `--verbose`                  | Write detailed debug log                         | `false`     |
