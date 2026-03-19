@@ -227,6 +227,7 @@ For full details, each entry links to `gitmap/helptext/<command>.md`.
 | setup.md | setup | — |
 | doctor.md | doctor | — |
 | update.md | update | — |
+| update-cleanup.md | update-cleanup | — |
 | version.md | version | v |
 | seo-write.md | seo-write | sw |
 | gomod.md | gomod | gm |
