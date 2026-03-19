@@ -436,6 +436,96 @@ const ReleasePage = () => {
           </div>
         </div>
 
+        {/* Zip Groups */}
+        <div>
+          <h2 className="text-xl font-mono font-bold text-foreground mb-4">Zip Groups</h2>
+          <p className="text-sm text-muted-foreground mb-4 max-w-2xl">
+            Attach compressed file bundles to releases using persistent groups (stored in SQLite) or
+            ad-hoc <code className="font-mono text-primary">-Z</code> items. Archives use maximum compression
+            (Deflate level 9) and are placed in the staging directory before upload.
+          </p>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mb-3">Flags</h3>
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Flag</th>
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Behavior</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { flag: "--zip-group <name>", desc: "Look up a named group from the database, compress its items into a single archive" },
+                  { flag: "-Z <path>", desc: "Add an ad-hoc file or folder; each item becomes its own archive unless --bundle is used" },
+                  { flag: "--bundle <name.zip>", desc: "Combine all -Z items into a single named archive instead of individual ones" },
+                ].map((row) => (
+                  <tr key={row.flag} className="border-b border-border/50">
+                    <td className="py-2 px-3 font-mono text-primary whitespace-nowrap">{row.flag}</td>
+                    <td className="py-2 px-3 text-muted-foreground">{row.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mb-3">Archive Naming</h3>
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Scenario</th>
+                  <th className="text-left py-2 px-3 font-mono text-muted-foreground font-medium">Output Filename</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { scenario: "Persistent group, no custom name", output: "<group>_<version>.zip" },
+                  { scenario: "Persistent group, custom archive name", output: "<archive-name> (as-is)" },
+                  { scenario: "Ad-hoc file, no --bundle", output: "<filename>.zip" },
+                  { scenario: "Ad-hoc folder, no --bundle", output: "<foldername>.zip" },
+                  { scenario: "Ad-hoc with --bundle", output: "<bundle-name>.zip" },
+                ].map((row) => (
+                  <tr key={row.scenario} className="border-b border-border/50">
+                    <td className="py-2 px-3 text-foreground">{row.scenario}</td>
+                    <td className="py-2 px-3 font-mono text-primary">{row.output}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-base font-mono font-semibold text-foreground mb-3">Metadata (zipGroups)</h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            Release metadata in <code className="font-mono text-primary">.release/vX.Y.Z.json</code> includes a
+            <code className="font-mono text-primary"> zipGroups</code> array recording each group and its archive:
+          </p>
+          <CodeBlock code={`{
+  "version": "3.0.0",
+  "tag": "v3.0.0",
+  "zipGroups": [
+    {
+      "name": "docs-bundle",
+      "archive": "docs-bundle_v3.0.0.zip",
+      "items": ["README.md", "CHANGELOG.md", "docs/"]
+    }
+  ],
+  "assets": [
+    "gitmap_v3.0.0_windows_amd64.exe.zip",
+    "docs-bundle_v3.0.0.zip"
+  ]
+}`} />
+
+          <h3 className="text-base font-mono font-semibold text-foreground mt-6 mb-3">Dry-Run Output</h3>
+          <div className="bg-card border border-border rounded-lg p-5 font-mono text-sm space-y-1">
+            <p className="text-muted-foreground">$ gitmap release v3.0.0 --zip-group docs-bundle -Z ./report.pdf --dry-run</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Would create 2 zip archive(s):</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ docs-bundle_v3.0.0.zip (3 items: README.md, CHANGELOG.md, docs/)</p>
+            <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ report.pdf.zip (1 item: dist/report.pdf)</p>
+            <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Would upload 8 assets + checksums.txt</p>
+          </div>
+        </div>
+
         {/* Error Scenarios */}
         <div>
           <h2 className="text-xl font-mono font-bold text-foreground mb-4">Error Scenarios</h2>
