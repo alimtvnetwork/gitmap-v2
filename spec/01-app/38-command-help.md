@@ -69,7 +69,7 @@ Every help file follows this structure:
 
 **Output:**
 
-    <sample terminal output, 3-8 lines>
+    <sample terminal output, 3-8 lines per example>
 
 ### Example 2: <title>
 
