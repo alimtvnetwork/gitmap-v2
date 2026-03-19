@@ -16,7 +16,7 @@ import (
 // runRelease handles the 'release' command.
 func runRelease(args []string) {
 	checkHelp("release", args)
-	version, assets, commit, branch, bump, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit := parseReleaseFlags(args)
+	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit := parseReleaseFlags(args)
 	_ = verbose
 
 	if listTargets {
@@ -26,17 +26,17 @@ func runRelease(args []string) {
 	}
 
 	validateReleaseFlags(version, bump, commit, branch)
-	executeRelease(version, assets, commit, branch, bump, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, noCommit)
+	executeRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, noCommit)
 }
 
 // executeRelease builds options and runs the release workflow.
-func executeRelease(version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, noCommit bool) {
+func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, noCommit bool) {
 	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
 
 	opts := release.Options{
 		Version: version, Assets: assets,
 		Commit: commit, Branch: branch,
-		Bump: bump, Targets: targets,
+		Bump: bump, Notes: notes, Targets: targets,
 		ConfigTargets: cfg.Release.Targets,
 		ZipGroups:     zipGroups,
 		ZipItems:      zipItems,
@@ -90,12 +90,13 @@ func (z *zipItemFlag) Set(val string) error {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
 	branchFlag := fs.String("branch", "", constants.FlagDescRelBranch)
 	bumpFlag := fs.String("bump", "", constants.FlagDescBump)
+	notesFlag := fs.String("notes", "", constants.FlagDescNotes)
 	targetsFlag := fs.String("targets", "", constants.FlagDescTargets)
 	draftFlag := fs.Bool("draft", false, constants.FlagDescDraft)
 	dryRunFlag := fs.Bool("dry-run", false, constants.FlagDescDryRun)
@@ -112,6 +113,10 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 
 	fs.Var(&zgGroups, "zip-group", constants.FlagDescZGZipGroup)
 	fs.Var(&zgItems, "Z", constants.FlagDescZGZipItem)
+
+	// Register -N as shorthand for --notes.
+	fs.StringVar(notesFlag, "N", "", constants.FlagDescNotes)
+
 	fs.Parse(args)
 
 	version = ""
@@ -119,7 +124,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
 }
 
 // printListTargets resolves and prints the target matrix, then returns.
@@ -181,6 +186,7 @@ func metaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
 		SourceBranch: m.SourceBranch,
 		CommitSha:    m.Commit,
 		Changelog:    store.JoinChangelog(m.Changelog),
+		Notes:        m.Notes,
 		Draft:        m.Draft,
 		PreRelease:   m.PreRelease,
 		IsLatest:     m.IsLatest,

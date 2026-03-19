@@ -18,6 +18,7 @@ const (
 	MsgReleaseTag           = "  ✓ Created tag %s\n"
 	MsgReleasePushed        = "  ✓ Pushed branch and tag to origin\n"
 	MsgReleaseMeta          = "  ✓ Release metadata written to %s\n"
+	MsgReleaseMetaCommitted = "  ✓ Committed release metadata on %s\n"
 	MsgReleaseLatest        = "  ✓ Marked %s as latest release\n"
 	MsgReleaseAttach        = "  ✓ Attached %s\n"
 	MsgReleaseChangelog     = "  ✓ Using CHANGELOG.md as release body\n"
@@ -27,6 +28,7 @@ const (
 	MsgReleaseBranchStart   = "\n  Completing release from %s...\n"
 	MsgReleaseVersionRead   = "  → Version from %s: %s\n"
 	MsgReleaseBumpResult    = "  → Bumped %s → %s\n"
+	MsgReleaseNotes         = "  → Release notes: %s\n"
 	MsgReleaseSwitchedBack  = "  ✓ Switched back to %s\n"
 	MsgReleasePendingNone   = "  No pending release branches found.\n"
 	MsgReleasePendingFound  = "\n  Found %d pending release branch(es).\n"
@@ -35,6 +37,7 @@ const (
 	ChangelogFile           = "CHANGELOG.md"
 	ReadmeFile              = "README.md"
 	ReleaseTagPrefix        = "Release "
+	FlagDescNotes           = "Release notes or title for the release"
 )
 
 // Release orphaned metadata messages.

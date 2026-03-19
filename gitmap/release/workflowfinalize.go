@@ -132,8 +132,13 @@ func uploadToGitHub(v Version, assets []string, opts Options) {
 		return
 	}
 
+	name := constants.ReleaseTagPrefix + v.String()
+	if len(opts.Notes) > 0 {
+		name = opts.Notes
+	}
+
 	body := DetectChangelog()
-	ghRelease, err := CreateGitHubRelease(owner, repo, v.String(), body, token, opts.Draft)
+	ghRelease, err := CreateGitHubRelease(owner, repo, v.String(), name, body, token, opts.Draft)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ GitHub release creation failed: %v\n", err)
 
@@ -177,6 +182,7 @@ func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, ass
 		Tag:          tag,
 		Assets:       assetPaths,
 		Changelog:    loadChangelogNotes(v.String()),
+		Notes:        opts.Notes,
 		ZipGroups:    zipGroups,
 		Draft:        opts.Draft,
 		PreRelease:   v.IsPreRelease(),

@@ -79,6 +79,7 @@ func (db *DB) Migrate() error {
 	}
 
 	db.migrateSourceColumn()
+	db.migrateNotesColumn()
 
 	return db.SeedProjectTypes()
 }
@@ -86,6 +87,11 @@ func (db *DB) Migrate() error {
 // migrateSourceColumn adds the Source column to existing Releases tables.
 func (db *DB) migrateSourceColumn() {
 	_, _ = db.conn.Exec(constants.SQLAddSourceColumn)
+}
+
+// migrateNotesColumn adds the Notes column to existing Releases tables.
+func (db *DB) migrateNotesColumn() {
+	_, _ = db.conn.Exec(constants.SQLAddNotesColumn)
 }
 
 // Reset drops all tables and recreates them for a fresh start.

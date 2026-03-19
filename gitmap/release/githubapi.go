@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/user/gitmap/constants"
 )
 
 // GitHubRelease represents the response from creating a GitHub release.
@@ -18,12 +16,12 @@ type GitHubRelease struct {
 }
 
 // CreateGitHubRelease creates a release via the GitHub API and returns the release ID.
-func CreateGitHubRelease(owner, repo, tag, body, token string, draft bool) (*GitHubRelease, error) {
+func CreateGitHubRelease(owner, repo, tag, name, body, token string, draft bool) (*GitHubRelease, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases", owner, repo)
 
 	payload := map[string]interface{}{
 		"tag_name": tag,
-		"name":     constants.ReleaseTagPrefix + tag,
+		"name":     name,
 		"body":     body,
 		"draft":    draft,
 	}

@@ -10,6 +10,7 @@ type ReleaseRecord struct {
 	SourceBranch string `json:"sourceBranch"`
 	CommitSha    string `json:"commitSha"`
 	Changelog    string `json:"changelog"`
+	Notes        string `json:"notes"`
 	Draft        bool   `json:"draft"`
 	PreRelease   bool   `json:"preRelease"`
 	IsLatest     bool   `json:"isLatest"`

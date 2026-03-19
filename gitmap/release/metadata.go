@@ -20,6 +20,7 @@ type ReleaseMeta struct {
 	Tag          string   `json:"tag"`
 	Assets       []string `json:"assets"`
 	Changelog    []string `json:"changelog,omitempty"`
+	Notes        string   `json:"notes,omitempty"`
 	ZipGroups    []string `json:"zipGroups,omitempty"`
 	Draft        bool     `json:"draft"`
 	PreRelease   bool     `json:"preRelease"`
