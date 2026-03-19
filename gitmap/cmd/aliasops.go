@@ -105,6 +105,7 @@ func runAliasList() {
 	}
 
 	printAliasList(aliases)
+	printHints(aliasListHints())
 }
 
 // printAliasList renders the alias table to stdout.
