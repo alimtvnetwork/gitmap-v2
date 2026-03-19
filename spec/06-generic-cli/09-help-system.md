@@ -54,7 +54,7 @@ toolname/helptext/<command-name>.md
 
 **Output:**
 
-    <sample terminal output, max 3 lines>
+    <sample terminal output, 3-8 lines per example>
 
 ## See Also
 
