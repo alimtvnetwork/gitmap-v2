@@ -9,7 +9,7 @@ import (
 )
 
 // ExecuteFromBranch runs the release workflow from an existing release branch.
-func ExecuteFromBranch(branchName, assetsPath string, draft bool, dryRun bool) error {
+func ExecuteFromBranch(branchName, assetsPath string, draft bool, dryRun bool, noCommit bool) error {
 	version, err := extractVersionFromBranch(branchName)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func ExecuteFromBranch(branchName, assetsPath string, draft bool, dryRun bool) e
 		})
 	}
 
-	return completeBranchRelease(version, branchName, assetsPath, draft)
+	return completeBranchRelease(version, branchName, assetsPath, draft, noCommit)
 }
 
 // extractVersionFromBranch parses the version from a release branch name.
