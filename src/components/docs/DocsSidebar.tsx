@@ -63,6 +63,8 @@ const navItems = [
   { title: "Import", url: "/import", icon: FileText },
   { title: "Profile", url: "/profile", icon: FileText },
   { title: "Diff Profiles", url: "/diff-profiles", icon: FileText },
+  { title: "Zip Groups", url: "/zip-group", icon: Archive },
+  { title: "Aliases", url: "/alias", icon: Link2 },
 ];
 
 export function DocsSidebar() {

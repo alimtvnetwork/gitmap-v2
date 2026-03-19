@@ -66,6 +66,8 @@ const App = () => (
           <Route path="/import" element={<ImportPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/diff-profiles" element={<DiffProfilesPage />} />
+          <Route path="/zip-group" element={<ZipGroupPage />} />
+          <Route path="/alias" element={<AliasPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
