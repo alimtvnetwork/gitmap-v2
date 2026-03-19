@@ -28,6 +28,7 @@ r
 | --zip-group \<name\> | — | Include a persistent zip group as a release asset |
 | -Z \<path\> | — | Add ad-hoc file or folder to zip as a release asset |
 | --bundle \<name.zip\> | — | Bundle all -Z items into a single named archive |
+| --no-commit | false | Skip post-release auto-commit and push |
 | --verbose | false | Write detailed debug log to a timestamped file |
 
 ## Prerequisites
