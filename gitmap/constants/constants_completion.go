@@ -34,7 +34,7 @@ const (
 	MsgCompInstalled    = "Shell completion installed for %s\n"
 	MsgCompAlreadyDone  = "Shell completion already configured for %s\n"
 	MsgCompProfileWrite = "Added source line to %s\n"
-	ErrCompUsage        = "usage: gitmap completion <powershell|bash|zsh> [--list-repos|--list-groups|--list-commands]\n"
+	ErrCompUsage        = "usage: gitmap completion <powershell|bash|zsh> [--list-repos|--list-groups|--list-commands|--list-aliases|--list-zip-groups]\n"
 	ErrCompUnknownShell = "unknown shell: %s (use powershell, bash, or zsh)\n"
 	ErrCompProfileWrite = "failed to update profile %s: %v\n"
 )
