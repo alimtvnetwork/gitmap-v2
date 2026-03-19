@@ -18,78 +18,59 @@ i
 |------|---------|-------------|
 | `--refresh` | config or 30 | Dashboard auto-refresh interval in seconds |
 
-## Views
+## Prerequisites
 
-The TUI has four views, accessible via **Tab**:
+- Run `gitmap scan` at least once to populate the database (see scan.md)
+- Terminal must support alternate screen mode
 
-### Repos (default)
-Browse all tracked repositories with fuzzy search:
+## Examples
 
-    ┌─ Repos ─────────────────────────────────────────┐
-    │ Search: api_                                     │
-    │                                                  │
-    │ > my-api           main     clean    0/0         │
-    │   api-gateway      main     dirty    1/0         │
-    │   payments-api     develop  clean    0/2         │
-    │                                                  │
-    │ 3 matches (42 total) │ Space: select │ /: search │
-    └──────────────────────────────────────────────────┘
+### Example 1: Launch the TUI
 
-- Type `/` to search, `j`/`k` or arrow keys to navigate
-- `Space` to select repos, `a` to select all
-- `Enter` to view detail
+    gitmap interactive
 
-### Actions
-Perform batch operations on selected repos:
+**Output:**
 
-    ┌─ Actions ───────────────────────────────────────┐
-    │ 3 repos selected                                 │
-    │                                                  │
-    │   [p] Pull selected repos                        │
-    │   [x] Execute git command across selected        │
-    │   [s] Show status for selected                   │
-    │   [g] Add selected to a group                    │
-    │                                                  │
-    │ Press a key to perform action                    │
-    └──────────────────────────────────────────────────┘
+    Launching interactive TUI (42 repos loaded)...
+    ┌─ Repos ──────────────────────────────────────┐
+    │ > my-api         main    clean   0/0         │
+    │   web-app        develop dirty   2/1         │
+    │   billing-svc    main    clean   0/0         │
+    │ 42 repos │ Tab: switch view │ /: search      │
+    └──────────────────────────────────────────────┘
 
-### Groups
-Manage repository groups:
+### Example 2: Launch with custom refresh interval
 
-    ┌─ Groups ────────────────────────────────────────┐
-    │ GROUP           REPOS   DESCRIPTION              │
-    │ > backend       5       All backend services     │
-    │   frontend      3       React frontend apps      │
-    │   infra         2       Infrastructure           │
-    │                                                  │
-    │ c: create │ d: delete │ Enter: show members      │
-    └──────────────────────────────────────────────────┘
+    gitmap i --refresh 10
 
-### Status
-Live dashboard showing dirty/clean status, branch, ahead/behind:
+**Output:**
 
-    ┌─ Status ────────────────────────────────────────┐
-    │ 42 repos │ Refreshing in 25s │ r: refresh now    │
-    │                                                  │
-    │ REPO             BRANCH     STATUS  AHEAD/BEHIND │
-    │ my-api           main       clean   0/0          │
-    │ web-app          develop    dirty   2/1          │
-    │ billing-svc      main       clean   0/0          │
-    │ auth-gateway     feature/x  dirty   5/0          │
-    │                                                  │
-    │ 2 dirty │ 40 clean                               │
-    └──────────────────────────────────────────────────┘
+    Launching interactive TUI (42 repos loaded)...
+    Auto-refresh: every 10 seconds
+    ┌─ Status ─────────────────────────────────────┐
+    │ REPO           BRANCH    STATUS  AHEAD/BEHIND │
+    │ my-api         main      clean   0/0          │
+    │ web-app        develop   dirty   2/1          │
+    │ 2 dirty │ 40 clean │ Refreshing in 10s        │
+    └──────────────────────────────────────────────┘
+
+### Example 3: No repos in database
+
+    gitmap interactive
+
+**Output:**
+
+    ✗ No repositories found in database.
+    → Run 'gitmap scan <directory>' first to populate the database.
 
 ## Key Bindings
 
     q / Esc      Quit
-    Tab          Switch view
+    Tab          Switch view (Repos → Actions → Groups → Status)
     j / ↓        Move down
     k / ↑        Move up
     Space        Select/deselect repo
-    a            Select all
     /            Focus search
-    Enter        Show detail / confirm
 
 ## Prerequisites
 
