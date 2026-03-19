@@ -61,7 +61,7 @@ func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options
 	// Upload to GitHub if token is available.
 	uploadToGitHub(v, assets, opts)
 
-	return writeMetadata(v, branchName, tag, sourceName, assets, opts.Draft)
+	return writeMetadata(v, branchName, tag, sourceName, assets, opts)
 }
 
 // buildGoAssetsIfApplicable cross-compiles Go binaries when a Go project is detected.
