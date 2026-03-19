@@ -15,6 +15,12 @@ func Run() {
 		os.Exit(1)
 	}
 
+	aliasName, cleaned := extractAliasFlag(os.Args[2:])
+	if len(aliasName) > 0 {
+		resolveAliasContext(aliasName)
+		os.Args = append(os.Args[:2], cleaned...)
+	}
+
 	command := os.Args[1]
 	dispatch(command)
 }
