@@ -26,7 +26,10 @@ None.
 
 **Output:**
 
-    gitmap v2.8.0
+    gitmap v2.22.0
+    Built:  2025-03-10
+    Go:     go1.22.1
+    OS:     windows/amd64
 
 ### Example 2: Using alias
 
@@ -34,7 +37,7 @@ None.
 
 **Output:**
 
-    gitmap v2.8.0
+    gitmap v2.22.0
 
 ## See Also
 

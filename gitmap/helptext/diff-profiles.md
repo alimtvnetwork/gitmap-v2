@@ -29,17 +29,46 @@ dp
 
 **Output:**
 
-    Only in 'home': personal-blog
-    Only in 'work': billing-svc
-    Common: 12 repos
+    Comparing profiles: home vs work
+    ═══════════════════════════════════════════
+    Only in 'home' (3):
+      personal-blog
+      side-project
+      dotfiles
+    Only in 'work' (2):
+      billing-svc
+      internal-tools
+    Common repos: 12
+    ═══════════════════════════════════════════
+    Summary: 3 unique to home, 2 unique to work, 12 shared
 
-### Example 2: Full comparison as JSON
+### Example 2: Full comparison showing all repos
 
-    gitmap dp home work --all --json
+    gitmap dp home work --all
 
 **Output:**
 
-    {"only_a":["personal-blog"],"only_b":["billing-svc"],"common":12}
+    REPO              HOME    WORK
+    my-api            ✓       ✓
+    web-app           ✓       ✓
+    billing-svc       —       ✓
+    personal-blog     ✓       —
+    shared-lib        ✓       ✓
+    ...
+    17 repos total (12 common, 3 home-only, 2 work-only)
+
+### Example 3: JSON output for scripting
+
+    gitmap dp home work --json
+
+**Output:**
+
+    {
+      "only_a": ["personal-blog", "side-project", "dotfiles"],
+      "only_b": ["billing-svc", "internal-tools"],
+      "common": ["my-api", "web-app", "shared-lib", ...],
+      "summary": {"only_a": 3, "only_b": 2, "common": 12}
+    }
 
 ## See Also
 

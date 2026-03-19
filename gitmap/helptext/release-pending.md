@@ -33,29 +33,66 @@ rp
 
 **Output:**
 
-    Found 2 pending release branch(es).
-    ✓ Created tag v2.18.0
-    ✓ Release v2.18.0 complete.
+    ■ Scanning for pending releases...
+    Found 2 pending release branch(es):
+      release/v2.20.0 (untagged)
+      release/v2.21.0 (untagged)
 
-### Example 2: Release from metadata
+    [1/2] Releasing v2.20.0...
+      Creating tag v2.20.0... done
+      Pushing tag... done
+      ✓ Release v2.20.0 complete.
+
+    [2/2] Releasing v2.21.0...
+      Creating tag v2.21.0... done
+      Pushing tag... done
+      ✓ Release v2.21.0 complete.
+
+    ✓ 2 pending releases completed
+
+### Example 2: Release from orphaned metadata
 
     gitmap rp
 
 **Output:**
 
-    Found 1 pending release branch(es).
-    → Found 1 unreleased version(s) from .release/ metadata
-    → Creating release from metadata: v2.19.0 (commit: abc1234)
-    ✓ Release v2.19.0 complete.
+    ■ Scanning for pending releases...
+    Found 0 pending release branch(es).
+    → Found 1 unreleased version(s) from .release/ metadata:
+      v2.19.0 (commit: abc1234, no branch or tag found)
 
-### Example 3: Dry run
+    [1/1] Creating release from metadata: v2.19.0
+      Creating branch release/v2.19.0 from commit abc1234... done
+      Creating tag v2.19.0... done
+      Pushing branch and tag... done
+      ✓ Release v2.19.0 complete.
+
+### Example 3: Dry-run preview
 
     gitmap rp --dry-run
 
 **Output:**
 
-    [dry-run] Create branch release/v2.19.0 from commit abc1234
-    [dry-run] Create tag v2.19.0
+    [DRY RUN] Scanning for pending releases...
+    [DRY RUN] Found 2 pending release branch(es):
+      release/v2.20.0 (would create tag v2.20.0)
+      release/v2.21.0 (would create tag v2.21.0)
+    [DRY RUN] Found 1 unreleased from .release/ metadata:
+      v2.19.0 (would create branch + tag from abc1234)
+    No changes made.
+
+### Example 4: Release pending as drafts with assets
+
+    gitmap release-pending --draft --assets ./dist/
+
+**Output:**
+
+    Found 1 pending release branch(es):
+      release/v2.22.0 (untagged)
+    [1/1] Releasing v2.22.0 (draft)...
+      Creating tag v2.22.0... done
+      Attaching assets from ./dist/... done
+      ✓ Draft release v2.22.0 created
 
 ## See Also
 

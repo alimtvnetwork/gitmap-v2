@@ -40,23 +40,59 @@ sw
 
 ### Example 1: Run SEO writes from CSV
 
-    gitmap seo-write --csv data.csv --max-commits 5
+    gitmap seo-write --csv data.csv --max-commits 5 --interval 30
 
 **Output:**
 
     Loading SEO data from data.csv...
-    [1/5] "Best plumber in Seattle"... done
-    ✓ 5 commits created
+    Found 12 messages (using first 5)
+    [1/5] "Best plumber in Seattle — 24/7 emergency"... committed
+          Waiting 30s...
+    [2/5] "Licensed plumbing contractor in Seattle WA"... committed
+          Waiting 30s...
+    [3/5] "Affordable drain cleaning services Seattle"... committed
+          Waiting 30s...
+    [4/5] "Emergency pipe repair — call now"... committed
+          Waiting 30s...
+    [5/5] "Seattle's top-rated plumbing company"... committed
+    ✓ 5 commits created (30s intervals)
 
 ### Example 2: Dry-run preview
 
-    gitmap sw --csv data.csv --dry-run
+    gitmap sw --csv data.csv --dry-run --max-commits 3
 
 **Output:**
 
-    [DRY RUN] "Best plumber in Seattle"
-    [DRY RUN] "Emergency plumbing 24/7"
+    [DRY RUN] Loading SEO data from data.csv...
+    [DRY RUN] Found 12 messages (would use first 3)
+    [DRY RUN] 1. "Best plumber in Seattle — 24/7 emergency"
+    [DRY RUN] 2. "Licensed plumbing contractor in Seattle WA"
+    [DRY RUN] 3. "Affordable drain cleaning services Seattle"
     No changes made.
+
+### Example 3: Create a starter template
+
+    gitmap seo-write --create-template
+
+**Output:**
+
+    ✓ Template created at ./data/seo-templates.json
+    → Edit the template, then run:
+      gitmap seo-write --url https://example.com --service "Plumbing"
+
+### Example 4: SEO writes from template with custom author
+
+    gitmap sw --url https://plumber.com --service "Plumbing" --area "Seattle" \
+              --company "AcePlumb" --author-name "SEO Bot" --author-email "seo@aceplumb.com"
+
+**Output:**
+
+    Loading template for https://plumber.com...
+    Generated 10 messages for "Plumbing" in "Seattle"
+    Author: SEO Bot <seo@aceplumb.com>
+    [1/10] "AcePlumb — Best Plumbing in Seattle"... committed
+    ...
+    ✓ 10 commits created
 
 ## See Also
 

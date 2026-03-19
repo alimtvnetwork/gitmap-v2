@@ -25,34 +25,53 @@ lb
 
 ## Examples
 
-### Example 1: Show latest branch
+### Example 1: Show the latest branch
 
     gitmap lb
 
 **Output:**
 
-    Branch: feature/auth-redesign
-    Last commit: 2 hours ago
-    Author: developer@example.com
+    Latest branch: feature/auth-redesign
+    Last commit:   2 hours ago (2025-03-10 14:30)
+    Author:        developer@example.com
+    Commit:        abc1234 — Add OAuth2 provider
 
-### Example 2: Top 5 branches as CSV
+### Example 2: Top 5 most recent branches
 
-    gitmap lb 5 --format csv
-
-**Output:**
-
-    branch,last_commit,author
-    feature/auth-redesign,2025-03-10T14:30:00Z,dev@example.com
-    bugfix/login-fix,2025-03-10T12:15:00Z,dev@example.com
-    main,2025-03-09T18:00:00Z,dev@example.com
-
-### Example 3: JSON output
-
-    gitmap latest-branch --format json
+    gitmap lb 5
 
 **Output:**
 
-    {"branch":"feature/auth-redesign","last_commit":"2h ago","author":"dev@example.com"}
+     #  BRANCH                    LAST COMMIT          AUTHOR
+     1  feature/auth-redesign     2 hours ago          dev@example.com
+     2  bugfix/login-fix          5 hours ago          dev@example.com
+     3  main                      1 day ago            dev@example.com
+     4  develop                   2 days ago           team@example.com
+     5  feature/payments          3 days ago           dev@example.com
+
+### Example 3: CSV output for scripting
+
+    gitmap lb 3 --format csv
+
+**Output:**
+
+    branch,last_commit,author,commit_sha
+    feature/auth-redesign,2025-03-10T14:30:00Z,dev@example.com,abc1234
+    bugfix/login-fix,2025-03-10T09:15:00Z,dev@example.com,def5678
+    main,2025-03-09T18:00:00Z,dev@example.com,ghi9012
+
+### Example 4: JSON output without fetch
+
+    gitmap latest-branch --format json --no-fetch
+
+**Output:**
+
+    {
+      "branch": "feature/auth-redesign",
+      "last_commit": "2025-03-10T14:30:00Z",
+      "author": "dev@example.com",
+      "commit_sha": "abc1234"
+    }
 
 ## See Also
 

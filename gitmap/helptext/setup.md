@@ -23,26 +23,51 @@ None
 
 ## Examples
 
-### Example 1: Run setup wizard
+### Example 1: Run the setup wizard
 
     gitmap setup
 
 **Output:**
 
-    Applying global Git configuration...
-    ✓ 3 settings applied
-    ■ Shell Completion — powershell
-    Shell completion installed for powershell
-    Setup complete.
+    ■ Applying global Git configuration...
+      ✓ core.autocrlf = true
+      ✓ push.default = current
+      ✓ pull.rebase = false
+    ✓ 3 Git settings applied
 
-### Example 2: Dry-run mode
+    ■ Shell Completion
+      Detected shell: powershell
+      Installing completion to $PROFILE...
+    ✓ Shell completion installed for PowerShell
+
+    ■ Setup complete!
+    → Run 'gitmap scan <directory>' to start tracking repos
+
+### Example 2: Dry-run mode (preview only)
 
     gitmap setup --dry-run
 
 **Output:**
 
     [DRY RUN] No changes will be made
-    [dry-run] would install powershell completion
+    [DRY RUN] Would set core.autocrlf = true
+    [DRY RUN] Would set push.default = current
+    [DRY RUN] Would set pull.rebase = false
+    [DRY RUN] Would install powershell completion to $PROFILE
+    No changes made.
+
+### Example 3: Setup with custom config file
+
+    gitmap setup --config ./my-config/git-setup.json
+
+**Output:**
+
+    ■ Loading config from ./my-config/git-setup.json...
+    ■ Applying global Git configuration...
+      ✓ core.autocrlf = true
+      ✓ init.defaultBranch = main
+    ✓ 2 Git settings applied
+    ✓ Setup complete!
 
 ## See Also
 

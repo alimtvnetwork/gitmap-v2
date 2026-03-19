@@ -30,19 +30,52 @@ cl
 
 **Output:**
 
-    v2.3.10 — 2025-03-10
-    - Add user auth endpoint
-    - Fix pagination bug
+    ═══════════════════════════════════════════
+    v2.22.0 — 2025-03-10
+    ═══════════════════════════════════════════
+    - Add interactive TUI with dashboard view
+    - Add zip-group support for release assets
+    - Add alias suggest --apply flag
+    - Fix watch interval minimum validation
+    - Fix cd picker numbering off-by-one
+    ═══════════════════════════════════════════
+    5 changes | Branch: release/v2.22.0
 
 ### Example 2: Show changelog for a specific version
 
-    gitmap cl v2.3.7
+    gitmap cl v2.20.0
 
 **Output:**
 
-    v2.3.7 — 2025-02-28
-    - Initial release branch support
-    - Add stats command
+    ═══════════════════════════════════════════
+    v2.20.0 — 2025-02-28
+    ═══════════════════════════════════════════
+    - Add clear-release-json command with --dry-run
+    - Add release-pending metadata source recovery
+    - Fix orphaned metadata detection prompt
+    ═══════════════════════════════════════════
+    3 changes | Branch: release/v2.20.0
+
+### Example 3: Show changelog with source path
+
+    gitmap changelog v2.20.0 --source
+
+**Output:**
+
+    Source: .release/v2.20.0.json
+    v2.20.0 — 2025-02-28
+    - Add clear-release-json command with --dry-run
+    - Add release-pending metadata source recovery
+
+### Example 4: Open changelog in browser
+
+    gitmap changelog --latest --open
+
+**Output:**
+
+    v2.22.0 — 2025-03-10
+    ...
+    Opening in browser... done
 
 ## See Also
 

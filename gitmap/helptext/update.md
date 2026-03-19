@@ -21,15 +21,21 @@ None.
 
 ## Examples
 
-### Example 1: Update to latest
+### Example 1: Update to a newer version
 
     gitmap update
 
 **Output:**
 
-    v2.5.0 → v2.8.0
-    Building and deploying... done
-    ✓ Updated to v2.8.0
+    ■ Checking for updates...
+    Current version: v2.19.0
+    Latest version:  v2.22.0
+    v2.19.0 → v2.22.0
+    ■ Pulling latest source...
+    ■ Building gitmap.exe...
+    ■ Deploying to E:\bin-run\gitmap.exe...
+    ✓ Updated to v2.22.0
+    → Run 'gitmap changelog --latest' to see what's new
 
 ### Example 2: Already up to date
 
@@ -37,8 +43,20 @@ None.
 
 **Output:**
 
-    Current: v2.8.0
-    ✓ Already up to date.
+    ■ Checking for updates...
+    Current version: v2.22.0
+    Latest version:  v2.22.0
+    ✓ Already up to date (v2.22.0)
+
+### Example 3: Update with network error
+
+    gitmap update
+
+**Output:**
+
+    ■ Checking for updates...
+    ✗ Failed to pull latest: network timeout
+    → Check your internet connection and try again
 
 ## See Also
 
