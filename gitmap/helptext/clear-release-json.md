@@ -8,17 +8,18 @@ crj
 
 ## Usage
 
-    gitmap clear-release-json <version>
+    gitmap clear-release-json <version> [flags]
 
 ## Flags
 
-| Flag | Description |
-|------|-------------|
-| `--dry-run` | Preview which file would be removed without deleting it |
+| Flag | Default | Description |
+|------|---------|-------------|
+| --dry-run | false | Preview which file would be removed without deleting it |
 
 ## Prerequisites
 
-- A `.release/vX.Y.Z.json` file must exist for the given version.
+- A `.release/vX.Y.Z.json` file must exist for the given version
+- Run `gitmap release` first to generate metadata (see [release](release.md))
 
 ## Examples
 
@@ -52,7 +53,16 @@ crj
       v2.22.0, v2.21.0, v2.20.0, v2.19.0
     → Use 'gitmap list-releases' to see all stored releases
 
-### Example 4: Clear after orphaned metadata prompt
+### Example 4: Version with zero-padding normalization
+
+    gitmap crj v2
+
+**Output:**
+
+    Found .release/v2.0.0.json (0.8 KB)
+    ✓ Removed .release/v2.0.0.json
+
+### Example 5: Clean up after orphaned metadata prompt
 
     gitmap release --bump patch
     # ⚠ Release metadata exists for v2.20.0 but no tag found
@@ -67,6 +77,8 @@ crj
 
 ## See Also
 
-- [release](release.md) — Create a release
-- [list-releases](list-releases.md) — Show stored releases
+- [release](release.md) — Create a new versioned release
+- [list-releases](list-releases.md) — Show all stored releases
+- [list-versions](list-versions.md) — List version tags in a repository
+- [revert](revert.md) — Roll back a release
 - [db-reset](db-reset.md) — Clear the entire database
