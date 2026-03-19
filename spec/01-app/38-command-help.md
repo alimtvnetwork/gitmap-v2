@@ -205,6 +205,7 @@ For full details, each entry links to `gitmap/helptext/<command>.md`.
 | list-versions.md | list-versions | lv |
 | list-releases.md | list-releases | lr |
 | revert.md | revert | — |
+| clear-release-json.md | clear-release-json | crj |
 | cd.md | cd | go |
 | list.md | list | ls |
 | group.md | group | g |
