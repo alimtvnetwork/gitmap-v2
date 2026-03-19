@@ -110,6 +110,42 @@ func printCompletionCommands() {
 	}
 }
 
+// printCompletionAliases prints all alias names, one per line.
+func printCompletionAliases() {
+	db, err := openDB()
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	aliases, err := db.ListAliases()
+	if err != nil {
+		return
+	}
+
+	for _, a := range aliases {
+		fmt.Println(a.Alias)
+	}
+}
+
+// printCompletionZipGroups prints all zip group names, one per line.
+func printCompletionZipGroups() {
+	db, err := openDB()
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	groups, err := db.ListZipGroups()
+	if err != nil {
+		return
+	}
+
+	for _, g := range groups {
+		fmt.Println(g.Name)
+	}
+}
+
 // printCompletionScript outputs the shell completion script.
 func printCompletionScript(shell string) {
 	script, err := completion.Generate(shell)
