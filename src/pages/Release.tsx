@@ -547,7 +547,16 @@ const ReleasePage = () => {
               </tbody>
             </table>
           </div>
-        </div>
+      </div>
+
+      {/* See Also */}
+      <section className="mb-10 mt-10">
+        <h2 className="text-xl font-mono font-bold text-foreground mb-4">See Also</h2>
+        <ul className="space-y-1 text-sm font-mono">
+          <li><a href="/zip-group" className="text-primary hover:underline">zip-group</a> — Manage named file/folder collections for release bundling <span className="text-muted-foreground">↗</span></li>
+          <li><a href="/clear-release-json" className="text-primary hover:underline">clear-release-json</a> — Remove stale release metadata files <span className="text-muted-foreground">↗</span></li>
+        </ul>
+      </section>
 
         {/* Package Layout */}
         <div>
