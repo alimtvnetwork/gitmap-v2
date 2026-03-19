@@ -281,7 +281,3 @@ func executeZipGroupRename(name, archiveName string) {
 	fmt.Printf(constants.MsgZGArchiveSet, archiveName, name)
 }
 
-// Unused imports guard — these are used only in specific build contexts.
-var _ = exec.Command
-var _ = filepath.Join
-var _ = strings.TrimSpace

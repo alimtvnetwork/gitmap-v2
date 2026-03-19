@@ -299,6 +299,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdZipGroup || command == constants.CmdZipGroupShort {
+		runZipGroup(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
