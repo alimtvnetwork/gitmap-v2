@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.22.0
+- Bumped compiled version constant to v2.22.0.
+- Persisted zip group metadata in `.release/vX.Y.Z.json` via new `zipGroups` field on `ReleaseMeta`.
+- Documented `-A`/`--alias` flag in help text for `pull`, `exec`, `status`, and `cd` commands.
+- Added shell completion support for `alias` and `zip-group` subcommands across PowerShell, Bash, and Zsh.
+- Added `--list-aliases` and `--list-zip-groups` completion list flags with dynamic DB lookups.
+- Added unit tests for `collectZipGroupNames` covering persistent groups, ad-hoc bundles, and merged output.
+
 ## v2.21.0
 - Bumped compiled version constant to v2.21.0.
 - Refactored `assetsupload.go` into three focused files: `githubapi.go` (API types/helpers), `assetsupload.go` (upload logic), `remoteorigin.go` (git URL parsing).
