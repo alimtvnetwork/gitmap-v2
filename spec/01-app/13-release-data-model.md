@@ -37,6 +37,7 @@ project root. Created after a successful release.
   "commit": "abc123def456789",
   "tag": "v1.2.3",
   "assets": ["./dist"],
+  "zipGroups": ["docs-bundle"],
   "draft": false,
   "preRelease": false,
   "createdAt": "2026-03-05T12:00:00Z",
