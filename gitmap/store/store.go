@@ -107,6 +107,8 @@ func (db *DB) Reset() error {
 		constants.SQLDropCommandHistory,
 		constants.SQLDropBookmarks,
 		constants.SQLDropAliases,
+		constants.SQLDropZipGroupItems,
+		constants.SQLDropZipGroups,
 		constants.SQLDropRepos,
 	}
 
