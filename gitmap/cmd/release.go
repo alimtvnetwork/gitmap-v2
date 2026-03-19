@@ -30,7 +30,7 @@ func runRelease(args []string) {
 }
 
 // executeRelease builds options and runs the release workflow.
-func executeRelease(version, assets, commit, branch, bump, targets string, draft, dryRun, verbose, compress, checksums, noAssets bool) {
+func executeRelease(version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets bool) {
 	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
 
 	opts := release.Options{
@@ -38,6 +38,9 @@ func executeRelease(version, assets, commit, branch, bump, targets string, draft
 		Commit: commit, Branch: branch,
 		Bump: bump, Targets: targets,
 		ConfigTargets: cfg.Release.Targets,
+		ZipGroups:     zipGroups,
+		ZipItems:      zipItems,
+		BundleName:    bundleName,
 		Draft:         draft, DryRun: dryRun,
 		Verbose:       verbose,
 		Compress:      compress || cfg.Release.Compress,
