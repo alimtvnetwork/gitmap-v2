@@ -18,6 +18,7 @@ r
 | --commit \<sha\> | HEAD | Release from specific commit |
 | --branch \<name\> | current | Release from branch |
 | --bump major\|minor\|patch | — | Auto-increment version |
+| --notes \<text\> / -N \<text\> | — | Release notes or title for the release |
 | --draft | false | Create unpublished draft |
 | --dry-run | false | Preview without executing |
 | --compress | false | Wrap assets in .zip (Windows) or .tar.gz archives |
