@@ -147,9 +147,9 @@ func uploadToGitHub(v Version, assets []string, opts Options) {
 }
 
 // writeMetadata persists release info and updates latest.
-func writeMetadata(v Version, branchName, tag, sourceName string, assets []string, draft bool) error {
+func writeMetadata(v Version, branchName, tag, sourceName string, assets []string, opts Options) error {
 	commit, _ := CurrentCommitSHA()
-	meta := buildReleaseMeta(v, branchName, tag, sourceName, commit, assets, draft)
+	meta := buildReleaseMeta(v, branchName, tag, sourceName, commit, assets, opts)
 
 	err := WriteReleaseMeta(meta)
 	if err != nil {
@@ -163,9 +163,11 @@ func writeMetadata(v Version, branchName, tag, sourceName string, assets []strin
 }
 
 // buildReleaseMeta constructs the metadata struct for a release.
-func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, assets []string, draft bool) ReleaseMeta {
+func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, assets []string, opts Options) ReleaseMeta {
 	assetPaths := make([]string, len(assets))
 	copy(assetPaths, assets)
+
+	zipGroups := collectZipGroupNames(opts)
 
 	return ReleaseMeta{
 		Version:      v.CoreString(),
@@ -175,11 +177,28 @@ func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, ass
 		Tag:          tag,
 		Assets:       assetPaths,
 		Changelog:    loadChangelogNotes(v.String()),
-		Draft:        draft,
+		ZipGroups:    zipGroups,
+		Draft:        opts.Draft,
 		PreRelease:   v.IsPreRelease(),
 		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
 		IsLatest:     false,
 	}
+}
+
+// collectZipGroupNames merges persistent group names and ad-hoc bundle name.
+func collectZipGroupNames(opts Options) []string {
+	var names []string
+	names = append(names, opts.ZipGroups...)
+
+	if len(opts.BundleName) > 0 {
+		names = append(names, opts.BundleName)
+	}
+
+	if len(names) == 0 {
+		return nil
+	}
+
+	return names
 }
 
 // loadChangelogNotes reads changelog notes for a version, returning nil on error.
