@@ -81,3 +81,54 @@ func cdHints() []hintEntry {
 		{constants.HintCDRepos, constants.HintCDReposDesc},
 	}
 }
+
+// zipGroupListHints returns hints shown after gitmap z list.
+func zipGroupListHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintZGCreate, constants.HintZGCreateDesc},
+		{constants.HintZGShow, constants.HintZGShowDesc},
+		{constants.HintZGDelete, constants.HintZGDeleteDesc},
+	}
+}
+
+// zipGroupCreateHints returns hints shown after gitmap z create.
+func zipGroupCreateHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintZGAdd, constants.HintZGAddDesc},
+		{constants.HintZGRelease, constants.HintZGReleaseDesc},
+	}
+}
+
+// zipGroupShowHints returns hints shown after gitmap z show.
+func zipGroupShowHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintZGAdd, constants.HintZGAddDesc},
+		{constants.HintZGRelease, constants.HintZGReleaseDesc},
+		{constants.HintZGDelete, constants.HintZGDeleteDesc},
+	}
+}
+
+// aliasListHints returns hints shown after gitmap a list.
+func aliasListHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintAliasSet, constants.HintAliasSetDesc},
+		{constants.HintAliasSuggest, constants.HintAliasSuggestDesc},
+		{constants.HintAliasUse, constants.HintAliasUseDesc},
+	}
+}
+
+// aliasSetHints returns hints shown after gitmap a set.
+func aliasSetHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintAliasList, constants.HintAliasListDesc},
+		{constants.HintAliasUse, constants.HintAliasUseDesc},
+	}
+}
+
+// aliasSuggestHints returns hints shown after gitmap a suggest.
+func aliasSuggestHints() []hintEntry {
+	return []hintEntry{
+		{constants.HintAliasList, constants.HintAliasListDesc},
+		{constants.HintAliasUse, constants.HintAliasUseDesc},
+	}
+}

@@ -52,4 +52,34 @@ const (
 
 	HintMGUsage     = "gitmap mg g1,g2"
 	HintMGUsageDesc = "Select multiple groups"
+
+	HintZGCreate     = "gitmap z create <name>"
+	HintZGCreateDesc = "Create a zip group"
+
+	HintZGAdd     = "gitmap z add <group> <path>"
+	HintZGAddDesc = "Add files to a zip group"
+
+	HintZGShow     = "gitmap z show <name>"
+	HintZGShowDesc = "Show items in a zip group"
+
+	HintZGDelete     = "gitmap z delete <name>"
+	HintZGDeleteDesc = "Delete a zip group"
+
+	HintZGRelease     = "gitmap r v1.0.0 --zip-group <name>"
+	HintZGReleaseDesc = "Include zip group in release"
+
+	HintAliasSet     = "gitmap a set <alias> <slug>"
+	HintAliasSetDesc = "Create a repo alias"
+
+	HintAliasList     = "gitmap a list"
+	HintAliasListDesc = "List all aliases"
+
+	HintAliasSuggest     = "gitmap a suggest"
+	HintAliasSuggestDesc = "Auto-suggest aliases"
+
+	HintAliasUse     = "gitmap pull -A <alias>"
+	HintAliasUseDesc = "Use alias with any command"
+
+	HintAliasRemove     = "gitmap a remove <alias>"
+	HintAliasRemoveDesc = "Remove an alias"
 )

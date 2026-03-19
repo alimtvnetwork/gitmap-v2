@@ -49,6 +49,7 @@ func executeAliasSet(alias, slug string) {
 		}
 
 		fmt.Printf(constants.MsgAliasUpdated, alias, slug)
+		printHints(aliasSetHints())
 
 		return
 	}
@@ -60,6 +61,7 @@ func executeAliasSet(alias, slug string) {
 	}
 
 	fmt.Printf(constants.MsgAliasCreated, alias, slug)
+	printHints(aliasSetHints())
 }
 
 // runAliasRemove handles "alias remove <alias>".
@@ -103,6 +105,7 @@ func runAliasList() {
 	}
 
 	printAliasList(aliases)
+	printHints(aliasListHints())
 }
 
 // printAliasList renders the alias table to stdout.
@@ -170,6 +173,7 @@ func runAliasSuggest(args []string) {
 
 	created := suggestAliases(db, repos, apply)
 	fmt.Printf(constants.MsgAliasSuggestDone, created)
+	printHints(aliasSuggestHints())
 }
 
 // parseAliasSuggestFlags parses flags for alias suggest.

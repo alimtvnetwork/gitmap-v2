@@ -49,6 +49,7 @@ func executeZipGroupCreate(name, archiveName string) {
 	}
 
 	fmt.Printf(constants.MsgZGCreated, name)
+	printHints(zipGroupCreateHints())
 }
 
 // runZipGroupAdd handles "zip-group add <group> <path...>".
@@ -139,6 +140,7 @@ func runZipGroupList() {
 	}
 
 	printZipGroupList(groups)
+	printHints(zipGroupListHints())
 }
 
 // printZipGroupList renders the zip group table to stdout.
@@ -206,6 +208,8 @@ func printZipGroupShow(group model.ZipGroup, items []model.ZipGroupItem) {
 	if len(group.ArchiveName) > 0 {
 		fmt.Printf(constants.MsgZGShowArchive, group.ArchiveName)
 	}
+
+	printHints(zipGroupShowHints())
 }
 
 // runZipGroupDelete handles "zip-group delete <name>".
