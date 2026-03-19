@@ -23,23 +23,44 @@ hi
 
 ## Examples
 
-### Example 1: Show recent history
+### Example 1: Show recent command history
 
     gitmap history
 
 **Output:**
 
-    1  scan ~/projects       2025-03-10 14:30
-    2  clone json            2025-03-10 14:32
-    3  status --all          2025-03-10 15:00
+     #   COMMAND                           TIMESTAMP
+     1   scan D:\wp-work                   2025-03-10 14:30:12
+     2   clone json --target-dir D:\proj   2025-03-10 14:32:45
+     3   status --all                      2025-03-10 15:00:03
+     4   pull --group backend              2025-03-10 15:05:18
+     5   release --bump patch              2025-03-10 16:20:00
+     6   cd my-api                         2025-03-10 16:25:33
+     7   watch --interval 10               2025-03-10 16:30:00
+    7 entries (showing last 20)
 
-### Example 2: Last 5 entries as JSON
+### Example 2: Show last 3 entries
 
-    gitmap hi --limit 5 --json
+    gitmap hi --limit 3
 
 **Output:**
 
-    [{"id":1,"command":"scan ~/projects","timestamp":"2025-03-10T14:30:00Z"}]
+     #   COMMAND                           TIMESTAMP
+     1   cd my-api                         2025-03-10 16:25:33
+     2   watch --interval 10               2025-03-10 16:30:00
+     3   release --bump minor --dry-run    2025-03-10 17:00:15
+    3 entries
+
+### Example 3: Export history as JSON
+
+    gitmap history --json --limit 2
+
+**Output:**
+
+    [
+      {"id":1,"command":"scan D:\\wp-work","timestamp":"2025-03-10T14:30:12Z"},
+      {"id":2,"command":"clone json","timestamp":"2025-03-10T14:32:45Z"}
+    ]
 
 ## See Also
 

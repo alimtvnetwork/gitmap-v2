@@ -22,14 +22,18 @@ ex
 
 ## Examples
 
-### Example 1: Export database
+### Example 1: Export database (default format)
 
     gitmap export
 
 **Output:**
 
-    Exporting 42 repos...
-    ✓ Exported to gitmap-export.json
+    Exporting 42 repos from profile 'default'...
+    Including:
+      42 repositories
+       3 groups (backend, frontend, infra)
+       5 aliases
+    ✓ Exported to gitmap-export.json (12.4 KB)
 
 ### Example 2: Export as JSON
 
@@ -37,8 +41,25 @@ ex
 
 **Output:**
 
-    Exporting 42 repos...
+    Exporting 42 repos from profile 'default'...
+    {
+      "repos": [...],
+      "groups": [...],
+      "aliases": [...]
+    }
     ✓ Exported to gitmap-export.json
+
+### Example 3: Export from a different profile
+
+    gitmap profile switch work
+    gitmap export
+
+**Output:**
+
+    ✓ Switched to profile 'work'
+
+    Exporting 18 repos from profile 'work'...
+    ✓ Exported to gitmap-export.json (6.2 KB)
 
 ## See Also
 

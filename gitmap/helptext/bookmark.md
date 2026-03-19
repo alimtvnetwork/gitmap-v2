@@ -22,31 +22,44 @@ None.
 
 ### Example 1: Save a bookmark
 
-    gitmap bookmark save "daily-scan" "scan ~/projects --quiet"
+    gitmap bookmark save "daily-scan" "scan D:\wp-work --quiet"
 
 **Output:**
 
     ✓ Bookmark 'daily-scan' saved
+    Command: scan D:\wp-work --quiet
 
-### Example 2: List bookmarks
+### Example 2: List all bookmarks
 
     gitmap bk list
 
 **Output:**
 
-    daily-scan  scan ~/projects --quiet
-    work-pull   pull --group work
-    2 bookmarks
+    NAME            COMMAND
+    daily-scan      scan D:\wp-work --quiet
+    work-pull       pull --group backend
+    check-status    status --all
+    3 bookmarks saved
 
-### Example 3: Run a bookmark
+### Example 3: Run a saved bookmark
 
     gitmap bookmark run daily-scan
 
 **Output:**
 
-    Running 'daily-scan'...
+    Running bookmark 'daily-scan'...
+    → gitmap scan D:\wp-work --quiet
+    Scanning D:\wp-work...
     Found 42 repositories
-    ✓ Scan complete
+    ✓ Output written to ./gitmap-output/
+
+### Example 4: Delete a bookmark
+
+    gitmap bookmark delete work-pull
+
+**Output:**
+
+    ✓ Bookmark 'work-pull' deleted
 
 ## See Also
 

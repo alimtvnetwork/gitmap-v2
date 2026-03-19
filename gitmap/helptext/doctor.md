@@ -22,25 +22,55 @@ None
 
 ## Examples
 
-### Example 1: Run diagnostics
+### Example 1: Run full diagnostics
 
     gitmap doctor
 
 **Output:**
 
+    ■ Checking system...
     ✓ Git installed (v2.43.0)
+    ✓ Go installed (go1.22.1)
+    ✓ GitHub CLI (gh) installed (v2.44.1)
+    ■ Checking binary...
     ✓ Binary at E:\bin-run\gitmap.exe
-    ✗ Stale binary in C:\old\ — 1 issue
+    ✗ Stale binary found at C:\old\gitmap.exe
+    ■ Checking database...
+    ✓ Database OK (42 repos, 3 groups)
+    ■ Result: 1 issue found
+      → Run 'gitmap doctor --fix-path' to resolve
 
-### Example 2: Fix PATH issues
+### Example 2: Fix PATH issues automatically
 
     gitmap doctor --fix-path
 
 **Output:**
 
+    ■ Checking system...
     ✓ Git installed (v2.43.0)
-    ✓ Fixed: removed stale binary
-    All checks passed.
+    ✓ Go installed (go1.22.1)
+    ■ Checking binary...
+    ✓ Binary at E:\bin-run\gitmap.exe
+    ✓ Fixed: removed stale binary at C:\old\gitmap.exe
+    ■ Checking database...
+    ✓ Database OK (42 repos, 3 groups)
+    ✓ All checks passed.
+
+### Example 3: Clean installation
+
+    gitmap doctor
+
+**Output:**
+
+    ■ Checking system...
+    ✓ Git installed (v2.43.0)
+    ✓ Go installed (go1.22.1)
+    ✓ GitHub CLI (gh) installed (v2.44.1)
+    ■ Checking binary...
+    ✓ Binary at E:\bin-run\gitmap.exe
+    ■ Checking database...
+    ✓ Database OK (42 repos, 3 groups)
+    ✓ All checks passed. No issues found.
 
 ## See Also
 

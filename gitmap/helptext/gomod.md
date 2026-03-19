@@ -26,15 +26,26 @@ gm
 
 ## Examples
 
-### Example 1: Rename module path
+### Example 1: Rename module path (full flow)
 
     gitmap gomod "github.com/neworg/myproject"
 
 **Output:**
 
-    Replacing in 24 files... done
+    Current module: github.com/oldorg/myproject
+    New module:     github.com/neworg/myproject
+    Creating branch gomod-rename...
+    Replacing in 24 files...
+      go.mod
+      main.go
+      cmd/root.go
+      cmd/scan.go
+      store/store.go
+      ...
     Running go mod tidy... done
-    ✓ Module renamed
+    Committing changes... done
+    Merging into main... done
+    ✓ Module renamed across 24 files
 
 ### Example 2: Dry-run with specific extensions
 
@@ -42,18 +53,44 @@ gm
 
 **Output:**
 
-    [DRY RUN] 18 .go files, 3 .md files
+    [DRY RUN] Current module: github.com/old/name
+    [DRY RUN] New module:     github.com/new/name
+    [DRY RUN] Would modify:
+      18 .go files
+       3 .md files
+    [DRY RUN] Would run go mod tidy
+    [DRY RUN] Would commit and merge
     No changes made.
 
-### Example 3: Rename without merge
+### Example 3: Rename without merge, verbose output
 
     gitmap gomod "github.com/new/name" --no-merge --verbose
 
 **Output:**
 
-    Replacing in cmd/root.go... done
-    Committed on gomod-rename (not merged)
-    ✓ 24 files updated
+    Current module: github.com/old/name
+    Creating branch gomod-rename...
+    [verbose] Replacing in cmd/root.go... 3 occurrences
+    [verbose] Replacing in cmd/scan.go... 2 occurrences
+    [verbose] Replacing in store/store.go... 1 occurrence
+    [verbose] Replacing in main.go... 1 occurrence
+    ...
+    Running go mod tidy... done
+    Committed on branch 'gomod-rename' (not merged)
+    ✓ 24 files updated — merge manually when ready
+
+### Example 4: Rename and skip go mod tidy
+
+    gitmap gomod "github.com/new/name" --no-tidy
+
+**Output:**
+
+    Current module: github.com/old/name
+    Replacing in 24 files... done
+    Skipping go mod tidy (--no-tidy).
+    Committing changes... done
+    Merging into main... done
+    ✓ Module renamed (tidy skipped)
 
 ## See Also
 

@@ -20,7 +20,7 @@ None.
 
 ## Examples
 
-### Example 1: Import from file
+### Example 1: Import from an export file
 
     gitmap import gitmap-export.json
 
@@ -28,16 +28,39 @@ None.
 
     Importing from gitmap-export.json...
     [1/42] my-api... added
+    [2/42] web-app... added
+    [3/42] billing-svc... added
+    ...
     ✓ 42 repos imported
+    ✓ 3 groups restored (backend, frontend, infra)
+    ✓ 5 aliases restored
 
-### Example 2: Import using alias
+### Example 2: Import with duplicates
 
     gitmap im backup.json
 
 **Output:**
 
     Importing from backup.json...
-    ✓ 15 repos imported (3 skipped)
+    [1/15] my-api... skipped (already exists)
+    [2/15] web-app... skipped (already exists)
+    [3/15] new-service... added
+    [4/15] analytics-api... added
+    ...
+    ✓ 15 repos processed (5 added, 10 skipped)
+
+### Example 3: Import into a fresh profile
+
+    gitmap profile create new-machine
+    gitmap profile switch new-machine
+    gitmap import team-repos.json
+
+**Output:**
+
+    ✓ Switched to profile 'new-machine'
+    Importing from team-repos.json...
+    ✓ 28 repos imported
+    ✓ 4 groups restored
 
 ## See Also
 

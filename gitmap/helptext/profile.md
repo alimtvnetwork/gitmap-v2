@@ -20,35 +20,52 @@ None.
 
 ## Examples
 
-### Example 1: Create and switch profile
+### Example 1: Create a new profile and switch to it
 
     gitmap profile create work
     gitmap profile switch work
 
 **Output:**
 
-    ✓ Profile 'work' created
-    ✓ Switched to profile 'work'
+    ✓ Profile 'work' created (empty database)
 
-### Example 2: List profiles
+    ✓ Switched to profile 'work'
+    Active profile: work (0 repos)
+    → Run 'gitmap scan' to populate this profile
+
+### Example 2: List all profiles
 
     gitmap pf list
 
 **Output:**
 
-    default  42 repos
-    work     18 repos  ✓ active
+    PROFILE     REPOS   GROUPS  STATUS
+    default     42      3       
+    work        18      2       ✓ active
+    personal    7       1       
     3 profiles
 
-### Example 3: Show current profile
+### Example 3: Show current profile details
 
     gitmap profile show
 
 **Output:**
 
     Active profile: work
-    Repos: 18
-    Created: 2025-03-01
+    Repos:    18
+    Groups:   2 (backend, frontend)
+    Aliases:  5
+    Created:  2025-03-01
+    Database: ~/.gitmap/profiles/work.db
+
+### Example 4: Delete a profile
+
+    gitmap profile delete old-project
+
+**Output:**
+
+    Delete profile 'old-project' and all its data? [y/N]: y
+    ✓ Profile 'old-project' deleted (12 repos, 1 group removed)
 
 ## See Also
 

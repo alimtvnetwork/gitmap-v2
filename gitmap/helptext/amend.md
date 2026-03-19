@@ -26,25 +26,50 @@ am
 
 ## Examples
 
-### Example 1: Amend last commit author
+### Example 1: Amend the last commit's author
 
     gitmap amend --name "John Doe" --email "john@example.com"
 
 **Output:**
 
     Amending commit abc1234...
-    Author: John Doe <john@example.com>
-    ✓ 1 commit amended
+    Before: Old Author <old@email.com>
+    After:  John Doe <john@example.com>
+    Continue? [y/N]: y
+    ✓ 1 commit amended on branch 'main'
 
-### Example 2: Dry-run preview
+### Example 2: Amend a specific commit
+
+    gitmap amend abc1234 --name "Jane Smith" --email "jane@company.com"
+
+**Output:**
+
+    Amending commit abc1234...
+    Before: Wrong Name <wrong@email.com>
+    After:  Jane Smith <jane@company.com>
+    Continue? [y/N]: y
+    ✓ 1 commit amended on branch 'main'
+
+### Example 3: Dry-run preview (no changes)
 
     gitmap am abc1234 --name "Jane" --email "jane@co.com" --dry-run
 
 **Output:**
 
-    [DRY RUN] abc1234: Old Name → Jane
-    [DRY RUN] old@email.com → jane@co.com
+    [DRY RUN] Amending commit abc1234
+    [DRY RUN] Before: Old Name <old@email.com>
+    [DRY RUN] After:  Jane <jane@co.com>
+    [DRY RUN] Branch: main
     No changes made.
+
+### Example 4: Force amend without confirmation
+
+    gitmap amend --name "CI Bot" --email "ci@example.com" --force
+
+**Output:**
+
+    Amending commit def5678...
+    ✓ 1 commit amended (forced, no confirmation)
 
 ## See Also
 
