@@ -15,6 +15,12 @@ import (
 
 // runCDLookup finds a repo by name and prints its path to stdout.
 func runCDLookup(name string, args []string) {
+	if HasAlias() {
+		fmt.Print(GetAliasPath())
+
+		return
+	}
+
 	pick := parseCDPickFlag(args)
 	records := lookupCDRecords(name)
 

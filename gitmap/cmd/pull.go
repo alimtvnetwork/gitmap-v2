@@ -55,8 +55,15 @@ func initVerboseLog() {
 	defer log.Close()
 }
 
-// resolvePullTargets returns records based on group, all, or slug lookup.
+// resolvePullTargets returns records based on alias, group, all, or slug lookup.
 func resolvePullTargets(slug, groupName string, all bool) []model.ScanRecord {
+	if HasAlias() {
+		return []model.ScanRecord{{
+			RepoName:     GetAliasSlug(),
+			Slug:         GetAliasSlug(),
+			AbsolutePath: GetAliasPath(),
+		}}
+	}
 	if len(groupName) > 0 {
 		return loadRecordsByGroup(groupName)
 	}

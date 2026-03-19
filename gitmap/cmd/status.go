@@ -34,8 +34,15 @@ func parseStatusFlags(args []string) (groupName string, all bool) {
 	return *gFlag, *aFlag
 }
 
-// loadStatusByScope returns records filtered by group, all DB repos, or JSON fallback.
+// loadStatusByScope returns records filtered by alias, group, all DB repos, or JSON fallback.
 func loadStatusByScope(groupName string, all bool) []model.ScanRecord {
+	if HasAlias() {
+		return []model.ScanRecord{{
+			RepoName:     GetAliasSlug(),
+			Slug:         GetAliasSlug(),
+			AbsolutePath: GetAliasPath(),
+		}}
+	}
 	if len(groupName) > 0 {
 		return loadRecordsByGroup(groupName)
 	}

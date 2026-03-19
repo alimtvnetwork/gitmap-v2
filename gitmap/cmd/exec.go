@@ -69,8 +69,15 @@ func parseExecFlags(args []string) (groupName string, all bool, gitArgs []string
 	return *gFlag, *aFlag, fs.Args()
 }
 
-// loadExecByScope returns records filtered by group, all DB repos, or JSON fallback.
+// loadExecByScope returns records filtered by alias, group, all DB repos, or JSON fallback.
 func loadExecByScope(groupName string, all bool) []model.ScanRecord {
+	if HasAlias() {
+		return []model.ScanRecord{{
+			RepoName:     GetAliasSlug(),
+			Slug:         GetAliasSlug(),
+			AbsolutePath: GetAliasPath(),
+		}}
+	}
 	if len(groupName) > 0 {
 		return loadRecordsByGroup(groupName)
 	}
