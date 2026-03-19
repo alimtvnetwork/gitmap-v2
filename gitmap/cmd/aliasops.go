@@ -173,6 +173,7 @@ func runAliasSuggest(args []string) {
 
 	created := suggestAliases(db, repos, apply)
 	fmt.Printf(constants.MsgAliasSuggestDone, created)
+	printHints(aliasSuggestHints())
 }
 
 // parseAliasSuggestFlags parses flags for alias suggest.
