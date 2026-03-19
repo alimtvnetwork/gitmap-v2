@@ -3,6 +3,10 @@
 Launch a full-screen interactive terminal UI for browsing, searching,
 and managing repositories.
 
+## Alias
+
+i
+
 ## Usage
 
     gitmap interactive [--refresh <seconds>]
