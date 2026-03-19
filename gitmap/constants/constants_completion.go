@@ -41,7 +41,9 @@ const (
 
 // Completion flag descriptions.
 const (
-	FlagDescCompListRepos    = "Print repo slugs one per line"
-	FlagDescCompListGroups   = "Print group names one per line"
-	FlagDescCompListCommands = "Print all command names one per line"
+	FlagDescCompListRepos     = "Print repo slugs one per line"
+	FlagDescCompListGroups    = "Print group names one per line"
+	FlagDescCompListCommands  = "Print all command names one per line"
+	FlagDescCompListAliases   = "Print alias names one per line"
+	FlagDescCompListZipGroups = "Print zip group names one per line"
 )
