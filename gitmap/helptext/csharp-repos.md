@@ -22,15 +22,17 @@ csr
 
 ## Examples
 
-### Example 1: List C# projects
+### Example 1: List all C# projects
 
     gitmap csharp-repos
 
 **Output:**
 
-    billing-svc  BillingSvc.sln  net8.0
-    auth-api     AuthApi.sln     net7.0
-    2 C# projects detected
+    REPO          SOLUTION           TARGET    PATH
+    billing-svc   BillingSvc.sln     net8.0    D:\repos\billing-svc
+    auth-api      AuthApi.sln        net7.0    D:\repos\auth-api
+    web-portal    WebPortal.sln      net8.0    D:\repos\web-portal
+    3 C# projects detected
 
 ### Example 2: JSON output
 
@@ -38,7 +40,20 @@ csr
 
 **Output:**
 
-    [{"repo":"billing-svc","solution":"BillingSvc.sln","target":"net8.0"}]
+    [
+      {"repo":"billing-svc","solution":"BillingSvc.sln","target":"net8.0","path":"D:\\repos\\billing-svc"},
+      {"repo":"auth-api","solution":"AuthApi.sln","target":"net7.0","path":"D:\\repos\\auth-api"},
+      {"repo":"web-portal","solution":"WebPortal.sln","target":"net8.0","path":"D:\\repos\\web-portal"}
+    ]
+
+### Example 3: No C# projects found
+
+    gitmap csharp-repos
+
+**Output:**
+
+    No C# projects detected.
+    → Run 'gitmap scan' to detect projects in your repos.
 
 ## See Also
 

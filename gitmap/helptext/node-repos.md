@@ -22,15 +22,18 @@ nr
 
 ## Examples
 
-### Example 1: List Node.js projects
+### Example 1: List all Node.js projects
 
     gitmap node-repos
 
 **Output:**
 
-    web-app    @user/web-app  18.x
-    docs-site  docs-site      20.x
-    2 Node.js projects detected
+    REPO          PACKAGE             NODE VER  PATH
+    web-app       @user/web-app       18.x      D:\repos\web-app
+    docs-site     docs-site           20.x      D:\repos\docs-site
+    landing-page  landing-page        18.x      D:\repos\landing-page
+    admin-panel   @user/admin-panel   20.x      D:\repos\admin-panel
+    4 Node.js projects detected
 
 ### Example 2: JSON output
 
@@ -38,7 +41,20 @@ nr
 
 **Output:**
 
-    [{"repo":"web-app","package":"@user/web-app","node_version":"18.x"}]
+    [
+      {"repo":"web-app","package":"@user/web-app","node_version":"18.x","path":"D:\\repos\\web-app"},
+      {"repo":"docs-site","package":"docs-site","node_version":"20.x","path":"D:\\repos\\docs-site"},
+      {"repo":"landing-page","package":"landing-page","node_version":"18.x","path":"D:\\repos\\landing-page"}
+    ]
+
+### Example 3: No Node.js projects found
+
+    gitmap node-repos
+
+**Output:**
+
+    No Node.js projects detected.
+    → Run 'gitmap scan' to detect projects in your repos.
 
 ## See Also
 

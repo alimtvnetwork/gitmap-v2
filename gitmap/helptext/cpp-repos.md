@@ -22,15 +22,17 @@ cr
 
 ## Examples
 
-### Example 1: List C++ projects
+### Example 1: List all C++ projects
 
     gitmap cpp-repos
 
 **Output:**
 
-    game-engine  CMake     ~/projects/game-engine
-    codec-lib    Makefile  ~/work/codec-lib
-    2 C++ projects detected
+    REPO          BUILD SYSTEM  STANDARD  PATH
+    game-engine   CMake         C++20     D:\repos\game-engine
+    codec-lib     Makefile      C++17     D:\repos\codec-lib
+    renderer      CMake         C++20     D:\repos\renderer
+    3 C++ projects detected
 
 ### Example 2: JSON output
 
@@ -38,7 +40,19 @@ cr
 
 **Output:**
 
-    [{"repo":"game-engine","build_system":"CMake"}]
+    [
+      {"repo":"game-engine","build_system":"CMake","standard":"C++20","path":"D:\\repos\\game-engine"},
+      {"repo":"codec-lib","build_system":"Makefile","standard":"C++17","path":"D:\\repos\\codec-lib"}
+    ]
+
+### Example 3: No C++ projects found
+
+    gitmap cpp-repos
+
+**Output:**
+
+    No C++ projects detected.
+    → Run 'gitmap scan' to detect projects in your repos.
 
 ## See Also
 

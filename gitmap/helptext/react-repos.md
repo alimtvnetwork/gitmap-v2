@@ -22,15 +22,17 @@ rr
 
 ## Examples
 
-### Example 1: List React projects
+### Example 1: List all React projects
 
     gitmap react-repos
 
 **Output:**
 
-    web-app    @user/web-app  18.2.0
-    docs-site  docs-site      18.2.0
-    2 React projects detected
+    REPO          PACKAGE             REACT VER  PATH
+    web-app       @user/web-app       18.2.0     D:\repos\web-app
+    docs-site     docs-site           18.2.0     D:\repos\docs-site
+    admin-panel   @user/admin-panel   18.3.1     D:\repos\admin-panel
+    3 React projects detected
 
 ### Example 2: JSON output
 
@@ -38,7 +40,20 @@ rr
 
 **Output:**
 
-    [{"repo":"web-app","package":"@user/web-app","react_version":"18.2.0"}]
+    [
+      {"repo":"web-app","package":"@user/web-app","react_version":"18.2.0","path":"D:\\repos\\web-app"},
+      {"repo":"docs-site","package":"docs-site","react_version":"18.2.0","path":"D:\\repos\\docs-site"},
+      {"repo":"admin-panel","package":"@user/admin-panel","react_version":"18.3.1","path":"D:\\repos\\admin-panel"}
+    ]
+
+### Example 3: No React projects found
+
+    gitmap react-repos
+
+**Output:**
+
+    No React projects detected.
+    → Run 'gitmap scan' to detect projects in your repos.
 
 ## See Also
 
