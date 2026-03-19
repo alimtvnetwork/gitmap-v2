@@ -89,7 +89,7 @@ func (z *zipItemFlag) Set(val string) error {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
@@ -104,6 +104,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 	noAssetsFlag := fs.Bool("no-assets", false, constants.FlagDescNoAssets)
 	listTargetsFlag := fs.Bool("list-targets", false, constants.FlagDescListTargets)
 	bundleFlag := fs.String("bundle", "", constants.FlagDescZGBundle)
+	noCommitFlag := fs.Bool("no-commit", false, constants.FlagDescNoCommit)
 
 	var zgGroups zipGroupFlag
 	var zgItems zipItemFlag
@@ -117,7 +118,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
 }
 
 // printListTargets resolves and prints the target matrix, then returns.
