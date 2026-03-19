@@ -73,7 +73,7 @@ func resolveAliasContext(aliasName string) {
 	}
 
 	aliasContext = &resolvedAlias{
-		Alias:        resolved.Alias,
+		Alias:        resolved.Alias.Alias,
 		AbsolutePath: resolved.AbsolutePath,
 		Slug:         resolved.Slug,
 	}
