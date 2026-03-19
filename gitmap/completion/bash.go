@@ -39,10 +39,25 @@ func generateBash() string {
             COMPREPLY=($(compgen -W "pull status exec clear $(gitmap completion --list-groups)" -- "$cur"))
             ;;
         release|r)
-            COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose" -- "$cur"))
+            if [[ "$prev" == "--zip-group" ]]; then
+                COMPREPLY=($(compgen -W "$(gitmap completion --list-zip-groups)" -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose --zip-group -Z --bundle" -- "$cur"))
+            fi
             ;;
         release-branch|rb)
             COMPREPLY=($(compgen -W "--assets --draft --dry-run --compress --checksums --no-assets --targets" -- "$cur"))
+            ;;
+        alias|a)
+            COMPREPLY=($(compgen -W "set remove list show suggest $(gitmap completion --list-aliases)" -- "$cur"))
+            ;;
+        zip-group|z)
+            COMPREPLY=($(compgen -W "create add remove list show delete rename $(gitmap completion --list-zip-groups)" -- "$cur"))
+            ;;
+        *)
+            if [[ "$prev" == "-A" || "$prev" == "--alias" ]]; then
+                COMPREPLY=($(compgen -W "$(gitmap completion --list-aliases)" -- "$cur"))
+            fi
             ;;
     esac
 }

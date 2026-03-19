@@ -57,7 +57,7 @@ func generatePowerShell() string {
     }
 
     if ($cmd -eq "release" -or $cmd -eq "r") {
-        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--list-targets", "--verbose")
+        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--list-targets", "--verbose", "--zip-group", "-Z", "--bundle")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
@@ -66,6 +66,36 @@ func generatePowerShell() string {
     if ($cmd -eq "release-branch" -or $cmd -eq "rb") {
         $items = @("--assets", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "alias" -or $cmd -eq "a") {
+        $subs = @("set", "remove", "list", "show", "suggest")
+        $aliases = @(gitmap completion --list-aliases)
+        $items = $subs + $aliases
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($cmd -eq "zip-group" -or $cmd -eq "z") {
+        $subs = @("create", "add", "remove", "list", "show", "delete", "rename")
+        $zgroups = @(gitmap completion --list-zip-groups)
+        $items = $subs + $zgroups
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($prev -eq "-A" -or $prev -eq "--alias") {
+        gitmap completion --list-aliases | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
+    if ($prev -eq "--zip-group") {
+        gitmap completion --list-zip-groups | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
     }

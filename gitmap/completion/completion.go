@@ -69,6 +69,8 @@ func AllCommands() []string {
 		"completion", "cmp",
 		"interactive", "i",
 		"clear-release-json", "crj",
+		"alias", "a",
+		"zip-group", "z",
 		"help",
 	}
 }

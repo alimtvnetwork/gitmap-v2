@@ -51,12 +51,35 @@ _gitmap() {
             _describe 'subcommand' subs
             ;;
         release|r)
-            local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose)
-            _describe 'flag' flags
+            if [[ "${words[CURRENT-1]}" == "--zip-group" ]]; then
+                local -a zgroups=($(gitmap completion --list-zip-groups))
+                _describe 'zip-group' zgroups
+            else
+                local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose --zip-group -Z --bundle)
+                _describe 'flag' flags
+            fi
             ;;
         release-branch|rb)
             local -a flags=(--assets --draft --dry-run --compress --checksums --no-assets --targets)
             _describe 'flag' flags
+            ;;
+        alias|a)
+            local -a subs=(set remove list show suggest)
+            local -a aliases=($(gitmap completion --list-aliases))
+            subs+=("${aliases[@]}")
+            _describe 'subcommand' subs
+            ;;
+        zip-group|z)
+            local -a subs=(create add remove list show delete rename)
+            local -a zgroups=($(gitmap completion --list-zip-groups))
+            subs+=("${zgroups[@]}")
+            _describe 'subcommand' subs
+            ;;
+        *)
+            if [[ "${words[CURRENT-1]}" == "-A" || "${words[CURRENT-1]}" == "--alias" ]]; then
+                local -a aliases=($(gitmap completion --list-aliases))
+                _describe 'alias' aliases
+            fi
             ;;
     esac
 }

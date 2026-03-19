@@ -29,7 +29,9 @@ func runCompletion(args []string) {
 // hasListFlag checks if any --list-* flag is present.
 func hasListFlag(args []string) bool {
 	for _, a := range args {
-		if a == constants.CompListRepos || a == constants.CompListGroups || a == constants.CompListCommands {
+		if a == constants.CompListRepos || a == constants.CompListGroups ||
+			a == constants.CompListCommands || a == constants.CompListAliases ||
+			a == constants.CompListZipGroups {
 			return true
 		}
 	}
@@ -40,18 +42,25 @@ func hasListFlag(args []string) bool {
 // handleCompletionList routes to the appropriate list printer.
 func handleCompletionList(args []string) {
 	for _, a := range args {
-		if a == constants.CompListRepos {
+		switch a {
+		case constants.CompListRepos:
 			printCompletionRepos()
 
 			return
-		}
-		if a == constants.CompListGroups {
+		case constants.CompListGroups:
 			printCompletionGroups()
 
 			return
-		}
-		if a == constants.CompListCommands {
+		case constants.CompListCommands:
 			printCompletionCommands()
+
+			return
+		case constants.CompListAliases:
+			printCompletionAliases()
+
+			return
+		case constants.CompListZipGroups:
+			printCompletionZipGroups()
 
 			return
 		}
@@ -98,6 +107,42 @@ func printCompletionGroups() {
 func printCompletionCommands() {
 	for _, cmd := range completion.AllCommands() {
 		fmt.Println(cmd)
+	}
+}
+
+// printCompletionAliases prints all alias names, one per line.
+func printCompletionAliases() {
+	db, err := openDB()
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	aliases, err := db.ListAliases()
+	if err != nil {
+		return
+	}
+
+	for _, a := range aliases {
+		fmt.Println(a.Alias)
+	}
+}
+
+// printCompletionZipGroups prints all zip group names, one per line.
+func printCompletionZipGroups() {
+	db, err := openDB()
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	groups, err := db.ListZipGroups()
+	if err != nil {
+		return
+	}
+
+	for _, g := range groups {
+		fmt.Println(g.Name)
 	}
 }
 
