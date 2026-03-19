@@ -32,6 +32,7 @@ type Options struct {
 	Compress      bool
 	Checksums     bool
 	NoAssets      bool
+	NoCommit      bool
 }
 
 // Result holds the outcome of a release operation.
