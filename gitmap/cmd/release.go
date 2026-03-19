@@ -90,12 +90,13 @@ func (z *zipItemFlag) Set(val string) error {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
 	branchFlag := fs.String("branch", "", constants.FlagDescRelBranch)
 	bumpFlag := fs.String("bump", "", constants.FlagDescBump)
+	notesFlag := fs.String("notes", "", constants.FlagDescNotes)
 	targetsFlag := fs.String("targets", "", constants.FlagDescTargets)
 	draftFlag := fs.Bool("draft", false, constants.FlagDescDraft)
 	dryRunFlag := fs.Bool("dry-run", false, constants.FlagDescDryRun)
@@ -112,6 +113,10 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 
 	fs.Var(&zgGroups, "zip-group", constants.FlagDescZGZipGroup)
 	fs.Var(&zgItems, "Z", constants.FlagDescZGZipItem)
+
+	// Register -N as shorthand for --notes.
+	fs.StringVar(notesFlag, "N", "", constants.FlagDescNotes)
+
 	fs.Parse(args)
 
 	version = ""
@@ -119,7 +124,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, ta
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
 }
 
 // printListTargets resolves and prints the target matrix, then returns.
