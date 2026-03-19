@@ -67,6 +67,7 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateCSharpProjectFiles,
 		constants.SQLCreateCSharpKeyFiles,
 		constants.SQLCreateSettings,
+		constants.SQLCreateAliases,
 	}
 
 	for _, stmt := range statements {
@@ -103,6 +104,7 @@ func (db *DB) Reset() error {
 		constants.SQLDropCommitTemplates,
 		constants.SQLDropCommandHistory,
 		constants.SQLDropBookmarks,
+		constants.SQLDropAliases,
 		constants.SQLDropRepos,
 	}
 
