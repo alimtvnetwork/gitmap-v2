@@ -350,6 +350,18 @@ const ReleasePage = () => {
               <CodeBlock code="gitmap release v1.0.0 --no-assets" />
             </div>
             <div>
+              <p className="text-sm text-muted-foreground mb-2">Release with a persistent zip group</p>
+              <CodeBlock code="gitmap release v3.0.0 --zip-group docs-bundle" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Ad-hoc zip with bundle</p>
+              <CodeBlock code={`gitmap release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip`} />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Combine persistent groups and ad-hoc items</p>
+              <CodeBlock code="gitmap release v3.0.0 --zip-group docs-bundle -Z ./extras/notes.txt" />
+            </div>
+            <div>
               <p className="text-sm text-muted-foreground mb-2">Draft and dry-run</p>
               <CodeBlock code={`gitmap release v3.0.0-rc.1 --draft\ngitmap release v1.0.0 --dry-run`} />
             </div>
