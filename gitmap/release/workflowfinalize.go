@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/store"
 )
 
 // LastMeta holds the most recent release metadata after Execute completes.
