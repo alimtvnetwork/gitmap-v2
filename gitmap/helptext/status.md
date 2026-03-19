@@ -14,6 +14,7 @@ st
 
 | Flag | Default | Description |
 |------|---------|-------------|
+| -A, --alias \<name\> | — | Target a repo by its alias |
 | --group \<name\> | — | Show status for repos in a group |
 | --all | false | Show status for all tracked repos |
 
