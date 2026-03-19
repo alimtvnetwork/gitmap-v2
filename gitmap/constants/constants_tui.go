@@ -53,6 +53,23 @@ const (
 	TUIBatchHint      = "p: pull  x: exec  s: status  g: add to group"
 	TUIGroupHint      = "c: create  d: delete  enter: show members"
 	TUIDashHint       = "r: refresh"
+	TUIZGHint         = "enter: show items  r: refresh  c: create  d: delete"
+	TUIAliasHint      = "r: refresh  c: set alias  d: remove"
+)
+
+// TUI zip group messages.
+const (
+	TUIZGEmpty      = "No zip groups defined. Use 'gitmap z create <name>' to create one."
+	TUIZGRefreshed  = "Zip groups refreshed."
+	TUIZGCreateHint = "Use CLI: gitmap z create <name>"
+)
+
+// TUI alias messages.
+const (
+	TUIAliasEmpty      = "No aliases defined. Use 'gitmap alias set <alias> <slug>' to create one."
+	TUIAliasRefreshed  = "Aliases refreshed."
+	TUIAliasCreateHint = "Use CLI: gitmap alias set <alias> <slug>"
+	TUIAliasDeleteHint = "Remove alias '%s'? Use CLI: gitmap alias remove %s"
 )
 
 // TUI column headers.

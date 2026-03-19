@@ -10,7 +10,7 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-const viewCount = 4
+const viewCount = 6
 
 // view indices.
 const (
@@ -18,6 +18,8 @@ const (
 	viewActions   = 1
 	viewGroups    = 2
 	viewDashboard = 3
+	viewZipGroups = 4
+	viewAliases   = 5
 )
 
 // rootModel is the top-level Bubble Tea model.
@@ -32,6 +34,8 @@ type rootModel struct {
 	actions   actionsModel
 	groupsMgr groupsModel
 	dashboard dashboardModel
+	zipGroups zipGroupsModel
+	aliases   aliasesModel
 	quitting  bool
 }
 
@@ -61,6 +65,8 @@ func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, 
 		actions:   newActionsModel(),
 		groupsMgr: newGroupsModel(groups),
 		dashboard: newDashboardModel(repos, cfg.DashboardRefresh),
+		zipGroups: newZipGroupsModel(db),
+		aliases:   newAliasesModel(db),
 	}
 }
 
@@ -118,6 +124,16 @@ func (m rootModel) updateActiveView(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.dashboard = dm
 
 		return m, cmd
+	case viewZipGroups:
+		zm, cmd := m.zipGroups.Update(msg)
+		m.zipGroups = zm
+
+		return m, cmd
+	case viewAliases:
+		am, cmd := m.aliases.Update(msg)
+		m.aliases = am
+
+		return m, cmd
 	}
 
 	return m, nil
@@ -146,6 +162,8 @@ func (m rootModel) renderTabs() string {
 		constants.TUIViewActions,
 		constants.TUIViewGroups,
 		constants.TUIViewDashboard,
+		constants.TUIViewZipGroups,
+		constants.TUIViewAliases,
 	}
 
 	var tabs []string
@@ -170,6 +188,10 @@ func (m rootModel) renderContent() string {
 		return m.groupsMgr.View()
 	case viewDashboard:
 		return m.dashboard.View()
+	case viewZipGroups:
+		return m.zipGroups.View()
+	case viewAliases:
+		return m.aliases.View()
 	}
 
 	return ""
@@ -187,6 +209,10 @@ func (m rootModel) renderStatusBar() string {
 		hints = append(hints, constants.TUIGroupHint)
 	case viewDashboard:
 		hints = append(hints, constants.TUIDashHint)
+	case viewZipGroups:
+		hints = append(hints, constants.TUIZGHint)
+	case viewAliases:
+		hints = append(hints, constants.TUIAliasHint)
 	}
 
 	return styleStatusBar.Render(strings.Join(hints, "  │  "))
