@@ -174,7 +174,7 @@ in the docs site:
 | History & Stats | history, history-reset, stats, amend, amend-list |
 | Project Detection | go-repos, node-repos, react-repos, cpp-repos, csharp-repos |
 | Data & Profiles | export, import, profile, bookmark, db-reset |
-| Utilities | setup, doctor, update, version, seo-write, gomod |
+| Utilities | setup, doctor, update, update-cleanup, version, seo-write, gomod |
 
 Each command entry in the README includes:
 - Command name and alias
