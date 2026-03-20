@@ -35,6 +35,7 @@ type rootModel struct {
 	actions   actionsModel
 	groupsMgr groupsModel
 	dashboard dashboardModel
+	releases  releasesModel
 	zipGroups zipGroupsModel
 	aliases   aliasesModel
 	quitting  bool
