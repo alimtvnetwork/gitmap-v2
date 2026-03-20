@@ -10,7 +10,7 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-const viewCount = 6
+const viewCount = 7
 
 // view indices.
 const (
@@ -18,8 +18,9 @@ const (
 	viewActions   = 1
 	viewGroups    = 2
 	viewDashboard = 3
-	viewZipGroups = 4
-	viewAliases   = 5
+	viewReleases  = 4
+	viewZipGroups = 5
+	viewAliases   = 6
 )
 
 // rootModel is the top-level Bubble Tea model.
