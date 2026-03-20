@@ -62,7 +62,7 @@ func buildUpdateScript(repoPath, runPS1 string) string {
 		constants.UpdatePSVersionBefore +
 		fmt.Sprintf(constants.UpdatePSRunUpdate, runPS1) +
 		constants.UpdatePSVersionAfter +
-		constants.UpdatePSVerify +
+		fmt.Sprintf(constants.UpdatePSVerify, repoPath, repoPath) +
 		constants.UpdatePSPostActions
 }
 
