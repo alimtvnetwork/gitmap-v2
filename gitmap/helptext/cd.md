@@ -91,6 +91,7 @@ If you prefer to install it manually, add this to your shell profile:
 
 ## See Also
 
+- [setup](setup.md) — Auto-install gcd and shell completions
 - [list](list.md) — View all tracked repos and paths
 - [group](group.md) — Manage repo groups for filtered navigation
 - [scan](scan.md) — Scan directories to populate the database
