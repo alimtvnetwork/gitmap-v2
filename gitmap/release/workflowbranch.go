@@ -167,9 +167,9 @@ func isMetaPending(meta ReleaseMeta, branchSet map[string]bool) bool {
 }
 
 // releasePendingFromMetadata creates branch+tag from stored commit SHA.
-func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath string, draft bool, dryRun bool) error {
+func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath, notes string, draft bool, dryRun bool) error {
 	for _, meta := range pending {
-		err := releaseFromMetadata(meta, assetsPath, draft, dryRun)
+		err := releaseFromMetadata(meta, assetsPath, notes, draft, dryRun)
 		if err != nil {
 			fmt.Printf(constants.MsgReleasePendingFailed, meta.Tag, err)
 			continue
