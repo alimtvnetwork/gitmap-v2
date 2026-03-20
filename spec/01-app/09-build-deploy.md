@@ -220,7 +220,75 @@ file handle when deploy starts.
 - Active version before update
 - Deployed version after update
 - Final active version after sync (must match deployed)
+- Last released version (from binary, `latest.json`, or git tag)
 - Latest changelog entries from updated binary
+
+## Last Release Detection — `Get-LastRelease.ps1`
+
+A standalone PowerShell script at `gitmap/scripts/Get-LastRelease.ps1`
+resolves and displays the latest released version. It is invoked
+automatically by both `run.ps1` (after "All done!") and the generated
+update script (in the version-verify block).
+
+### Resolution Order
+
+The script uses a three-tier fallback strategy:
+
+| Priority | Source | Method |
+|----------|--------|--------|
+| 1 | Binary | `gitmap list-versions --limit 1` — parses first `vX.Y.Z` from output |
+| 2 | JSON | `.release/latest.json` — reads `tag` or `version` field |
+| 3 | Git tag | `git tag --list "v*" --sort=-version:refname` — first stable `vX.Y.Z` |
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `-BinaryPath` | string | `""` | Path to gitmap binary; falls back to `Get-Command gitmap` |
+| `-RepoRoot` | string | `""` | Repo root for `latest.json` lookup; falls back to CWD |
+| `-Label` | string | `"Last release"` | Display label prefix |
+
+### Output
+
+```
+  Last release:    v2.24.0 (binary)
+```
+
+The parenthetical suffix indicates which source resolved the version:
+`binary`, `latest.json`, or `git tag`. If all sources fail, prints
+`unknown`.
+
+### Integration Points
+
+**`run.ps1`** — called after the final "All done!" message:
+
+```powershell
+$lastReleaseScript = Join-Path $RepoRoot "gitmap" "scripts" "Get-LastRelease.ps1"
+if (Test-Path $lastReleaseScript) {
+    & $lastReleaseScript -BinaryPath $changelogBinaryPath -RepoRoot $RepoRoot
+}
+```
+
+**Update script (`constants_update.go`)** — embedded in the
+`UpdatePSVerify` section between the version lines and the
+active/deployed match check:
+
+```powershell
+$lastReleaseScript = Join-Path "<repoPath>" "gitmap" "scripts" "Get-LastRelease.ps1"
+if (Test-Path $lastReleaseScript) {
+    & $lastReleaseScript -BinaryPath $activeBinary -RepoRoot "<repoPath>"
+}
+```
+
+### Design Decisions
+
+- **Separate file** keeps `run.ps1` lean and allows reuse from any
+  context (manual invocation, CI, update scripts).
+- **Three-tier fallback** ensures a result even when the binary is
+  unavailable (fresh clone) or when `.release/` metadata hasn't been
+  generated yet.
+- **No error exits** — the script always succeeds; missing data simply
+  shows `unknown`.
 
 ## Contributors
 
