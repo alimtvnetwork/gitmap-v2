@@ -24,6 +24,7 @@ func runSetup(args []string) {
 	printSetupBanner(dryRun)
 	result := setup.Apply(cfg, dryRun)
 	installShellCompletion(dryRun)
+	installCDFunction(dryRun)
 	printSetupSummary(result)
 }
 

@@ -41,3 +41,38 @@ const (
 	FlagDescCDGroup = "Filter repos list by group"
 	FlagDescCDPick  = "Force interactive picker even if a default is set"
 )
+
+// CD shell wrapper functions — installed by setup/completion.
+const CDFuncMarker = "# gitmap cd wrapper"
+
+// CDFuncBash is the gcd wrapper for Bash.
+const CDFuncBash = `gcd() {
+  local dest
+  dest="$(gitmap cd "$@")"
+  if [ -n "$dest" ] && [ -d "$dest" ]; then
+    cd "$dest" || return
+  fi
+}`
+
+// CDFuncZsh is the gcd wrapper for Zsh.
+const CDFuncZsh = `gcd() {
+  local dest
+  dest="$(gitmap cd "$@")"
+  if [[ -n "$dest" ]] && [[ -d "$dest" ]]; then
+    cd "$dest" || return
+  fi
+}`
+
+// CDFuncPowerShell is the gcd wrapper for PowerShell.
+const CDFuncPowerShell = `function gcd {
+  $dest = gitmap cd @args
+  if ($dest -and (Test-Path $dest)) {
+    Set-Location $dest
+  }
+}`
+
+// CD function messages.
+const (
+	MsgCDFuncInstalled = "Installed 'gcd' shell function — restart your terminal or source your profile\n"
+	MsgCDFuncAlready   = "Shell function 'gcd' already installed\n"
+)
