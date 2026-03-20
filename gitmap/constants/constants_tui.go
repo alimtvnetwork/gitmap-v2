@@ -28,6 +28,7 @@ const (
 	TUIViewActions   = "Actions"
 	TUIViewGroups    = "Groups"
 	TUIViewDashboard = "Status"
+	TUIViewReleases  = "Releases"
 	TUIViewZipGroups = "Zip Groups"
 	TUIViewAliases   = "Aliases"
 )
