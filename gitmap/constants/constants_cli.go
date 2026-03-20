@@ -58,6 +58,8 @@ const (
 	CmdCompletionAlias     = "cmp"
 	CmdClearReleaseJSON      = "clear-release-json"
 	CmdClearReleaseJSONAlias = "crj"
+	CmdDocs                  = "docs"
+	CmdDocsAlias             = "d"
 )
 
 // Clone shorthands.
