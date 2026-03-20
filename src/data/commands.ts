@@ -863,4 +863,17 @@ export const commands: CommandDef[] = [
       { name: "exec", description: "CLI batch execution" },
     ],
   },
+  {
+    category: "utilities",
+    name: "docs", alias: "d", description: "Open the gitmap documentation website in the default browser",
+    usage: "gitmap docs",
+    examples: [
+      { command: "gitmap docs", description: "Open docs in browser" },
+      { command: "gitmap d", description: "Open docs (short alias)" },
+    ],
+    seeAlso: [
+      { name: "help", description: "Show CLI usage summary" },
+      { name: "version", description: "Show installed version" },
+    ],
+  },
 ];
