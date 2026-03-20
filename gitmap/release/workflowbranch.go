@@ -68,7 +68,7 @@ func completeBranchRelease(v Version, branchName, assetsPath, notes string, draf
 	}
 	fmt.Printf(constants.MsgReleaseTag, tag)
 
-	opts := Options{Assets: assetsPath, Draft: draft}
+	opts := Options{Assets: assetsPath, Notes: notes, Draft: draft}
 
 	err = pushAndFinalize(v, branchName, tag, branchName, opts)
 	if err != nil {
