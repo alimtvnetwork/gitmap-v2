@@ -56,6 +56,13 @@ const (
 	ErrUnknownGroupSub = "Unknown group subcommand: %s\n"
 )
 
+// Docs command.
+const (
+	DocsURL        = "https://gitmap.dev/docs"
+	MsgDocsOpened  = "  ✓ Opened %s\n"
+	ErrDocsOpen    = "  ✗ Failed to open browser: %v\n"
+)
+
 // Version display.
 const MsgVersionFmt = "gitmap v%s\n"
 
