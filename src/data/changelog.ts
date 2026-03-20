@@ -24,6 +24,7 @@ export const changelog: ChangelogEntry[] = [
     ],
   },
   {
+    version: "v2.21.0",
     items: [
       "Bumped compiled version constant to v2.21.0.",
       "Refactored `assetsupload.go` into three focused files: `githubapi.go`, `assetsupload.go`, `remoteorigin.go`.",
