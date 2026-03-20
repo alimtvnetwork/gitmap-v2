@@ -240,24 +240,6 @@ func executeSteps(v Version, branchName, tag, sourceRef, sourceName string, opts
 	return pushAndFinalize(v, branchName, tag, sourceName, opts)
 }
 
-// commitReleaseMeta stages and commits .release/ metadata on the current branch.
-func commitReleaseMeta(v Version) error {
-	metaPath := filepath.Join(constants.DefaultReleaseDir, v.String()+constants.ExtJSON)
-	latestPath := filepath.Join(constants.DefaultReleaseDir, constants.DefaultLatestFile)
-
-	files := []string{metaPath}
-	if _, err := os.Stat(latestPath); err == nil {
-		files = append(files, latestPath)
-	}
-
-	err := stageFiles(files)
-	if err != nil {
-		return err
-	}
-
-	return commitStaged(fmt.Sprintf(constants.AutoCommitMsgFmt, v.String()))
-}
-
 // resolveTagMessage returns the tag annotation message, using notes if provided.
 func resolveTagMessage(tag string, opts Options) string {
 	if len(opts.Notes) > 0 {
