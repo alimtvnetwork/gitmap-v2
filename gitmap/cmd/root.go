@@ -167,6 +167,11 @@ func dispatchUtility(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdDocs || command == constants.CmdDocsAlias {
+		runDocs(os.Args[2:])
+
+		return true
+	}
 
 	return dispatchMisc(command)
 }
