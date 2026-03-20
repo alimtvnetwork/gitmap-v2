@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.23.0
+- Bumped compiled version constant to v2.23.0.
+- Added `--notes` / `-N` flag to `release-branch` and `release-pending` commands, matching the `release` command.
+- Updated docs site Release page with metadata-first workflow diagram, release notes feature card, and `--notes` flag documentation.
+
 ## v2.22.0
 - Bumped compiled version constant to v2.22.0.
 - Persisted zip group metadata in `.release/vX.Y.Z.json` via new `zipGroups` field on `ReleaseMeta`.
