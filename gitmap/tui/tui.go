@@ -127,6 +127,11 @@ func (m rootModel) updateActiveView(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.dashboard = dm
 
 		return m, cmd
+	case viewReleases:
+		rm, cmd := m.releases.Update(msg)
+		m.releases = rm
+
+		return m, cmd
 	case viewZipGroups:
 		zm, cmd := m.zipGroups.Update(msg)
 		m.zipGroups = zm
