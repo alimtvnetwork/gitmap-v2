@@ -193,23 +193,27 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 		return err
 	}
 
-	// Step 1: Write metadata JSON on the current branch before branching.
-	err := writeMetadata(v, branchName, tag, sourceName, nil, opts)
+	// Step 1: Create the release branch, tag, push, and finalize assets.
+	err := executeSteps(v, branchName, tag, sourceRef, sourceName, opts)
 	if err != nil {
 		return err
 	}
 
-	// Step 2: Create the release branch, commit metadata, tag, push.
-	err = executeSteps(v, branchName, tag, sourceRef, sourceName, opts)
-	if err != nil {
-		return err
-	}
-
+	// Step 2: Return to the original branch.
 	err = returnToBranch(originalBranch)
 	if err != nil {
 		return err
 	}
 
+	// Step 3: Write metadata JSON on the original branch (picked up by auto-commit).
+	if !opts.SkipMeta {
+		err = writeMetadata(v, branchName, tag, sourceName, nil, opts)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Step 4: Auto-commit the .release/ metadata files.
 	if !opts.NoCommit {
 		AutoCommit(v.String(), false)
 	} else {
@@ -227,13 +231,6 @@ func executeSteps(v Version, branchName, tag, sourceRef, sourceName string, opts
 	}
 	fmt.Printf(constants.MsgReleaseBranch, branchName)
 
-	// Commit the release metadata JSON on the release branch.
-	err = commitReleaseMeta(v)
-	if err != nil {
-		return fmt.Errorf("commit release metadata: %w", err)
-	}
-	fmt.Printf(constants.MsgReleaseMetaCommitted, branchName)
-
 	err = CreateTag(tag, resolveTagMessage(tag, opts))
 	if err != nil {
 		return fmt.Errorf("create tag: %w", err)
@@ -241,24 +238,6 @@ func executeSteps(v Version, branchName, tag, sourceRef, sourceName string, opts
 	fmt.Printf(constants.MsgReleaseTag, tag)
 
 	return pushAndFinalize(v, branchName, tag, sourceName, opts)
-}
-
-// commitReleaseMeta stages and commits .release/ metadata on the current branch.
-func commitReleaseMeta(v Version) error {
-	metaPath := filepath.Join(constants.DefaultReleaseDir, v.String()+constants.ExtJSON)
-	latestPath := filepath.Join(constants.DefaultReleaseDir, constants.DefaultLatestFile)
-
-	files := []string{metaPath}
-	if _, err := os.Stat(latestPath); err == nil {
-		files = append(files, latestPath)
-	}
-
-	err := stageFiles(files)
-	if err != nil {
-		return err
-	}
-
-	return commitStaged(fmt.Sprintf(constants.AutoCommitMsgFmt, v.String()))
 }
 
 // resolveTagMessage returns the tag annotation message, using notes if provided.

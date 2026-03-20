@@ -5,6 +5,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.24.0",
+    items: [
+      "Bumped compiled version constant to v2.24.0.",
+      "Moved release metadata writing from the release branch to the original branch.",
+      "Auto-commit now handles `.release/` files after returning to the original branch.",
+      "Removed `commitReleaseMeta` step from the release branch workflow.",
+      "Simplified `pushAndFinalize` to complete without metadata writes.",
+    ],
+  },
+  {
     version: "v2.23.0",
     items: [
       "Bumped compiled version constant to v2.23.0.",

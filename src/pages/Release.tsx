@@ -133,17 +133,17 @@ const ReleasePage = () => {
               "2. Pad partial version to full semver",
               "3. Check .release/ and git tags for duplicates",
               "4. Resolve source commit (--commit / --branch / HEAD)",
-              "5. Write .release/vX.Y.Z.json metadata on the current branch",
-              "6. Create/switch to branch release/vX.Y.Z, commit metadata",
-              "7. Create git tag vX.Y.Z (annotated with --notes if provided)",
-              "8. Push branch + tag to origin",
-              "8a. Cross-compile Go binaries (if go.mod detected)",
-              "8a′. Resolve and compress zip groups / ad-hoc -Z items",
-              "8b. Compress assets (.zip/.tar.gz) if --compress",
-              "8c. Generate checksums.txt if --checksums",
-              "8d. Upload assets to GitHub Releases API",
-              "9. Return to original branch, auto-commit release metadata",
-              "10. Update .release/latest.json (if highest stable)",
+              "5. Create/switch to branch release/vX.Y.Z",
+              "6. Create git tag vX.Y.Z (annotated with --notes if provided)",
+              "7. Push branch + tag to origin",
+              "7a. Cross-compile Go binaries (if go.mod detected)",
+              "7a′. Resolve and compress zip groups / ad-hoc -Z items",
+              "7b. Compress assets (.zip/.tar.gz) if --compress",
+              "7c. Generate checksums.txt if --checksums",
+              "7d. Upload assets to GitHub Releases API",
+              "8. Return to original branch",
+              "9. Write .release/vX.Y.Z.json + update latest.json on original branch",
+              "10. Auto-commit .release/ metadata files",
             ].map((step) => (
               <p key={step} className="text-foreground/80 pl-2">{step}</p>
             ))}
@@ -164,7 +164,7 @@ const ReleasePage = () => {
             ))}
             <div className="mt-3 pt-3 border-t border-border/50">
               <p className="text-muted-foreground text-xs">
-                <span className="text-primary font-semibold">Note:</span> Steps 5–6 from the release command (metadata write + commit) are skipped.
+                <span className="text-primary font-semibold">Note:</span> Steps 9–10 from the release command (metadata write + auto-commit) are skipped.
                 These commands process existing branches/metadata — they only tag, push, and upload.
               </p>
             </div>

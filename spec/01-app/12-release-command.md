@@ -249,13 +249,13 @@ failed step so the user knows exactly what to clean up.
  3. Check .release/ and git tags for duplicates
  3a. If orphaned metadata detected → prompt to remove and continue
  4. Resolve source commit (--commit / --branch / HEAD)
- 5. Write .release/vX.Y.Z.json metadata on the current branch
- 6. Create branch release/vX.Y.Z, commit metadata files
- 7. Create git tag vX.Y.Z (annotated with --notes if provided)
- 8. Push branch + tag to origin
- 9. Collect --assets contents, cross-compile, upload
-10. Return to original branch, auto-commit release metadata
-11. Update .release/latest.json if highest stable version
+ 5. Create branch release/vX.Y.Z
+ 6. Create git tag vX.Y.Z (annotated with --notes if provided)
+ 7. Push branch + tag to origin
+ 8. Collect --assets contents, cross-compile, upload
+ 9. Return to original branch
+10. Write .release/vX.Y.Z.json + update latest.json on original branch
+11. Auto-commit .release/ metadata files
 ```
 
 ## Workflow: Release from Existing Branch

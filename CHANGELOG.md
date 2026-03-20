@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.24.0
+- Bumped compiled version constant to v2.24.0.
+- Moved release metadata writing from the release branch to the original branch, letting auto-commit handle `.release/` files after returning.
+- Removed `commitReleaseMeta` step from the release branch workflow; the release branch now only contains the branch, tag, and push.
+- Simplified `pushAndFinalize` to always complete without metadata writes (metadata is now the caller's responsibility).
+
 ## v2.23.0
 - Bumped compiled version constant to v2.23.0.
 - Added `--notes` / `-N` flag to `release-branch` and `release-pending` commands, matching the `release` command.
