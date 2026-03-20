@@ -36,12 +36,10 @@ const releaseFlags = [
 
 const branchFlags = [
   { flag: "--assets <path>", description: "Directory or file to record" },
+  { flag: "--notes <text> / -N", description: "Release notes or title for the release" },
   { flag: "--draft", description: "Mark release metadata as draft" },
   { flag: "--dry-run", description: "Preview steps without executing" },
-  { flag: "--compress", description: "Wrap assets in .zip/.tar.gz" },
-  { flag: "--checksums", description: "Generate SHA256 checksums.txt" },
-  { flag: "--no-assets", description: "Skip Go binary compilation" },
-  { flag: "--targets <list>", description: "Custom cross-compile targets" },
+  { flag: "--no-commit", description: "Skip post-release auto-commit and push" },
   { flag: "--verbose", description: "Write detailed debug log" },
 ];
 
