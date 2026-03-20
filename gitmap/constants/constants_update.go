@@ -80,6 +80,11 @@ Write-Host "  Version before:   $activeBefore" -ForegroundColor DarkGray
 Write-Host "  Version active:   $activeAfter" -ForegroundColor DarkGray
 Write-Host "  Version deployed: $deployedAfter" -ForegroundColor DarkGray
 
+$lastReleaseScript = Join-Path "%s" "gitmap" "scripts" "Get-LastRelease.ps1"
+if (Test-Path $lastReleaseScript) {
+    & $lastReleaseScript -BinaryPath $activeBinary -RepoRoot "%s"
+}
+
 if (($activeAfter -eq "unknown") -or ($deployedAfter -eq "unknown") -or ($activeAfter -ne $deployedAfter)) {
     Write-Host "  [FAIL] Active PATH version does not match deployed version." -ForegroundColor Red
     exit 1
