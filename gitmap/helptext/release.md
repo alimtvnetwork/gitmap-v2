@@ -114,18 +114,19 @@ Answering `n` (or pressing Enter) aborts the release.
     Uploading to GitHub... done
     ✓ Released v3.0.0
 
-### Example 5: Ad-hoc zip with bundle
+### Example 5: Release with notes
 
-    gitmap release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip
+    gitmap release --bump patch -N 'Hotfix for auth timeout'
 
 **Output:**
 
-    Creating branch release/v3.0.0... done
-    Creating tag v3.0.0... done
+    v2.21.0 → v2.21.1
+    → Release notes: Hotfix for auth timeout
+    Creating branch release/v2.21.1... done
+    Creating tag v2.21.1... done
     Pushing branch and tag... done
-    ✓ Compressed 2 items → docs.zip
-    Uploading to GitHub... done
-    ✓ Released v3.0.0
+    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Released v2.21.1
 
 ### Example 6: Release as a draft from a specific branch
 
