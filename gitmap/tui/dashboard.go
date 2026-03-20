@@ -1,7 +1,6 @@
 package tui
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -13,12 +12,15 @@ import (
 
 // statusEntry holds computed git status for one repo.
 type statusEntry struct {
-	Slug   string
-	Branch string
-	Status string
-	Ahead  int
-	Behind int
-	Stash  int
+	Slug      string
+	Branch    string
+	Status    string
+	Ahead     int
+	Behind    int
+	Stash     int
+	Untracked int
+	Modified  int
+	Staged    int
 }
 
 // refreshMsg carries freshly computed statuses.
@@ -30,11 +32,11 @@ type refreshMsg struct {
 type tickMsg struct{}
 
 type dashboardModel struct {
-	repos      []model.ScanRecord
-	entries    []statusEntry
-	cursor     int
-	loading    bool
-	interval   time.Duration
+	repos    []model.ScanRecord
+	entries  []statusEntry
+	cursor   int
+	loading  bool
+	interval time.Duration
 }
 
 func newDashboardModel(repos []model.ScanRecord, refreshSec int) dashboardModel {
@@ -62,12 +64,15 @@ func refreshStatuses(repos []model.ScanRecord) tea.Cmd {
 		for _, r := range repos {
 			rs := gitutil.Status(r.AbsolutePath)
 			entries = append(entries, statusEntry{
-				Slug:   r.Slug,
-				Branch: rs.Branch,
-				Status: statusLabel(rs.Dirty, rs.Unreachable),
-				Ahead:  rs.Ahead,
-				Behind: rs.Behind,
-				Stash:  rs.StashCount,
+				Slug:      r.Slug,
+				Branch:    rs.Branch,
+				Status:    statusLabel(rs.Dirty, rs.Unreachable),
+				Ahead:     rs.Ahead,
+				Behind:    rs.Behind,
+				Stash:     rs.StashCount,
+				Untracked: rs.Untracked,
+				Modified:  rs.Modified,
+				Staged:    rs.Staged,
 			})
 		}
 
@@ -142,15 +147,11 @@ func (m dashboardModel) View() string {
 
 	var b strings.Builder
 
-	header := fmt.Sprintf("  %-4s %-20s %-12s %-8s %-6s %-6s %-6s",
-		"", constants.TUIColSlug, constants.TUIColBranch,
-		constants.TUIColStatus, constants.TUIColAhead,
-		constants.TUIColBehind, constants.TUIColStash)
-	b.WriteString(styleHeader.Render(header))
+	b.WriteString(styleHeader.Render(dashHeader()))
 	b.WriteString("\n")
 
 	for i, e := range m.entries {
-		line := m.formatRow(e)
+		line := formatDashRow(e)
 		if i == m.cursor {
 			b.WriteString(styleCursorRow.Render("> " + line))
 		} else {
@@ -160,54 +161,7 @@ func (m dashboardModel) View() string {
 	}
 
 	b.WriteString("\n")
-	b.WriteString(styleHint.Render(m.summaryLine()))
+	b.WriteString(styleHint.Render(dashSummary(m.entries)))
 
 	return b.String()
-}
-
-func (m dashboardModel) formatRow(e statusEntry) string {
-	styledStatus := formatStatus(e.Status)
-
-	return fmt.Sprintf("%-20s %-12s %-8s %-6s %-6s %-6s",
-		e.Slug, e.Branch, styledStatus,
-		formatCount(e.Ahead), formatCount(e.Behind), formatCount(e.Stash))
-}
-
-func formatStatus(status string) string {
-	switch status {
-	case "dirty":
-		return styleDirty.Render("dirty")
-	case "error":
-		return styleDirty.Render("error")
-	default:
-		return styleClean.Render("clean")
-	}
-}
-
-func formatCount(n int) string {
-	if n == 0 {
-		return "-"
-	}
-
-	return fmt.Sprintf("%d", n)
-}
-
-func (m dashboardModel) summaryLine() string {
-	dirty, behind, stash := 0, 0, 0
-	for _, e := range m.entries {
-		if e.Status == "dirty" {
-			dirty++
-		}
-		if e.Behind > 0 {
-			behind++
-		}
-		if e.Stash > 0 {
-			stash++
-		}
-	}
-
-	ts := time.Now().UTC().Format("15:04:05")
-
-	return fmt.Sprintf("  %d repos  •  %d dirty  •  %d behind  •  %d stash  •  %s UTC  •  r: refresh",
-		len(m.entries), dirty, behind, stash, ts)
 }
