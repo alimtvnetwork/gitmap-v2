@@ -47,6 +47,12 @@ const VIEWS = [
     description: "Live-refreshing dashboard showing git status for all tracked repositories.",
     features: ["Dirty/clean indicators", "Branch ahead/behind counts", "Stash count per repo", "Configurable auto-refresh interval"],
   },
+  {
+    name: "Releases",
+    icon: "🏷️",
+    description: "Browse release history stored in the database with detail view for each version.",
+    features: ["Version, tag, branch, date columns", "Detail view with changelog and notes", "Draft and pre-release indicators", "Refresh from database"],
+  },
 ];
 
 const InteractiveTUI = () => {
