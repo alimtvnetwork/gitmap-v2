@@ -53,7 +53,7 @@ func validateExistingBranch(branchName string, v Version) error {
 }
 
 // completeBranchRelease checks out the branch and runs tag/push/release.
-func completeBranchRelease(v Version, branchName, assetsPath string, draft bool, noCommit bool) error {
+func completeBranchRelease(v Version, branchName, assetsPath, notes string, draft bool, noCommit bool) error {
 	originalBranch, _ := CurrentBranchName()
 
 	err := CheckoutBranch(branchName)
