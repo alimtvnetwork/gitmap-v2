@@ -91,7 +91,7 @@ func completeBranchRelease(v Version, branchName, assetsPath, notes string, draf
 
 // ExecutePending finds all release branches without tags and releases them.
 // Also discovers unreleased versions from .release/v*.json metadata files.
-func ExecutePending(assetsPath string, draft bool, dryRun bool, noCommit bool) error {
+func ExecutePending(assetsPath, notes string, draft bool, dryRun bool, noCommit bool) error {
 	branches, err := listReleaseBranches()
 	if err != nil {
 		return fmt.Errorf("could not list release branches: %w", err)
