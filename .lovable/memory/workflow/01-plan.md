@@ -70,6 +70,28 @@
 - ✅ Issue post-mortem: `.lovable/memory/issues/04-database-path-resolution.md`
 - ✅ Spec update: `spec/01-app/16-database.md` updated with binary-relative path
 
+### v2.17.0 → v2.23.0
+- ✅ Enhanced group management (scoped commands, multi-group operations)
+- ✅ `gomod` command for Go module rename/replace operations
+- ✅ `diff-profiles` command for comparing scan profiles
+- ✅ `watch` command for live repository monitoring
+- ✅ `zip-group` command with Level 9 Deflate compression
+- ✅ `alias` command with global `-A` flag resolution across pull, exec, status, cd
+- ✅ Enriched CLI help with terminal simulations, standardized headers, 3-example limits
+- ✅ Documentation site expansion with dedicated spec pages and reciprocal See Also navigation
+- ✅ Unit/integration tests: location resolution, remote origin parsing, alias CRUD, SEO write
+- ✅ Shell completion and cross-platform build parity
+
+### v2.24.0 — Release Workflow Restructure
+- ✅ Metadata committed on original branch: release branch only contains code and tags
+- ✅ Verified 10-step release sequence: resolve → pad → check → source → branch → tag → push/assets → return → metadata → auto-commit
+- ✅ `release-branch` and `release-pending` skip metadata steps 9–10
+- ✅ `--notes` / `-N` flag for custom release titles, persisted in DB and JSON
+- ✅ `--no-commit` flag to skip post-release auto-commit
+- ✅ `--skip-meta` flag to bypass metadata writing
+- ✅ Dry-run integration tests validating workflow step order
+- ✅ TUI expanded to 6 views: Repos, Actions, Groups, Status, Zip Groups, Aliases
+
 ## Pending Work
 
 - ⬜ **Wire real git status** into TUI dashboard (dirty/clean, ahead/behind via gitutil)
