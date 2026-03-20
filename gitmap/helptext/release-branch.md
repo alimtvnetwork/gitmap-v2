@@ -8,13 +8,14 @@ rb
 
 ## Usage
 
-    gitmap release-branch [version] [--bump major|minor|patch]
+    gitmap release-branch [version] [--bump major|minor|patch] [--notes "text"]
 
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | --bump major\|minor\|patch | — | Auto-increment version |
+| --notes, -N | (none) | Release notes or title for the release |
 | --no-commit | false | Skip post-release auto-commit and push |
 
 ## Prerequisites

@@ -10,13 +10,14 @@ rp
 
 ## Usage
 
-    gitmap release-pending [--assets <path>] [--draft] [--dry-run] [--verbose]
+    gitmap release-pending [--assets <path>] [--notes "text"] [--draft] [--dry-run] [--verbose]
 
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | --assets | (none) | Directory or file to attach to each release |
+| --notes, -N | (none) | Release notes or title for the release |
 | --draft | false | Mark releases as drafts |
 | --dry-run | false | Preview without executing |
 | --verbose | false | Detailed output |
