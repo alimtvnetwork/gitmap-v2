@@ -2,6 +2,7 @@
 package gitutil
 
 import (
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
