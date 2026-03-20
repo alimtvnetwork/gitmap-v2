@@ -44,8 +44,13 @@ branch/tag exists:
 4. Checkout the branch.
 5. Create tag `vX.Y.Z`.
 6. Push branch and tag to origin.
-7. Update release metadata (overwrite the existing JSON with updated fields).
-8. Update `latest.json` if applicable.
+
+**Important:** `release-pending` (and `release-branch`) **skip**
+writing `.release/` metadata JSON files and committing them. These
+commands process already-existing branches or metadata — they only
+create the tag, push, and optionally upload assets. The `.release/`
+JSON writing and committing is exclusive to the primary `release`
+command's metadata-first workflow.
 
 If the commit SHA is missing or invalid, skip the version with a
 warning and continue processing remaining candidates.

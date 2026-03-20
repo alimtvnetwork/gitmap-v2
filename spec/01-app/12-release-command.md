@@ -59,8 +59,10 @@ for the full metadata-based discovery spec.
 | Flag               | Description                         | Default |
 |--------------------|-------------------------------------|---------|
 | `--assets <path>`  | Directory or file to record         | (none)  |
+| `--notes <text>` / `-N` | Release notes or title         | (none)  |
 | `--draft`          | Mark release metadata as draft      | `false` |
 | `--dry-run`        | Preview steps without executing     | `false` |
+| `--no-commit`      | Skip post-release auto-commit       | `false` |
 | `--verbose`        | Write detailed debug log            | `false` |
 
 ### Release-Pending Flags
@@ -68,8 +70,10 @@ for the full metadata-based discovery spec.
 | Flag               | Description                              | Default |
 |--------------------|------------------------------------------|---------|
 | `--assets <path>`  | Directory or file to record              | (none)  |
+| `--notes <text>` / `-N` | Release notes or title              | (none)  |
 | `--draft`          | Mark release metadata as draft           | `false` |
 | `--dry-run`        | Preview steps without executing          | `false` |
+| `--no-commit`      | Skip post-release auto-commit            | `false` |
 | `--verbose`        | Write detailed debug log                 | `false` |
 
 ---
