@@ -164,7 +164,7 @@ const ReleasePage = () => {
             ))}
             <div className="mt-3 pt-3 border-t border-border/50">
               <p className="text-muted-foreground text-xs">
-                <span className="text-primary font-semibold">Note:</span> Steps 5–6 from the release command (metadata write + commit) are skipped.
+                <span className="text-primary font-semibold">Note:</span> Steps 9–10 from the release command (metadata write + auto-commit) are skipped.
                 These commands process existing branches/metadata — they only tag, push, and upload.
               </p>
             </div>
