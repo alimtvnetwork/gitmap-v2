@@ -48,17 +48,18 @@ rb
     Switched to branch 'release/v3.0.0'
     → Ready to finalize: gitmap release v3.0.0
 
-### Example 3: Release branch with major bump
+### Example 3: Release branch with notes
 
-    gitmap release-branch --bump major
+    gitmap rb --bump minor -N 'Sprint 12 improvements'
 
 **Output:**
 
     Current version: v2.22.0
-    v2.22.0 → v3.0.0
-    Creating branch release/v3.0.0... done
-    Pushing release/v3.0.0 to origin... done
-    Switched to branch 'release/v3.0.0'
+    v2.22.0 → v2.23.0
+    → Release notes: Sprint 12 improvements
+    Creating branch release/v2.23.0... done
+    Pushing release/v2.23.0 to origin... done
+    Switched to branch 'release/v2.23.0'
 
 ## See Also
 
