@@ -82,6 +82,12 @@ func dispatchCore(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdHasAnyUpdates || command == constants.CmdHasAnyUpdatesAlias ||
+		command == constants.CmdHasAnyChanges || command == constants.CmdHasAnyChangesAlias {
+		runHasAnyUpdates(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
