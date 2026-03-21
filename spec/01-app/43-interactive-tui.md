@@ -99,7 +99,7 @@ gitmap/tui/
 └── styles.go        # Lipgloss style definitions
 ```
 
-All files under 200 lines.
+All files under 200 lines. View count: 8.
 
 ---
 
