@@ -95,6 +95,15 @@ func (db *DB) migrateNotesColumn() {
 	_, _ = db.conn.Exec(constants.SQLAddNotesColumn)
 }
 
+// migrateZipGroupItemPaths adds RepoPath, RelativePath, FullPath columns
+// to existing ZipGroupItems tables and copies Path into FullPath.
+func (db *DB) migrateZipGroupItemPaths() {
+	_, _ = db.conn.Exec(constants.SQLMigrateZGIRepoPath)
+	_, _ = db.conn.Exec(constants.SQLMigrateZGIRelativePath)
+	_, _ = db.conn.Exec(constants.SQLMigrateZGIFullPath)
+	_, _ = db.conn.Exec(constants.SQLMigrateZGICopyPath)
+}
+
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
