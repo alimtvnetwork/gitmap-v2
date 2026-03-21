@@ -735,7 +735,7 @@ Write-Success "All done!"
 Write-Host ""
 
 # -- Last release info -----------------------------------------
-$lastReleaseScript = Join-Path $RepoRoot "gitmap" "scripts" "Get-LastRelease.ps1"
+$lastReleaseScript = Join-Path (Join-Path (Join-Path $RepoRoot "gitmap") "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
     $lrBinary = $changelogBinaryPath
     & $lastReleaseScript -BinaryPath $lrBinary -RepoRoot $RepoRoot
