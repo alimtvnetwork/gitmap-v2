@@ -98,7 +98,7 @@
 - ✅ **Wire real git status** into TUI dashboard — unreachable detection, file counts, dashformat.go refactor
 - ✅ **TUI release view**: trigger releases, view release history, and inspect metadata from within the TUI
 - ✅ **TUI log viewer**: browse recent command history with detail view, duration formatting, and refresh
-- ⬜ **TUI log filtering**: filter logs by command name or exit code within the TUI
+- ✅ **TUI log filtering**: filter logs by command name, alias, args, or exit code within the TUI
 
 ### CLI Robustness
 - ⬜ **Partial failure rollback**: auto-cleanup branch/tag on push failure in the release workflow

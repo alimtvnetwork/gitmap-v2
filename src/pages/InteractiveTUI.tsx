@@ -20,6 +20,9 @@ const KEY_BINDINGS = [
   { key: "r", context: "Status", action: "Force refresh dashboard" },
   { key: "Enter", context: "Releases", action: "Toggle release detail view" },
   { key: "r", context: "Releases", action: "Refresh release list" },
+  { key: "/", context: "Logs", action: "Filter by command, alias, args, or exit code" },
+  { key: "Enter", context: "Logs", action: "Toggle log detail view" },
+  { key: "r", context: "Logs", action: "Refresh log list" },
 ];
 
 const VIEWS = [
