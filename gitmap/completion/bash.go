@@ -3,10 +3,11 @@ package completion
 // generateBash returns the Bash completion script.
 func generateBash() string {
 	return `_gitmap_completions() {
-    local cur prev cmd
+    local cur prev cmd sub
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     cmd="${COMP_WORDS[1]}"
+    sub="${COMP_WORDS[2]}"
 
     if [[ ${COMP_CWORD} -eq 1 ]]; then
         COMPREPLY=($(compgen -W "$(gitmap completion --list-commands)" -- "$cur"))
@@ -52,11 +53,17 @@ func generateBash() string {
             COMPREPLY=($(compgen -W "set remove list show suggest $(gitmap completion --list-aliases)" -- "$cur"))
             ;;
         zip-group|z)
-            COMPREPLY=($(compgen -W "create add remove list show delete rename $(gitmap completion --list-zip-groups)" -- "$cur"))
+            if [[ ${COMP_CWORD} -ge 3 ]] && [[ "$sub" == "add" || "$sub" == "show" || "$sub" == "delete" || "$sub" == "remove" || "$sub" == "rename" ]]; then
+                COMPREPLY=($(compgen -W "$(gitmap completion --list-zip-groups)" -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "create add remove list show delete rename $(gitmap completion --list-zip-groups)" -- "$cur"))
+            fi
             ;;
         *)
             if [[ "$prev" == "-A" || "$prev" == "--alias" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-aliases)" -- "$cur"))
+            elif [[ "$prev" == "--zip-group" ]]; then
+                COMPREPLY=($(compgen -W "$(gitmap completion --list-zip-groups)" -- "$cur"))
             fi
             ;;
     esac

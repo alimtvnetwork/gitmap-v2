@@ -7,6 +7,7 @@ func generatePowerShell() string {
     $elems = $commandAst.CommandElements | Select-Object -Skip 1
     $cmd = if ($elems.Count -gt 0) { $elems[0].ToString() } else { "" }
     $prev = if ($elems.Count -gt 1) { $elems[$elems.Count - 1].ToString() } else { "" }
+    $sub = if ($elems.Count -gt 1) { $elems[1].ToString() } else { "" }
 
     if ($cmd -eq "cd" -or $cmd -eq "go") {
         if ($prev -eq "--group" -or $prev -eq "-g") {
@@ -57,6 +58,11 @@ func generatePowerShell() string {
     }
 
     if ($cmd -eq "release" -or $cmd -eq "r") {
+        if ($prev -eq "--zip-group") {
+            gitmap completion --list-zip-groups | Where-Object { $_ -like "$wordToComplete*" } |
+                ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+            return
+        }
         $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--list-targets", "--verbose", "--zip-group", "-Z", "--bundle")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
@@ -80,6 +86,11 @@ func generatePowerShell() string {
     }
 
     if ($cmd -eq "zip-group" -or $cmd -eq "z") {
+        if ($sub -eq "add" -or $sub -eq "show" -or $sub -eq "delete" -or $sub -eq "remove" -or $sub -eq "rename") {
+            gitmap completion --list-zip-groups | Where-Object { $_ -like "$wordToComplete*" } |
+                ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+            return
+        }
         $subs = @("create", "add", "remove", "list", "show", "delete", "rename")
         $zgroups = @(gitmap completion --list-zip-groups)
         $items = $subs + $zgroups

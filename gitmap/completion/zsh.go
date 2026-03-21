@@ -70,15 +70,23 @@ _gitmap() {
             _describe 'subcommand' subs
             ;;
         zip-group|z)
-            local -a subs=(create add remove list show delete rename)
-            local -a zgroups=($(gitmap completion --list-zip-groups))
-            subs+=("${zgroups[@]}")
-            _describe 'subcommand' subs
+            if (( CURRENT >= 4 )) && [[ "${words[3]}" == "add" || "${words[3]}" == "show" || "${words[3]}" == "delete" || "${words[3]}" == "remove" || "${words[3]}" == "rename" ]]; then
+                local -a zgroups=($(gitmap completion --list-zip-groups))
+                _describe 'zip-group' zgroups
+            else
+                local -a subs=(create add remove list show delete rename)
+                local -a zgroups=($(gitmap completion --list-zip-groups))
+                subs+=("${zgroups[@]}")
+                _describe 'subcommand' subs
+            fi
             ;;
         *)
             if [[ "${words[CURRENT-1]}" == "-A" || "${words[CURRENT-1]}" == "--alias" ]]; then
                 local -a aliases=($(gitmap completion --list-aliases))
                 _describe 'alias' aliases
+            elif [[ "${words[CURRENT-1]}" == "--zip-group" ]]; then
+                local -a zgroups=($(gitmap completion --list-zip-groups))
+                _describe 'zip-group' zgroups
             fi
             ;;
     esac
