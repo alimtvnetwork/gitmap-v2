@@ -212,6 +212,8 @@ func (m rootModel) renderContent() string {
 		return m.zipGroups.View()
 	case viewAliases:
 		return m.aliases.View()
+	case viewLogs:
+		return m.logs.View()
 	}
 
 	return ""
