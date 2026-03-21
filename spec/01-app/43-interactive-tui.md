@@ -70,6 +70,14 @@ Browse release history from the database:
 - Draft / pre-release / latest indicators
 - `r` to refresh from database
 
+### 6. Logs
+
+Browse recent command history from the database:
+- Command, alias, args, duration, exit code, date columns
+- Enter to toggle detail view (flags, summary, repo count)
+- `r` to refresh from database
+- Shows duration in human-readable format (ms, s, m)
+
 ---
 
 ## Package Structure
@@ -81,11 +89,17 @@ gitmap/tui/
 ├── actions.go       # Batch action executor
 ├── groups.go        # Group management view
 ├── dashboard.go     # Live status dashboard
+├── releases.go      # Release history browser
+├── relformat.go     # Release formatting helpers
+├── logs.go          # Command history log viewer
+├── logformat.go     # Log formatting helpers
+├── zipgroups.go     # Zip group browser
+├── aliases.go       # Alias browser
 ├── keys.go          # Key bindings
 └── styles.go        # Lipgloss style definitions
 ```
 
-All files under 200 lines.
+All files under 200 lines. View count: 8.
 
 ---
 

@@ -31,6 +31,7 @@ const (
 	TUIViewReleases  = "Releases"
 	TUIViewZipGroups = "Zip Groups"
 	TUIViewAliases   = "Aliases"
+	TUIViewLogs      = "Logs"
 )
 
 // TUI status messages.
@@ -75,22 +76,33 @@ const (
 
 // TUI column headers.
 const (
-	TUIColSlug    = "Slug"
-	TUIColBranch  = "Branch"
-	TUIColPath    = "Path"
-	TUIColType    = "Type"
-	TUIColStatus  = "Status"
-	TUIColAhead   = "Ahead"
-	TUIColBehind  = "Behind"
-	TUIColStash   = "Stash"
-	TUIColGroup   = "Group"
-	TUIColMembers = "Members"
-	TUIColVersion = "Version"
-	TUIColTag     = "Tag"
-	TUIColDraft   = "Draft"
-	TUIColLatest  = "Latest"
-	TUIColSource  = "Source"
-	TUIColDate    = "Date"
+	TUIColSlug     = "Slug"
+	TUIColBranch   = "Branch"
+	TUIColPath     = "Path"
+	TUIColType     = "Type"
+	TUIColStatus   = "Status"
+	TUIColAhead    = "Ahead"
+	TUIColBehind   = "Behind"
+	TUIColStash    = "Stash"
+	TUIColGroup    = "Group"
+	TUIColMembers  = "Members"
+	TUIColVersion  = "Version"
+	TUIColTag      = "Tag"
+	TUIColDraft    = "Draft"
+	TUIColLatest   = "Latest"
+	TUIColSource   = "Source"
+	TUIColDate     = "Date"
+	TUIColCommand  = "Command"
+	TUIColAlias    = "Alias"
+	TUIColArgs     = "Args"
+	TUIColDuration = "Duration"
+	TUIColExit     = "Exit"
+)
+
+// TUI log messages.
+const (
+	TUILogEmpty = "No command history found. Run some gitmap commands first."
+	TUILogHint  = "enter: detail  r: refresh"
 )
 
 // TUI release messages.

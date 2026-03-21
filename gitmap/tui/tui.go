@@ -10,7 +10,7 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-const viewCount = 7
+const viewCount = 8
 
 // view indices.
 const (
@@ -21,6 +21,7 @@ const (
 	viewReleases  = 4
 	viewZipGroups = 5
 	viewAliases   = 6
+	viewLogs      = 7
 )
 
 // rootModel is the top-level Bubble Tea model.
@@ -38,6 +39,7 @@ type rootModel struct {
 	releases  releasesModel
 	zipGroups zipGroupsModel
 	aliases   aliasesModel
+	logs      logsModel
 	quitting  bool
 }
 
@@ -70,6 +72,7 @@ func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, 
 		releases:  newReleasesModel(db),
 		zipGroups: newZipGroupsModel(db),
 		aliases:   newAliasesModel(db),
+		logs:      newLogsModel(db),
 	}
 }
 
@@ -142,6 +145,11 @@ func (m rootModel) updateActiveView(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.aliases = am
 
 		return m, cmd
+	case viewLogs:
+		lm, cmd := m.logs.Update(msg)
+		m.logs = lm
+
+		return m, cmd
 	}
 
 	return m, nil
@@ -173,6 +181,7 @@ func (m rootModel) renderTabs() string {
 		constants.TUIViewReleases,
 		constants.TUIViewZipGroups,
 		constants.TUIViewAliases,
+		constants.TUIViewLogs,
 	}
 
 	var tabs []string
@@ -203,6 +212,8 @@ func (m rootModel) renderContent() string {
 		return m.zipGroups.View()
 	case viewAliases:
 		return m.aliases.View()
+	case viewLogs:
+		return m.logs.View()
 	}
 
 	return ""
@@ -226,6 +237,8 @@ func (m rootModel) renderStatusBar() string {
 		hints = append(hints, constants.TUIZGHint)
 	case viewAliases:
 		hints = append(hints, constants.TUIAliasHint)
+	case viewLogs:
+		hints = append(hints, constants.TUILogHint)
 	}
 
 	return styleStatusBar.Render(strings.Join(hints, "  │  "))
