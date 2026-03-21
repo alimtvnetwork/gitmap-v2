@@ -173,10 +173,15 @@ func createMaxCompressZip(archivePath string, items []model.ZipGroupItem) error 
 	})
 
 	for _, item := range items {
+		itemPath := item.FullPath
+		if len(itemPath) == 0 {
+			itemPath = item.Path
+		}
+
 		if item.IsFolder {
-			err = addFolderToZip(w, item.Path)
+			err = addFolderToZip(w, itemPath)
 		} else {
-			err = addSingleFileToZip(w, item.Path, filepath.Base(item.Path))
+			err = addSingleFileToZip(w, itemPath, filepath.Base(itemPath))
 		}
 
 		if err != nil {
