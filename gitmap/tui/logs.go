@@ -11,18 +11,22 @@ import (
 )
 
 type logsModel struct {
-	db      *store.DB
-	entries []model.CommandHistoryRecord
-	cursor  int
-	detail  bool
+	db        *store.DB
+	entries   []model.CommandHistoryRecord
+	filtered  []model.CommandHistoryRecord
+	cursor    int
+	detail    bool
+	searching bool
+	query     string
 }
 
 func newLogsModel(db *store.DB) logsModel {
 	entries, _ := db.ListHistory()
 
 	return logsModel{
-		db:      db,
-		entries: entries,
+		db:       db,
+		entries:  entries,
+		filtered: entries,
 	}
 }
 
@@ -32,12 +36,82 @@ func (m logsModel) Update(msg tea.Msg) (logsModel, tea.Cmd) {
 		return m, nil
 	}
 
+	if m.searching {
+		return m.updateSearch(keyMsg), nil
+	}
+
 	return m.handleKey(keyMsg), nil
 }
 
+func (m logsModel) updateSearch(msg tea.KeyMsg) logsModel {
+	switch msg.String() {
+	case "esc":
+		m.searching = false
+		m.query = ""
+		m.filtered = m.entries
+		m.cursor = 0
+	case "enter":
+		m.searching = false
+	case "backspace":
+		if len(m.query) > 0 {
+			m.query = m.query[:len(m.query)-1]
+			m.applyFilter()
+		}
+	default:
+		if len(msg.String()) == 1 {
+			m.query += msg.String()
+			m.applyFilter()
+		}
+	}
+
+	return m
+}
+
+func (m *logsModel) applyFilter() {
+	if m.query == "" {
+		m.filtered = m.entries
+		m.cursor = 0
+
+		return
+	}
+
+	q := strings.ToLower(m.query)
+	var results []model.CommandHistoryRecord
+
+	for _, e := range m.entries {
+		if matchesLogQuery(e, q) {
+			results = append(results, e)
+		}
+	}
+
+	m.filtered = results
+	m.cursor = 0
+}
+
+func matchesLogQuery(e model.CommandHistoryRecord, q string) bool {
+	if strings.Contains(strings.ToLower(e.Command), q) {
+		return true
+	}
+	if strings.Contains(strings.ToLower(e.Alias), q) {
+		return true
+	}
+	if strings.Contains(strings.ToLower(e.Args), q) {
+		return true
+	}
+	if strings.Contains(fmt.Sprintf("%d", e.ExitCode), q) {
+		return true
+	}
+
+	return false
+}
+
 func (m logsModel) handleKey(msg tea.KeyMsg) logsModel {
-	max := len(m.entries) - 1
+	max := len(m.filtered) - 1
 	if max < 0 {
+		if keys.search(msg) {
+			m.searching = true
+		}
+
 		return m
 	}
 
@@ -54,7 +128,9 @@ func (m logsModel) handleKey(msg tea.KeyMsg) logsModel {
 		m.detail = !m.detail
 	case keys.refresh(msg):
 		m.entries, _ = m.db.ListHistory()
-		m.cursor = 0
+		m.applyFilter()
+	case keys.search(msg):
+		m.searching = true
 	}
 
 	return m
@@ -65,7 +141,7 @@ func (m logsModel) View() string {
 		return styleHint.Render(constants.TUILogEmpty)
 	}
 
-	if m.detail && m.cursor < len(m.entries) {
+	if m.detail && m.cursor < len(m.filtered) {
 		return m.viewDetail()
 	}
 
@@ -75,6 +151,14 @@ func (m logsModel) View() string {
 func (m logsModel) viewList() string {
 	var b strings.Builder
 
+	if m.searching {
+		b.WriteString(styleSearchInput.Render(constants.TUISearchPrompt + m.query + "█"))
+		b.WriteString("\n")
+	} else if len(m.query) > 0 {
+		b.WriteString(styleHint.Render(fmt.Sprintf(constants.TUILogFilterActive, m.query, len(m.filtered))))
+		b.WriteString("\n")
+	}
+
 	header := fmt.Sprintf("  %-4s %-16s %-10s %-30s %-10s %-6s %s",
 		"", constants.TUIColCommand, constants.TUIColAlias,
 		constants.TUIColArgs, constants.TUIColDuration,
@@ -82,7 +166,12 @@ func (m logsModel) viewList() string {
 	b.WriteString(styleHeader.Render(header))
 	b.WriteString("\n")
 
-	for i, e := range m.entries {
+	if len(m.filtered) == 0 {
+		b.WriteString(styleHint.Render(constants.TUILogNoMatch))
+		b.WriteString("\n")
+	}
+
+	for i, e := range m.filtered {
 		line := formatLogRow(e)
 		if i == m.cursor {
 			b.WriteString(styleCursorRow.Render("> " + line))
@@ -93,13 +182,13 @@ func (m logsModel) viewList() string {
 	}
 
 	b.WriteString("\n")
-	b.WriteString(styleHint.Render(fmt.Sprintf("  %d log(s)  •  enter: detail  •  r: refresh", len(m.entries))))
+	b.WriteString(styleHint.Render(fmt.Sprintf("  %d log(s)  •  enter: detail  •  r: refresh  •  /: filter", len(m.filtered))))
 
 	return b.String()
 }
 
 func (m logsModel) viewDetail() string {
-	e := m.entries[m.cursor]
+	e := m.filtered[m.cursor]
 
 	var b strings.Builder
 	b.WriteString(styleGroupName.Render(fmt.Sprintf("  Command: %s", e.Command)))

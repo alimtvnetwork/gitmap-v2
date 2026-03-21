@@ -101,8 +101,10 @@ const (
 
 // TUI log messages.
 const (
-	TUILogEmpty = "No command history found. Run some gitmap commands first."
-	TUILogHint  = "enter: detail  r: refresh"
+	TUILogEmpty        = "No command history found. Run some gitmap commands first."
+	TUILogHint         = "enter: detail  r: refresh  /: filter"
+	TUILogFilterActive = "  Filter: %s (%d matches)"
+	TUILogNoMatch      = "  No logs match the current filter."
 )
 
 // TUI release messages.
