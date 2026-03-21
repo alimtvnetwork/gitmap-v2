@@ -4,99 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/store"
 )
-
-// runZipGroupCreate handles "zip-group create <name> [--archive <name>]".
-func runZipGroupCreate(args []string) {
-	name, archiveName := parseZipGroupCreateFlags(args)
-	if len(name) == 0 {
-		fmt.Fprintln(os.Stderr, constants.ErrZGEmpty)
-		os.Exit(1)
-	}
-	executeZipGroupCreate(name, archiveName)
-}
-
-// parseZipGroupCreateFlags parses flags for zip-group create.
-func parseZipGroupCreateFlags(args []string) (name, archive string) {
-	fs := flag.NewFlagSet(constants.SubCmdZGCreate, flag.ExitOnError)
-	archiveFlag := fs.String("archive", "", constants.FlagDescZGArchive)
-	fs.Parse(args)
-
-	if fs.NArg() > 0 {
-		name = fs.Arg(0)
-	}
-
-	return name, *archiveFlag
-}
-
-// executeZipGroupCreate opens the DB and creates the zip group.
-func executeZipGroupCreate(name, archiveName string) {
-	db, err := openDB()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
-		os.Exit(1)
-	}
-	defer db.Close()
-
-	_, err = db.CreateZipGroup(name, archiveName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
-		os.Exit(1)
-	}
-
-	fmt.Printf(constants.MsgZGCreated, name)
-	printHints(zipGroupCreateHints())
-}
-
-// runZipGroupAdd handles "zip-group add <group> <path...>".
-func runZipGroupAdd(args []string) {
-	if len(args) < 2 {
-		fmt.Fprintln(os.Stderr, constants.ErrZGEmpty)
-		os.Exit(1)
-	}
-
-	groupName := args[0]
-	paths := args[1:]
-
-	db, err := openDB()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrListDBFailed, err)
-		os.Exit(1)
-	}
-	defer db.Close()
-
-	for _, p := range paths {
-		addOneZipGroupItem(db, groupName, p)
-	}
-}
-
-// addOneZipGroupItem adds a single path to a zip group.
-func addOneZipGroupItem(db *store.DB, groupName, path string) {
-	isFolder := isDirectory(path)
-
-	err := db.AddZipGroupItem(groupName, path, isFolder)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
-
-		return
-	}
-
-	fmt.Printf(constants.MsgZGItemAdded, path, groupName)
-}
-
-// isDirectory checks if a path is a directory.
-func isDirectory(path string) bool {
-	info, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
-
-	return info.IsDir()
-}
 
 // runZipGroupRemove handles "zip-group remove <group> <path>".
 func runZipGroupRemove(args []string) {
@@ -106,7 +19,7 @@ func runZipGroupRemove(args []string) {
 	}
 
 	groupName := args[0]
-	path := args[1]
+	rawPath := args[1]
 
 	db, err := openDB()
 	if err != nil {
@@ -115,13 +28,17 @@ func runZipGroupRemove(args []string) {
 	}
 	defer db.Close()
 
-	err = db.RemoveZipGroupItem(groupName, path)
+	// Resolve to full path for matching.
+	_, _, fullPath, _, _ := resolveZipPath(rawPath)
+
+	err = db.RemoveZipGroupItem(groupName, fullPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}
 
-	fmt.Printf(constants.MsgZGItemRemoved, path, groupName)
+	fmt.Printf(constants.MsgZGItemRemoved, rawPath, groupName)
+	syncZipGroupJSON(db)
 }
 
 // runZipGroupList handles "zip-group list".
@@ -174,7 +91,7 @@ func runZipGroupShow(args []string) {
 	executeZipGroupShow(name)
 }
 
-// executeZipGroupShow opens the DB and displays group items.
+// executeZipGroupShow opens the DB and displays group items with dynamic expansion.
 func executeZipGroupShow(name string) {
 	db, err := openDB()
 	if err != nil {
@@ -193,15 +110,26 @@ func executeZipGroupShow(name string) {
 	printZipGroupShow(group, items)
 }
 
-// printZipGroupShow renders items in a zip group.
+// printZipGroupShow renders items in a zip group with dynamic folder expansion.
 func printZipGroupShow(group model.ZipGroup, items []model.ZipGroupItem) {
 	fmt.Printf(constants.MsgZGShowHeader, group.Name, len(items))
 
 	for _, item := range items {
 		if item.IsFolder {
-			fmt.Printf(constants.MsgZGShowFolder, item.Path)
+			fmt.Printf(constants.MsgZGShowFolder, item.RelativePath)
+			fmt.Printf(constants.MsgZGShowPaths, item.RepoPath, item.RelativePath, item.FullPath)
+
+			// Dynamically expand folder contents.
+			files := expandFolder(item.FullPath)
+			if len(files) > 0 {
+				fmt.Printf(constants.MsgZGShowExpanded, len(files))
+				for _, f := range files {
+					fmt.Printf(constants.MsgZGShowExpFile, f)
+				}
+			}
 		} else {
-			fmt.Printf(constants.MsgZGShowFile, item.Path)
+			fmt.Printf(constants.MsgZGShowFile, item.RelativePath)
+			fmt.Printf(constants.MsgZGShowPaths, item.RepoPath, item.RelativePath, item.FullPath)
 		}
 	}
 
@@ -210,6 +138,32 @@ func printZipGroupShow(group model.ZipGroup, items []model.ZipGroupItem) {
 	}
 
 	printHints(zipGroupShowHints())
+}
+
+// expandFolder returns relative file paths inside a folder for display.
+func expandFolder(folderPath string) []string {
+	var files []string
+
+	filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		rel, relErr := filepath.Rel(folderPath, path)
+		if relErr != nil {
+			rel = path
+		}
+
+		files = append(files, rel)
+
+		return nil
+	})
+
+	return files
 }
 
 // runZipGroupDelete handles "zip-group delete <name>".
@@ -235,6 +189,7 @@ func runZipGroupDelete(args []string) {
 	}
 
 	fmt.Printf(constants.MsgZGDeleted, name)
+	syncZipGroupJSON(db)
 }
 
 // runZipGroupRename handles "zip-group rename <group> --archive <name>".
@@ -280,5 +235,18 @@ func executeZipGroupRename(name, archiveName string) {
 	}
 
 	fmt.Printf(constants.MsgZGArchiveSet, archiveName, name)
+	syncZipGroupJSON(db)
 }
 
+// syncZipGroupJSON writes zip group data to .gitmap/zip-groups.json.
+func syncZipGroupJSON(db *store.DB) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return
+	}
+
+	err = db.WriteZipGroupsJSON(cwd)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrZGJSONWrite+"\n", err)
+	}
+}
