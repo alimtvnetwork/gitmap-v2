@@ -109,8 +109,8 @@ func (db *DB) UpdateZipGroupArchive(name, archiveName string) error {
 	return nil
 }
 
-// AddZipGroupItem adds a file or folder to a zip group.
-func (db *DB) AddZipGroupItem(groupName, path string, isFolder bool) error {
+// AddZipGroupItem adds a file or folder to a zip group with full path metadata.
+func (db *DB) AddZipGroupItem(groupName, repoPath, relativePath, fullPath string, isFolder bool) error {
 	g, err := db.FindZipGroupByName(groupName)
 	if err != nil {
 		return err
@@ -121,7 +121,7 @@ func (db *DB) AddZipGroupItem(groupName, path string, isFolder bool) error {
 		folderFlag = 1
 	}
 
-	_, err = db.conn.Exec(constants.SQLInsertZipGroupItem, g.ID, path, folderFlag)
+	_, err = db.conn.Exec(constants.SQLInsertZipGroupItem, g.ID, repoPath, relativePath, fullPath, folderFlag)
 	if err != nil {
 		return fmt.Errorf(constants.ErrZGAddItem, err)
 	}
@@ -130,13 +130,13 @@ func (db *DB) AddZipGroupItem(groupName, path string, isFolder bool) error {
 }
 
 // RemoveZipGroupItem removes a path from a zip group.
-func (db *DB) RemoveZipGroupItem(groupName, path string) error {
+func (db *DB) RemoveZipGroupItem(groupName, fullPath string) error {
 	g, err := db.FindZipGroupByName(groupName)
 	if err != nil {
 		return err
 	}
 
-	_, err = db.conn.Exec(constants.SQLDeleteZipGroupItem, g.ID, path)
+	_, err = db.conn.Exec(constants.SQLDeleteZipGroupItem, g.ID, fullPath)
 	if err != nil {
 		return fmt.Errorf(constants.ErrZGRemoveItem, err)
 	}
@@ -163,12 +163,13 @@ func (db *DB) ListZipGroupItems(groupName string) ([]model.ZipGroupItem, error) 
 		var item model.ZipGroupItem
 		var folderFlag int
 
-		err := rows.Scan(&item.GroupID, &item.Path, &folderFlag)
+		err := rows.Scan(&item.GroupID, &item.RepoPath, &item.RelativePath, &item.FullPath, &folderFlag)
 		if err != nil {
 			continue
 		}
 
 		item.IsFolder = folderFlag == 1
+		item.Path = item.FullPath
 		items = append(items, item)
 	}
 
