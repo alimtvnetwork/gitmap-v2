@@ -15,11 +15,11 @@ z
 
 | Subcommand | Description |
 |------------|-------------|
-| create     | Create a named zip group |
+| create     | Create a named zip group (optionally with paths) |
 | add        | Add files or folders to a group |
 | remove     | Remove an item from a group |
 | list       | List all zip groups |
-| show       | Show items in a group |
+| show       | Show items in a group (folders expanded dynamically) |
 | delete     | Delete a zip group |
 | rename     | Set a custom archive name for a group |
 
@@ -29,41 +29,63 @@ z
 |------|-------------|
 | --archive \<name\> | Custom output filename (used with create/rename) |
 
+## Path Resolution
+
+When adding paths, gitmap resolves them using:
+1. **Repo path** — current working directory
+2. **Relative path** — the path you provide
+3. **Full path** — repo path + relative path combined
+
+If the resolved path is a directory, only the folder reference is stored.
+Files within the folder are expanded at runtime during `show` and archive creation.
+
+## Storage
+
+Zip groups are persisted in two locations:
+1. **SQLite database** — primary storage with full metadata
+2. **.gitmap/zip-groups.json** — JSON mirror for version control
+
 ## Prerequisites
 
 - Must be inside a Git repository with release workflow configured (see release.md)
 
 ## Examples
 
-### Example 1: Create a group and add items
+### Example 1: Create a group with paths in one step
+
+    gitmap z create "chrome extension" chrome-extension/dist
+
+**Output:**
+
+    ✓ Added chrome-extension/dist to "chrome extension" (folder)
+    ✓ Created zip group "chrome extension" with 1 item(s)
+
+### Example 2: Create a group and add items separately
 
     gitmap z create docs-bundle
     gitmap z add docs-bundle ./README.md ./CHANGELOG.md ./docs/
 
 **Output:**
 
-    ✓ Zip group 'docs-bundle' created
+    ✓ Created zip group "docs-bundle"
 
-    Adding items to 'docs-bundle'...
-    ✓ Added ./README.md
-    ✓ Added ./CHANGELOG.md
-    ✓ Added ./docs/ (directory)
-    3 items in group 'docs-bundle'
+    ✓ Added ./README.md to "docs-bundle" (file)
+    ✓ Added ./CHANGELOG.md to "docs-bundle" (file)
+    ✓ Added ./docs/ to "docs-bundle" (folder)
 
-### Example 2: Create with custom archive name
+### Example 3: Create with custom archive name
 
     gitmap z create extras --archive extra-files.zip
     gitmap z add extras ./config/ ./scripts/deploy.sh
 
 **Output:**
 
-    ✓ Zip group 'extras' created (archive: extra-files.zip)
+    ✓ Created zip group "extras" (archive: extra-files.zip)
 
-    ✓ Added ./config/ (directory)
-    ✓ Added ./scripts/deploy.sh
-    2 items in group 'extras'
+    ✓ Added ./config/ to "extras" (folder)
+    ✓ Added ./scripts/deploy.sh to "extras" (file)
 
-### Example 3: List all zip groups
+### Example 4: List all zip groups
 
     gitmap z list
 
@@ -74,20 +96,29 @@ z
     extras          2       extra-files.zip
     2 zip groups defined
 
-### Example 4: Show items in a group
+### Example 5: Show items with dynamic folder expansion
 
     gitmap z show docs-bundle
 
 **Output:**
 
-    Zip group: docs-bundle
-    Archive:   docs-bundle.zip
-    Items (3):
-      ./README.md
-      ./CHANGELOG.md
-      ./docs/ (directory)
+    Zip group: docs-bundle (3 items):
 
-### Example 5: Use during release
+      📄 ./README.md
+        repo:     D:\projects\myapp
+        relative: ./README.md
+        full:     D:\projects\myapp\README.md
+      📁 ./docs/
+        repo:     D:\projects\myapp
+        relative: ./docs/
+        full:     D:\projects\myapp\docs
+        Contents (4 files):
+          getting-started.md
+          api-reference.md
+          faq.md
+          changelog.md
+
+### Example 6: Use during release
 
     gitmap release v3.0.0 --zip-group docs-bundle
 
@@ -95,19 +126,6 @@ z
 
     Creating tag v3.0.0... done
     ✓ Compressed docs-bundle → docs-bundle_v3.0.0.zip (3 items)
-    Uploading to GitHub... done
-    ✓ Released v3.0.0
-
-### Example 6: Ad-hoc zip with bundle
-
-    gitmap release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle reports.zip
-
-**Output:**
-
-    Creating tag v3.0.0... done
-    ✓ Compressed 2 items → reports.zip
-      ./dist/report.pdf
-      ./dist/manual.pdf
     Uploading to GitHub... done
     ✓ Released v3.0.0
 
