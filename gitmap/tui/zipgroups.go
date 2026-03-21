@@ -73,9 +73,9 @@ func (m zipGroupsModel) loadDetail() string {
 
 	for _, item := range items {
 		if item.IsFolder {
-			b.WriteString(fmt.Sprintf("    📁 %s\n", item.Path))
+			b.WriteString(fmt.Sprintf("    📁 %s\n", item.RelativePath))
 		} else {
-			b.WriteString(fmt.Sprintf("    📄 %s\n", item.Path))
+			b.WriteString(fmt.Sprintf("    📄 %s\n", item.RelativePath))
 		}
 	}
 

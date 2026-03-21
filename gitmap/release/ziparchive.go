@@ -259,7 +259,10 @@ func DryRunZipGroups(db *store.DB, groupNames []string) {
 
 		paths := make([]string, len(items))
 		for i, item := range items {
-			paths[i] = item.Path
+			paths[i] = item.FullPath
+			if len(paths[i]) == 0 {
+				paths[i] = item.Path
+			}
 		}
 
 		group, _ := db.FindZipGroupByName(name)
