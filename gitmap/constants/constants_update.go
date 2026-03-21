@@ -80,7 +80,7 @@ Write-Host "  Version before:   $activeBefore" -ForegroundColor DarkGray
 Write-Host "  Version active:   $activeAfter" -ForegroundColor DarkGray
 Write-Host "  Version deployed: $deployedAfter" -ForegroundColor DarkGray
 
-$lastReleaseScript = Join-Path "%s" "gitmap" "scripts" "Get-LastRelease.ps1"
+$lastReleaseScript = Join-Path (Join-Path (Join-Path "%s" "gitmap") "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
     & $lastReleaseScript -BinaryPath $activeBinary -RepoRoot "%s"
 }
