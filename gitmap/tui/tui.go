@@ -72,6 +72,7 @@ func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, 
 		releases:  newReleasesModel(db),
 		zipGroups: newZipGroupsModel(db),
 		aliases:   newAliasesModel(db),
+		logs:      newLogsModel(db),
 	}
 }
 
