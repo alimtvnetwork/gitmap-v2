@@ -181,6 +181,7 @@ func (m rootModel) renderTabs() string {
 		constants.TUIViewReleases,
 		constants.TUIViewZipGroups,
 		constants.TUIViewAliases,
+		constants.TUIViewLogs,
 	}
 
 	var tabs []string
