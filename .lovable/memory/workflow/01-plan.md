@@ -109,7 +109,7 @@
 ### New Commands & Features
 - ⬜ **`docs` command**: open the documentation website in the default browser from the CLI
 - ⬜ **`prune` command**: detect and clean up stale release branches with no matching tags
-- ⬜ **`changelog generate`**: auto-generate changelog entries from commit messages between tags
+- ✅ **`changelog generate`**: auto-generate changelog entries from commit messages between tags
 - ⬜ **Config validation**: `doctor` check that warns on invalid or deprecated `config.json` fields
 
 ### Testing Coverage

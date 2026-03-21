@@ -45,6 +45,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpReleaseBr)
 	fmt.Println(constants.HelpReleasePend)
 	fmt.Println(constants.HelpChangelog)
+	fmt.Println(constants.HelpChangelogGen)
 	fmt.Println(constants.HelpDoctor)
 	fmt.Println(constants.HelpLatestBr)
 	fmt.Println(constants.HelpList)

@@ -124,6 +124,11 @@ func dispatchRelease(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdChangelogGen || command == constants.CmdChangelogGenAlias {
+		runChangelogGen(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

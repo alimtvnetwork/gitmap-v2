@@ -18,6 +18,7 @@ import StatsPage from "./pages/Stats";
 import ProjectDetectionPage from "./pages/ProjectDetection";
 import GenericCLIPage from "./pages/GenericCLI";
 import ChangelogPage from "./pages/Changelog";
+import ChangelogGeneratePage from "./pages/ChangelogGenerate";
 import FlagReferencePage from "./pages/FlagReference";
 import InteractiveExamplesPage from "./pages/InteractiveExamples";
 import InteractiveTUIPage from "./pages/InteractiveTUI";
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/project-detection" element={<ProjectDetectionPage />} />
           <Route path="/generic-cli" element={<GenericCLIPage />} />
           <Route path="/changelog" element={<ChangelogPage />} />
+          <Route path="/changelog-generate" element={<ChangelogGeneratePage />} />
           <Route path="/flags" element={<FlagReferencePage />} />
           <Route path="/examples" element={<InteractiveExamplesPage />} />
           <Route path="/interactive" element={<InteractiveTUIPage />} />
