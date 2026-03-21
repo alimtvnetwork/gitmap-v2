@@ -80,6 +80,7 @@ func (db *DB) Migrate() error {
 
 	db.migrateSourceColumn()
 	db.migrateNotesColumn()
+	db.migrateZipGroupItemPaths()
 
 	return db.SeedProjectTypes()
 }
