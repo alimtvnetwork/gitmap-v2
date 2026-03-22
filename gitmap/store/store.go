@@ -154,8 +154,10 @@ func (db *DB) Reset() error {
 	return db.Migrate()
 }
 
-// Close closes the database connection.
+// Close closes the database connection and releases the lock.
 func (db *DB) Close() error {
+	releaseLock(db.dbDir)
+
 	return db.conn.Close()
 }
 
