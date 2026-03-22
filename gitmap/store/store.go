@@ -14,7 +14,8 @@ import (
 
 // DB wraps the SQLite database connection.
 type DB struct {
-	conn *sql.DB
+	conn   *sql.DB
+	dbDir  string
 }
 
 // Open creates or opens the SQLite database for the active profile.
