@@ -14,7 +14,8 @@ import (
 
 // DB wraps the SQLite database connection.
 type DB struct {
-	conn *sql.DB
+	conn   *sql.DB
+	dbDir  string
 }
 
 // Open creates or opens the SQLite database for the active profile.
@@ -35,16 +36,31 @@ func OpenProfile(outputDir, profileName string) (*DB, error) {
 
 // openDBAt opens a database at an exact path.
 func openDBAt(dbPath string) (*DB, error) {
-	if err := ensureDir(filepath.Dir(dbPath)); err != nil {
+	dbDir := filepath.Dir(dbPath)
+	if err := ensureDir(dbDir); err != nil {
 		return nil, fmt.Errorf(constants.ErrDBCreateDir, err)
+	}
+
+	if err := acquireLock(dbDir); err != nil {
+		return nil, err
 	}
 
 	conn, err := sql.Open("sqlite", dbPath)
 	if err != nil {
+		releaseLock(dbDir)
+
 		return nil, fmt.Errorf(constants.ErrDBOpen, err)
 	}
 
-	return &DB{conn: conn}, enableFK(conn)
+	err = enableFK(conn)
+	if err != nil {
+		conn.Close()
+		releaseLock(dbDir)
+
+		return nil, err
+	}
+
+	return &DB{conn: conn, dbDir: dbDir}, nil
 }
 
 // Migrate creates all required tables if they don't exist.
@@ -138,8 +154,10 @@ func (db *DB) Reset() error {
 	return db.Migrate()
 }
 
-// Close closes the database connection.
+// Close closes the database connection and releases the lock.
 func (db *DB) Close() error {
+	releaseLock(db.dbDir)
+
 	return db.conn.Close()
 }
 

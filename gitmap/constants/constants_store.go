@@ -6,6 +6,13 @@ const (
 	DBFile = "gitmap.db"
 )
 
+// Lock file.
+const (
+	LockFileName       = "gitmap.lock"
+	LockFilePermission = 0o644
+	ErrLockHeld        = "another gitmap process is running (PID %d).\n  If incorrect, delete: %s"
+)
+
 // Table names.
 const (
 	TableRepos     = "Repos"
