@@ -240,3 +240,13 @@ const (
 	RevertScriptLogExec     = "executing revert script: %s"
 	RevertScriptLogExit     = "revert script exited: err=%v"
 )
+
+// Network / offline detection.
+const (
+	NetworkProto      = "tcp"
+	NetworkCheckHost  = "github.com:443"
+	NetworkTimeoutSec = 5
+	ErrOffline        = "network unavailable — cannot reach github.com"
+	MsgOfflineWarning = "\n  ⚠ Network unavailable — cannot reach github.com.\n"
+	MsgOfflineHint    = "  Offline operations (scan, list, status, group) still work.\n"
+)
