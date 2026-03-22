@@ -48,6 +48,7 @@ func runClone(args []string) {
 		os.Exit(1)
 	}
 	initCloneVerbose(verboseMode)
+	requireOnline()
 	applySSHKey(sshKeyName)
 	source = resolveCloneShorthand(source)
 	executeClone(source, targetDir, safePull, ghDesktop)

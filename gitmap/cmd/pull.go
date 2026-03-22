@@ -18,6 +18,7 @@ import (
 // runPull handles the "pull" subcommand.
 func runPull(args []string) {
 	checkHelp("pull", args)
+	requireOnline()
 	slug, groupName, all, verboseMode := parsePullFlags(args)
 	if verboseMode {
 		initVerboseLog()

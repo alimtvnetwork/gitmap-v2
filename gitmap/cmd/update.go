@@ -15,6 +15,7 @@ import (
 // runUpdate handles the "update" subcommand.
 // It creates a handoff copy and runs a hidden worker command from that copy.
 func runUpdate() {
+	requireOnline()
 	repoPath := constants.RepoPath
 	if len(repoPath) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
