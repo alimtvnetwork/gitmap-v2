@@ -110,7 +110,19 @@ const (
 // TUI release messages.
 const (
 	TUIRelEmpty    = "No releases found. Use 'gitmap release' to create one."
-	TUIRelHint     = "enter: detail  r: refresh"
+	TUIRelHint     = "enter: detail  r: refresh  n: new release"
+)
+
+// TUI release trigger messages.
+const (
+	TUIRelTriggerTitle     = "  New Release"
+	TUIRelTriggerCmd       = "gitmap release %s"
+	TUIRelTriggerBumpCmd   = "gitmap release %s"
+	TUIRelTriggerNavHint   = "  ↑/↓: select  enter: confirm  esc: cancel"
+	TUIRelTriggerVerPrompt = "  Version: "
+	TUIRelTriggerTypeHint  = "  enter: confirm  esc: back"
+	TUIRelTriggerReady     = "  Release Command"
+	TUIRelTriggerRunHint   = "  Run this command in your terminal.  esc: back"
 )
 
 // TUI errors.
