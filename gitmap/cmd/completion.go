@@ -31,7 +31,7 @@ func hasListFlag(args []string) bool {
 	for _, a := range args {
 		if a == constants.CompListRepos || a == constants.CompListGroups ||
 			a == constants.CompListCommands || a == constants.CompListAliases ||
-			a == constants.CompListZipGroups {
+			a == constants.CompListZipGroups || a == constants.CompListSSHKeys {
 			return true
 		}
 	}
