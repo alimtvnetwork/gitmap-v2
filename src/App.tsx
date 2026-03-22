@@ -34,6 +34,7 @@ import ZipGroupPage from "./pages/ZipGroup";
 import AliasPage from "./pages/Alias";
 import SSHPage from "./pages/SSH";
 import PrunePage from "./pages/Prune";
+import DoctorPage from "./pages/Doctor";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ const App = () => (
           <Route path="/alias" element={<AliasPage />} />
           <Route path="/ssh" element={<SSHPage />} />
           <Route path="/prune" element={<PrunePage />} />
+          <Route path="/doctor" element={<DoctorPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

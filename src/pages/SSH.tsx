@@ -165,7 +165,10 @@ const SSHPage = () => (
                 { flag: "--path", short: "-p", desc: "Private key file path" },
                 { flag: "--email", short: "-e", desc: "Email comment for the key" },
                 { flag: "--force", short: "-f", desc: "Skip regeneration prompt" },
+                { flag: "--host", short: "—", desc: "Git provider hostname (default: github.com)" },
+                { flag: "--confirm", short: "—", desc: "Skip interactive confirmation prompt" },
                 { flag: "--files", short: "—", desc: "Delete key files from disk (delete only)" },
+                { flag: "--json", short: "—", desc: "Output key list as JSON (list only)" },
                 { flag: "--ssh-key", short: "-K", desc: "SSH key name for clone command" },
               ].map((f) => (
                 <tr key={f.flag} className="border-t border-border">
@@ -189,8 +192,17 @@ gitmap ssh
 # Generate named key for work
 gitmap ssh --name work --path ~/.ssh/id_rsa_work
 
+# Generate key for GitLab with custom host
+gitmap ssh --name gitlab --host gitlab.com --email user@company.com
+
+# Non-interactive generation (CI/scripting)
+gitmap ssh --name deploy --confirm
+
 # Display public key for copying
 gitmap ssh cat --name work
+
+# List keys as JSON for scripting
+gitmap ssh list --json
 
 # Clone using a specific SSH key
 gitmap clone repos.json --ssh-key work
