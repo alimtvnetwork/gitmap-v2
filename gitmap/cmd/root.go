@@ -331,6 +331,11 @@ func dispatchMisc(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdSSH {
+		runSSH(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
