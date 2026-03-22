@@ -192,8 +192,17 @@ gitmap ssh
 # Generate named key for work
 gitmap ssh --name work --path ~/.ssh/id_rsa_work
 
+# Generate key for GitLab with custom host
+gitmap ssh --name gitlab --host gitlab.com --email user@company.com
+
+# Non-interactive generation (CI/scripting)
+gitmap ssh --name deploy --confirm
+
 # Display public key for copying
 gitmap ssh cat --name work
+
+# List keys as JSON for scripting
+gitmap ssh list --json
 
 # Clone using a specific SSH key
 gitmap clone repos.json --ssh-key work

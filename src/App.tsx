@@ -75,6 +75,7 @@ const App = () => (
           <Route path="/alias" element={<AliasPage />} />
           <Route path="/ssh" element={<SSHPage />} />
           <Route path="/prune" element={<PrunePage />} />
+          <Route path="/doctor" element={<DoctorPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

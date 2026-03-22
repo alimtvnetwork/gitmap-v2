@@ -256,6 +256,51 @@ const BatchActions = () => {
           </div>
         </section>
 
+        {/* Progress Tracking */}
+        <section className="mb-10">
+          <h2 className="text-xl font-mono font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Zap className="h-5 w-5 text-primary" />
+            Progress Tracking
+          </h2>
+          <p className="text-muted-foreground mb-4">
+            All batch operations — pull, exec, and status — display real-time progress counters with per-repo
+            success/failure reporting and a final summary. Progress output goes to stderr so it can be separated
+            from command output.
+          </p>
+          <TerminalDemo
+            title="gitmap pull — progress tracking"
+            lines={[
+              { text: "gitmap pull --group backend", type: "input" as const, delay: 800 },
+              { text: "", delay: 200 },
+              { text: "  [1/4] api-server...", type: "output" as const, delay: 300 },
+              { text: "  ✓ done (1.2s)", type: "accent" as const, delay: 400 },
+              { text: "  [2/4] auth-service...", type: "output" as const, delay: 300 },
+              { text: "  ✓ done (0.8s)", type: "accent" as const, delay: 350 },
+              { text: "  [3/4] data-layer...", type: "output" as const, delay: 300 },
+              { text: "  ✗ failed", type: "output" as const, delay: 200 },
+              { text: "  [4/4] queue-worker...", type: "output" as const, delay: 300 },
+              { text: "  — skipped", type: "output" as const, delay: 200 },
+              { text: "", delay: 150 },
+              { text: "  pull complete: 4/4 repos · 2.3s elapsed", type: "header" as const },
+              { text: "  2 succeeded · 1 failed · 1 skipped", type: "accent" as const },
+            ]}
+            autoPlay
+          />
+          <div className="mt-4 rounded-lg border border-border p-4 bg-card">
+            <h3 className="font-mono font-semibold text-sm mb-2">Progress Modes</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                <strong className="text-foreground">Normal</strong> — real-time [current/total] counters with per-item status (pull, exec)
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                <strong className="text-foreground">Quiet</strong> — suppresses per-item output to preserve table layout (status command)
+              </li>
+            </ul>
+          </div>
+        </section>
+
         {/* Tips */}
         <section className="mb-10">
           <h2 className="text-xl font-mono font-semibold text-foreground mb-3">Tips</h2>
@@ -274,7 +319,7 @@ const BatchActions = () => {
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-              The exec action (<kbd className="px-1 py-0.5 rounded bg-muted text-xs font-mono border border-border">x</kbd>) accepts any valid git subcommand — not just pull or status
+              Progress tracking shows elapsed time per item and a final success/fail/skip summary
             </li>
           </ul>
         </section>
