@@ -1,0 +1,66 @@
+package release
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/user/gitmap/constants"
+)
+
+// retryable determines if an HTTP status code should trigger a retry.
+func retryable(statusCode int) bool {
+	if statusCode == constants.HTTPTooManyRequests {
+		return true
+	}
+	if statusCode >= constants.HTTPServerErrorMin {
+		return true
+	}
+
+	return false
+}
+
+// withRetry executes fn up to maxAttempts times with exponential backoff.
+func withRetry(label string, maxAttempts int, fn func() error) error {
+	var lastErr error
+
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		lastErr = fn()
+		if lastErr == nil {
+			printRetrySuccess(label, attempt)
+
+			return nil
+		}
+
+		if attempt < maxAttempts {
+			waitAndLog(label, attempt, maxAttempts)
+		}
+	}
+
+	return fmt.Errorf("%s after %d attempts: %w", label, maxAttempts, lastErr)
+}
+
+// waitAndLog prints the retry message and sleeps with exponential backoff.
+func waitAndLog(label string, attempt, maxAttempts int) {
+	delay := computeDelay(attempt)
+	fmt.Printf(constants.MsgRetryAttempt, attempt, maxAttempts, label, delay)
+	time.Sleep(delay)
+}
+
+// computeDelay returns the backoff duration for the given attempt.
+func computeDelay(attempt int) time.Duration {
+	base := time.Duration(constants.RetryBaseDelayMs) * time.Millisecond
+	factor := time.Duration(1)
+
+	for i := 1; i < attempt; i++ {
+		factor *= time.Duration(constants.RetryBackoffFactor)
+	}
+
+	return base * factor
+}
+
+// printRetrySuccess logs success with attempt number when retries occurred.
+func printRetrySuccess(label string, attempt int) {
+	if attempt > 1 {
+		fmt.Printf(constants.MsgRetrySuccess, label, attempt)
+	}
+}

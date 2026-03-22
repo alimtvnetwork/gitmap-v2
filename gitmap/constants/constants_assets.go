@@ -51,8 +51,26 @@ const (
 // Asset error messages.
 const (
 	ErrAssetBuildFailed  = "  ✗ Build failed for %s/%s: %s\n"
-	ErrAssetUploadRetry  = "  ⟳ Retrying upload for %s...\n"
-	ErrAssetUploadFailed = "  ✗ Upload failed for %s: %v\n"
+	ErrAssetUploadFinal  = "  ✗ Upload failed for %s: %v\n"
 	ErrAssetNoToken      = "  ✗ GITHUB_TOKEN not set — skipping asset upload\n"
 	ErrAssetRemoteParse  = "  ✗ Could not parse remote origin: %v\n"
+)
+
+// Retry constants.
+const (
+	RetryMaxAttempts   = 3
+	RetryBaseDelayMs   = 1000
+	RetryBackoffFactor = 2
+)
+
+// Retry HTTP status codes.
+const (
+	HTTPTooManyRequests = 429
+	HTTPServerErrorMin  = 500
+)
+
+// Retry messages.
+const (
+	MsgRetryAttempt = "  ⟳ Retry %d/%d for %s (waiting %s)...\n"
+	MsgRetrySuccess = "  ✓ Uploaded %s (attempt %d)\n"
 )

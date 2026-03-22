@@ -40,28 +40,46 @@ func UploadAsset(owner, repo string, releaseID int, filePath, token string) erro
 	if resp.StatusCode >= 300 {
 		respBody, _ := io.ReadAll(resp.Body)
 
-		return fmt.Errorf("upload error %d: %s", resp.StatusCode, string(respBody))
+		return &uploadError{
+			statusCode: resp.StatusCode,
+			message:    string(respBody),
+		}
 	}
 
 	return nil
 }
 
-// UploadAllAssets uploads all assets to a GitHub release with retry.
+// uploadError captures HTTP status for retry decisions.
+type uploadError struct {
+	statusCode int
+	message    string
+}
+
+// Error implements the error interface.
+func (e *uploadError) Error() string {
+	return fmt.Sprintf("upload error %d: %s", e.statusCode, e.message)
+}
+
+// UploadAllAssets uploads all assets to a GitHub release with exponential backoff retry.
 func UploadAllAssets(owner, repo string, releaseID int, assets []string, token string) {
 	for _, asset := range assets {
-		err := UploadAsset(owner, repo, releaseID, asset, token)
-		if err != nil {
-			// Retry once on failure.
-			fmt.Fprintf(os.Stderr, constants.ErrAssetUploadRetry, filepath.Base(asset))
-
-			retryErr := UploadAsset(owner, repo, releaseID, asset, token)
-			if retryErr != nil {
-				fmt.Fprintf(os.Stderr, constants.ErrAssetUploadFailed, filepath.Base(asset), retryErr)
-
-				continue
-			}
-		}
-
-		fmt.Printf(constants.MsgAssetUploaded, filepath.Base(asset))
+		uploadSingleAsset(owner, repo, releaseID, asset, token)
 	}
+}
+
+// uploadSingleAsset uploads one asset with retry logic.
+func uploadSingleAsset(owner, repo string, releaseID int, asset, token string) {
+	filename := filepath.Base(asset)
+
+	err := withRetry(filename, constants.RetryMaxAttempts, func() error {
+		return UploadAsset(owner, repo, releaseID, asset, token)
+	})
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrAssetUploadFinal, filename, err)
+
+		return
+	}
+
+	fmt.Printf(constants.MsgAssetUploaded, filename)
 }
