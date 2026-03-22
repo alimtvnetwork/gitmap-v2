@@ -165,7 +165,10 @@ const SSHPage = () => (
                 { flag: "--path", short: "-p", desc: "Private key file path" },
                 { flag: "--email", short: "-e", desc: "Email comment for the key" },
                 { flag: "--force", short: "-f", desc: "Skip regeneration prompt" },
+                { flag: "--host", short: "—", desc: "Git provider hostname (default: github.com)" },
+                { flag: "--confirm", short: "—", desc: "Skip interactive confirmation prompt" },
                 { flag: "--files", short: "—", desc: "Delete key files from disk (delete only)" },
+                { flag: "--json", short: "—", desc: "Output key list as JSON (list only)" },
                 { flag: "--ssh-key", short: "-K", desc: "SSH key name for clone command" },
               ].map((f) => (
                 <tr key={f.flag} className="border-t border-border">
