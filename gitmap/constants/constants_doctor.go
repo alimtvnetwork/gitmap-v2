@@ -89,3 +89,29 @@ const (
 	DoctorWarnFmt  = "  %s[--]%s %s\n"
 	DoctorDetail   = "       %s\n"
 )
+
+// Doctor config validation messages.
+const (
+	DoctorConfigMissing = "config.json not found (using defaults)"
+	DoctorConfigInvalid = "config.json is not valid JSON"
+	DoctorConfigOKFmt   = "Config: %s"
+)
+
+// Doctor database validation messages.
+const (
+	DoctorDBOpenFail    = "Database cannot be opened"
+	DoctorDBMigrateFail = "Database migration failed"
+	DoctorDBOK          = "Database: %s"
+)
+
+// Doctor lock file messages.
+const (
+	DoctorLockNone   = "No stale lock file"
+	DoctorLockExists = "Lock file exists — another gitmap may be running (or stale)"
+)
+
+// Doctor network messages.
+const (
+	DoctorNetworkOK      = "Network: github.com reachable"
+	DoctorNetworkOffline = "Network: github.com unreachable (offline mode)"
+)
