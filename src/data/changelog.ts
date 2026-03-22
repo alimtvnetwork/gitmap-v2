@@ -5,6 +5,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.27.0",
+    items: [
+      "Bumped compiled version constant to v2.27.0.",
+      "Added doctor validation checks for config.json, database migration, lock file, and network connectivity.",
+      "Added TUI release trigger overlay with patch/minor/major/custom version bump selection.",
+      "Integrated batch progress tracking into pull, exec, and status commands with success/fail/skip counters.",
+      "Added BatchProgress tracker to cloner package with quiet mode for programmatic use.",
+      "Added TUI interaction tests covering tab switching, browser navigation, fuzzy search, and release triggers.",
+      "Added alias suggestion tests covering auto-suggestion, conflict detection, and idempotent re-runs.",
+    ],
+  },
+  {
     version: "v2.24.0",
     items: [
       "Bumped compiled version constant to v2.24.0.",

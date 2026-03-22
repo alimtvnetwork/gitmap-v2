@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.27.0
+- Bumped compiled version constant to v2.27.0.
+- Added doctor validation checks for config.json, database migration, lock file, and network connectivity.
+- Added TUI release trigger overlay with patch/minor/major/custom version bump selection.
+- Integrated batch progress tracking into pull, exec, and status commands with success/fail/skip counters.
+- Added BatchProgress tracker to cloner package with quiet mode for programmatic use.
+- Added TUI interaction tests covering tab switching, browser navigation, fuzzy search, and release triggers.
+- Added alias suggestion tests covering auto-suggestion, conflict detection, and idempotent re-runs.
+
 ## v2.24.0
 - Bumped compiled version constant to v2.24.0.
 - Moved release metadata writing from the release branch to the original branch, letting auto-commit handle `.release/` files after returning.
