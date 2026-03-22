@@ -26,7 +26,7 @@ func dispatchSSH(sub string, args []string) {
 		return
 	}
 	if sub == constants.SubCmdSSHList || sub == constants.SubCmdSSHListS {
-		runSSHList()
+		runSSHList(args...)
 
 		return
 	}

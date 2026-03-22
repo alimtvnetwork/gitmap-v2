@@ -24,6 +24,14 @@ Manages SSH key pairs for Git authentication.
 | --path    | -p    | File path for the private key          | ~/.ssh/id_rsa  |
 | --email   | -e    | Email comment for the key              | git global     |
 | --force   | -f    | Skip prompt if key already exists      | false          |
+| --host    | -H    | Git provider hostname                  | github.com     |
+| --confirm |       | Require explicit yes before generating | false          |
+
+## Flags (list)
+
+| Flag      | Short | Description                            |
+|-----------|-------|----------------------------------------|
+| --json    |       | Output keys as JSON for scripting      |
 
 ## Flags (delete)
 
