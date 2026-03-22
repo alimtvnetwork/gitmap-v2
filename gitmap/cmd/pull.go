@@ -10,7 +10,6 @@ import (
 
 	"github.com/user/gitmap/cloner"
 	"github.com/user/gitmap/constants"
-	"github.com/user/gitmap/gitutil"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/verbose"
 )
