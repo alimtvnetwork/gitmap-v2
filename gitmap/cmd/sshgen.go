@@ -15,7 +15,7 @@ import (
 
 // runSSHGenerate generates a new SSH key pair.
 func runSSHGenerate(args []string) {
-	name, keyPath, email, force := parseSSHGenFlags(args)
+	name, keyPath, email, force, host, confirm := parseSSHGenFlags(args)
 
 	if err := validateSSHKeygen(); err != nil {
 		fmt.Fprint(os.Stderr, constants.ErrSSHKeygenMissing)
@@ -32,6 +32,17 @@ func runSSHGenerate(args []string) {
 
 	keyPath = expandHome(keyPath)
 
+	if confirm {
+		fmt.Fprintf(os.Stdout, constants.MsgSSHConfirmPrompt, name, keyPath)
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		if strings.TrimSpace(strings.ToLower(input)) != "y" {
+			fmt.Fprint(os.Stdout, constants.MsgSSHCancelled)
+
+			return
+		}
+	}
+
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHCreate, err)
@@ -45,11 +56,11 @@ func runSSHGenerate(args []string) {
 		}
 	}
 
-	generateAndStore(db, name, keyPath, email)
+	generateAndStore(db, name, keyPath, email, host)
 }
 
 // parseSSHGenFlags parses flags for SSH key generation.
-func parseSSHGenFlags(args []string) (name, keyPath, email string, force bool) {
+func parseSSHGenFlags(args []string) (name, keyPath, email string, force bool, host string, confirm bool) {
 	fs := flag.NewFlagSet(constants.CmdSSH, flag.ExitOnError)
 	nameFlag := fs.String("name", constants.DefaultSSHKeyName, "Key label")
 	fs.StringVar(nameFlag, "n", constants.DefaultSSHKeyName, "Key label (short)")
@@ -59,6 +70,9 @@ func parseSSHGenFlags(args []string) (name, keyPath, email string, force bool) {
 	fs.StringVar(emailFlag, "e", "", "Email comment (short)")
 	forceFlag := fs.Bool("force", false, "Skip prompt if key exists")
 	fs.BoolVar(forceFlag, "f", false, "Skip prompt (short)")
+	hostFlag := fs.String("host", constants.DefaultSSHHost, "Git provider hostname")
+	fs.StringVar(hostFlag, "H", constants.DefaultSSHHost, "Git provider hostname (short)")
+	confirmFlag := fs.Bool("confirm", false, "Require explicit confirmation")
 	fs.Parse(args)
 
 	path := *pathFlag
@@ -66,7 +80,7 @@ func parseSSHGenFlags(args []string) (name, keyPath, email string, force bool) {
 		path = defaultSSHKeyPath(*nameFlag)
 	}
 
-	return *nameFlag, path, *emailFlag, *forceFlag
+	return *nameFlag, path, *emailFlag, *forceFlag, *hostFlag, *confirmFlag
 }
 
 // handleExistingKey prompts the user when a key already exists.
@@ -99,7 +113,7 @@ func handleExistingKey(db *store.DB, name string, keyPath *string) bool {
 }
 
 // generateAndStore runs ssh-keygen and stores the result in the database.
-func generateAndStore(db *store.DB, name, keyPath, email string) {
+func generateAndStore(db *store.DB, name, keyPath, email, host string) {
 	if err := ensureSSHDir(filepath.Dir(keyPath)); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHKeygen, err)
 		os.Exit(1)
@@ -136,6 +150,9 @@ func generateAndStore(db *store.DB, name, keyPath, email string) {
 	fmt.Fprintf(os.Stdout, constants.MsgSSHGenerated, name)
 	fmt.Fprintf(os.Stdout, constants.MsgSSHPath, keyPath)
 	fmt.Fprintf(os.Stdout, constants.MsgSSHFingerprint, fingerprint)
+	if host != constants.DefaultSSHHost {
+		fmt.Fprintf(os.Stdout, constants.MsgSSHHostUsed, host)
+	}
 	fmt.Fprint(os.Stdout, constants.MsgSSHPubLabel)
 	fmt.Fprintf(os.Stdout, "  %s\n", strings.TrimSpace(string(pubKey)))
 	fmt.Fprint(os.Stdout, constants.MsgSSHCopyHint)

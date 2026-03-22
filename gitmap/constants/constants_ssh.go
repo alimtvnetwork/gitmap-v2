@@ -55,17 +55,26 @@ const (
 
 // SSH key generation flags.
 const (
-	FlagSSHName  = "--name"
-	FlagSSHNameS = "-n"
-	FlagSSHPath  = "--path"
-	FlagSSHPathS = "-p"
-	FlagSSHEmail = "--email"
-	FlagSSHEmailS = "-e"
-	FlagSSHForce = "--force"
-	FlagSSHForceS = "-f"
-	FlagSSHFiles = "--files"
-	FlagSSHKey   = "--ssh-key"
-	FlagSSHKeyS  = "-K"
+	FlagSSHName    = "--name"
+	FlagSSHNameS   = "-n"
+	FlagSSHPath    = "--path"
+	FlagSSHPathS   = "-p"
+	FlagSSHEmail   = "--email"
+	FlagSSHEmailS  = "-e"
+	FlagSSHForce   = "--force"
+	FlagSSHForceS  = "-f"
+	FlagSSHFiles   = "--files"
+	FlagSSHKey     = "--ssh-key"
+	FlagSSHKeyS    = "-K"
+	FlagSSHHost    = "--host"
+	FlagSSHHostS   = "-H"
+	FlagSSHJSON    = "--json"
+	FlagSSHConfirm = "--confirm"
+)
+
+// SSH defaults.
+const (
+	DefaultSSHHost = "github.com"
 )
 
 // SSH config markers.
@@ -84,29 +93,32 @@ const SSHConfigHostEntry = `Host %s
 
 // SSH messages.
 const (
-	MsgSSHGenerated    = "  \u2713 SSH key %q generated\n"
-	MsgSSHPath         = "    Path:        %s\n"
-	MsgSSHFingerprint  = "    Fingerprint: %s\n"
-	MsgSSHPubLabel     = "    Public key:\n\n"
-	MsgSSHCopyHint     = "\n  \u2139  Copy the public key above and add it to your Git provider.\n"
-	MsgSSHExists       = "  Key %q already exists at %s\n"
-	MsgSSHExistsFP     = "    Fingerprint: %s\n"
-	MsgSSHPromptAction = "  [R]egenerate / [N]ew path / [C]ancel: "
-	MsgSSHRegenerated  = "  \u2713 SSH key %q regenerated\n"
-	MsgSSHDeleted      = "  \u2713 SSH key %q deleted\n"
-	MsgSSHDeletedFiles = "  \u2713 Key files removed from disk\n"
+	MsgSSHGenerated     = "  \u2713 SSH key %q generated\n"
+	MsgSSHPath          = "    Path:        %s\n"
+	MsgSSHFingerprint   = "    Fingerprint: %s\n"
+	MsgSSHPubLabel      = "    Public key:\n\n"
+	MsgSSHCopyHint      = "\n  \u2139  Copy the public key above and add it to your Git provider.\n"
+	MsgSSHExists        = "  Key %q already exists at %s\n"
+	MsgSSHExistsFP      = "    Fingerprint: %s\n"
+	MsgSSHPromptAction  = "  [R]egenerate / [N]ew path / [C]ancel: "
+	MsgSSHRegenerated   = "  \u2713 SSH key %q regenerated\n"
+	MsgSSHDeleted       = "  \u2713 SSH key %q deleted\n"
+	MsgSSHDeletedFiles  = "  \u2713 Key files removed from disk\n"
 	MsgSSHDeleteConfirm = "  Delete SSH key %q? (y/N): "
-	MsgSSHListHeader   = "\n  SSH Keys (%d):\n\n"
-	MsgSSHListRow      = "  %-15s %-30s %-25s %s\n"
-	MsgSSHListColumns  = "  %-15s %-30s %-25s %s\n"
-	MsgSSHConfigDone   = "  \u2713 SSH config updated\n"
-	MsgSSHConfigShow   = "\n  Managed SSH config:\n\n"
+	MsgSSHListHeader    = "\n  SSH Keys (%d):\n\n"
+	MsgSSHListRow       = "  %-15s %-30s %-25s %s\n"
+	MsgSSHListColumns   = "  %-15s %-30s %-25s %s\n"
+	MsgSSHConfigDone    = "  \u2713 SSH config updated\n"
+	MsgSSHConfigShow    = "\n  Managed SSH config:\n\n"
 	MsgSSHNewPathPrompt = "  Enter new key path: "
-	MsgSSHCloneUsing   = "  \u2192 Cloning with SSH key %q (%s)\n"
-	MsgSSHMultiKeyHint = `
+	MsgSSHCloneUsing    = "  \u2192 Cloning with SSH key %q (%s)\n"
+	MsgSSHMultiKeyHint  = `
   Multiple SSH keys detected. Use host aliases in your remote URLs:
     git remote set-url origin git@github.com-%s:%s/%s.git
 `
+	MsgSSHConfirmPrompt = "  Generate SSH key %q at %s? (y/N): "
+	MsgSSHCancelled     = "  Cancelled.\n"
+	MsgSSHHostUsed      = "    Host:        %s\n"
 )
 
 // SSH error messages.

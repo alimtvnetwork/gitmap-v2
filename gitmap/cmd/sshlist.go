@@ -1,14 +1,17 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/user/gitmap/constants"
 )
 
-// runSSHList displays all stored SSH keys as an aligned table.
-func runSSHList() {
+// runSSHList displays all stored SSH keys as an aligned table or JSON.
+func runSSHList(args ...string) {
+	jsonOut := hasFlag(args, constants.FlagSSHJSON)
+
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
@@ -20,6 +23,12 @@ func runSSHList() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
 		os.Exit(1)
+	}
+
+	if jsonOut {
+		printSSHListJSON(keys)
+
+		return
 	}
 
 	if len(keys) == 0 {
@@ -42,4 +51,27 @@ func runSSHList() {
 
 		fmt.Fprintf(os.Stdout, constants.MsgSSHListRow, k.Name, k.PrivatePath, k.Fingerprint, created)
 	}
+}
+
+// printSSHListJSON outputs SSH keys as JSON.
+func printSSHListJSON(keys interface{}) {
+	data, err := json.MarshalIndent(keys, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
+
+		return
+	}
+
+	fmt.Println(string(data))
+}
+
+// hasFlag checks if a flag is present in the args.
+func hasFlag(args []string, flag string) bool {
+	for _, a := range args {
+		if a == flag {
+			return true
+		}
+	}
+
+	return false
 }
