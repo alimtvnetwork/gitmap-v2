@@ -714,7 +714,7 @@ export const commands: CommandDef[] = [
   },
   {
     category: "utilities",
-    name: "doctor", alias: undefined, description: "Diagnose PATH, deploy, and version issues",
+    name: "doctor", alias: undefined, description: "Run 11 health checks: binary, Git, Go, config, database, lock file, and network",
     usage: "gitmap doctor [--fix-path]",
     flags: [
       { flag: "--fix-path", description: "Attempt to fix PATH issues automatically" },
