@@ -13,6 +13,30 @@ import (
 	"github.com/user/gitmap/verbose"
 )
 
+// applySSHKey sets GIT_SSH_COMMAND if an SSH key name is provided.
+func applySSHKey(name string) {
+	if len(name) == 0 {
+		return
+	}
+
+	db, err := openDB()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	key, err := db.FindSSHKeyByName(name)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrSSHNotFound, name)
+		os.Exit(1)
+	}
+
+	sshCmd := fmt.Sprintf("ssh -i %s -o IdentitiesOnly=yes", key.PrivatePath)
+	os.Setenv("GIT_SSH_COMMAND", sshCmd)
+	fmt.Fprintf(os.Stdout, constants.MsgSSHCloneUsing, name, key.PrivatePath)
+}
+
 // runClone handles the "clone" subcommand.
 func runClone(args []string) {
 	checkHelp("clone", args)
