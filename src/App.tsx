@@ -33,6 +33,7 @@ import NotFound from "./pages/NotFound";
 import ZipGroupPage from "./pages/ZipGroup";
 import AliasPage from "./pages/Alias";
 import SSHPage from "./pages/SSH";
+import PrunePage from "./pages/Prune";
 
 const queryClient = new QueryClient();
 
