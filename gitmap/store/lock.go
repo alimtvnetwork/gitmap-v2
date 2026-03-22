@@ -83,7 +83,7 @@ func processRunning(pid int) bool {
 		return false
 	}
 
-	err = proc.Signal(os.Signal(nil))
+	err = proc.Signal(syscall.Signal(0))
 
 	return err == nil
 }
