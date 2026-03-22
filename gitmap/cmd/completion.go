@@ -150,6 +150,24 @@ func printCompletionZipGroups() {
 	}
 }
 
+// printCompletionSSHKeys prints all SSH key names, one per line.
+func printCompletionSSHKeys() {
+	db, err := openDB()
+	if err != nil {
+		return
+	}
+	defer db.Close()
+
+	names, err := db.SSHKeyNames()
+	if err != nil {
+		return
+	}
+
+	for _, n := range names {
+		fmt.Println(n)
+	}
+}
+
 // printCompletionScript outputs the shell completion script.
 func printCompletionScript(shell string) {
 	script, err := completion.Generate(shell)
