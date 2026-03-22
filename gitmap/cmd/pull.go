@@ -24,9 +24,12 @@ func runPull(args []string) {
 	}
 	records := resolvePullTargets(slug, groupName, all)
 
+	prog := cloner.NewBatchProgress(len(records), "Pull", false)
 	for _, rec := range records {
-		pullOneRepo(rec)
+		prog.BeginItem(rec.RepoName)
+		pullOneRepoTracked(rec, prog)
 	}
+	prog.PrintSummary()
 }
 
 // parsePullFlags parses flags for the pull command.
