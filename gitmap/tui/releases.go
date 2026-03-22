@@ -15,6 +15,7 @@ type releasesModel struct {
 	releases []model.ReleaseRecord
 	cursor   int
 	detail   bool
+	trigger  relTriggerModel
 }
 
 func newReleasesModel(db *store.DB) releasesModel {
@@ -23,6 +24,7 @@ func newReleasesModel(db *store.DB) releasesModel {
 	return releasesModel{
 		db:       db,
 		releases: releases,
+		trigger:  newRelTriggerModel(),
 	}
 }
 
@@ -32,18 +34,26 @@ func (m releasesModel) Update(msg tea.Msg) (releasesModel, tea.Cmd) {
 		return m, nil
 	}
 
+	if m.trigger.active {
+		m.trigger, _ = m.trigger.Update(msg)
+		if !m.trigger.active {
+			m.trigger = newRelTriggerModel()
+		}
+
+		return m, nil
+	}
+
 	return m.handleKey(keyMsg), nil
 }
 
 func (m releasesModel) handleKey(msg tea.KeyMsg) releasesModel {
 	max := len(m.releases) - 1
-	if max < 0 {
-		return m
-	}
 
 	switch {
+	case msg.String() == "n":
+		m.trigger.active = true
 	case keys.down(msg):
-		if m.cursor < max {
+		if max >= 0 && m.cursor < max {
 			m.cursor++
 		}
 	case keys.up(msg):
@@ -51,7 +61,9 @@ func (m releasesModel) handleKey(msg tea.KeyMsg) releasesModel {
 			m.cursor--
 		}
 	case keys.enter(msg):
-		m.detail = !m.detail
+		if max >= 0 {
+			m.detail = !m.detail
+		}
 	case keys.refresh(msg):
 		m.releases, _ = m.db.ListReleases()
 	}
