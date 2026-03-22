@@ -71,6 +71,7 @@ const navItems = [
   { title: "Zip Groups", url: "/zip-group", icon: Archive },
   { title: "Aliases", url: "/alias", icon: Link2 },
   { title: "SSH Keys", url: "/ssh", icon: KeyRound },
+  { title: "Prune", url: "/prune", icon: Archive },
 ];
 
 export function DocsSidebar() {
