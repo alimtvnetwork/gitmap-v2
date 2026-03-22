@@ -16,6 +16,7 @@ import (
 // runRelease handles the 'release' command.
 func runRelease(args []string) {
 	checkHelp("release", args)
+	requireOnline()
 	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit := parseReleaseFlags(args)
 	_ = verbose
 
