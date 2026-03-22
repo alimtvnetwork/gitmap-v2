@@ -63,6 +63,10 @@ func handleCompletionList(args []string) {
 			printCompletionZipGroups()
 
 			return
+		case constants.CompListSSHKeys:
+			printCompletionSSHKeys()
+
+			return
 		}
 	}
 }
