@@ -88,7 +88,7 @@ const SSHPage = () => (
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: Key, title: "Named Keys", desc: "Label keys (work, personal) for easy reference" },
+            { icon: KeyRound, title: "Named Keys", desc: "Label keys (work, personal) for easy reference" },
             { icon: Settings, title: "Auto Config", desc: "~/.ssh/config managed automatically" },
             { icon: FolderGit2, title: "Clone Integration", desc: "Use --ssh-key flag with clone command" },
           ].map((f) => (
