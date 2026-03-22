@@ -301,7 +301,7 @@ The parenthetical suffix indicates which source resolved the version:
 **`run.ps1`** — called after the final "All done!" message:
 
 ```powershell
-$lastReleaseScript = Join-Path $RepoRoot "scripts" "Get-LastRelease.ps1"
+$lastReleaseScript = Join-Path (Join-Path $RepoRoot "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
     & $lastReleaseScript -BinaryPath $binaryPath -RepoRoot $RepoRoot
 }
@@ -311,7 +311,7 @@ if (Test-Path $lastReleaseScript) {
 version lines and the active/deployed match check:
 
 ```powershell
-$lastReleaseScript = Join-Path "<repoPath>" "scripts" "Get-LastRelease.ps1"
+$lastReleaseScript = Join-Path (Join-Path "<repoPath>" "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
     & $lastReleaseScript -BinaryPath $activeBinary -RepoRoot "<repoPath>"
 }

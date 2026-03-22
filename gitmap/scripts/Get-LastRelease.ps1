@@ -53,7 +53,7 @@ function Get-ReleaseFromJSON {
         $Root = (Get-Location).Path
     }
 
-    $latestFile = Join-Path $Root ".release" "latest.json"
+    $latestFile = Join-Path (Join-Path $Root ".release") "latest.json"
     if (Test-Path $latestFile) {
         try {
             $data = Get-Content $latestFile -Raw | ConvertFrom-Json

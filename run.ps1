@@ -478,7 +478,7 @@ function Resolve-RunArgs {
 function Invoke-Tests {
     Write-Step "TEST" "Running unit tests"
 
-    $reportDir = Join-Path $GitMapDir "data" "unit-test-reports"
+    $reportDir = Join-Path (Join-Path $GitMapDir "data") "unit-test-reports"
     if (-not (Test-Path $reportDir)) {
         New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
         Write-Info "Created report directory: $reportDir"
