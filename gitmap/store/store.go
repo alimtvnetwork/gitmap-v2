@@ -36,16 +36,31 @@ func OpenProfile(outputDir, profileName string) (*DB, error) {
 
 // openDBAt opens a database at an exact path.
 func openDBAt(dbPath string) (*DB, error) {
-	if err := ensureDir(filepath.Dir(dbPath)); err != nil {
+	dbDir := filepath.Dir(dbPath)
+	if err := ensureDir(dbDir); err != nil {
 		return nil, fmt.Errorf(constants.ErrDBCreateDir, err)
+	}
+
+	if err := acquireLock(dbDir); err != nil {
+		return nil, err
 	}
 
 	conn, err := sql.Open("sqlite", dbPath)
 	if err != nil {
+		releaseLock(dbDir)
+
 		return nil, fmt.Errorf(constants.ErrDBOpen, err)
 	}
 
-	return &DB{conn: conn}, enableFK(conn)
+	err = enableFK(conn)
+	if err != nil {
+		conn.Close()
+		releaseLock(dbDir)
+
+		return nil, err
+	}
+
+	return &DB{conn: conn, dbDir: dbDir}, nil
 }
 
 // Migrate creates all required tables if they don't exist.
