@@ -876,4 +876,30 @@ export const commands: CommandDef[] = [
       { name: "version", description: "Show installed version" },
     ],
   },
+  {
+    category: "utilities",
+    name: "ssh", description: "Generate and manage SSH keys for Git authentication",
+    usage: "gitmap ssh [subcommand] [flags]",
+    flags: [
+      { flag: "--name, -n <label>", description: "Key label in database (default: 'default')" },
+      { flag: "--path, -p <path>", description: "Private key file path (default: ~/.ssh/id_rsa)" },
+      { flag: "--email, -e <email>", description: "Email comment (default: git global email)" },
+      { flag: "--force, -f", description: "Skip prompt if key already exists" },
+      { flag: "--files", description: "Also delete key files from disk (delete subcommand)" },
+      { flag: "--ssh-key, -K <name>", description: "SSH key name to use for cloning (clone flag)" },
+    ],
+    examples: [
+      { command: "gitmap ssh", description: "Generate default RSA-4096 key" },
+      { command: "gitmap ssh --name work", description: "Generate a named key for work" },
+      { command: "gitmap ssh cat", description: "Display the default public key" },
+      { command: "gitmap ssh cat --name work", description: "Display a named public key" },
+      { command: "gitmap ssh list", description: "List all stored SSH keys" },
+      { command: "gitmap ssh delete --name work --files", description: "Delete key record and files" },
+      { command: "gitmap clone repos.json --ssh-key work", description: "Clone using a specific SSH key" },
+    ],
+    seeAlso: [
+      { name: "clone", description: "Clone repos with --ssh-key integration" },
+      { name: "setup", description: "Configure Git global settings" },
+    ],
+  },
 ];

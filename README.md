@@ -251,7 +251,7 @@ gitmap gomod "github.com/neworg/project" --dry-run
 gitmap seo-write --csv data.csv --max-commits 5
 ```
 
-→ Full details: [setup](gitmap/helptext/setup.md) · [doctor](gitmap/helptext/doctor.md) · [update](gitmap/helptext/update.md) · [version](gitmap/helptext/version.md) · [seo-write](gitmap/helptext/seo-write.md) · [gomod](gitmap/helptext/gomod.md)
+→ Full details: [setup](gitmap/helptext/setup.md) · [doctor](gitmap/helptext/doctor.md) · [update](gitmap/helptext/update.md) · [version](gitmap/helptext/version.md) · [seo-write](gitmap/helptext/seo-write.md) · [gomod](gitmap/helptext/gomod.md) · [ssh](gitmap/helptext/ssh.md)
 
 ---
 

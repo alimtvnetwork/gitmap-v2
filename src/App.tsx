@@ -71,6 +71,7 @@ const App = () => (
           <Route path="/diff-profiles" element={<DiffProfilesPage />} />
           <Route path="/zip-group" element={<ZipGroupPage />} />
           <Route path="/alias" element={<AliasPage />} />
+          <Route path="/ssh" element={<SSHPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

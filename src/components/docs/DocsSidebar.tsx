@@ -69,6 +69,7 @@ const navItems = [
   { title: "Diff Profiles", url: "/diff-profiles", icon: FileText },
   { title: "Zip Groups", url: "/zip-group", icon: Archive },
   { title: "Aliases", url: "/alias", icon: Link2 },
+  { title: "SSH Keys", url: "/ssh", icon: Key },
 ];
 
 export function DocsSidebar() {
