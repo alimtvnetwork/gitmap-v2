@@ -104,7 +104,7 @@ func loadReleases() []model.ReleaseRecord {
 	return loadReleasesFromDB()
 }
 
-// loadReleasesFromRepo reads .release/v*.json files and converts to records.
+// loadReleasesFromRepo reads .gitmap/release/v*.json files and converts to records.
 func loadReleasesFromRepo() []model.ReleaseRecord {
 	metas, err := release.ListReleaseMetaFiles()
 	if err != nil || len(metas) == 0 {

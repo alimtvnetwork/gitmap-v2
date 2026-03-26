@@ -103,7 +103,7 @@ func classifyFiles(files []string) (releaseFiles, otherFiles []string) {
 	return releaseFiles, otherFiles
 }
 
-// commitReleaseOnly stages and commits only .release/ files.
+// commitReleaseOnly stages and commits only .gitmap/release/ files.
 func commitReleaseOnly(files []string, msg string) AutoCommitResult {
 	err := stageFiles(files)
 	if err != nil {

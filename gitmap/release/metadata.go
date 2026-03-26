@@ -145,7 +145,7 @@ func ReadReleaseMeta(path string) (ReleaseMeta, error) {
 	return meta, err
 }
 
-// ListReleaseMetaFiles reads all .release/v*.json files and returns parsed metadata.
+// ListReleaseMetaFiles reads all .gitmap/release/v*.json files and returns parsed metadata.
 func ListReleaseMetaFiles() ([]ReleaseMeta, error) {
 	pattern := filepath.Join(constants.DefaultReleaseDir, constants.ReleaseGlob)
 	matches, err := filepath.Glob(pattern)

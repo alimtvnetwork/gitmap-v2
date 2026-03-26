@@ -248,7 +248,7 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 		}
 	}
 
-	// Step 4: Auto-commit the .release/ metadata files.
+	// Step 4: Auto-commit the .gitmap/release/ metadata files.
 	if !opts.NoCommit {
 		AutoCommit(v.String(), false)
 	} else {
