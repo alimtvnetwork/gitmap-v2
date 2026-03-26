@@ -7,7 +7,7 @@
 High — data integrity and portability issue.
 
 ## Symptom
-Running `gitmap scan` creates the SQLite database at `<CWD>/gitmap-output/data/gitmap.db`
+Running `gitmap scan` creates the SQLite database at `<CWD>/.gitmap/output/data/gitmap.db`
 inside the scan output directory, instead of at `<binary-location>/data/gitmap.db`. This
 means:
 - The database location changes depending on which directory the user runs the command from.
@@ -18,8 +18,8 @@ means:
 ## Root Cause
 `store.Open(outputDir)` accepted a directory parameter and resolved the DB path as
 `outputDir/data/gitmap.db`. All 13 callers across the codebase passed CWD-relative
-constants like `constants.DefaultOutputDir` ("./gitmap-output") or
-`constants.DefaultOutputFolder` ("gitmap-output"). This made the DB path depend
+constants like `constants.DefaultOutputDir` ("./.gitmap/output") or
+`constants.DefaultOutputFolder` (".gitmap/output"). This made the DB path depend
 on the working directory rather than the binary's physical installation location.
 
 ### Affected Callers (13 total)
@@ -27,16 +27,16 @@ on the working directory rather than the binary's physical installation location
 |------|----------|---------------|
 | `cmd/scan.go` | `upsertToDB` | `<outputDir>/data/gitmap.db` |
 | `cmd/scan.go` | `alignRecordsWithDB` | `<outputDir>/data/gitmap.db` |
-| `cmd/list.go` | `openDB` | `gitmap-output/data/gitmap.db` |
-| `cmd/release.go` | `persistRelease` | `gitmap-output/data/gitmap.db` |
-| `cmd/audit.go` | `openAuditDB` | `<CWD>/gitmap-output/data/gitmap.db` |
-| `cmd/amendaudit.go` | `saveAmendToDB` | `./gitmap-output/data/gitmap.db` |
-| `cmd/seowritetemplate.go` | `openSEODatabase` | `./gitmap-output/data/gitmap.db` |
-| `cmd/projectrepos.go` | `runProjectRepos` | `<resolved CWD>/gitmap-output/data/` |
+| `cmd/list.go` | `openDB` | `.gitmap/output/data/gitmap.db` |
+| `cmd/release.go` | `persistRelease` | `.gitmap/output/data/gitmap.db` |
+| `cmd/audit.go` | `openAuditDB` | `<CWD>/.gitmap/output/data/gitmap.db` |
+| `cmd/amendaudit.go` | `saveAmendToDB` | `./.gitmap/output/data/gitmap.db` |
+| `cmd/seowritetemplate.go` | `openSEODatabase` | `./.gitmap/output/data/gitmap.db` |
+| `cmd/projectrepos.go` | `runProjectRepos` | `<resolved CWD>/.gitmap/output/data/` |
 | `cmd/scanprojects.go` | `upsertProjectsToDB` | `<outputDir>/data/gitmap.db` |
 | `cmd/scanimport.go` | `importReleases` | `<outputDir>/data/gitmap.db` |
-| `cmd/diffprofiles.go` | `loadProfileRepos` | `gitmap-output/data/gitmap.db` |
-| `cmd/profileutil.go` | `initProfileDB` | `gitmap-output/data/gitmap.db` |
+| `cmd/diffprofiles.go` | `loadProfileRepos` | `.gitmap/output/data/gitmap.db` |
+| `cmd/profileutil.go` | `initProfileDB` | `.gitmap/output/data/gitmap.db` |
 | `cmd/interactive.go` | `runInteractive` | `constants.DefaultDBPath` (undefined) |
 
 ## Solution

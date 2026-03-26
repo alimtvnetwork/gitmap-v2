@@ -46,4 +46,6 @@ Step 1 complete — constants, display strings, comments, and test updated.
 Steps 4–5 complete — all helptext and spec markdown files updated to .gitmap/ paths.
 Step 8 complete — doctor check for legacy .release/ and gitmap-output/ directories.
 Step 6 complete — docs site src/data/ and src/pages/ references updated.
-Steps 7, 9 remaining.
+Step 7 complete — .lovable/memory/ references updated.
+Step 9 complete — bumped to v2.35.0 with changelog.
+Steps all complete.
