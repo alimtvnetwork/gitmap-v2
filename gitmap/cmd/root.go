@@ -10,11 +10,15 @@ import (
 
 // Run is the main entry point for the CLI.
 func Run() {
-	migrateLegacyDirs()
-
 	if len(os.Args) < 2 {
 		printUsage()
 		os.Exit(1)
+	}
+
+	// Skip migration for commands that must produce clean stdout
+	cmd := os.Args[1]
+	if cmd != constants.CmdVersion && cmd != constants.CmdVersionAlias {
+		migrateLegacyDirs()
 	}
 
 	aliasName, cleaned := extractAliasFlag(os.Args[2:])
