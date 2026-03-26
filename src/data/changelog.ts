@@ -5,6 +5,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.28.0",
+    items: [
+      "Bumped compiled version constant to v2.28.0.",
+      "Added verbose logging to release pipeline: version resolution, source resolution, git operations, asset collection, staging, cross-compilation, compression, checksums, zip groups, ad-hoc zips, GitHub upload, retry, metadata persistence, and rollback.",
+      "Updated verbose logging spec with all 15 pipeline stages documented.",
+      "Added pull conflict handling to run.ps1 and run.sh with stash/discard/clean/quit prompt.",
+      "Added --force-pull flag to both build scripts for non-interactive CI usage.",
+      "Fixed set -e early exit bug in run.sh git pull error handling.",
+      "Fixed parseCommitLines and hasListFlag redeclaration conflicts.",
+    ],
+  },
+  {
     version: "v2.27.0",
     items: [
       "Bumped compiled version constant to v2.27.0.",

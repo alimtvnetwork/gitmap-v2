@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.28.0
+- Bumped compiled version constant to v2.28.0.
+- Added verbose logging to release pipeline: version resolution, source resolution, git operations, asset collection, staging, cross-compilation, compression, checksums, zip groups, ad-hoc zips, GitHub upload, retry, metadata persistence, and rollback.
+- Updated verbose logging spec with all 15 pipeline stages documented.
+- Added pull conflict handling to run.ps1 and run.sh with stash/discard/clean/quit prompt.
+- Added --force-pull flag to both build scripts for non-interactive CI usage.
+- Fixed set -e early exit bug in run.sh git pull error handling.
+- Fixed parseCommitLines redeclaration conflict between temprelease.go and changeloggen.go.
+- Fixed hasListFlag redeclaration conflict between tempreleaseops.go and completion.go.
+
 ## v2.27.0
 - Bumped compiled version constant to v2.27.0.
 - Added doctor validation checks for config.json, database migration, lock file, and network connectivity.
