@@ -13,6 +13,10 @@ import (
 
 // CreateBranch creates a release branch from the given source ref.
 func CreateBranch(branchName, sourceRef string) error {
+	if verbose.IsEnabled() {
+		verbose.Get().Log("git: creating branch %s from %s", branchName, sourceRef)
+	}
+
 	args := []string{constants.GitCheckout, constants.GitBranchFlag, branchName}
 	if len(sourceRef) > 0 {
 		args = append(args, sourceRef)
@@ -23,14 +27,26 @@ func CreateBranch(branchName, sourceRef string) error {
 
 // CreateTag creates an annotated git tag.
 func CreateTag(tag, message string) error {
+	if verbose.IsEnabled() {
+		verbose.Get().Log("git: creating tag %s", tag)
+	}
+
 	return runGitCmd(constants.GitTag, constants.GitTagAnnotateFlag, tag, constants.GitTagMessageFlag, message)
 }
 
 // PushBranchAndTag pushes the branch and tag to origin.
 func PushBranchAndTag(branchName, tag string) error {
+	if verbose.IsEnabled() {
+		verbose.Get().Log("git: pushing branch %s to origin", branchName)
+	}
+
 	err := runGitCmd(constants.GitPush, constants.GitOrigin, branchName)
 	if err != nil {
 		return fmt.Errorf("push branch: %w", err)
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("git: pushing tag %s to origin", tag)
 	}
 
 	err = runGitCmd(constants.GitPush, constants.GitOrigin, tag)
