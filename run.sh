@@ -21,6 +21,7 @@ GITMAP_DIR="$REPO_ROOT/gitmap"
 # -- Defaults --------------------------------------------------
 NO_PULL=false
 NO_DEPLOY=false
+FORCE_PULL=false
 DEPLOY_PATH=""
 UPDATE=false
 RUN=false
