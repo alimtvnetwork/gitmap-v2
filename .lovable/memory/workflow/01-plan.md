@@ -120,6 +120,14 @@
 - ✅ All `cmd/` dispatch files comply with 200-line limit
 - ✅ Refactoring specs added: `58-refactor-workflowfinalize.md`, `59-refactor-root-dispatch.md`
 
+### v2.36.5 — Extended Refactoring
+- ✅ Split `ziparchive.go` (362→171) into `ziparchive.go`, `zipio.go`, `zipdryrun.go`
+- ✅ Split `autocommit.go` (352→179) into `autocommit.go`, `autocommitgit.go`
+- ✅ Split `seowriteloop.go` (340→198) into `seowriteloop.go`, `seowritegit.go`
+- ✅ Split `workflowbranch.go` (310→179) into `workflowbranch.go`, `workflowpending.go`
+- ✅ Split `workflow.go` (291→183) into `workflow.go`, `workflowvalidate.go`
+- ✅ Refactoring specs 60–64 added for all five splits
+
 ## Pending Work
 
 ### Next Up: Temp Release Command

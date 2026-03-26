@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.36.5 — Extended Refactoring
+- Split `ziparchive.go` (362 lines) into three files under `release/`:
+  - `ziparchive.go` (~171 lines): orchestration, DB group routing, ad-hoc path resolution.
+  - `zipio.go` (~152 lines): ZIP I/O with max Deflate compression, SHA-1 hashing, archive summary.
+  - `zipdryrun.go` (~60 lines): dry-run preview for zip groups and ad-hoc archives.
+- Split `autocommit.go` (352 lines) into two files under `release/`:
+  - `autocommit.go` (~179 lines): orchestration, file classification, user prompts.
+  - `autocommitgit.go` (~185 lines): Git primitives, push/retry, rebase recovery.
+- Split `seowriteloop.go` (340 lines) into two files under `cmd/`:
+  - `seowriteloop.go` (~198 lines): commit loop, rotation orchestration, signal handling.
+  - `seowritegit.go` (~153 lines): Git stage/commit/push, rotation file I/O, output formatting.
+- Split `workflowbranch.go` (310 lines) into two files under `release/`:
+  - `workflowbranch.go` (~179 lines): branch-based releases, pending branch discovery.
+  - `workflowpending.go` (~138 lines): metadata-based pending discovery and release.
+- Split `workflow.go` (291 lines) into two files under `release/`:
+  - `workflow.go` (~183 lines): `Execute`, `Options`/`Result` types, step execution.
+  - `workflowvalidate.go` (~115 lines): duplicate detection, orphaned metadata, version resolution.
+- Added refactoring specs: `60-refactor-ziparchive.md`, `61-refactor-autocommit.md`, `62-refactor-seowriteloop.md`, `63-refactor-workflowbranch.md`, `64-refactor-workflow.md`.
+- All `release/` and `cmd/` files comply with the 200-line limit; no functional changes.
+
 ## v2.36.4
 - Split `workflowfinalize.go` (498 lines) into four domain-specific files under `release/`:
   - `workflowfinalize.go` (~190 lines): core pipeline orchestration and metadata persistence.

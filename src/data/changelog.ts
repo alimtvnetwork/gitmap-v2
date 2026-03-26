@@ -5,6 +5,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.5",
+    items: [
+      "Split ziparchive.go (362 lines) into three files: ziparchive.go, zipio.go, zipdryrun.go.",
+      "Split autocommit.go (352 lines) into two files: autocommit.go, autocommitgit.go.",
+      "Split seowriteloop.go (340 lines) into two files: seowriteloop.go, seowritegit.go.",
+      "Split workflowbranch.go (310 lines) into two files: workflowbranch.go, workflowpending.go.",
+      "Split workflow.go (291 lines) into two files: workflow.go, workflowvalidate.go.",
+      "Added refactoring specs 60–64 for all five file splits.",
+      "All release/ and cmd/ files comply with the 200-line limit; no functional changes.",
+    ],
+  },
+  {
     version: "v2.36.4",
     items: [
       "Split workflowfinalize.go (498 lines) into four domain-specific files: workflowfinalize.go, workflowdryrun.go, workflowzip.go, workflowgithub.go.",
