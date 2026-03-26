@@ -30,7 +30,7 @@ func migrateSingleDir(oldDir, subDir string) {
 
 	target := filepath.Join(constants.GitMapDir, subDir)
 	if dirExists(target) {
-		fmt.Fprintf(os.Stderr, constants.WarnMigrationSkipped, oldDir, target)
+		fmt.Printf(constants.WarnMigrationSkipped, oldDir, target)
 
 		return
 	}
