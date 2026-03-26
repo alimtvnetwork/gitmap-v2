@@ -56,7 +56,7 @@ None
     ✓ Database OK (42 repos, 3 groups)
     ✓ All checks passed.
 
-### Example 3: Clean installation
+### Example 3: Legacy directories detected
 
     gitmap doctor
 
@@ -65,11 +65,32 @@ None
     ■ Checking system...
     ✓ Git installed (v2.43.0)
     ✓ Go installed (go1.22.1)
-    ✓ GitHub CLI (gh) installed (v2.44.1)
     ■ Checking binary...
     ✓ Binary at E:\bin-run\gitmap.exe
     ■ Checking database...
     ✓ Database OK (42 repos, 3 groups)
+    ■ Checking directories...
+    ✗ Legacy .release/ directory found
+      Fix: Move contents: mv .release/ .gitmap/release/
+    ✗ Legacy gitmap-output/ directory found
+      Fix: Move contents: mv gitmap-output/ .gitmap/output/
+    ■ Result: 2 issues found
+
+### Example 4: Clean installation
+
+    gitmap doctor
+
+**Output:**
+
+    ■ Checking system...
+    ✓ Git installed (v2.43.0)
+    ✓ Go installed (go1.22.1)
+    ■ Checking binary...
+    ✓ Binary at E:\bin-run\gitmap.exe
+    ■ Checking database...
+    ✓ Database OK (42 repos, 3 groups)
+    ■ Checking directories...
+    ✓ No legacy directories (.release/, gitmap-output/)
     ✓ All checks passed. No issues found.
 
 ## See Also
