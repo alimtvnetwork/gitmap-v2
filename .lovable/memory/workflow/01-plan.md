@@ -115,12 +115,12 @@
 ### v2.36.4 — Code Refactoring
 - ✅ Split `workflowfinalize.go` into `workflowfinalize.go`, `workflowdryrun.go`, `workflowzip.go`, `workflowgithub.go`
 - ✅ All `release/` workflow files comply with 200-line limit
+- ✅ Split `root.go` into `root.go`, `rootcore.go`, `rootrelease.go`, `rootutility.go`, `rootdata.go`, `roottooling.go`, `rootprojectrepos.go`
+- ✅ Eliminated `dispatchMisc`; replaced by `dispatchData` + `dispatchTooling`
+- ✅ All `cmd/` dispatch files comply with 200-line limit
 - ✅ Refactoring specs added: `58-refactor-workflowfinalize.md`, `59-refactor-root-dispatch.md`
 
 ## Pending Work
-
-### Next Up: Refactoring
-- ⬜ **`cmd/root.go` dispatch modularization**: split into `rootcore.go`, `rootrelease.go`, `rootutility.go`, `rootdata.go`, `roottooling.go`, `rootprojectrepos.go` per spec 59
 
 ### Next Up: Temp Release Command
 - ⬜ **`temp-release` (`tr`) command**: create lightweight branches from recent commits without tags
