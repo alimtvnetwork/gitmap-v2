@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.35.1
+- Bumped compiled version constant to v2.35.1.
+- Added legacy UUID data detection to all remaining DB query paths: `group show`, `group list`, `stats`, `history`, `status`, and `export`.
+- All DB query errors from legacy string-based IDs now show a recovery prompt (`rescan` or `db-reset`) instead of raw SQL errors.
+
 ## v2.35.0
 - Bumped compiled version constant to v2.35.0.
 - Consolidated `.release/` and `gitmap-output/` under unified `.gitmap/` directory (`release/`, `output/`).

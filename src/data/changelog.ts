@@ -5,6 +5,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.35.1",
+    items: [
+      "Bumped compiled version constant to v2.35.1.",
+      "Added legacy UUID data detection to all remaining DB query paths: group show, group list, stats, history, status, and export.",
+      "All DB query errors from legacy string-based IDs now show a recovery prompt instead of raw SQL errors.",
+    ],
+  },
+  {
     version: "v2.35.0",
     items: [
       "Bumped compiled version constant to v2.35.0.",
