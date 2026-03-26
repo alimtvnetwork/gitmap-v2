@@ -145,18 +145,6 @@ func resolveBinName() string {
 	return BinaryName(mod)
 }
 
-// CollectSuccessfulBuilds returns file paths from successful results.
-func CollectSuccessfulBuilds(results []CrossCompileResult) []string {
-	var paths []string
-
-	for _, r := range results {
-		if r.Success {
-			paths = append(paths, r.Output)
-		}
-	}
-
-	return paths
-}
 
 // EnsureStagingDir creates the release-assets staging directory.
 func EnsureStagingDir() (string, error) {
