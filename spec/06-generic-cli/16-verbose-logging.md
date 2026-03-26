@@ -213,6 +213,17 @@ version: resolved via --bump minor: v2.5.0
 version: resolved from version.json: v2.5.0
 ```
 
+### Source Resolution (`gitops.go`)
+
+Logged when the release source ref is determined from `--commit`, `--branch`, or HEAD:
+
+```
+source: using commit a1b2c3d4e5f6
+source: using branch feature-x (origin/feature-x)
+source: using HEAD on branch main
+source: using detached HEAD
+```
+
 ### Asset Collection (`github.go`)
 
 Logged when user-provided assets are resolved from `--assets`:
