@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.36.0
+- Bumped compiled version constant to v2.36.0.
+- Added automatic legacy directory migration: `gitmap-output/` → `.gitmap/output/`, `.release/` → `.gitmap/release/`, `.deployed/` → `.gitmap/deployed/`.
+- Migration runs at CLI startup before any command dispatch; skips if target already exists.
+- Added `DeployedDirName` subdirectory constant and legacy directory name constants.
+
 ## v2.35.1
 - Bumped compiled version constant to v2.35.1.
 - Added legacy UUID data detection to all remaining DB query paths: `group show`, `group list`, `stats`, `history`, `status`, and `export`.
