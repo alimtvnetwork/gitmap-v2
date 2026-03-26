@@ -36,7 +36,7 @@ func (db *DB) ImportAll(data model.DatabaseExport) error {
 func (db *DB) importRepos(repos []model.ScanRecord) error {
 	for _, r := range repos {
 		_, err := db.conn.Exec(constants.SQLUpsertRepo,
-			r.ID, r.Slug, r.RepoName, r.HTTPSUrl, r.SSHUrl,
+			r.Slug, r.RepoName, r.HTTPSUrl, r.SSHUrl,
 			r.Branch, r.RelativePath, r.AbsolutePath,
 			r.CloneInstruction, r.Notes)
 		if err != nil {
