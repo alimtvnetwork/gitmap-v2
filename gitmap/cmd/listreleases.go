@@ -181,6 +181,10 @@ func loadReleasesFromDB() []model.ReleaseRecord {
 
 	releases, err := db.ListReleases()
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrListReleasesFailed, err)
 		os.Exit(1)
 	}
