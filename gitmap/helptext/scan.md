@@ -17,7 +17,7 @@ s
 | --config \<path\> | ./data/config.json | Config file path |
 | --mode ssh\|https | https | Clone URL style |
 | --output csv\|json\|terminal | terminal | Output format |
-| --output-path \<dir\> | ./gitmap-output | Output directory |
+| --output-path \<dir\> | ./.gitmap/output | Output directory |
 | --github-desktop | false | Add repos to GitHub Desktop |
 | --open | false | Open output folder after scan |
 | --quiet | false | Suppress clone help section |
@@ -40,7 +40,7 @@ s
     [3/42] github/org/billing-svc
     ...
     Found 42 repositories
-    ✓ Output written to ./gitmap-output/
+    ✓ Output written to ./.gitmap/output/
     ✓ Database updated (42 repos)
 
 ### Example 2: Scan with JSON output and SSH URLs
@@ -51,8 +51,8 @@ s
 
     Scanning ~/work...
     Found 18 repositories
-    ✓ gitmap-output/gitmap.json written
-    ✓ gitmap-output/gitmap.csv written
+    ✓ .gitmap/output/gitmap.json written
+    ✓ .gitmap/output/gitmap.csv written
     ✓ Clone URLs use SSH format (git@github.com:...)
 
 ### Example 3: Scan and register with GitHub Desktop
@@ -63,7 +63,7 @@ s
 
     Scanning D:\repos...
     Found 12 repositories
-    ✓ Output written to ./gitmap-output/
+    ✓ Output written to ./.gitmap/output/
     Registering with GitHub Desktop...
     [1/12] my-api... added
     [2/12] web-app... already registered
@@ -77,7 +77,7 @@ s
 
     Scanning current directory...
     Found 7 repositories
-    ✓ gitmap-output/gitmap.csv written
+    ✓ .gitmap/output/gitmap.csv written
 
 ## See Also
 

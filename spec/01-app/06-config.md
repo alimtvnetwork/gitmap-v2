@@ -11,7 +11,7 @@ Override: `--config <path>` flag.
 {
   "defaultMode": "https",
   "defaultOutput": "terminal",
-  "outputDir": "./gitmap-output",
+  "outputDir": "./.gitmap/output",
   "excludeDirs": [".cache", "node_modules", "vendor", ".venv"],
   "notes": "",
   "release": {
@@ -32,7 +32,7 @@ Override: `--config <path>` flag.
 |---------------|---------------|--------------------|------------------------------------------|
 | defaultMode   | string        | "https"            | "https" or "ssh"                         |
 | defaultOutput | string        | "terminal"         | "terminal", "csv", or "json"             |
-| outputDir     | string        | "./gitmap-output"  | Where output files are written           |
+| outputDir     | string        | "./.gitmap/output"  | Where output files are written           |
 | excludeDirs   | []string      | []                 | Directory names to skip                  |
 | notes         | string        | ""                 | Default note for all records             |
 | release       | ReleaseConfig | {}                 | Release-specific settings (see below)    |

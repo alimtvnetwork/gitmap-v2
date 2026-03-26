@@ -4,7 +4,7 @@
 
 The `temp-release` command (`tr`) creates lightweight, temporary release branches from recent commits without creating tags. It enables rapid experimentation — spin up multiple candidate releases, review them, then clean up the ones you don't need.
 
-**Key Difference from `release`:** No tags are created. No metadata (`.release/` JSON) is written. No auto-commit step. Branches use the `temp-release/` prefix instead of `release/`.
+**Key Difference from `release`:** No tags are created. No metadata (`.gitmap/release/` JSON) is written. No auto-commit step. Branches use the `temp-release/` prefix instead of `release/`.
 
 ## Commands
 
@@ -349,7 +349,7 @@ if command == constants.CmdTempRelease || command == constants.CmdTempReleaseSho
 10. Sequence overflow (e.g., 100 for `$$`) produces a clear error.
 11. Existing branches are skipped with a warning during creation.
 12. DB records are inserted on create and deleted on remove.
-13. No tags are created. No `.release/` metadata is written.
+13. No tags are created. No `.gitmap/release/` metadata is written.
 
 ## Related Commands
 

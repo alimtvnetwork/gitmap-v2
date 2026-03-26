@@ -17,7 +17,7 @@ Every scan **always produces all outputs simultaneously**:
 7. **Direct Clone SSH** — `direct-clone-ssh.ps1` — plain SSH git clone commands, one per line.
 8. **Desktop Script** — `register-desktop.ps1` — registers cloned repos with GitHub Desktop.
 
-The output directory defaults to `gitmap-output/` inside the scanned directory.
+The output directory defaults to `.gitmap/output/` inside the scanned directory.
 
 ## Formats
 
@@ -103,13 +103,13 @@ via `//go:embed templates/*` in `formatter/template.go`. This means:
 ## Output Location
 
 - Terminal: stdout.
-- All files: `gitmap-output/` inside the scanned directory,
+- All files: `.gitmap/output/` inside the scanned directory,
   or path from `--output-path` flag, or exact path from `--out-file`.
 
 ## Output Directory Contents
 
 ```
-gitmap-output/
+.gitmap/output/
 ├── gitmap.csv
 ├── gitmap.json
 ├── folder-structure.md

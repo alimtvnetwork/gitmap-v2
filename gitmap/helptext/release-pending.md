@@ -1,7 +1,7 @@
 # gitmap release-pending
 
 Release all pending versions from two sources: local `release/v*`
-branches missing tags, and `.release/v*.json` metadata files where
+branches missing tags, and `.gitmap/release/v*.json` metadata files where
 neither the branch nor the tag exists.
 
 ## Alias
@@ -60,7 +60,7 @@ rp
 
     ■ Scanning for pending releases...
     Found 0 pending release branch(es).
-    → Found 1 unreleased version(s) from .release/ metadata:
+    → Found 1 unreleased version(s) from .gitmap/release/ metadata:
       v2.19.0 (commit: abc1234, no branch or tag found)
 
     [1/1] Creating release from metadata: v2.19.0
@@ -79,7 +79,7 @@ rp
     [DRY RUN] Found 2 pending release branch(es):
       release/v2.20.0 (would create tag v2.20.0)
       release/v2.21.0 (would create tag v2.21.0)
-    [DRY RUN] Found 1 unreleased from .release/ metadata:
+    [DRY RUN] Found 1 unreleased from .gitmap/release/ metadata:
       v2.19.0 (would create branch + tag from abc1234)
     No changes made.
 

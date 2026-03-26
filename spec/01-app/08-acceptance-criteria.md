@@ -10,7 +10,7 @@
   **then** clone instructions use `git@github.com:…` format.
 
 - **Given** any scan,
-  **then** a `gitmap-output/` folder is created inside the scanned directory
+  **then** a `.gitmap/output/` folder is created inside the scanned directory
   containing `gitmap.csv`, `gitmap.json`, `folder-structure.md`, `clone.ps1`,
   `direct-clone.ps1`, `direct-clone-ssh.ps1`, and `register-desktop.ps1`.
 
@@ -26,7 +26,7 @@
 ## Clone Feature
 
 - **Given** a valid CSV or JSON from scan,
-  **when** `gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored`,
+  **when** `gitmap clone ./.gitmap/output/gitmap.json --target-dir ./restored`,
   **then** all repos are cloned into correct relative paths preserving
   the original folder hierarchy.
 

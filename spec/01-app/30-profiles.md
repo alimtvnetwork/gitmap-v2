@@ -5,13 +5,13 @@
 The `profile` command lets users maintain separate database environments
 (e.g., work, personal, client projects) and switch between them. Each
 profile has its own SQLite database file while sharing the same
-`gitmap-output/` directory.
+`.gitmap/output/` directory.
 
 ---
 
 ## How It Works
 
-- Profiles are tracked in `gitmap-output/data/profiles.json`
+- Profiles are tracked in `.gitmap/output/data/profiles.json`
 - Each profile maps to a separate DB file:
   - `default` → `gitmap.db` (backward compatible)
   - `work` → `gitmap-work.db`
@@ -87,7 +87,7 @@ Cannot delete the `default` profile or the currently active profile.
 
 ## Configuration File
 
-`gitmap-output/data/profiles.json`:
+`.gitmap/output/data/profiles.json`:
 
 ```json
 {

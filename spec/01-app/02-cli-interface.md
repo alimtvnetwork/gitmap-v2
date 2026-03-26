@@ -10,12 +10,12 @@ Default: current working directory.
 Every scan **always produces all outputs** — terminal, CSV, JSON,
 folder-structure Markdown, clone script (`clone.ps1`), and desktop
 registration script (`register-desktop.ps1`) — written to a
-`gitmap-output/` folder at the root of the scanned directory.
+`.gitmap/output/` folder at the root of the scanned directory.
 
 After each scan, a **`last-scan.json`** cache file is written to
-`gitmap-output/` so the scan can be replayed with `gitmap rescan`.
+`.gitmap/output/` so the scan can be replayed with `gitmap rescan`.
 
-After repo upsert, the scan also **imports `.release/v*.json` metadata
+After repo upsert, the scan also **imports `.gitmap/release/v*.json` metadata
 files** from the scan root into the `Releases` database table. This
 keeps the DB in sync with on-disk release history automatically.
 See [22-scan-release-import.md](./22-scan-release-import.md) for details.
@@ -25,16 +25,16 @@ See [22-scan-release-import.md](./22-scan-release-import.md) for details.
 Re-clone repositories from a CSV, JSON, or text file.
 
 **Shorthands:**
-- `gitmap clone json` → resolves to `./gitmap-output/gitmap.json`
-- `gitmap clone csv` → resolves to `./gitmap-output/gitmap.csv`
-- `gitmap clone text` → resolves to `./gitmap-output/gitmap.txt`
+- `gitmap clone json` → resolves to `./.gitmap/output/gitmap.json`
+- `gitmap clone csv` → resolves to `./.gitmap/output/gitmap.csv`
+- `gitmap clone text` → resolves to `./.gitmap/output/gitmap.txt`
 
 If the resolved file doesn't exist, an error instructs the user to run `gitmap scan` first.
 
 ### `gitmap pull <repo-name>` (alias: `p`)
 
 Pull a specific repo by its name (slug). The name is matched
-against `repoName` values in `./gitmap-output/gitmap.json`.
+against `repoName` values in `./.gitmap/output/gitmap.json`.
 
 - **Exact match** takes priority; falls back to partial/substring match (case-insensitive).
 - Lists all available repo names if no match is found.
@@ -44,7 +44,7 @@ against `repoName` values in `./gitmap-output/gitmap.json`.
 
 ### `gitmap rescan` (alias: `rs`)
 
-Re-run the last scan using cached flags from `gitmap-output/last-scan.json`.
+Re-run the last scan using cached flags from `.gitmap/output/last-scan.json`.
 No flags are needed — all options from the previous scan are replayed exactly.
 
 If no previous scan cache exists, an error instructs the user to run `gitmap scan` first.
@@ -88,7 +88,7 @@ but can also be invoked manually for ad-hoc cleanup.
 ### `gitmap desktop-sync` (alias: `ds`)
 
 Sync previously scanned repos to GitHub Desktop without re-scanning.
-Reads from `./gitmap-output/gitmap.json` in the current directory.
+Reads from `./.gitmap/output/gitmap.json` in the current directory.
 
 - Validates output directory and JSON file exist.
 - Checks GitHub Desktop CLI is installed.
@@ -141,14 +141,14 @@ are optional — omit a section to leave those settings untouched.
 Show a live dashboard of all scanned repos with current branch,
 dirty/clean state, ahead/behind counts, stash entries, and file
 change breakdown (staged/modified/untracked). Reads from
-`./gitmap-output/gitmap.json` by default.
+`./.gitmap/output/gitmap.json` by default.
 
 - Supports `--group` (`-g`) to show status for repos in a named group.
 - Supports `--all` to show status for every repo tracked in the database.
 
 ### `gitmap exec <git-args...>` (alias: `x`)
 
-Run any git command across all repos from `./gitmap-output/gitmap.json`.
+Run any git command across all repos from `./.gitmap/output/gitmap.json`.
 Arguments after `exec` are passed directly to `git` inside each repo directory.
 
 - Skips repos whose paths no longer exist on disk.
@@ -164,10 +164,10 @@ full (`v1.2.3`), partial (`v1`, `v1.2` — zero-padded), or omitted
 (reads from `version.json`). Supports pre-release suffixes (`-rc.1`,
 `-beta`) and draft mode.
 
-- Checks `.release/` and Git tags to prevent duplicate releases.
+- Checks `.gitmap/release/` and Git tags to prevent duplicate releases.
 - Records assets from `--assets` in release metadata.
-- Writes release metadata to `.release/vX.Y.Z.json`.
-- Updates `.release/latest.json` for the highest stable version.
+- Writes release metadata to `.gitmap/release/vX.Y.Z.json`.
+- Updates `.gitmap/release/latest.json` for the highest stable version.
 
 See [12-release-command.md](./12-release-command.md) for full details.
 
@@ -189,7 +189,7 @@ for any that are untagged.
 
 ### `gitmap clear-release-json <version>` (alias: `crj`)
 
-Remove a single `.release/vX.Y.Z.json` metadata file. This is a
+Remove a single `.gitmap/release/vX.Y.Z.json` metadata file. This is a
 cleanup command — it does not affect Git branches, tags, or the
 database. Only the on-disk JSON file is deleted.
 
@@ -430,7 +430,7 @@ Existing repos detected — safe-pull enabled automatically.
    - Windows path length risks (paths ≥ 240 characters)
    - OneDrive sync folder detection
 5. When `--verbose` is enabled, every attempt, its stdout/stderr output,
-   and the diagnosis are logged to a timestamped file in `gitmap-output/`.
+   and the diagnosis are logged to a timestamped file in `.gitmap/output/`.
 
 This means users never need to remember to pass `--safe-pull` — it
 activates whenever existing repos are detected during a clone operation.
@@ -444,7 +444,7 @@ activates whenever existing repos are detected during a clone operation.
 | `--config <path>`      | Path to JSON config file             | `./data/config.json` |
 | `--mode ssh \| https`  | Clone URL style                      | `https`              |
 | `--output csv\|json\|terminal` | Output format                | `terminal`           |
-| `--output-path <dir>`  | Output directory                     | `gitmap-output/` in scan dir |
+| `--output-path <dir>`  | Output directory                     | `.gitmap/output/` in scan dir |
 | `--out-file <path>`    | Exact CSV output file path           | auto                 |
 | `--github-desktop`     | Add discovered repos to GitHub Desktop | `false`            |
 | `--open`               | Open output folder after scan completes | `false`           |
@@ -615,7 +615,7 @@ gitmap scan ..
 gitmap rescan
 gitmap rs            # alias
 
-# Clone using shorthand (auto-resolves to ./gitmap-output/gitmap.json)
+# Clone using shorthand (auto-resolves to ./.gitmap/output/gitmap.json)
 gitmap clone json
 gitmap c json        # alias
 
@@ -623,13 +623,13 @@ gitmap c json        # alias
 gitmap clone csv
 
 # Clone from JSON, preserving folder structure
-gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored
+gitmap clone ./.gitmap/output/gitmap.json --target-dir ./restored
 
 # Clone with verbose logging
 gitmap clone json --verbose
 
 # Clone and register with GitHub Desktop
-gitmap clone ./gitmap-output/gitmap.csv --target-dir ./restored --github-desktop
+gitmap clone ./.gitmap/output/gitmap.csv --target-dir ./restored --github-desktop
 
 # Pull a single repo by name
 gitmap pull my-api-service
@@ -767,7 +767,7 @@ gitmap lv --limit 5              # top 5 versions
 gitmap lv --json                 # JSON output
 gitmap lv --limit 3 --json       # top 3 as JSON
 gitmap lv --source release       # only versions from gitmap release
-gitmap lv --source import        # only versions imported from .release/ files
+gitmap lv --source import        # only versions imported from .gitmap/release/ files
 
 # List releases (from database)
 gitmap list-releases
@@ -775,7 +775,7 @@ gitmap lr                        # alias
 gitmap lr --limit 10             # top 10 releases
 gitmap lr --json                 # JSON output
 gitmap lr --source release       # only releases created via gitmap release
-gitmap lr --source import        # only releases imported from .release/ files
+gitmap lr --source import        # only releases imported from .gitmap/release/ files
 
 # Reset database
 gitmap db-reset --confirm

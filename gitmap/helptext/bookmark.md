@@ -51,7 +51,7 @@ None.
     → gitmap scan D:\wp-work --quiet
     Scanning D:\wp-work...
     Found 42 repositories
-    ✓ Output written to ./gitmap-output/
+    ✓ Output written to ./.gitmap/output/
 
 ### Example 4: Delete a bookmark
 

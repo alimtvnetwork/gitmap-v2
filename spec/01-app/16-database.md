@@ -38,7 +38,7 @@ binary location.
 
 On every `scan` completion, gitmap:
 
-1. Checks if `gitmap-output/data/gitmap.db` exists.
+1. Checks if `.gitmap/output/data/gitmap.db` exists.
 2. If missing, creates the database and initializes all tables.
 3. Upserts all scanned repos into the `Repos` table.
 
@@ -201,10 +201,10 @@ If the HTTPS URL is empty, fall back to `repoName`.
 Commands that resolve repos by slug (`pull`, `exec`, `status`) use a
 two-tier lookup strategy:
 
-1. **Try the database first.** Open `gitmap-output/data/gitmap.db` and
+1. **Try the database first.** Open `.gitmap/output/data/gitmap.db` and
    query the `Repos` table.
 2. **Fall back to JSON.** If the database does not exist (no prior scan
-   with DB support), load `gitmap-output/gitmap.json` and match by
+   with DB support), load `.gitmap/output/gitmap.json` and match by
    repo name as before.
 
 ---

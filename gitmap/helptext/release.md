@@ -39,7 +39,7 @@ r
 
 ## Orphaned Metadata Recovery
 
-If a `.release/vX.Y.Z.json` file exists but neither the Git tag nor
+If a `.gitmap/release/vX.Y.Z.json` file exists but neither the Git tag nor
 the release branch is found, the command warns and prompts:
 
     ⚠ Release metadata exists for v2.3.10 but no tag or branch was found.
@@ -68,7 +68,7 @@ Answering `n` (or pressing Enter) aborts the release.
       ✓ gitmap_v2.21.1_darwin_amd64
       ✓ gitmap_v2.21.1_darwin_arm64
     Uploading to GitHub... done
-    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Metadata written to .gitmap/release/v2.21.1.json
     ✓ Released v2.21.1
 
 ### Example 2: Dry-run preview with minor bump
@@ -125,7 +125,7 @@ Answering `n` (or pressing Enter) aborts the release.
     Creating branch release/v2.21.1... done
     Creating tag v2.21.1... done
     Pushing branch and tag... done
-    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Metadata written to .gitmap/release/v2.21.1.json
     ✓ Released v2.21.1
 
 ### Example 6: Release as a draft from a specific branch
@@ -138,7 +138,7 @@ Answering `n` (or pressing Enter) aborts the release.
     Creating tag v3.0.0-rc1... done
     Pushing branch and tag... done
     ✓ Draft release created (not published)
-    ✓ Metadata written to .release/v3.0.0-rc1.json
+    ✓ Metadata written to .gitmap/release/v3.0.0-rc1.json
     ✓ Released v3.0.0-rc1 (draft)
 
 ### Example 7: List resolved cross-compile targets
@@ -167,7 +167,7 @@ Answering `n` (or pressing Enter) aborts the release.
     Creating tag v2.21.1... done
     Pushing branch and tag... done
     Skipping Go binary cross-compilation.
-    ✓ Metadata written to .release/v2.21.1.json
+    ✓ Metadata written to .gitmap/release/v2.21.1.json
     ✓ Released v2.21.1
 
 ## See Also

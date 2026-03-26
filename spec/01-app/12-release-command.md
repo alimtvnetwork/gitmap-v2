@@ -30,7 +30,7 @@ Creates the tag and pushes if not already done.
 Release all pending versions from **two sources**:
 
 1. Local `release/v*` branches missing their `vX.Y.Z` tag.
-2. `.release/vX.Y.Z.json` metadata files where neither the branch
+2. `.gitmap/release/vX.Y.Z.json` metadata files where neither the branch
    nor the tag exists — uses the stored `commit` SHA to create
    branch + tag.
 
@@ -94,7 +94,7 @@ The following flag combinations are invalid and cause an immediate error:
 Version is resolved in priority order:
 
 1. **CLI argument** — `gitmap release v1.2.3`
-2. **`--bump` flag** — reads latest from `.release/latest.json`, falls back to git tags
+2. **`--bump` flag** — reads latest from `.gitmap/release/latest.json`, falls back to git tags
 3. **`version.json`** — `{ "version": "1.2.3" }` in project root
 4. **Error** — no version source found
 
@@ -140,7 +140,7 @@ Metadata files are not written.
   [dry-run] Create branch release/v1.2.3 from main
   [dry-run] Create tag v1.2.3
   [dry-run] Push branch and tag to origin
-  [dry-run] Write metadata to .release/v1.2.3.json
+  [dry-run] Write metadata to .gitmap/release/v1.2.3.json
   [dry-run] Mark v1.2.3 as latest
 ```
 
@@ -148,7 +148,7 @@ Metadata files are not written.
 
 ## Auto-Increment (`--bump`)
 
-Reads the latest version from `.release/latest.json` and increments.
+Reads the latest version from `.gitmap/release/latest.json` and increments.
 If `latest.json` is missing, falls back to scanning local Git tags
 (`v*`) for the highest stable semver version.
 
@@ -168,7 +168,7 @@ an error instructing the user to create an initial release first.
 
 Before creating a release, the tool checks:
 
-1. **`.release/vX.Y.Z.json`** — if the metadata file exists:
+1. **`.gitmap/release/vX.Y.Z.json`** — if the metadata file exists:
    - Check if the Git tag exists (locally or remote).
    - Check if the release branch exists.
    - If **both** are missing → orphaned metadata (see below).
@@ -177,12 +177,12 @@ Before creating a release, the tool checks:
 
 Error message:
 ```
-Version v1.2.3 is already released. See .release/v1.2.3.json for details.
+Version v1.2.3 is already released. See .gitmap/release/v1.2.3.json for details.
 ```
 
 ### Orphaned Metadata Recovery
 
-If a `.release/vX.Y.Z.json` file exists but neither the Git tag nor
+If a `.gitmap/release/vX.Y.Z.json` file exists but neither the Git tag nor
 the release branch is found, the metadata is considered **orphaned**
 (e.g. from a previously failed or manually cleaned-up release).
 
@@ -195,7 +195,7 @@ Instead of aborting, the tool prompts the user:
 
 | User Response | Behavior |
 |---------------|----------|
-| `y` or `yes`  | Deletes the stale `.release/vX.Y.Z.json` file and proceeds with the normal release workflow (step 5 onward). |
+| `y` or `yes`  | Deletes the stale `.gitmap/release/vX.Y.Z.json` file and proceeds with the normal release workflow (step 5 onward). |
 | `n`, `no`, or Enter | Aborts the release with "release aborted by user". |
 | EOF / no input | Aborts with the standard "already released" error. |
 
@@ -226,7 +226,7 @@ If a step fails after partial execution:
 - **Branch/tag created but push fails**: error is reported; user must
   manually delete the local branch and tag.
 - **Push succeeds but metadata write fails**: branch and tag remain on
-  remote; user should manually create the `.release/` file.
+  remote; user should manually create the `.gitmap/release/` file.
 
 No automatic rollback is performed. The error message includes the
 failed step so the user knows exactly what to clean up.
@@ -246,7 +246,7 @@ failed step so the user knows exactly what to clean up.
 ```
  1. Resolve version (CLI → --bump → version.json → error)
  2. Pad partial version to full semver
- 3. Check .release/ and git tags for duplicates
+ 3. Check .gitmap/release/ and git tags for duplicates
  3a. If orphaned metadata detected → prompt to remove and continue
  4. Resolve source commit (--commit / --branch / HEAD)
  5. Create branch release/vX.Y.Z
@@ -254,8 +254,8 @@ failed step so the user knows exactly what to clean up.
  7. Push branch + tag to origin
  8. Collect --assets contents, cross-compile, upload
  9. Return to original branch
-10. Write .release/vX.Y.Z.json + update latest.json on original branch
-11. Auto-commit .release/ metadata files
+10. Write .gitmap/release/vX.Y.Z.json + update latest.json on original branch
+11. Auto-commit .gitmap/release/ metadata files
 ```
 
 ## Workflow: Release from Existing Branch
@@ -269,7 +269,7 @@ failed step so the user knows exactly what to clean up.
 6. Return to original branch
 ```
 
-**Note:** `release-branch` and `release-pending` skip `.release/` metadata
+**Note:** `release-branch` and `release-pending` skip `.gitmap/release/` metadata
 writing and committing. These commands process branches/metadata that
 already exist — they only create the tag, push, and upload assets.
 
@@ -280,7 +280,7 @@ already exist — they only create the tag, push, and upload assets.
 ```
 release/
 ├── semver.go       # Version parsing, padding, comparison, bumping
-├── metadata.go     # Read/write .release/*.json, latest.json, version.json
+├── metadata.go     # Read/write .gitmap/release/*.json, latest.json, version.json
 ├── gitops.go       # Branch, tag, push, checkout Git operations + git tag fallback
 ├── github.go       # Asset collection, changelog/readme detection
 └── workflow.go     # Orchestration: Execute(), ExecuteFromBranch()
@@ -378,7 +378,7 @@ gitmap release-pending --assets ./dist
   without matching tags are released.
 - **Given** `gitmap release-pending --dry-run`, **then** pending releases
   are listed but no tags or pushes are created.
-- **Given** `.release/vX.Y.Z.json` exists but no tag or branch, **then**
+- **Given** `.gitmap/release/vX.Y.Z.json` exists but no tag or branch, **then**
   user is prompted to remove the orphaned JSON file.
 - **Given** orphaned metadata prompt answered `y`, **then** the stale
   JSON is deleted and the release proceeds normally.

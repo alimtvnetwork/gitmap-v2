@@ -62,7 +62,7 @@ cl
 
 **Output:**
 
-    Source: .release/v2.20.0.json
+    Source: .gitmap/release/v2.20.0.json
     v2.20.0 — 2025-02-28
     - Add clear-release-json command with --dry-run
     - Add release-pending metadata source recovery

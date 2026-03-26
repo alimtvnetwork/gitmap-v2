@@ -2,7 +2,7 @@
 
 List release metadata from the current git repo or stored database.
 
-When run inside a git repo with `.release/v*.json` files, releases are read
+When run inside a git repo with `.gitmap/release/v*.json` files, releases are read
 directly from those files. Otherwise, releases are loaded from the gitmap
 database.
 
@@ -24,7 +24,7 @@ lr
 
 ## Prerequisites
 
-- Inside a git repo with `.release/v*.json` files, **or**
+- Inside a git repo with `.gitmap/release/v*.json` files, **or**
 - Run `gitmap scan` or `gitmap release` to populate the database
 
 ## Examples

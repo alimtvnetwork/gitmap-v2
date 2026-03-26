@@ -24,9 +24,9 @@ is provided to `gitmap release`.
 
 ---
 
-## Release Metadata: `.release/vX.Y.Z.json`
+## Release Metadata: `.gitmap/release/vX.Y.Z.json`
 
-One file per release, stored in the `.release/` directory at the
+One file per release, stored in the `.gitmap/release/` directory at the
 project root. Created after a successful release.
 
 ```json
@@ -61,7 +61,7 @@ project root. Created after a successful release.
 
 ---
 
-## Latest Pointer: `.release/latest.json`
+## Latest Pointer: `.gitmap/release/latest.json`
 
 Always points to the highest **stable** (non-pre-release) version.
 Updated after each stable release.
@@ -82,10 +82,10 @@ Updated after each stable release.
 
 ---
 
-## `.release/` Directory Structure
+## `.gitmap/release/` Directory Structure
 
 ```
-.release/
+.gitmap/release/
 ├── latest.json
 ├── v1.0.0.json
 ├── v1.1.0.json
@@ -106,9 +106,9 @@ Updated after each stable release.
 
 ### Git Tracking
 
-The `.release/` directory should **NOT** be committed to the repository.
+The `.gitmap/release/` directory should **NOT** be committed to the repository.
 Release metadata JSON files are local build artifacts, not source code.
-Add `.release/` to `.gitignore`. Use `gitmap clear-release-json <version>`
+Add `.gitmap/release/` to `.gitignore`. Use `gitmap clear-release-json <version>`
 to remove individual release files when needed.
 
 ---
@@ -146,16 +146,16 @@ The release data model is implemented in `release/metadata.go`:
 | Function          | Responsibility                                    |
 |-------------------|---------------------------------------------------|
 | `ReadVersionFile` | Parse `version.json`, return raw version string   |
-| `ReadLatest`      | Parse `.release/latest.json`                      |
-| `WriteLatest`     | Update `.release/latest.json` for stable releases |
-| `WriteReleaseMeta`| Write `.release/vX.Y.Z.json`                      |
-| `ReleaseExists`   | Check if `.release/vX.Y.Z.json` already exists    |
+| `ReadLatest`      | Parse `.gitmap/release/latest.json`                      |
+| `WriteLatest`     | Update `.gitmap/release/latest.json` for stable releases |
+| `WriteReleaseMeta`| Write `.gitmap/release/vX.Y.Z.json`                      |
+| `ReleaseExists`   | Check if `.gitmap/release/vX.Y.Z.json` already exists    |
 
 Cleanup lives in `cmd/clearreleasejson.go`:
 
 | Function              | Responsibility                                    |
 |-----------------------|---------------------------------------------------|
-| `runClearReleaseJSON` | Remove a `.release/vX.Y.Z.json` file by version   |
+| `runClearReleaseJSON` | Remove a `.gitmap/release/vX.Y.Z.json` file by version   |
 
 Version parsing lives in `release/semver.go`:
 

@@ -1,6 +1,6 @@
 # gitmap clear-release-json
 
-Remove a specific release metadata JSON file from the `.release/` directory.
+Remove a specific release metadata JSON file from the `.gitmap/release/` directory.
 
 ## Alias
 
@@ -18,7 +18,7 @@ crj
 
 ## Prerequisites
 
-- A `.release/vX.Y.Z.json` file must exist for the given version
+- A `.gitmap/release/vX.Y.Z.json` file must exist for the given version
 - Run `gitmap release` first to generate metadata (see [release](release.md))
 
 ## Examples
@@ -29,8 +29,8 @@ crj
 
 **Output:**
 
-    Found .release/v2.20.0.json (1.2 KB)
-    ✓ Removed .release/v2.20.0.json
+    Found .gitmap/release/v2.20.0.json (1.2 KB)
+    ✓ Removed .gitmap/release/v2.20.0.json
 
 ### Example 2: Dry-run preview
 
@@ -38,8 +38,8 @@ crj
 
 **Output:**
 
-    [dry-run] Found .release/v2.20.0.json (1.2 KB)
-    [dry-run] Would remove .release/v2.20.0.json
+    [dry-run] Found .gitmap/release/v2.20.0.json (1.2 KB)
+    [dry-run] Would remove .gitmap/release/v2.20.0.json
     No changes made.
 
 ### Example 3: Version not found
@@ -49,7 +49,7 @@ crj
 **Output:**
 
     ✗ Error: no release file found for v9.9.9
-    Available versions in .release/:
+    Available versions in .gitmap/release/:
       v2.22.0, v2.21.0, v2.20.0, v2.19.0
     → Use 'gitmap list-releases' to see all stored releases
 
@@ -59,8 +59,8 @@ crj
 
 **Output:**
 
-    Found .release/v2.0.0.json (0.8 KB)
-    ✓ Removed .release/v2.0.0.json
+    Found .gitmap/release/v2.0.0.json (0.8 KB)
+    ✓ Removed .gitmap/release/v2.0.0.json
 
 ### Example 5: Clean up after orphaned metadata prompt
 
@@ -71,8 +71,8 @@ crj
 
 **Output:**
 
-    Found .release/v2.20.0.json (1.2 KB)
-    ✓ Removed .release/v2.20.0.json
+    Found .gitmap/release/v2.20.0.json (1.2 KB)
+    ✓ Removed .gitmap/release/v2.20.0.json
     → You can now re-run 'gitmap release --bump patch'
 
 ## See Also

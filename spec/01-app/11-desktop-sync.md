@@ -12,12 +12,12 @@ requiring a full re-scan.
 gitmap desktop-sync
 ```
 
-No flags. The command always reads from `./gitmap-output/gitmap.json`
+No flags. The command always reads from `./.gitmap/output/gitmap.json`
 in the current working directory.
 
 ## Prerequisites
 
-1. **Scan output exists**: `gitmap-output/` folder with `gitmap.json`
+1. **Scan output exists**: `.gitmap/output/` folder with `gitmap.json`
    must exist in the current directory. Run `gitmap scan` first.
 2. **GitHub Desktop installed**: The `github` CLI must be on `PATH`.
 
@@ -25,12 +25,12 @@ in the current working directory.
 
 ### Step 1 — Validate Output Directory
 
-Check if `gitmap-output/` exists in the current directory.
+Check if `.gitmap/output/` exists in the current directory.
 If missing, print an error and exit with code 1.
 
 ### Step 2 — Validate JSON File
 
-Check if `gitmap-output/gitmap.json` exists.
+Check if `.gitmap/output/gitmap.json` exists.
 If missing, print an error and exit with code 1.
 
 ### Step 3 — Check GitHub Desktop
@@ -63,7 +63,7 @@ GitHub Desktop sync: 8 added, 2 skipped, 1 failed
 
 | Scenario | Behavior |
 |----------|----------|
-| No `gitmap-output/` directory | Print error, exit 1 |
+| No `.gitmap/output/` directory | Print error, exit 1 |
 | No `gitmap.json` file | Print error, exit 1 |
 | GitHub Desktop not installed | Print error, exit 1 |
 | Invalid JSON | Print parse error, exit 1 |
@@ -91,8 +91,8 @@ GitHub Desktop sync: 8 added, 2 skipped, 1 failed
 ```
 User runs: gitmap desktop-sync
    │
-   ├─ Check ./gitmap-output/ exists → error if missing
-   ├─ Check ./gitmap-output/gitmap.json exists → error if missing
+   ├─ Check ./.gitmap/output/ exists → error if missing
+   ├─ Check ./.gitmap/output/gitmap.json exists → error if missing
    ├─ Check GitHub Desktop CLI available → error if missing
    ├─ Parse JSON → []ScanRecord
    │

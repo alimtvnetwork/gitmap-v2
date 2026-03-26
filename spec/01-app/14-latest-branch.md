@@ -167,7 +167,7 @@ release/v2.3.0,origin,b7c8d9e,04-Mar-2025 05:45 PM,Bump version,origin/release/v
 - Branch name resolution strips `<remote>/` prefix using
   `strings.TrimPrefix`.
 - SHA display is truncated to 7 characters for readability.
-- The command does **not** require `gitmap-output/` or a previous scan.
+- The command does **not** require `.gitmap/output/` or a previous scan.
 
 ## File Layout
 

@@ -34,7 +34,7 @@ rs
     ...
     Found 44 repositories (+2 new since last scan)
     ✓ Database updated (44 repos)
-    ✓ Output written to ./gitmap-output/
+    ✓ Output written to ./.gitmap/output/
 
 ### Example 2: Rescan with JSON output
 
@@ -44,8 +44,8 @@ rs
 
     Re-scanning D:\wp-work (cached parameters)...
     Found 44 repositories
-    ✓ gitmap-output/gitmap.json written
-    ✓ gitmap-output/gitmap.csv written
+    ✓ .gitmap/output/gitmap.json written
+    ✓ .gitmap/output/gitmap.csv written
 
 ### Example 3: Rescan with no cache (error)
 

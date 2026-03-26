@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Remove a specific release metadata JSON file from the `.release/` directory. Supports a `--dry-run` flag to preview the target file without deleting it.
+Remove a specific release metadata JSON file from the `.gitmap/release/` directory. Supports a `--dry-run` flag to preview the target file without deleting it.
 
 ## Command
 
@@ -26,14 +26,14 @@ The `<version>` argument is parsed through `release.Parse`, which applies standa
 2. Partial versions are zero-padded — `v2` becomes `v2.0.0`, `v2.1` becomes `v2.1.0`.
 3. Pre-release suffixes (e.g. `v3.0.0-rc.1`) are preserved as-is.
 
-The resolved version determines the file path: `.release/vX.Y.Z.json`.
+The resolved version determines the file path: `.gitmap/release/vX.Y.Z.json`.
 
 ## Behaviour
 
 ### Normal Mode
 
 1. Parse and validate the version argument.
-2. Construct the path `.release/vX.Y.Z.json`.
+2. Construct the path `.gitmap/release/vX.Y.Z.json`.
 3. Check the file exists — if not, print an error and exit 1.
 4. Remove the file.
 5. Print a success message.
@@ -41,7 +41,7 @@ The resolved version determines the file path: `.release/vX.Y.Z.json`.
 ### Dry-Run Mode
 
 1. Parse and validate the version argument.
-2. Construct the path `.release/vX.Y.Z.json`.
+2. Construct the path `.gitmap/release/vX.Y.Z.json`.
 3. Check the file exists — if not, print an error and exit 1.
 4. Print `[dry-run] Would remove <path>` and exit 0 without deleting.
 
@@ -55,7 +55,7 @@ The resolved version determines the file path: `.release/vX.Y.Z.json`.
 | File exists but is read-only | `os.Remove` fails; print `Error: could not remove release file: <err>` and exit 1 |
 | `--dry-run` with missing file | Same as normal missing-file error — dry-run still validates existence |
 | `--dry-run` with valid file | Print preview message and exit 0; file is untouched |
-| Partial version `v2` | Normalised to `v2.0.0`; targets `.release/v2.0.0.json` |
+| Partial version `v2` | Normalised to `v2.0.0`; targets `.gitmap/release/v2.0.0.json` |
 
 ## Exit Codes
 
@@ -70,7 +70,7 @@ This command produces only terminal output. It does not support `--json` or `--c
 
 | Constant | Format String |
 |----------|---------------|
-| `MsgClearReleaseDone` | `✓ Removed .release/%s.json` |
+| `MsgClearReleaseDone` | `✓ Removed .gitmap/release/%s.json` |
 | `MsgClearReleaseDryRun` | `[dry-run] Would remove %s` |
 | `ErrClearReleaseUsage` | `Usage: gitmap clear-release-json <version> [--dry-run]` |
 | `ErrClearReleaseNotFound` | `Error: no release file found for %s` |
@@ -89,6 +89,6 @@ This command produces only terminal output. It does not support `--json` or `--c
 ## See Also
 
 - [release](12-release-command.md) — Create a release
-- [release data model](13-release-data-model.md) — `.release/` file layout and schemas
+- [release data model](13-release-data-model.md) — `.gitmap/release/` file layout and schemas
 - [list-releases](21-list-releases.md) — Show stored releases
 - [CLI interface](02-cli-interface.md) — Full command reference

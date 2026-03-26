@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Enhance the `scan` command to discover `.release/*.json` metadata files
+Enhance the `scan` command to discover `.gitmap/release/*.json` metadata files
 in the scan root and upsert them into the `Releases` database table.
 This keeps the DB in sync with on-disk release history without requiring
 users to run `gitmap release` for every past version.
@@ -14,15 +14,15 @@ after repos are upserted and before the output folder is opened.
 
 ## Behavior
 
-1. Resolve the `.release/` directory path relative to the scan root.
+1. Resolve the `.gitmap/release/` directory path relative to the scan root.
 2. If the directory does not exist, skip silently (no error).
-3. Read all files matching the glob `.release/v*.json`.
+3. Read all files matching the glob `.gitmap/release/v*.json`.
    Skip `latest.json` and any non-`v`-prefixed files.
 4. For each file, unmarshal into `release.ReleaseMeta`.
    Skip files that fail to parse (log a warning, continue).
 5. Map each `ReleaseMeta` to a `model.ReleaseRecord`.
 6. Call `db.UpsertRelease()` for each record.
-7. Print a summary: `"Releases imported: %d from .release/\n"`.
+7. Print a summary: `"Releases imported: %d from .gitmap/release/\n"`.
 8. If zero files were found, print nothing (silent skip).
 
 ## Field Mapping
@@ -44,12 +44,12 @@ after repos are upserted and before the output folder is opened.
 
 | Condition                        | Behavior                                    |
 |----------------------------------|---------------------------------------------|
-| `.release/` missing              | Skip silently, no error                     |
+| `.gitmap/release/` missing              | Skip silently, no error                     |
 | File fails to parse              | Log warning, skip file, continue            |
 | Duplicate tag in DB              | Upsert overwrites (ON CONFLICT(Tag))        |
 | `latest.json` in directory       | Ignored (not a release file)                |
 | Pre-release files (e.g. rc)      | Imported normally, `IsLatest = false`        |
-| Empty `.release/` directory      | Skip silently, no output                    |
+| Empty `.gitmap/release/` directory      | Skip silently, no output                    |
 
 ## Implementation Files
 
@@ -68,7 +68,7 @@ after repos are upserted and before the output folder is opened.
 ReadReleaseMeta(path string) (ReleaseMeta, error)
 ```
 
-Reads and unmarshals a single `.release/vX.Y.Z.json` file.
+Reads and unmarshals a single `.gitmap/release/vX.Y.Z.json` file.
 
 ### `cmd/scanimport.go`
 

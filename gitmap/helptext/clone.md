@@ -30,7 +30,7 @@ c
 
 **Output:**
 
-    Cloning from gitmap-output/gitmap.json...
+    Cloning from .gitmap/output/gitmap.json...
     [1/12] Cloning my-api... done
     [2/12] Cloning web-app... done
     [3/12] Cloning billing-svc... done
@@ -58,7 +58,7 @@ c
 **Output:**
 
     [verbose] Log file: gitmap-debug-2025-03-10T14-30.log
-    Cloning from gitmap-output/gitmap.txt...
+    Cloning from .gitmap/output/gitmap.txt...
     [1/5] Cloning https://github.com/user/my-api.git... done
     [2/5] Cloning https://github.com/user/web-app.git... done
     ...

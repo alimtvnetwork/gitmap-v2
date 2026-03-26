@@ -3,8 +3,8 @@
 ## Purpose
 
 `gitmap list-releases` (`lr`) displays release records, sorted from newest to
-oldest. It reads from the **current git repo** first (`.release/v*.json`
-files), falling back to the SQLite database only when no `.release/` directory
+oldest. It reads from the **current git repo** first (`.gitmap/release/v*.json`
+files), falling back to the SQLite database only when no `.gitmap/release/` directory
 exists.
 
 ## Command Signature
@@ -24,22 +24,22 @@ gitmap lr [flags]
 
 ## Data Source (Resolution Order)
 
-1. **Repo-local `.release/` files** (preferred): read all `.release/v*.json`
+1. **Repo-local `.gitmap/release/` files** (preferred): read all `.gitmap/release/v*.json`
    files via `release.ListReleaseMetaFiles()`, convert each `ReleaseMeta` to
    a `ReleaseRecord` with `Source = "repo"`, sort by `CreatedAt DESC`, and
-   mark the latest using `.release/latest.json`.
-2. **Database fallback**: if no `.release/` files are found, open the SQLite
+   mark the latest using `.gitmap/release/latest.json`.
+2. **Database fallback**: if no `.gitmap/release/` files are found, open the SQLite
    database via `store.Open()` and call `db.ListReleases()`.
 
-This ensures `gitmap lr` works inside any git repo that has `.release/`
+This ensures `gitmap lr` works inside any git repo that has `.gitmap/release/`
 metadata, without requiring a prior `gitmap scan`.
 
 ## Behavior
 
-1. Call `release.ListReleaseMetaFiles()` to read `.release/v*.json`.
+1. Call `release.ListReleaseMetaFiles()` to read `.gitmap/release/v*.json`.
 2. If results are found, convert to `[]model.ReleaseRecord`, sort by
    `CreatedAt DESC`, and mark `IsLatest` from `latest.json`.
-3. If no `.release/` files exist, open the database and call
+3. If no `.gitmap/release/` files exist, open the database and call
    `db.ListReleases()`.
 4. Apply `--source` filter if provided.
 5. Apply `--limit N` if provided and N > 0.
@@ -83,7 +83,7 @@ Releases (3 found)
 
 | Condition              | Message                                          | Exit |
 |------------------------|--------------------------------------------------|------|
-| No .release/ + no DB   | `"No database found. Run gitmap scan first.\n"`  | 1    |
+| No .gitmap/release/ + no DB   | `"No database found. Run gitmap scan first.\n"`  | 1    |
 | DB open/migrate error  | `"failed to load releases: %v\n"`                | 1    |
 | No releases            | `"No releases found.\n"`                         | 0    |
 
@@ -102,7 +102,7 @@ Releases (3 found)
 
 - `cmd/root.go`: register `list-releases` / `lr` in `dispatchMisc`.
 - Reuse `release.ListReleaseMetaFiles()` — no new filesystem code needed.
-- DB path is only resolved when `.release/` files are absent.
+- DB path is only resolved when `.gitmap/release/` files are absent.
 
 ## Code Style
 

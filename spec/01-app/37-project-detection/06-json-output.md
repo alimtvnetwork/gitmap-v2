@@ -2,7 +2,7 @@
 
 ## Output Files
 
-Each project type produces a dedicated JSON file in `gitmap-output/`:
+Each project type produces a dedicated JSON file in `.gitmap/output/`:
 
 | File                    | Contents                     |
 |-------------------------|------------------------------|

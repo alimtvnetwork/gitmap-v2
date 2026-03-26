@@ -29,7 +29,7 @@ in the GitHub Desktop repository list.
 
 ```bash
 # Clone and add all successfully cloned repos to GitHub Desktop
-gitmap clone ./gitmap-output/gitmap.json --target-dir ./restored --github-desktop
+gitmap clone ./.gitmap/output/gitmap.json --target-dir ./restored --github-desktop
 ```
 
 After cloning, only **successfully cloned** repositories are registered.

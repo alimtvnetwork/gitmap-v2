@@ -43,7 +43,7 @@ Build configuration lives in `gitmap/powershell.json`.
 .\run.ps1 -R scan D:\repos --mode ssh
 
 # Build and clone from JSON
-.\run.ps1 -R clone .\gitmap-output\gitmap.json --target-dir .\restored
+.\run.ps1 -R clone .\.gitmap/output\gitmap.json --target-dir .\restored
 
 # Build and clone with GitHub Desktop registration
 .\run.ps1 -R clone .\gitmap.json --github-desktop
@@ -237,7 +237,7 @@ The script uses a three-tier fallback strategy:
 | Priority | Source | Method |
 |----------|--------|--------|
 | 1 | Binary | `gitmap list-versions --limit 1` — parses first `vX.Y.Z` from output |
-| 2 | JSON | `.release/latest.json` — reads `tag` or `version` field |
+| 2 | JSON | `.gitmap/release/latest.json` — reads `tag` or `version` field |
 | 3 | Git tag | `git tag --list "v*" --sort=-version:refname` — first stable `vX.Y.Z` |
 
 ### Parameters
@@ -285,7 +285,7 @@ if (Test-Path $lastReleaseScript) {
 - **Separate file** keeps `run.ps1` lean and allows reuse from any
   context (manual invocation, CI, update scripts).
 - **Three-tier fallback** ensures a result even when the binary is
-  unavailable (fresh clone) or when `.release/` metadata hasn't been
+  unavailable (fresh clone) or when `.gitmap/release/` metadata hasn't been
   generated yet.
 - **No error exits** — the script always succeeds; missing data simply
   shows `unknown`.

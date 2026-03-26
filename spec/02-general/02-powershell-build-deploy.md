@@ -275,7 +275,7 @@ The script uses a three-tier fallback strategy:
 | Priority | Source | Method |
 |----------|--------|--------|
 | 1 | Binary | `toolname list-versions --limit 1` — parses first `vX.Y.Z` from output |
-| 2 | JSON | `.release/latest.json` — reads `tag` or `version` field |
+| 2 | JSON | `.gitmap/release/latest.json` — reads `tag` or `version` field |
 | 3 | Git tag | `git tag --list "v*" --sort=-version:refname` — first stable `vX.Y.Z` |
 
 ### Parameters
@@ -322,7 +322,7 @@ if (Test-Path $lastReleaseScript) {
 - **No error exits** — the script always succeeds; missing data shows
   `unknown`.
 - **Three-tier fallback** ensures a result even when the binary is
-  unavailable (fresh clone) or `.release/` metadata hasn't been
+  unavailable (fresh clone) or `.gitmap/release/` metadata hasn't been
   generated yet.
 - **Separate file** keeps `run.ps1` lean and allows reuse from any
   context.

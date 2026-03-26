@@ -22,7 +22,7 @@ defined ad-hoc via flags on `gitmap release`.
    during the release workflow, and the resulting archives are attached
    as release assets.
 6. **Metadata persistence** — zip group definitions are stored in the
-   `.release/vX.Y.Z.json` metadata under a `zipGroups` key.
+   `.gitmap/release/vX.Y.Z.json` metadata under a `zipGroups` key.
 
 ---
 
@@ -158,7 +158,7 @@ unless `--bundle` is used.
 | IsFolder    | INTEGER | DEFAULT 0                           |
 | PRIMARY KEY | —       | (GroupId, Path)                      |
 
-### Release Metadata (`.release/vX.Y.Z.json`)
+### Release Metadata (`.gitmap/release/vX.Y.Z.json`)
 
 The `zipGroups` key records which groups were used and the resulting
 archive filenames:
