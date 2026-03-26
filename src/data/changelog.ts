@@ -5,6 +5,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.0",
+    items: [
+      "Bumped compiled version constant to v2.36.0.",
+      "Added automatic legacy directory migration: gitmap-output/ → .gitmap/output/, .release/ → .gitmap/release/, .deployed/ → .gitmap/deployed/.",
+      "Migration runs at CLI startup before any command dispatch; skips if target already exists.",
+    ],
+  },
+  {
     version: "v2.35.1",
     items: [
       "Bumped compiled version constant to v2.35.1.",
