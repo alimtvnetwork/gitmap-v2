@@ -354,6 +354,18 @@ rollback: deleting local branch release/v2.5.0
 rollback: deleting local tag v2.5.0
 ```
 
+### Autocommit (`autocommit.go`)
+
+Logged during the post-release auto-commit and push of metadata files:
+
+```
+autocommit: starting for v2.5.0 (dry-run=false)
+autocommit: 2 release file(s), 0 other file(s)
+autocommit: staged 2 file(s)
+autocommit: committed "release v2.5.0 metadata"
+autocommit: pushed to main
+```
+
 ---
 
 ## Constants
