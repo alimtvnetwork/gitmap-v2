@@ -94,7 +94,7 @@ func completeBranchRelease(v Version, branchName, assetsPath, notes string, draf
 }
 
 // ExecutePending finds all release branches without tags and releases them.
-// Also discovers unreleased versions from .release/v*.json metadata files.
+// Also discovers unreleased versions from .gitmap/release/v*.json metadata files.
 func ExecutePending(assetsPath, notes string, draft bool, dryRun bool, noCommit bool) error {
 	branches, err := listReleaseBranches()
 	if err != nil {
@@ -125,7 +125,7 @@ func ExecutePending(assetsPath, notes string, draft bool, dryRun bool, noCommit 
 	return releasePendingFromMetadata(metaPending, assetsPath, notes, draft, dryRun)
 }
 
-// discoverMetadataPending finds .release/v*.json files where neither
+// discoverMetadataPending finds .gitmap/release/v*.json files where neither
 // the Git branch nor the tag exists. Skips versions already in pendingBranches.
 func discoverMetadataPending(pendingBranches []string) []ReleaseMeta {
 	metaFiles, err := ListReleaseMetaFiles()

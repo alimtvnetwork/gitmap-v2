@@ -86,7 +86,7 @@ const (
 	MsgDesktopSyncAdded   = "  ✓ Added to GitHub Desktop: %s\n"
 	MsgDesktopSyncFailed  = "  ✗ Failed: %s — %v\n"
 	MsgDesktopSyncDone    = "\n  GitHub Desktop sync: %d added, %d skipped, %d failed\n"
-	MsgNoOutputDir        = "Error: gitmap-output/ not found in current directory.\nRun 'gitmap scan' first to generate output files."
+	MsgNoOutputDir        = "Error: .gitmap/output/ not found in current directory.\nRun 'gitmap scan' first to generate output files."
 	MsgNoJSONFile         = "Error: %s not found.\nRun 'gitmap scan' first to generate the JSON output."
 	MsgFailedClones       = "\nFailed clones:"
 	MsgFailedEntry        = "  - %s (%s): %s\n"
@@ -171,7 +171,7 @@ const (
 	ErrReleaseVersionRequired = "Error: version is required.\nProvide a version argument, use --bump, or create a version.json file."
 	ErrReleaseUsage           = "Usage: gitmap release [version] [--assets <path>] [--commit <sha>] [--branch <name>] [--bump major|minor|patch] [--draft] [--dry-run]"
 	ErrReleaseBranchUsage     = "Usage: gitmap release-branch <release/vX.Y.Z> [--assets <path>] [--draft]"
-	ErrReleaseAlreadyExists   = "Error: version %s is already released. See .release/%s.json for details.\n"
+	ErrReleaseAlreadyExists   = "Error: version %s is already released. See .gitmap/release/%s.json for details.\n"
 	ErrReleaseTagExists       = "Error: tag %s already exists.\n"
 	ErrReleaseBranchNotFound  = "Error: branch %s does not exist.\n"
 	ErrReleaseCommitNotFound  = "Error: commit %s not found.\n"
@@ -206,14 +206,14 @@ const (
 
 // Release import messages.
 const (
-	MsgReleasesImported   = "Releases imported: %d from .release/\n"
+	MsgReleasesImported   = "Releases imported: %d from .gitmap/release/\n"
 	WarnReleaseImportSkip = "Warning: skipping %s: %v\n"
 	ReleaseGlob           = "v*.json"
 )
 
 // Pending metadata discovery messages.
 const (
-	MsgPendingMetaFound    = "  → Found %d unreleased version(s) from .release/ metadata\n"
+	MsgPendingMetaFound    = "  → Found %d unreleased version(s) from .gitmap/release/ metadata\n"
 	MsgPendingMetaRelease  = "  → Creating release from metadata: %s (commit: %s)\n"
 	WarnPendingMetaNoCommit = "  ⚠ Skipping %s: commit %s not found in repository\n"
 	WarnPendingMetaNoSHA   = "  ⚠ Skipping %s: no commit SHA in metadata\n"
@@ -221,7 +221,7 @@ const (
 
 // Clear release JSON messages.
 const (
-	MsgClearReleaseDone      = "  ✓ Removed .release/%s.json\n"
+	MsgClearReleaseDone      = "  ✓ Removed .gitmap/release/%s.json\n"
 	MsgClearReleaseDryRun    = "  [dry-run] Would remove %s\n"
 	ErrClearReleaseUsage     = "Usage: gitmap clear-release-json <version> [--dry-run]\nExample: gitmap clear-release-json v2.20.0"
 	ErrClearReleaseNotFound  = "Error: no release file found for %s\n"

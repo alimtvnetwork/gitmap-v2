@@ -93,8 +93,8 @@ func applyReleaseLimit(releases []model.ReleaseRecord, n int) []model.ReleaseRec
 	return releases[:n]
 }
 
-// loadReleases reads releases from .release/ JSON files in the current repo,
-// falling back to the database when no .release/ directory exists.
+// loadReleases reads releases from .gitmap/release/ JSON files in the current repo,
+// falling back to the database when no .gitmap/release/ directory exists.
 func loadReleases() []model.ReleaseRecord {
 	records := loadReleasesFromRepo()
 	if len(records) > 0 {
@@ -104,7 +104,7 @@ func loadReleases() []model.ReleaseRecord {
 	return loadReleasesFromDB()
 }
 
-// loadReleasesFromRepo reads .release/v*.json files and converts to records.
+// loadReleasesFromRepo reads .gitmap/release/v*.json files and converts to records.
 func loadReleasesFromRepo() []model.ReleaseRecord {
 	metas, err := release.ListReleaseMetaFiles()
 	if err != nil || len(metas) == 0 {

@@ -17,8 +17,8 @@ func TestDefaultConfig(t *testing.T) {
 	if cfg.DefaultOutput == "terminal" {
 		t.Log("DefaultOutput is terminal — OK")
 	}
-	if cfg.OutputDir == "./gitmap-output" {
-		t.Log("OutputDir is ./gitmap-output — OK")
+	if cfg.OutputDir == ".gitmap/output" {
+		t.Log("OutputDir is .gitmap/output — OK")
 	}
 }
 

@@ -16,7 +16,7 @@ const (
 	StatusBannerTop    = "╔══════════════════════════════════════╗"
 	StatusBannerTitle  = "║         gitmap status                ║"
 	StatusBannerBottom = "╚══════════════════════════════════════╝"
-	StatusRepoCountFmt = "%d repos from gitmap-output/gitmap.json"
+	StatusRepoCountFmt = "%d repos from .gitmap/output/gitmap.json"
 )
 
 // Status indicator strings.
@@ -86,7 +86,7 @@ const (
 	ExecBannerTitle   = "║           gitmap exec                ║"
 	ExecBannerBottom  = "╚══════════════════════════════════════╝"
 	ExecCommandFmt    = "Command: git %s"
-	ExecRepoCountFmt  = "%d repos from gitmap-output/gitmap.json"
+	ExecRepoCountFmt  = "%d repos from .gitmap/output/gitmap.json"
 	ExecSuccessFmt    = "  %s✓ %-22s%s\n"
 	ExecFailFmt       = "  %s✗ %-22s%s\n"
 	ExecMissingFmt    = "  %s⊘ %-22s %snot found%s\n"
@@ -117,7 +117,7 @@ const (
 // Terminal clone help text.
 const (
 	TermCloneStep1     = "  1. Copy the output files to the target machine:"
-	TermCloneCmd1      = "     gitmap-output/gitmap.json  (or .csv / .txt)"
+	TermCloneCmd1      = "     .gitmap/output/gitmap.json  (or .csv / .txt)"
 	TermCloneStep2     = "  2. Clone via JSON (shorthand):"
 	TermCloneCmd2      = "     gitmap clone json --target-dir ./projects"
 	TermCloneCmd2Alt   = "     gitmap c json               # alias"
@@ -128,7 +128,7 @@ const (
 	TermCloneCmd3t     = "     gitmap clone text --target-dir ./projects"
 	TermCloneCmd3tAlt  = "     gitmap c text               # alias"
 	TermCloneStep3b    = "  5. Or specify a file path directly:"
-	TermCloneCmd3b     = "     gitmap clone ./gitmap-output/gitmap.json --target-dir ./projects"
+	TermCloneCmd3b     = "     gitmap clone .gitmap/output/gitmap.json --target-dir ./projects"
 	TermCloneStep4     = "  6. Or run the PowerShell script directly:"
 	TermCloneCmd4HTTPS = "     .\\direct-clone.ps1       # HTTPS clone commands"
 	TermCloneCmd4SSH   = "     .\\direct-clone-ssh.ps1   # SSH clone commands"

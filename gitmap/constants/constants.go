@@ -44,12 +44,21 @@ const (
 	ExtGit  = ".git"
 )
 
+// Root directory for all repo-local gitmap data.
+const GitMapDir = ".gitmap"
+
+// Subdirectory names within .gitmap/.
+const (
+	ReleaseDirName = "release"
+	OutputDirName  = "output"
+)
+
 // Default file names.
 const (
 	DefaultCSVFile              = "gitmap.csv"
 	DefaultJSONFile             = "gitmap.json"
 	DefaultTextFile             = "gitmap.txt"
-	DefaultVerboseLogDir        = "gitmap-output"
+	DefaultVerboseLogDir        = GitMapDir + "/output"
 	DefaultStructureFile        = "folder-structure.md"
 	DefaultCloneScript          = "clone.ps1"
 	DefaultDirectCloneScript    = "direct-clone.ps1"
@@ -58,15 +67,15 @@ const (
 	DefaultScanCacheFile        = "last-scan.json"
 	DefaultConfigPath           = "./data/config.json"
 	DefaultSetupConfigPath      = "./data/git-setup.json"
-	DefaultOutputDir            = "./gitmap-output"
-	DefaultOutputFolder         = "gitmap-output"
+	DefaultOutputDir            = ".gitmap/output"
+	DefaultOutputFolder         = "output"
 	DefaultBranch               = "main"
 	DefaultDir                  = "."
 	DefaultVersionFile          = "version.json"
 )
 
 // DefaultReleaseDir is a var so tests can override it.
-var DefaultReleaseDir = ".release"
+var DefaultReleaseDir = GitMapDir + "/" + ReleaseDirName
 
 const (
 	DefaultLatestFile = "latest.json"

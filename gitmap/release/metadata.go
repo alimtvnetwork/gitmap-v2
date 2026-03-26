@@ -56,7 +56,7 @@ func metaFilePath(v Version) string {
 	return filepath.Join(constants.DefaultReleaseDir, filename)
 }
 
-// WriteReleaseMeta writes release metadata to .release/vX.Y.Z.json.
+// WriteReleaseMeta writes release metadata to .gitmap/release/vX.Y.Z.json.
 func WriteReleaseMeta(meta ReleaseMeta) error {
 	err := os.MkdirAll(constants.DefaultReleaseDir, constants.DirPermission)
 	if err != nil {
@@ -71,7 +71,7 @@ func WriteReleaseMeta(meta ReleaseMeta) error {
 	return writeJSON(metaFilePath(v), meta)
 }
 
-// WriteLatest updates .release/latest.json if the version is the highest stable.
+// WriteLatest updates .gitmap/release/latest.json if the version is the highest stable.
 func WriteLatest(v Version) error {
 	if latestIsHigher(v) {
 		return nil
@@ -103,7 +103,7 @@ func latestIsHigher(candidate Version) bool {
 	return true
 }
 
-// ReadLatest reads .release/latest.json.
+// ReadLatest reads .gitmap/release/latest.json.
 func ReadLatest() (LatestMeta, error) {
 	data, err := os.ReadFile(latestFilePath())
 	if err != nil {
@@ -132,7 +132,7 @@ func ReadVersionFile() (string, error) {
 	return vf.Version, nil
 }
 
-// ReadReleaseMeta reads and unmarshals a single .release/vX.Y.Z.json file.
+// ReadReleaseMeta reads and unmarshals a single .gitmap/release/vX.Y.Z.json file.
 func ReadReleaseMeta(path string) (ReleaseMeta, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -145,7 +145,7 @@ func ReadReleaseMeta(path string) (ReleaseMeta, error) {
 	return meta, err
 }
 
-// ListReleaseMetaFiles reads all .release/v*.json files and returns parsed metadata.
+// ListReleaseMetaFiles reads all .gitmap/release/v*.json files and returns parsed metadata.
 func ListReleaseMetaFiles() ([]ReleaseMeta, error) {
 	pattern := filepath.Join(constants.DefaultReleaseDir, constants.ReleaseGlob)
 	matches, err := filepath.Glob(pattern)

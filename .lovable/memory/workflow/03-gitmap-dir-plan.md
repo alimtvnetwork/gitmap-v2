@@ -42,4 +42,5 @@ Add warning in `doctor` if `.release/` or `gitmap-output/` exist at repo root.
 
 ## Status
 
-Planned — awaiting approval to proceed.
+Step 1 complete — constants, display strings, comments, and test updated.
+Steps 2–9 remaining.

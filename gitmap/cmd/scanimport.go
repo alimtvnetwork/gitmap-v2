@@ -12,7 +12,7 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-// importReleases discovers .release/v*.json files and upserts them into the DB.
+// importReleases discovers .gitmap/release/v*.json files and upserts them into the DB.
 func importReleases(scanDir, outputDir string) {
 	releaseDir := filepath.Join(scanDir, constants.DefaultReleaseDir)
 	files := discoverReleaseFiles(releaseDir)

@@ -13,7 +13,7 @@ func setupTempDir(t *testing.T) func() {
 	t.Helper()
 	dir := t.TempDir()
 	orig := constants.DefaultReleaseDir
-	constants.DefaultReleaseDir = filepath.Join(dir, ".release")
+	constants.DefaultReleaseDir = filepath.Join(dir, ".gitmap", "release")
 	return func() { constants.DefaultReleaseDir = orig }
 }
 
