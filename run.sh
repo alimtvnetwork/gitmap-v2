@@ -247,9 +247,11 @@ resolve_pull_conflict() {
 # -- Retry git pull after stash/discard -----------------------
 retry_git_pull() {
     write_info "Retrying git pull..."
-    local output
-    local pull_exit=0
-    output=$(git pull 2>&1) || pull_exit=$?
+    local output pull_exit
+    set +e
+    output=$(git pull 2>&1)
+    pull_exit=$?
+    set -e
 
     while IFS= read -r line; do
         [[ -n "$line" ]] && write_info "$line"
