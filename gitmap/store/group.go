@@ -3,15 +3,13 @@ package store
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
 // CreateGroup inserts a new group with the given name, description, and color.
 func (db *DB) CreateGroup(name, description, color string) (model.Group, error) {
-	id := uuid.New().String()
-	_, err := db.conn.Exec(constants.SQLInsertGroup, id, name, description, color)
+	_, err := db.conn.Exec(constants.SQLInsertGroup, name, description, color)
 	if err != nil {
 		return model.Group{}, fmt.Errorf(constants.ErrDBGroupCreate, err)
 	}
@@ -43,7 +41,7 @@ func (db *DB) findGroupByName(name string) (model.Group, error) {
 }
 
 // AddRepoToGroup links a repo to a group (silent no-op if already linked).
-func (db *DB) AddRepoToGroup(groupName, repoID string) error {
+func (db *DB) AddRepoToGroup(groupName string, repoID int64) error {
 	group, err := db.findGroupByName(groupName)
 	if err != nil {
 		return err
@@ -58,7 +56,7 @@ func (db *DB) AddRepoToGroup(groupName, repoID string) error {
 }
 
 // RemoveRepoFromGroup unlinks a repo from a group.
-func (db *DB) RemoveRepoFromGroup(groupName, repoID string) error {
+func (db *DB) RemoveRepoFromGroup(groupName string, repoID int64) error {
 	group, err := db.findGroupByName(groupName)
 	if err != nil {
 		return err

@@ -21,7 +21,7 @@ func (db *DB) UpsertRepos(records []model.ScanRecord) error {
 // upsertOne inserts or updates a single repo by absolute_path.
 func (db *DB) upsertOne(r model.ScanRecord) error {
 	_, err := db.conn.Exec(constants.SQLUpsertRepoByPath,
-		r.ID, r.Slug, r.RepoName, r.HTTPSUrl, r.SSHUrl,
+		r.Slug, r.RepoName, r.HTTPSUrl, r.SSHUrl,
 		r.Branch, r.RelativePath, r.AbsolutePath,
 		r.CloneInstruction, r.Notes,
 	)
