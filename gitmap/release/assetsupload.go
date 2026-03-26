@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // UploadAsset uploads a single file to a GitHub release.
