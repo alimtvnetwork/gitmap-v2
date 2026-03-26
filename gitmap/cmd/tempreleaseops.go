@@ -171,7 +171,7 @@ func printTRDryRun(commits []release.TempReleaseCommit, prefix string, start, di
 
 // runTempReleaseList lists all temp-release branches.
 func runTempReleaseList(args []string) {
-	jsonOutput := hasListFlag(args, "--json")
+	jsonOutput := hasTRListFlag(args, "--json")
 
 	db, err := openDB()
 	if err != nil {
@@ -222,8 +222,8 @@ func printTRList(releases []model.TempRelease) {
 	}
 }
 
-// hasListFlag checks if a flag is present in the args.
-func hasListFlag(args []string, flag string) bool {
+// hasTRListFlag checks if a flag is present in the args.
+func hasTRListFlag(args []string, flag string) bool {
 	for _, a := range args {
 		if a == flag {
 			return true
