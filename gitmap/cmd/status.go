@@ -65,6 +65,10 @@ func loadRecordsByGroup(groupName string) []model.ScanRecord {
 	defer db.Close()
 	records, err := db.ShowGroup(groupName)
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrGenericFmt, err)
 		os.Exit(1)
 	}
