@@ -381,6 +381,12 @@ func buildZipGroupAssets(opts Options) []string {
 
 	fmt.Printf(constants.MsgZGProcessing, len(opts.ZipGroups))
 
+	if verbose.IsEnabled() {
+		for _, g := range opts.ZipGroups {
+			verbose.Get().Log("zip-group: processing group %q", g)
+		}
+	}
+
 	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ Cannot open DB for zip groups: %v\n", err)
@@ -397,6 +403,10 @@ func buildZipGroupAssets(opts Options) []string {
 	}
 
 	archives := BuildZipGroupArchives(db, opts.ZipGroups, stagingDir)
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("zip-group: %d group(s) produced %d archive(s)", len(opts.ZipGroups), len(archives))
+	}
 
 	if len(archives) == 0 {
 		fmt.Printf(constants.MsgZGNoArchives, len(opts.ZipGroups))
