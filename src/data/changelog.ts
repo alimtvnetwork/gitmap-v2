@@ -5,6 +5,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.35.0",
+    items: [
+      "Bumped compiled version constant to v2.35.0.",
+      "Consolidated `.release/` and `gitmap-output/` under unified `.gitmap/` directory (`release/`, `output/`).",
+      "Centralized all path constants (`GitMapDir`, `DefaultReleaseDir`, `DefaultOutputDir`) for single-point configuration.",
+      "Migrated all database primary keys from UUID strings to `INTEGER PRIMARY KEY AUTOINCREMENT` (`int64`).",
+      "Removed `github.com/google/uuid` dependency.",
+      "Added `doctor` check that warns if legacy `.release/` or `gitmap-output/` directories exist.",
+      "Updated all helptext, spec documents, and docs site to reference `.gitmap/` paths.",
+    ],
+  },
+  {
     version: "v2.34.0",
     items: [
       "Bumped compiled version constant to v2.34.0.",
