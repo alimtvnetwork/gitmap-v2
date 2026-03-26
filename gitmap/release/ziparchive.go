@@ -255,6 +255,10 @@ func addFolderToZip(w *zip.Writer, folderPath string) error {
 			relPath = path
 		}
 
+	if verbose.IsEnabled() {
+			verbose.Get().Log("  zip-add: %s → %s", path, filepath.ToSlash(relPath))
+		}
+
 		return addSingleFileToZip(w, path, filepath.ToSlash(relPath))
 	})
 }
