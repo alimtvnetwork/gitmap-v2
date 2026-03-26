@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
@@ -19,16 +18,14 @@ type AliasWithRepo struct {
 
 // UnaliasedRepo holds a repo that has no alias assigned.
 type UnaliasedRepo struct {
-	ID       string
+	ID       int64
 	Slug     string
 	RepoName string
 }
 
 // CreateAlias inserts a new alias for the given repo ID.
-func (db *DB) CreateAlias(alias, repoID string) (model.Alias, error) {
-	id := uuid.New().String()
-
-	_, err := db.conn.Exec(constants.SQLInsertAlias, id, alias, repoID)
+func (db *DB) CreateAlias(alias string, repoID int64) (model.Alias, error) {
+	_, err := db.conn.Exec(constants.SQLInsertAlias, alias, repoID)
 	if err != nil {
 		return model.Alias{}, fmt.Errorf(constants.ErrAliasCreate, err)
 	}
@@ -37,7 +34,7 @@ func (db *DB) CreateAlias(alias, repoID string) (model.Alias, error) {
 }
 
 // UpdateAlias reassigns an existing alias to a different repo.
-func (db *DB) UpdateAlias(alias, repoID string) error {
+func (db *DB) UpdateAlias(alias string, repoID int64) error {
 	_, err := db.conn.Exec(constants.SQLUpdateAlias, repoID, alias)
 	if err != nil {
 		return fmt.Errorf(constants.ErrAliasCreate, err)
@@ -54,7 +51,7 @@ func (db *DB) FindAliasByName(alias string) (model.Alias, error) {
 }
 
 // FindAliasByRepoID retrieves the alias for a specific repo.
-func (db *DB) FindAliasByRepoID(repoID string) (model.Alias, error) {
+func (db *DB) FindAliasByRepoID(repoID int64) (model.Alias, error) {
 	row := db.conn.QueryRow(constants.SQLSelectAliasByRepoID, repoID)
 
 	return scanOneAlias(row)
