@@ -11,6 +11,7 @@ import (
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
+	"github.com/user/gitmap/verbose"
 )
 
 
@@ -74,13 +75,34 @@ func Execute(opts Options) error {
 // resolveVersion determines the version from CLI args, bump, or file.
 func resolveVersion(opts Options) (Version, error) {
 	if len(opts.Version) > 0 {
-		return Parse(opts.Version)
+		v, err := Parse(opts.Version)
+		if err != nil {
+			return v, err
+		}
+		if verbose.IsEnabled() {
+			verbose.Get().Log("version: resolved from CLI argument: %s", v.String())
+		}
+		return v, nil
 	}
 	if len(opts.Bump) > 0 {
-		return resolveBump(opts.Bump)
+		v, err := resolveBump(opts.Bump)
+		if err != nil {
+			return v, err
+		}
+		if verbose.IsEnabled() {
+			verbose.Get().Log("version: resolved via --bump %s: %s", opts.Bump, v.String())
+		}
+		return v, nil
 	}
 
-	return resolveFromFile()
+	v, err := resolveFromFile()
+	if err != nil {
+		return v, err
+	}
+	if verbose.IsEnabled() {
+		verbose.Get().Log("version: resolved from %s: %s", constants.DefaultVersionFile, v.String())
+	}
+	return v, nil
 }
 
 // resolveBump reads latest.json or falls back to git tags, then increments.
@@ -88,6 +110,10 @@ func resolveBump(level string) (Version, error) {
 	current, err := resolveLatestVersion()
 	if err != nil {
 		return Version{}, err
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("version: current baseline: %s", current.String())
 	}
 
 	bumped, err := Bump(current, level)
@@ -106,8 +132,15 @@ func resolveLatestVersion() (Version, error) {
 	if err == nil {
 		v, parseErr := Parse(latest.Tag)
 		if parseErr == nil {
+			if verbose.IsEnabled() {
+				verbose.Get().Log("version: baseline from latest.json: %s", v.String())
+			}
 			return v, nil
 		}
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("version: latest.json unavailable, falling back to git tags")
 	}
 
 	return latestFromGitTags()
