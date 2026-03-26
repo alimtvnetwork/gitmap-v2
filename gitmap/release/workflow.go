@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/localdirs"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/verbose"
 )
