@@ -73,6 +73,7 @@ func AllCommands() []string {
 		"zip-group", "z",
 		"ssh",
 		"prune", "pr",
+		"temp-release", "tr",
 		"help",
 	}
 }
