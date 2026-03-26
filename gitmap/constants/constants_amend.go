@@ -102,7 +102,7 @@ const TableAmendments = "Amendments"
 
 // Amendments SQL.
 const SQLCreateAmendments = `CREATE TABLE IF NOT EXISTS Amendments (
-	Id            TEXT PRIMARY KEY,
+	Id            INTEGER PRIMARY KEY AUTOINCREMENT,
 	Branch        TEXT NOT NULL,
 	FromCommit    TEXT NOT NULL,
 	ToCommit      TEXT NOT NULL,
