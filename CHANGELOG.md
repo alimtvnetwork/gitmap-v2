@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.36.4
+- Split `workflowfinalize.go` (498 lines) into four domain-specific files under `release/`:
+  - `workflowfinalize.go` (~190 lines): core pipeline orchestration and metadata persistence.
+  - `workflowdryrun.go` (~123 lines): dry-run preview functions and `returnToBranch`.
+  - `workflowzip.go` (~108 lines): zip group building, ad-hoc archives, and checksum collection.
+  - `workflowgithub.go` (~104 lines): GitHub release uploads and Go cross-compilation.
+- All files comply with the 200-line limit; no functional changes.
+- Added refactoring specs: `spec/01-app/58-refactor-workflowfinalize.md`, `spec/01-app/59-refactor-root-dispatch.md`.
+
 ## v2.36.3
 - Bumped compiled version constant to v2.36.3.
 - Refactored legacy directory migration into shared `localdirs` package for reuse across CLI startup and release workflow.

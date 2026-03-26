@@ -7,7 +7,9 @@ export const changelog: ChangelogEntry[] = [
   {
     version: "v2.36.4",
     items: [
-      "Bumped compiled version constant to v2.36.4.",
+      "Split workflowfinalize.go (498 lines) into four domain-specific files: workflowfinalize.go, workflowdryrun.go, workflowzip.go, workflowgithub.go.",
+      "All release/ workflow files now comply with the 200-line limit.",
+      "Added refactoring specs for workflowfinalize.go and root.go dispatch modularization.",
     ],
   },
   {
