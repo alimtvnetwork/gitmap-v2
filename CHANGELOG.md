@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.32.0
+- Bumped compiled version constant to v2.32.0.
+- Documented autocommit verbose logging as pipeline stage 16 in the verbose logging spec.
+
 ## v2.31.0
 - Bumped compiled version constant to v2.31.0.
 - Added verbose logging to auto-commit step: logs version, file counts, staging, commit message, and push target.

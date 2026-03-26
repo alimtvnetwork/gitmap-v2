@@ -5,6 +5,13 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.32.0",
+    items: [
+      "Bumped compiled version constant to v2.32.0.",
+      "Documented autocommit verbose logging as pipeline stage 16 in the verbose logging spec.",
+    ],
+  },
+  {
     version: "v2.31.0",
     items: [
       "Bumped compiled version constant to v2.31.0.",
