@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // AutoCommitResult describes what happened during auto-commit.
@@ -23,6 +24,10 @@ type AutoCommitResult struct {
 func AutoCommit(version string, dryRun bool) AutoCommitResult {
 	fmt.Print(constants.MsgAutoCommitScanning)
 
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: starting for %s (dry-run=%v)", version, dryRun)
+	}
+
 	if dryRun {
 		fmt.Print(constants.MsgAutoCommitDryRun)
 
@@ -33,10 +38,18 @@ func AutoCommit(version string, dryRun bool) AutoCommitResult {
 	if len(changed) == 0 {
 		fmt.Print(constants.MsgAutoCommitNone)
 
+		if verbose.IsEnabled() {
+			verbose.Get().Log("autocommit: no changed files detected")
+		}
+
 		return AutoCommitResult{}
 	}
 
 	releaseFiles, otherFiles := classifyFiles(changed)
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: %d release file(s), %d other file(s)", len(releaseFiles), len(otherFiles))
+	}
 
 	commitMsg := fmt.Sprintf(constants.AutoCommitMsgFmt, version)
 
@@ -99,11 +112,19 @@ func commitReleaseOnly(files []string, msg string) AutoCommitResult {
 		return AutoCommitResult{}
 	}
 
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: staged %d release file(s)", len(files))
+	}
+
 	err = commitStaged(msg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrAutoCommitFailed, err)
 
 		return AutoCommitResult{}
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: committed release-only: %s", msg)
 	}
 
 	fmt.Printf(constants.MsgAutoCommitReleaseOnly, msg)
@@ -116,6 +137,11 @@ func commitReleaseOnly(files []string, msg string) AutoCommitResult {
 	}
 
 	branch, _ := CurrentBranchName()
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: pushed to %s", branch)
+	}
+
 	fmt.Printf(constants.MsgAutoCommitPushed, branch)
 
 	return AutoCommitResult{Committed: true, Message: msg}
@@ -160,11 +186,19 @@ func commitAll(msg string) AutoCommitResult {
 		return AutoCommitResult{}
 	}
 
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: staged all files")
+	}
+
 	err = commitStaged(msg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrAutoCommitFailed, err)
 
 		return AutoCommitResult{}
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: committed all: %s", msg)
 	}
 
 	fmt.Printf(constants.MsgAutoCommitAll, msg)
@@ -177,6 +211,11 @@ func commitAll(msg string) AutoCommitResult {
 	}
 
 	branch, _ := CurrentBranchName()
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: pushed all to %s", branch)
+	}
+
 	fmt.Printf(constants.MsgAutoCommitPushed, branch)
 
 	return AutoCommitResult{Committed: true, AllFiles: true, Message: msg}
