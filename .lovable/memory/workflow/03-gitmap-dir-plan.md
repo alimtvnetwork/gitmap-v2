@@ -44,9 +44,9 @@ Add warning in `doctor` if `.release/` or `gitmap-output/` exist at repo root.
 Add `cmd/migrate.go` with `migrateLegacyDirs()` called in root `PersistentPreRun`.
 Moves `gitmap-output/` → `.gitmap/output/`, `.release/` → `.gitmap/release/`,
 `.deployed/` → `.gitmap/deployed/` automatically when detected.
-Skips if target already exists (prints warning). DB is not affected.
+When target already exists, merges files and removes legacy directory.
+Skipped for `version` command to keep stdout clean.
 
 ## Status
 
-Steps 1–9 complete.
-Step 10 pending — implement automatic migration.
+Steps 1–10 complete.

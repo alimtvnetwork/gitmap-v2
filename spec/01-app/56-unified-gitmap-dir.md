@@ -127,18 +127,25 @@ working directory, it automatically moves the contents to `.gitmap/`:
 1. **Detection**: Check if the legacy directory exists at the working directory root.
 2. **Create parent**: Ensure `.gitmap/` exists (create if missing).
 3. **Move**: Rename the legacy directory to its new location under `.gitmap/`.
-4. **Skip if target exists**: If the target directory already exists, do NOT
-   overwrite — print a warning and leave both directories in place.
+4. **Merge if target exists**: If the target directory already exists, merge files
+   from the legacy directory into the target (skip files that already exist in
+   the target), then **remove the legacy directory entirely**. This ensures the
+   old folder never persists after migration runs.
 5. **Log**: Print a single-line message per migration:
-   `Migrated <old>/ → .gitmap/<new>/`
+   - Clean move: `Migrated <old>/ -> .gitmap/<new>/`
+   - Merge: `Merged <old>/ into .gitmap/<new>/ (N files copied, M skipped) and removed legacy folder`
 6. **No database changes**: The SQLite database remains binary-relative in
    `data/` and is completely unaffected.
 
 ### Implementation
 
-A single `migrateIfNeeded()` function in a new `cmd/migrate.go` file,
-called early in the root command's `PersistentPreRun`. It checks all three
-legacy directories and migrates each independently.
+A single `migrateLegacyDirs()` function in `cmd/migrate.go`,
+called early in the root command's `PersistentPreRun` (skipped for `version`).
+It checks all three legacy directories and migrates each independently.
+
+When both legacy and target directories exist, `mergeAndRemoveLegacy()` walks
+the legacy directory, copies missing files into the target, and removes the
+legacy directory via `os.RemoveAll`.
 
 ```go
 // migrateLegacyDirs moves old directories into .gitmap/ if found.
