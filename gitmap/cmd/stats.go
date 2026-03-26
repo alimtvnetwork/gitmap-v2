@@ -46,6 +46,10 @@ func loadStats(cmdFilter string) (model.OverallStats, []model.CommandStats) {
 
 	overall, err := db.QueryOverallStats()
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrStatsQuery+"\n", err)
 		os.Exit(1)
 	}

@@ -24,6 +24,13 @@ Added `isLegacyDataError(err error)` in `cmd/projectrepos.go` that checks for th
 | `cmd/projectrepos.go`   | `printProjectList`    | `SelectProjectsByTypeKey`      |
 | `cmd/list.go`           | `runList`             | `ListRepos` / `ShowGroup`      |
 | `cmd/listreleases.go`   | `loadReleasesFromDB`  | `ListReleases`                 |
+| `cmd/groupshow.go`      | `executeGroupShow`    | `ShowGroup`                    |
+| `cmd/grouplist.go`      | `runGroupList`        | `ListGroups`                   |
+| `cmd/stats.go`          | `loadStats`           | `QueryOverallStats`            |
+| `cmd/history.go`        | `loadHistory`         | `ListHistory` / `ListHistoryByCommand` |
+| `cmd/status.go`         | `loadRecordsByGroup`  | `ShowGroup`                    |
+| `cmd/status.go`         | `loadAllRecordsDB`    | `ListRepos`                    |
+| `cmd/export.go`         | `loadExportData`      | `ExportAll`                    |
 
 ### Recovery Message
 
