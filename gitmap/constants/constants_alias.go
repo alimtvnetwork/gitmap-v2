@@ -16,15 +16,15 @@ const TableAliases = "Aliases"
 
 // SQL: create Aliases table.
 const SQLCreateAliases = `CREATE TABLE IF NOT EXISTS Aliases (
-	Id        TEXT PRIMARY KEY,
+	Id        INTEGER PRIMARY KEY AUTOINCREMENT,
 	Alias     TEXT NOT NULL UNIQUE,
-	RepoId    TEXT NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
+	RepoId    INTEGER NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
 	CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP
 )`
 
 // SQL: alias operations.
 const (
-	SQLInsertAlias = `INSERT INTO Aliases (Id, Alias, RepoId) VALUES (?, ?, ?)`
+	SQLInsertAlias = `INSERT INTO Aliases (Alias, RepoId) VALUES (?, ?)`
 
 	SQLUpdateAlias = `UPDATE Aliases SET RepoId = ? WHERE Alias = ?`
 

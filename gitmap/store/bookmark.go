@@ -10,7 +10,7 @@ import (
 // InsertBookmark saves a new bookmark record.
 func (db *DB) InsertBookmark(r model.BookmarkRecord) error {
 	_, err := db.conn.Exec(constants.SQLInsertBookmark,
-		r.ID, r.Name, r.Command, r.Args, r.Flags)
+		r.Name, r.Command, r.Args, r.Flags)
 	if err != nil {
 		return fmt.Errorf(constants.ErrBookmarkQuery, err)
 	}

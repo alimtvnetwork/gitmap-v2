@@ -3,7 +3,7 @@ package model
 
 // ReleaseRecord holds release metadata stored in the database.
 type ReleaseRecord struct {
-	ID           string `json:"id"`
+	ID           int64  `json:"id"`
 	Version      string `json:"version"`
 	Tag          string `json:"tag"`
 	Branch       string `json:"branch"`

@@ -3,7 +3,7 @@ package model
 
 // AmendmentRecord represents a single author-rewrite operation.
 type AmendmentRecord struct {
-	ID            string          `json:"id"`
+	ID            int64           `json:"id"`
 	Timestamp     string          `json:"timestamp"`
 	Branch        string          `json:"branch"`
 	FromCommit    string          `json:"fromCommit"`

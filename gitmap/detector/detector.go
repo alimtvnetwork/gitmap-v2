@@ -6,13 +6,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
 // DetectProjects scans a repo directory for all supported project types.
-func DetectProjects(repoPath, repoID, repoName string) []DetectionResult {
+func DetectProjects(repoPath string, repoID int64, repoName string) []DetectionResult {
 	var results []DetectionResult
 	slnDirs := map[string]bool{}
 
@@ -30,7 +29,7 @@ type DetectionResult struct {
 }
 
 // walkRepo walks the directory tree and detects projects.
-func walkRepo(repoPath, repoID, repoName string, slnDirs map[string]bool, results *[]DetectionResult) {
+func walkRepo(repoPath string, repoID int64, repoName string, slnDirs map[string]bool, results *[]DetectionResult) {
 	_ = filepath.Walk(repoPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
@@ -48,7 +47,7 @@ func walkRepo(repoPath, repoID, repoName string, slnDirs map[string]bool, result
 }
 
 // detectFile checks a single file against all detection rules.
-func detectFile(path, repoPath, repoID, repoName string, slnDirs map[string]bool, results *[]DetectionResult) {
+func detectFile(path, repoPath string, repoID int64, repoName string, slnDirs map[string]bool, results *[]DetectionResult) {
 	name := filepath.Base(path)
 	dir := filepath.Dir(path)
 
@@ -103,45 +102,7 @@ func buildRelativePath(dir, repoPath string) string {
 	return rel
 }
 
-// stableID returns a deterministic UUID derived from stable identity parts.
-func stableID(parts ...string) string {
-	seed := strings.Join(parts, "|")
-
-	return uuid.NewSHA1(uuid.NameSpaceOID, []byte(seed)).String()
-}
-
-// normalizePath creates a cross-platform canonical path for ID seeds.
+// normalizePath creates a cross-platform canonical path for comparisons.
 func normalizePath(path string) string {
 	return filepath.ToSlash(filepath.Clean(path))
 }
-
-// projectID creates a stable ID for a detected project row.
-func projectID(repoID, projectTypeID, relativePath string) string {
-	return stableID("project", repoID, projectTypeID, normalizePath(relativePath))
-}
-
-// goMetadataID creates a stable ID for Go metadata linked to a project.
-func goMetadataID(detectedProjectID string) string {
-	return stableID("go_metadata", detectedProjectID)
-}
-
-// goRunnableID creates a stable ID for a Go runnable linked to metadata.
-func goRunnableID(metadataID, relativePath string) string {
-	return stableID("go_runnable", metadataID, normalizePath(relativePath))
-}
-
-// csharpMetadataID creates a stable ID for C# metadata linked to a project.
-func csharpMetadataID(detectedProjectID string) string {
-	return stableID("csharp_metadata", detectedProjectID)
-}
-
-// csharpProjectFileID creates a stable ID for a C# project file row.
-func csharpProjectFileID(metadataID, relativePath string) string {
-	return stableID("csharp_file", metadataID, normalizePath(relativePath))
-}
-
-// csharpKeyFileID creates a stable ID for a C# key file row.
-func csharpKeyFileID(metadataID, relativePath string) string {
-	return stableID("csharp_key_file", metadataID, normalizePath(relativePath))
-}
-

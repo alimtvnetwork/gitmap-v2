@@ -4,16 +4,13 @@ package store
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
 // InsertTempRelease records a new temp-release branch in the database.
 func (db *DB) InsertTempRelease(branch, versionPrefix string, seq int, commit, message string) error {
-	id := uuid.New().String()
-
-	_, err := db.conn.Exec(constants.SQLInsertTempRelease, id, branch, versionPrefix, seq, commit, message)
+	_, err := db.conn.Exec(constants.SQLInsertTempRelease, branch, versionPrefix, seq, commit, message)
 	if err != nil {
 		return fmt.Errorf(constants.ErrTRCreate, err)
 	}

@@ -2,7 +2,7 @@ package constants
 
 // SQL: create ProjectTypes table.
 const SQLCreateProjectTypes = `CREATE TABLE IF NOT EXISTS ProjectTypes (
-	Id          TEXT PRIMARY KEY,
+	Id          INTEGER PRIMARY KEY AUTOINCREMENT,
 	Key         TEXT NOT NULL UNIQUE,
 	Name        TEXT NOT NULL,
 	Description TEXT DEFAULT ''
@@ -10,9 +10,9 @@ const SQLCreateProjectTypes = `CREATE TABLE IF NOT EXISTS ProjectTypes (
 
 // SQL: create DetectedProjects table.
 const SQLCreateDetectedProjects = `CREATE TABLE IF NOT EXISTS DetectedProjects (
-	Id               TEXT PRIMARY KEY,
-	RepoId           TEXT NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
-	ProjectTypeId    TEXT NOT NULL REFERENCES ProjectTypes(Id),
+	Id               INTEGER PRIMARY KEY AUTOINCREMENT,
+	RepoId           INTEGER NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
+	ProjectTypeId    INTEGER NOT NULL REFERENCES ProjectTypes(Id),
 	ProjectName      TEXT NOT NULL,
 	AbsolutePath     TEXT NOT NULL,
 	RepoPath         TEXT NOT NULL,
@@ -24,8 +24,8 @@ const SQLCreateDetectedProjects = `CREATE TABLE IF NOT EXISTS DetectedProjects (
 
 // SQL: create GoProjectMetadata table.
 const SQLCreateGoProjectMetadata = `CREATE TABLE IF NOT EXISTS GoProjectMetadata (
-	Id                TEXT PRIMARY KEY,
-	DetectedProjectId TEXT NOT NULL UNIQUE
+	Id                INTEGER PRIMARY KEY AUTOINCREMENT,
+	DetectedProjectId INTEGER NOT NULL UNIQUE
 		REFERENCES DetectedProjects(Id) ON DELETE CASCADE,
 	GoModPath         TEXT NOT NULL,
 	GoSumPath         TEXT DEFAULT '',
@@ -35,8 +35,8 @@ const SQLCreateGoProjectMetadata = `CREATE TABLE IF NOT EXISTS GoProjectMetadata
 
 // SQL: create GoRunnableFiles table.
 const SQLCreateGoRunnableFiles = `CREATE TABLE IF NOT EXISTS GoRunnableFiles (
-	Id           TEXT PRIMARY KEY,
-	GoMetadataId TEXT NOT NULL
+	Id           INTEGER PRIMARY KEY AUTOINCREMENT,
+	GoMetadataId INTEGER NOT NULL
 		REFERENCES GoProjectMetadata(Id) ON DELETE CASCADE,
 	RunnableName TEXT NOT NULL,
 	FilePath     TEXT NOT NULL,
@@ -46,8 +46,8 @@ const SQLCreateGoRunnableFiles = `CREATE TABLE IF NOT EXISTS GoRunnableFiles (
 
 // SQL: create CSharpProjectMetadata table.
 const SQLCreateCSharpProjectMeta = `CREATE TABLE IF NOT EXISTS CSharpProjectMetadata (
-	Id                TEXT PRIMARY KEY,
-	DetectedProjectId TEXT NOT NULL UNIQUE
+	Id                INTEGER PRIMARY KEY AUTOINCREMENT,
+	DetectedProjectId INTEGER NOT NULL UNIQUE
 		REFERENCES DetectedProjects(Id) ON DELETE CASCADE,
 	SlnPath           TEXT DEFAULT '',
 	SlnName           TEXT DEFAULT '',
@@ -57,8 +57,8 @@ const SQLCreateCSharpProjectMeta = `CREATE TABLE IF NOT EXISTS CSharpProjectMeta
 
 // SQL: create CSharpProjectFiles table.
 const SQLCreateCSharpProjectFiles = `CREATE TABLE IF NOT EXISTS CSharpProjectFiles (
-	Id               TEXT PRIMARY KEY,
-	CSharpMetadataId TEXT NOT NULL
+	Id               INTEGER PRIMARY KEY AUTOINCREMENT,
+	CSharpMetadataId INTEGER NOT NULL
 		REFERENCES CSharpProjectMetadata(Id) ON DELETE CASCADE,
 	FilePath         TEXT NOT NULL,
 	RelativePath     TEXT NOT NULL,
@@ -72,8 +72,8 @@ const SQLCreateCSharpProjectFiles = `CREATE TABLE IF NOT EXISTS CSharpProjectFil
 
 // SQL: create CSharpKeyFiles table.
 const SQLCreateCSharpKeyFiles = `CREATE TABLE IF NOT EXISTS CSharpKeyFiles (
-	Id               TEXT PRIMARY KEY,
-	CSharpMetadataId TEXT NOT NULL
+	Id               INTEGER PRIMARY KEY AUTOINCREMENT,
+	CSharpMetadataId INTEGER NOT NULL
 		REFERENCES CSharpProjectMetadata(Id) ON DELETE CASCADE,
 	FileType         TEXT NOT NULL,
 	FilePath         TEXT NOT NULL,
@@ -82,17 +82,17 @@ const SQLCreateCSharpKeyFiles = `CREATE TABLE IF NOT EXISTS CSharpKeyFiles (
 )`
 
 // SQL: seed project types.
-const SQLSeedProjectTypes = `INSERT OR IGNORE INTO ProjectTypes (Id, Key, Name, Description) VALUES
-	('b3f1a2c4-5d6e-4f7a-8b9c-0d1e2f3a4b5c', 'go',     'Go',      'Go modules and packages'),
-	('c4d2b3e5-6f7a-4e8b-9c0d-1e2f3a4b5c6d', 'node',   'Node.js', 'Node.js projects'),
-	('d5e3c4f6-7a8b-4f9c-0d1e-2f3a4b5c6d7e', 'react',  'React',   'React applications'),
-	('e6f4d5a7-8b9c-4a0d-1e2f-3a4b5c6d7e8f', 'cpp',    'C++',     'C and C++ projects'),
-	('f7a5e6b8-9c0d-4b1e-2f3a-4b5c6d7e8f9a', 'csharp', 'C#',      '.NET and C# projects')`
+const SQLSeedProjectTypes = `INSERT OR IGNORE INTO ProjectTypes (Key, Name, Description) VALUES
+	('go',     'Go',      'Go modules and packages'),
+	('node',   'Node.js', 'Node.js projects'),
+	('react',  'React',   'React applications'),
+	('cpp',    'C++',     'C and C++ projects'),
+	('csharp', 'C#',      '.NET and C# projects')`
 
 // SQL: upsert detected project.
 const SQLUpsertDetectedProject = `INSERT INTO DetectedProjects
-	(Id, RepoId, ProjectTypeId, ProjectName, AbsolutePath, RepoPath, RelativePath, PrimaryIndicator)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	(RepoId, ProjectTypeId, ProjectName, AbsolutePath, RepoPath, RelativePath, PrimaryIndicator)
+	VALUES (?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(RepoId, ProjectTypeId, RelativePath) DO UPDATE SET
 		ProjectName=excluded.ProjectName,
 		AbsolutePath=excluded.AbsolutePath,
@@ -102,8 +102,8 @@ const SQLUpsertDetectedProject = `INSERT INTO DetectedProjects
 
 // SQL: upsert Go metadata.
 const SQLUpsertGoMetadata = `INSERT INTO GoProjectMetadata
-	(Id, DetectedProjectId, GoModPath, GoSumPath, ModuleName, GoVersion)
-	VALUES (?, ?, ?, ?, ?, ?)
+	(DetectedProjectId, GoModPath, GoSumPath, ModuleName, GoVersion)
+	VALUES (?, ?, ?, ?, ?)
 	ON CONFLICT(DetectedProjectId) DO UPDATE SET
 		GoModPath=excluded.GoModPath,
 		GoSumPath=excluded.GoSumPath,
@@ -112,16 +112,16 @@ const SQLUpsertGoMetadata = `INSERT INTO GoProjectMetadata
 
 // SQL: upsert Go runnable file.
 const SQLUpsertGoRunnable = `INSERT INTO GoRunnableFiles
-	(Id, GoMetadataId, RunnableName, FilePath, RelativePath)
-	VALUES (?, ?, ?, ?, ?)
+	(GoMetadataId, RunnableName, FilePath, RelativePath)
+	VALUES (?, ?, ?, ?)
 	ON CONFLICT(GoMetadataId, RelativePath) DO UPDATE SET
 		RunnableName=excluded.RunnableName,
 		FilePath=excluded.FilePath`
 
 // SQL: upsert C# metadata.
 const SQLUpsertCSharpMetadata = `INSERT INTO CSharpProjectMetadata
-	(Id, DetectedProjectId, SlnPath, SlnName, GlobalJsonPath, SdkVersion)
-	VALUES (?, ?, ?, ?, ?, ?)
+	(DetectedProjectId, SlnPath, SlnName, GlobalJsonPath, SdkVersion)
+	VALUES (?, ?, ?, ?, ?)
 	ON CONFLICT(DetectedProjectId) DO UPDATE SET
 		SlnPath=excluded.SlnPath,
 		SlnName=excluded.SlnName,
@@ -130,8 +130,8 @@ const SQLUpsertCSharpMetadata = `INSERT INTO CSharpProjectMetadata
 
 // SQL: upsert C# project file.
 const SQLUpsertCSharpProjectFile = `INSERT INTO CSharpProjectFiles
-	(Id, CSharpMetadataId, FilePath, RelativePath, FileName, ProjectName, TargetFramework, OutputType, Sdk)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	(CSharpMetadataId, FilePath, RelativePath, FileName, ProjectName, TargetFramework, OutputType, Sdk)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(CSharpMetadataId, RelativePath) DO UPDATE SET
 		FilePath=excluded.FilePath,
 		FileName=excluded.FileName,
@@ -142,8 +142,8 @@ const SQLUpsertCSharpProjectFile = `INSERT INTO CSharpProjectFiles
 
 // SQL: upsert C# key file.
 const SQLUpsertCSharpKeyFile = `INSERT INTO CSharpKeyFiles
-	(Id, CSharpMetadataId, FileType, FilePath, RelativePath)
-	VALUES (?, ?, ?, ?, ?)
+	(CSharpMetadataId, FileType, FilePath, RelativePath)
+	VALUES (?, ?, ?, ?)
 	ON CONFLICT(CSharpMetadataId, RelativePath) DO UPDATE SET
 		FileType=excluded.FileType,
 		FilePath=excluded.FilePath`

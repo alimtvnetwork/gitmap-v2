@@ -5,7 +5,7 @@ const TableCommandHistory = "CommandHistory"
 
 // SQL: create CommandHistory table.
 const SQLCreateCommandHistory = `CREATE TABLE IF NOT EXISTS CommandHistory (
-	Id          TEXT PRIMARY KEY,
+	Id          INTEGER PRIMARY KEY AUTOINCREMENT,
 	Command     TEXT NOT NULL,
 	Alias       TEXT DEFAULT '',
 	Args        TEXT DEFAULT '',
@@ -22,8 +22,8 @@ const SQLCreateCommandHistory = `CREATE TABLE IF NOT EXISTS CommandHistory (
 // SQL: command history operations.
 const (
 	SQLInsertHistory = `INSERT INTO CommandHistory
-		(Id, Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		(Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	SQLUpdateHistory = `UPDATE CommandHistory
 		SET FinishedAt = ?, DurationMs = ?, ExitCode = ?, Summary = ?, RepoCount = ?

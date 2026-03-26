@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/user/gitmap/model"
@@ -10,13 +9,11 @@ import (
 )
 
 // recordAuditStart inserts a new history record at command start.
-func recordAuditStart(command string, args []string) (string, time.Time) {
+func recordAuditStart(command string, args []string) (int64, time.Time) {
 	start := time.Now()
-	id := generateAuditID()
 	alias, flags, positional := classifyArgs(command, args)
 
 	record := model.CommandHistoryRecord{
-		ID:        id,
 		Command:   command,
 		Alias:     alias,
 		Args:      positional,
@@ -26,17 +23,17 @@ func recordAuditStart(command string, args []string) (string, time.Time) {
 
 	db, err := openAuditDB()
 	if err != nil {
-		return id, start
+		return 0, start
 	}
 	defer db.Close()
 
-	_ = db.InsertHistory(record)
+	id, _ := db.InsertHistory(record)
 
 	return id, start
 }
 
 // recordAuditEnd updates a history record with completion details.
-func recordAuditEnd(id string, start time.Time, exitCode int, summary string, repoCount int) {
+func recordAuditEnd(id int64, start time.Time, exitCode int, summary string, repoCount int) {
 	end := time.Now()
 	duration := end.Sub(start).Milliseconds()
 
@@ -70,25 +67,33 @@ func openAuditDB() (*store.DB, error) {
 	return db, nil
 }
 
-// generateAuditID creates a timestamp-based unique ID.
-func generateAuditID() string {
-	return fmt.Sprintf("hist-%d", time.Now().UnixNano())
-}
-
 // classifyArgs separates flags from positional arguments.
 func classifyArgs(command string, args []string) (string, string, string) {
 	alias := resolveAlias(command)
 	var flags, positional []string
 
 	for _, arg := range args {
-		if strings.HasPrefix(arg, "-") {
+		if fmt.Sprintf("%c", arg[0]) == "-" {
 			flags = append(flags, arg)
 		} else {
 			positional = append(positional, arg)
 		}
 	}
 
-	return alias, strings.Join(flags, " "), strings.Join(positional, " ")
+	return alias, fmt.Sprintf("%s", joinStrings(flags)), fmt.Sprintf("%s", joinStrings(positional))
+}
+
+// joinStrings joins string slices with spaces.
+func joinStrings(s []string) string {
+	result := ""
+	for i, v := range s {
+		if i > 0 {
+			result += " "
+		}
+		result += v
+	}
+
+	return result
 }
 
 // resolveAlias returns the alias if the command was invoked by alias.

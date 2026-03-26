@@ -4,13 +4,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 )
 
 // CommitTemplate represents a single commit message template.
 type CommitTemplate struct {
-	ID        string
+	ID        int64
 	Kind      string
 	Template  string
 	CreatedAt string
@@ -18,8 +17,7 @@ type CommitTemplate struct {
 
 // InsertTemplate adds a single template to the database.
 func (db *DB) InsertTemplate(kind, template string) error {
-	id := uuid.New().String()
-	_, err := db.conn.Exec(constants.SQLInsertTemplate, id, kind, template)
+	_, err := db.conn.Exec(constants.SQLInsertTemplate, kind, template)
 	if err != nil {
 		return fmt.Errorf(constants.ErrSEODBInsert, err)
 	}

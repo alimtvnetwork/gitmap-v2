@@ -133,14 +133,14 @@ const TableCommitTemplates = "CommitTemplates"
 
 // CommitTemplates SQL.
 const SQLCreateCommitTemplates = `CREATE TABLE IF NOT EXISTS CommitTemplates (
-	Id        TEXT PRIMARY KEY,
+	Id        INTEGER PRIMARY KEY AUTOINCREMENT,
 	Kind      TEXT NOT NULL,
 	Template  TEXT NOT NULL,
 	CreatedAt TEXT NOT NULL DEFAULT (datetime('now'))
 )`
 
 const (
-	SQLInsertTemplate        = "INSERT INTO CommitTemplates (Id, Kind, Template) VALUES (?, ?, ?)"
+	SQLInsertTemplate        = "INSERT INTO CommitTemplates (Kind, Template) VALUES (?, ?)"
 	SQLSelectTemplatesByKind = "SELECT Id, Kind, Template, CreatedAt FROM CommitTemplates WHERE Kind = ? ORDER BY CreatedAt"
 	SQLCountTemplates        = "SELECT COUNT(*) FROM CommitTemplates"
 	SQLDropCommitTemplates   = "DROP TABLE IF EXISTS CommitTemplates"

@@ -21,7 +21,7 @@ const (
 
 // SQL: create ZipGroups table.
 const SQLCreateZipGroups = `CREATE TABLE IF NOT EXISTS ZipGroups (
-	Id          TEXT PRIMARY KEY,
+	Id          INTEGER PRIMARY KEY AUTOINCREMENT,
 	Name        TEXT NOT NULL UNIQUE,
 	ArchiveName TEXT DEFAULT '',
 	CreatedAt   TEXT DEFAULT CURRENT_TIMESTAMP
@@ -29,7 +29,7 @@ const SQLCreateZipGroups = `CREATE TABLE IF NOT EXISTS ZipGroups (
 
 // SQL: create ZipGroupItems table (v2 with path fields).
 const SQLCreateZipGroupItems = `CREATE TABLE IF NOT EXISTS ZipGroupItems (
-	GroupId      TEXT NOT NULL REFERENCES ZipGroups(Id) ON DELETE CASCADE,
+	GroupId      INTEGER NOT NULL REFERENCES ZipGroups(Id) ON DELETE CASCADE,
 	RepoPath     TEXT NOT NULL DEFAULT '',
 	RelativePath TEXT NOT NULL DEFAULT '',
 	FullPath     TEXT NOT NULL DEFAULT '',
@@ -48,7 +48,7 @@ const (
 
 // SQL: zip group operations.
 const (
-	SQLInsertZipGroup = `INSERT INTO ZipGroups (Id, Name, ArchiveName) VALUES (?, ?, ?)`
+	SQLInsertZipGroup = `INSERT INTO ZipGroups (Name, ArchiveName) VALUES (?, ?)`
 
 	SQLSelectAllZipGroups = `SELECT Id, Name, ArchiveName, CreatedAt FROM ZipGroups ORDER BY Name`
 

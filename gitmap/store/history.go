@@ -7,16 +7,16 @@ import (
 	"github.com/user/gitmap/model"
 )
 
-// InsertHistory inserts a new command history record.
-func (db *DB) InsertHistory(r model.CommandHistoryRecord) error {
-	_, err := db.conn.Exec(constants.SQLInsertHistory,
-		r.ID, r.Command, r.Alias, r.Args, r.Flags,
+// InsertHistory inserts a new command history record and returns the auto-generated ID.
+func (db *DB) InsertHistory(r model.CommandHistoryRecord) (int64, error) {
+	result, err := db.conn.Exec(constants.SQLInsertHistory,
+		r.Command, r.Alias, r.Args, r.Flags,
 		r.StartedAt, r.FinishedAt, r.DurationMs, r.ExitCode, r.Summary, r.RepoCount)
 	if err != nil {
-		return fmt.Errorf(constants.ErrHistoryQuery, err)
+		return 0, fmt.Errorf(constants.ErrHistoryQuery, err)
 	}
 
-	return nil
+	return result.LastInsertId()
 }
 
 // UpdateHistory updates a history record with completion details.

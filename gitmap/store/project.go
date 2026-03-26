@@ -12,15 +12,15 @@ import (
 // UpsertDetectedProject inserts or updates a detected project record.
 func (db *DB) UpsertDetectedProject(p model.DetectedProject) error {
 	_, err := db.conn.Exec(constants.SQLUpsertDetectedProject,
-		p.ID, p.RepoID, p.ProjectTypeID, p.ProjectName,
+		p.RepoID, p.ProjectTypeID, p.ProjectName,
 		p.AbsolutePath, p.RepoPath, p.RelativePath, p.PrimaryIndicator)
 
 	return err
 }
 
 // SelectDetectedProjectID returns the persisted ID for a project identity tuple.
-func (db *DB) SelectDetectedProjectID(repoID, projectTypeID, relativePath string) (string, error) {
-	var id string
+func (db *DB) SelectDetectedProjectID(repoID, projectTypeID int64, relativePath string) (int64, error) {
+	var id int64
 	err := db.conn.QueryRow(constants.SQLSelectDetectedProjectID,
 		repoID, projectTypeID, relativePath).Scan(&id)
 
@@ -47,13 +47,13 @@ func (db *DB) CountProjectsByTypeKey(key string) (int, error) {
 }
 
 // DeleteStaleProjects removes projects not in the given ID list for a repo.
-func (db *DB) DeleteStaleProjects(repoID string, keepIDs []string) (int64, error) {
+func (db *DB) DeleteStaleProjects(repoID int64, keepIDs []int64) (int64, error) {
 	if len(keepIDs) == 0 {
 		return 0, nil
 	}
 	placeholders := buildPlaceholders(len(keepIDs))
 	query := fmt.Sprintf(constants.SQLDeleteStaleProjects, placeholders)
-	args := buildStaleArgs(repoID, keepIDs)
+	args := buildStaleArgsInt64(repoID, keepIDs)
 	result, err := db.conn.Exec(query, args...)
 	if err != nil {
 		return 0, err
@@ -89,8 +89,8 @@ func buildPlaceholders(count int) string {
 	return strings.Join(p, ", ")
 }
 
-// buildStaleArgs creates the argument slice for stale cleanup queries.
-func buildStaleArgs(parentID string, keepIDs []string) []interface{} {
+// buildStaleArgsInt64 creates the argument slice for stale cleanup queries with int64 IDs.
+func buildStaleArgsInt64(parentID int64, keepIDs []int64) []interface{} {
 	args := make([]interface{}, 0, len(keepIDs)+1)
 	args = append(args, parentID)
 	for _, id := range keepIDs {

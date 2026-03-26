@@ -2,7 +2,7 @@ package model
 
 // TempRelease represents a temporary release branch record.
 type TempRelease struct {
-	ID             string `json:"id"`
+	ID             int64  `json:"id"`
 	Branch         string `json:"branch"`
 	VersionPrefix  string `json:"versionPrefix"`
 	SequenceNumber int    `json:"sequenceNumber"`

@@ -5,16 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
 // InsertSSHKey stores a new SSH key record.
 func (db *DB) InsertSSHKey(name, privatePath, publicKey, fingerprint, email string) (model.SSHKey, error) {
-	id := uuid.New().String()
-
-	_, err := db.conn.Exec(constants.SQLInsertSSHKey, id, name, privatePath, publicKey, fingerprint, email)
+	_, err := db.conn.Exec(constants.SQLInsertSSHKey, name, privatePath, publicKey, fingerprint, email)
 	if err != nil {
 		return model.SSHKey{}, fmt.Errorf(constants.ErrSSHCreate, err)
 	}

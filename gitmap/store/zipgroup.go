@@ -4,7 +4,6 @@ package store
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
@@ -17,9 +16,7 @@ type ZipGroupWithCount struct {
 
 // CreateZipGroup inserts a new zip group.
 func (db *DB) CreateZipGroup(name, archiveName string) (model.ZipGroup, error) {
-	id := uuid.New().String()
-
-	_, err := db.conn.Exec(constants.SQLInsertZipGroup, id, name, archiveName)
+	_, err := db.conn.Exec(constants.SQLInsertZipGroup, name, archiveName)
 	if err != nil {
 		return model.ZipGroup{}, fmt.Errorf(constants.ErrZGCreate, err)
 	}

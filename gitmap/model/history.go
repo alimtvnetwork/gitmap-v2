@@ -3,7 +3,7 @@ package model
 
 // CommandHistoryRecord represents a single CLI command execution.
 type CommandHistoryRecord struct {
-	ID         string `json:"id"`
+	ID         int64  `json:"id"`
 	Command    string `json:"command"`
 	Alias      string `json:"alias,omitempty"`
 	Args       string `json:"args,omitempty"`

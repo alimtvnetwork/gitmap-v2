@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
 
 // UpsertRelease inserts or updates a release record in the database.
 func (db *DB) UpsertRelease(r model.ReleaseRecord) error {
-	id := uuid.New().String()
 	draft := boolToInt(r.Draft)
 	preRelease := boolToInt(r.PreRelease)
 	isLatest := boolToInt(r.IsLatest)
@@ -23,7 +21,7 @@ func (db *DB) UpsertRelease(r model.ReleaseRecord) error {
 	}
 
 	_, err := db.conn.Exec(constants.SQLUpsertRelease,
-		id, r.Version, r.Tag, r.Branch, r.SourceBranch,
+		r.Version, r.Tag, r.Branch, r.SourceBranch,
 		r.CommitSha, r.Changelog, r.Notes, draft, preRelease, isLatest, r.Source, r.CreatedAt,
 	)
 	if err != nil {

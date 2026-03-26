@@ -22,7 +22,7 @@ const TableTempReleases = "TempReleases"
 
 // SQL: create TempReleases table.
 const SQLCreateTempReleases = `CREATE TABLE IF NOT EXISTS TempReleases (
-	Id             TEXT PRIMARY KEY,
+	Id             INTEGER PRIMARY KEY AUTOINCREMENT,
 	Branch         TEXT NOT NULL UNIQUE,
 	VersionPrefix  TEXT NOT NULL DEFAULT '',
 	SequenceNumber INTEGER NOT NULL DEFAULT 0,
@@ -33,8 +33,8 @@ const SQLCreateTempReleases = `CREATE TABLE IF NOT EXISTS TempReleases (
 
 // SQL: temp-release operations.
 const (
-	SQLInsertTempRelease = `INSERT INTO TempReleases (Id, Branch, VersionPrefix, SequenceNumber, CommitSha, CommitMessage)
-		VALUES (?, ?, ?, ?, ?, ?)`
+	SQLInsertTempRelease = `INSERT INTO TempReleases (Branch, VersionPrefix, SequenceNumber, CommitSha, CommitMessage)
+		VALUES (?, ?, ?, ?, ?)`
 
 	SQLSelectAllTempReleases = `SELECT Id, Branch, VersionPrefix, SequenceNumber, CommitSha, CommitMessage, CreatedAt
 		FROM TempReleases ORDER BY SequenceNumber`

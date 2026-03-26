@@ -3,8 +3,8 @@ package model
 
 // GoProjectMetadata holds Go-specific metadata for a detected project.
 type GoProjectMetadata struct {
-	ID                string           `json:"id"`
-	DetectedProjectID string           `json:"detectedProjectId"`
+	ID                int64            `json:"id"`
+	DetectedProjectID int64            `json:"detectedProjectId"`
 	GoModPath         string           `json:"goModPath"`
 	GoSumPath         string           `json:"goSumPath"`
 	ModuleName        string           `json:"moduleName"`
@@ -14,8 +14,8 @@ type GoProjectMetadata struct {
 
 // GoRunnableFile represents a main.go entry point inside a Go project.
 type GoRunnableFile struct {
-	ID           string `json:"id"`
-	GoMetadataID string `json:"goMetadataId"`
+	ID           int64  `json:"id"`
+	GoMetadataID int64  `json:"goMetadataId"`
 	RunnableName string `json:"runnableName"`
 	FilePath     string `json:"filePath"`
 	RelativePath string `json:"relativePath"`

@@ -23,7 +23,7 @@ const (
 
 // SQL: create Repos table.
 const SQLCreateRepos = `CREATE TABLE IF NOT EXISTS Repos (
-	Id               TEXT PRIMARY KEY,
+	Id               INTEGER PRIMARY KEY AUTOINCREMENT,
 	Slug             TEXT NOT NULL,
 	RepoName         TEXT NOT NULL,
 	HttpsUrl         TEXT NOT NULL,
@@ -39,7 +39,7 @@ const SQLCreateRepos = `CREATE TABLE IF NOT EXISTS Repos (
 
 // SQL: create Groups table.
 const SQLCreateGroups = `CREATE TABLE IF NOT EXISTS Groups (
-	Id          TEXT PRIMARY KEY,
+	Id          INTEGER PRIMARY KEY AUTOINCREMENT,
 	Name        TEXT NOT NULL UNIQUE,
 	Description TEXT DEFAULT '',
 	Color       TEXT DEFAULT '',
@@ -48,14 +48,14 @@ const SQLCreateGroups = `CREATE TABLE IF NOT EXISTS Groups (
 
 // SQL: create GroupRepos join table.
 const SQLCreateGroupRepos = `CREATE TABLE IF NOT EXISTS GroupRepos (
-	GroupId TEXT NOT NULL REFERENCES Groups(Id) ON DELETE CASCADE,
-	RepoId  TEXT NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
+	GroupId INTEGER NOT NULL REFERENCES Groups(Id) ON DELETE CASCADE,
+	RepoId  INTEGER NOT NULL REFERENCES Repos(Id) ON DELETE CASCADE,
 	PRIMARY KEY (GroupId, RepoId)
 )`
 
 // SQL: create Releases table.
 const SQLCreateReleases = `CREATE TABLE IF NOT EXISTS Releases (
-	Id           TEXT PRIMARY KEY,
+	Id           INTEGER PRIMARY KEY AUTOINCREMENT,
 	Version      TEXT NOT NULL,
 	Tag          TEXT NOT NULL UNIQUE,
 	Branch       TEXT NOT NULL,
@@ -78,13 +78,12 @@ const SQLEnableFK = "PRAGMA foreign_keys = ON"
 
 // SQL: repo operations.
 const (
-	SQLUpsertRepo = `INSERT INTO Repos (Id, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT(Id) DO UPDATE SET
+	SQLUpsertRepo = `INSERT INTO Repos (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT(AbsolutePath) DO UPDATE SET
 			Slug=excluded.Slug, RepoName=excluded.RepoName, HttpsUrl=excluded.HttpsUrl,
 			SshUrl=excluded.SshUrl, Branch=excluded.Branch, RelativePath=excluded.RelativePath,
-			AbsolutePath=excluded.AbsolutePath, CloneInstruction=excluded.CloneInstruction,
-			Notes=excluded.Notes, UpdatedAt=CURRENT_TIMESTAMP`
+			CloneInstruction=excluded.CloneInstruction, Notes=excluded.Notes, UpdatedAt=CURRENT_TIMESTAMP`
 
 	SQLSelectAllRepos = "SELECT Id, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repos ORDER BY Slug"
 
@@ -94,8 +93,8 @@ const (
 )
 
 // SQL: upsert by AbsolutePath (spec requirement).
-const SQLUpsertRepoByPath = `INSERT INTO Repos (Id, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+const SQLUpsertRepoByPath = `INSERT INTO Repos (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(AbsolutePath) DO UPDATE SET
 		Slug=excluded.Slug, RepoName=excluded.RepoName, HttpsUrl=excluded.HttpsUrl,
 		SshUrl=excluded.SshUrl, Branch=excluded.Branch, RelativePath=excluded.RelativePath,
@@ -106,7 +105,7 @@ const SQLCreateAbsPathIndex = "CREATE UNIQUE INDEX IF NOT EXISTS idx_Repos_Absol
 
 // SQL: group operations.
 const (
-	SQLInsertGroup = "INSERT INTO Groups (Id, Name, Description, Color) VALUES (?, ?, ?, ?)"
+	SQLInsertGroup = "INSERT INTO Groups (Name, Description, Color) VALUES (?, ?, ?)"
 
 	SQLSelectAllGroups = "SELECT Id, Name, Description, Color, CreatedAt FROM Groups ORDER BY Name"
 
@@ -127,8 +126,8 @@ const (
 
 // SQL: release operations.
 const (
-	SQLUpsertRelease = `INSERT INTO Releases (Id, Version, Tag, Branch, SourceBranch, CommitSha, Changelog, Notes, Draft, PreRelease, IsLatest, Source, CreatedAt)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	SQLUpsertRelease = `INSERT INTO Releases (Version, Tag, Branch, SourceBranch, CommitSha, Changelog, Notes, Draft, PreRelease, IsLatest, Source, CreatedAt)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		ON CONFLICT(Tag) DO UPDATE SET
 			Version=excluded.Version, Branch=excluded.Branch, SourceBranch=excluded.SourceBranch,
 			CommitSha=excluded.CommitSha, Changelog=excluded.Changelog, Notes=excluded.Notes, Draft=excluded.Draft,

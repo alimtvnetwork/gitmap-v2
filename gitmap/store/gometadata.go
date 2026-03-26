@@ -11,7 +11,7 @@ import (
 // UpsertGoMetadata inserts or updates Go metadata for a detected project.
 func (db *DB) UpsertGoMetadata(m model.GoProjectMetadata) error {
 	_, err := db.conn.Exec(constants.SQLUpsertGoMetadata,
-		m.ID, m.DetectedProjectID, m.GoModPath, m.GoSumPath,
+		m.DetectedProjectID, m.GoModPath, m.GoSumPath,
 		m.ModuleName, m.GoVersion)
 
 	return err
@@ -20,13 +20,13 @@ func (db *DB) UpsertGoMetadata(m model.GoProjectMetadata) error {
 // UpsertGoRunnable inserts or updates a Go runnable file record.
 func (db *DB) UpsertGoRunnable(r model.GoRunnableFile) error {
 	_, err := db.conn.Exec(constants.SQLUpsertGoRunnable,
-		r.ID, r.GoMetadataID, r.RunnableName, r.FilePath, r.RelativePath)
+		r.GoMetadataID, r.RunnableName, r.FilePath, r.RelativePath)
 
 	return err
 }
 
 // SelectGoMetadata returns Go metadata for a detected project.
-func (db *DB) SelectGoMetadata(detectedProjectID string) (*model.GoProjectMetadata, error) {
+func (db *DB) SelectGoMetadata(detectedProjectID int64) (*model.GoProjectMetadata, error) {
 	var m model.GoProjectMetadata
 	err := db.conn.QueryRow(constants.SQLSelectGoMetadata, detectedProjectID).Scan(
 		&m.ID, &m.DetectedProjectID, &m.GoModPath, &m.GoSumPath,
@@ -39,7 +39,7 @@ func (db *DB) SelectGoMetadata(detectedProjectID string) (*model.GoProjectMetada
 }
 
 // SelectGoRunnables returns all runnable files for a Go metadata ID.
-func (db *DB) SelectGoRunnables(goMetadataID string) ([]model.GoRunnableFile, error) {
+func (db *DB) SelectGoRunnables(goMetadataID int64) ([]model.GoRunnableFile, error) {
 	rows, err := db.conn.Query(constants.SQLSelectGoRunnables, goMetadataID)
 	if err != nil {
 		return nil, fmt.Errorf(constants.ErrProjectQuery, err)
@@ -50,13 +50,13 @@ func (db *DB) SelectGoRunnables(goMetadataID string) ([]model.GoRunnableFile, er
 }
 
 // DeleteStaleGoRunnables removes runnables not in the given ID list.
-func (db *DB) DeleteStaleGoRunnables(goMetadataID string, keepIDs []string) error {
+func (db *DB) DeleteStaleGoRunnables(goMetadataID int64, keepIDs []int64) error {
 	if len(keepIDs) == 0 {
 		return nil
 	}
 	placeholders := buildPlaceholders(len(keepIDs))
 	query := fmt.Sprintf(constants.SQLDeleteStaleGoRunnables, placeholders)
-	args := buildStaleArgs(goMetadataID, keepIDs)
+	args := buildStaleArgsInt64(goMetadataID, keepIDs)
 	_, err := db.conn.Exec(query, args...)
 
 	return err

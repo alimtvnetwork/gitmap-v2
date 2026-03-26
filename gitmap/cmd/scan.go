@@ -95,7 +95,7 @@ func alignRecordsWithDB(records []model.ScanRecord, outputDir string) []model.Sc
 		return records
 	}
 
-	idsByPath := make(map[string]string, len(repos))
+	idsByPath := make(map[string]int64, len(repos))
 	for _, repo := range repos {
 		idsByPath[repo.AbsolutePath] = repo.ID
 	}

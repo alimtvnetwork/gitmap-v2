@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/gitutil"
 	"github.com/user/gitmap/model"
@@ -36,7 +35,7 @@ func buildOneRecord(repo scanner.RepoInfo, mode, note string) model.ScanRecord {
 	instruction := buildInstruction(cloneURL, branch, repo.RelativePath)
 
 	return model.ScanRecord{
-		ID: uuid.New().String(), Slug: buildSlug(httpsURL, repoName),
+		Slug: buildSlug(httpsURL, repoName),
 		RepoName: repoName, HTTPSUrl: httpsURL, SSHUrl: sshURL, Branch: branch,
 		RelativePath: repo.RelativePath, AbsolutePath: repo.AbsolutePath,
 		CloneInstruction: instruction, Notes: noteText,

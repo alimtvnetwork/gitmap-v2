@@ -4,13 +4,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/user/gitmap/constants"
 )
 
 // AmendmentRow represents a single row from the Amendments table.
 type AmendmentRow struct {
-	ID            string
+	ID            int64
 	Branch        string
 	FromCommit    string
 	ToCommit      string
@@ -26,11 +25,10 @@ type AmendmentRow struct {
 
 // InsertAmendment saves an amendment record to the database.
 func (db *DB) InsertAmendment(branch, fromCommit, toCommit string, total int, prevName, prevEmail, newName, newEmail, mode string, forcePushed bool) error {
-	id := uuid.New().String()
 	fp := boolToIntAmend(forcePushed)
 
 	_, err := db.conn.Exec(constants.SQLInsertAmendment,
-		id, branch, fromCommit, toCommit, total,
+		branch, fromCommit, toCommit, total,
 		prevName, prevEmail, newName, newEmail, mode, fp)
 
 	if err != nil {
