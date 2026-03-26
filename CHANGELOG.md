@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.31.0
+- Bumped compiled version constant to v2.31.0.
+- Added verbose logging to auto-commit step: logs version, file counts, staging, commit message, and push target.
+
 ## v2.30.0
 - Bumped compiled version constant to v2.30.0.
 - Renamed TempReleases `Commit` column to `CommitSha` to avoid SQLite reserved keyword conflict.
