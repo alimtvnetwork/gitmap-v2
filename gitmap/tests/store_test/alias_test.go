@@ -8,13 +8,11 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-// seedRepo inserts a test repo and returns its ID.
-func seedRepo(t *testing.T, db *store.DB, slug, repoName, absPath string) string {
+// seedRepo inserts a test repo and returns its auto-generated ID.
+func seedRepo(t *testing.T, db *store.DB, slug, repoName, absPath string) int64 {
 	t.Helper()
 
-	id := "repo-" + slug
 	records := []model.ScanRecord{{
-		ID:           id,
 		Slug:         slug,
 		RepoName:     repoName,
 		AbsolutePath: absPath,
@@ -24,7 +22,13 @@ func seedRepo(t *testing.T, db *store.DB, slug, repoName, absPath string) string
 		t.Fatalf("failed to seed repo %s: %v", slug, err)
 	}
 
-	return id
+	// Look up the auto-generated ID.
+	repos, err := db.FindBySlug(slug)
+	if err != nil || len(repos) == 0 {
+		t.Fatalf("failed to find seeded repo %s", slug)
+	}
+
+	return repos[0].ID
 }
 
 // TestCreateAlias_Success verifies a new alias is created and returned.
@@ -44,11 +48,11 @@ func TestCreateAlias_Success(t *testing.T) {
 	}
 
 	if alias.RepoID != repoID {
-		t.Errorf("expected repoID=%s, got %s", repoID, alias.RepoID)
+		t.Errorf("expected repoID=%d, got %d", repoID, alias.RepoID)
 	}
 
-	if alias.ID == "" {
-		t.Error("expected non-empty alias ID")
+	if alias.ID == 0 {
+		t.Error("expected non-zero alias ID")
 	}
 
 	if alias.CreatedAt == "" {
@@ -261,7 +265,7 @@ func TestListUnaliasedRepos_ReturnsOnlyUnaliased(t *testing.T) {
 	}
 }
 
-// TestDeleteRepoCascadesAlias verifies alias is removed when repo is deleted.
+// TestFindAliasByRepoID_Success verifies lookup by repo ID.
 func TestFindAliasByRepoID_Success(t *testing.T) {
 	db := openTestDB(t)
 	defer db.Close()
