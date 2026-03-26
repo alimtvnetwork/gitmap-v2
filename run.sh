@@ -21,6 +21,7 @@ GITMAP_DIR="$REPO_ROOT/gitmap"
 # -- Defaults --------------------------------------------------
 NO_PULL=false
 NO_DEPLOY=false
+FORCE_PULL=false
 DEPLOY_PATH=""
 UPDATE=false
 RUN=false
@@ -31,6 +32,7 @@ RUN_ARGS=()
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --no-pull)    NO_PULL=true; shift ;;
+        --force-pull) FORCE_PULL=true; shift ;;
         --no-deploy)  NO_DEPLOY=true; shift ;;
         --deploy-path)
             DEPLOY_PATH="$2"; shift 2 ;;
@@ -140,7 +142,11 @@ invoke_git_pull() {
 
     if [[ $pull_exit -ne 0 ]]; then
         if echo "$output" | grep -qiE "Your local changes|overwritten by merge|not possible because you have unmerged|Please commit your changes or stash them"; then
-            resolve_pull_conflict
+            if [[ "$FORCE_PULL" == "true" ]]; then
+                force_pull_clean
+            else
+                resolve_pull_conflict
+            fi
         else
             write_fail "Git pull failed (exit code $pull_exit)"
             exit 1
@@ -148,6 +154,26 @@ invoke_git_pull() {
     else
         write_success "Pull complete"
     fi
+}
+
+# -- Force pull: discard + clean without prompting -------------
+force_pull_clean() {
+    write_warn "Force-pull: discarding local changes and removing untracked files..."
+    if ! git checkout -- . 2>&1; then
+        write_fail "Git checkout failed"
+        exit 1
+    fi
+    write_success "Local changes discarded"
+
+    local clean_output
+    clean_output=$(git clean -fd 2>&1) || true
+    if [[ -n "$clean_output" ]]; then
+        local clean_count
+        clean_count=$(echo "$clean_output" | grep -c . || true)
+        write_success "Removed $clean_count untracked file(s)"
+    fi
+
+    retry_git_pull
 }
 
 # -- Resolve pull conflict with local changes ------------------

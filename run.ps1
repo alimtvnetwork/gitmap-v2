@@ -27,6 +27,7 @@
 param(
     [switch]$NoPull,
     [switch]$NoDeploy,
+    [switch]$ForcePull,
     [string]$DeployPath = "",
     [switch]$Update,
     [switch]$R,
@@ -162,7 +163,38 @@ function Invoke-GitPull {
                            $outputText -match "Please commit your changes or stash them"
 
             if ($hasConflict) {
-                Resolve-PullConflict
+                if ($ForcePull) {
+                    Write-Warn "Force-pull: discarding local changes and removing untracked files..."
+                    $prevPref = $ErrorActionPreference
+                    $ErrorActionPreference = "Continue"
+
+                    $resetOutput = git checkout -- . 2>&1
+                    $resetExit = $LASTEXITCODE
+                    if ($resetExit -ne 0) {
+                        Write-Fail "Git checkout failed"
+                        $ErrorActionPreference = $prevPref
+                        exit 1
+                    }
+                    Write-Success "Local changes discarded"
+
+                    $cleanOutput = git clean -fd 2>&1
+                    $cleanExit = $LASTEXITCODE
+                    $ErrorActionPreference = $prevPref
+
+                    if ($cleanExit -ne 0) {
+                        Write-Fail "Git clean failed"
+                        exit 1
+                    }
+
+                    $cleanedFiles = @($cleanOutput | ForEach-Object { "$_".Trim() } | Where-Object { $_.Length -gt 0 })
+                    if ($cleanedFiles.Count -gt 0) {
+                        Write-Success "Removed $($cleanedFiles.Count) untracked file(s)"
+                    }
+
+                    Retry-GitPull
+                } else {
+                    Resolve-PullConflict
+                }
             } else {
                 Write-Fail "Git pull failed (exit code $pullExit)"
                 exit 1
