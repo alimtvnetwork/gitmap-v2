@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.35.0
+- Bumped compiled version constant to v2.35.0.
+- Consolidated `.release/` and `gitmap-output/` under unified `.gitmap/` directory (`release/`, `output/`).
+- Centralized all path constants (`GitMapDir`, `DefaultReleaseDir`, `DefaultOutputDir`) for single-point configuration.
+- Migrated all database primary keys from UUID strings to `INTEGER PRIMARY KEY AUTOINCREMENT` (`int64`).
+- Removed `github.com/google/uuid` dependency.
+- Added `doctor` check (12th) that warns if legacy `.release/` or `gitmap-output/` directories exist.
+- Updated all helptext, spec documents, and docs site to reference `.gitmap/` paths.
+
 ## v2.34.0
 - Bumped compiled version constant to v2.34.0.
 - Fixed `list-releases` to read `.release/v*.json` from the current repo first, falling back to the database only when no local files exist.
