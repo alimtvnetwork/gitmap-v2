@@ -61,7 +61,7 @@ func loadMultiGroupRepos() (*store.DB, []model.ScanRecord) {
 // collectGroupRepos gathers repos from multiple groups.
 func collectGroupRepos(db *store.DB, names []string) []model.ScanRecord {
 	var all []model.ScanRecord
-	seen := make(map[string]bool)
+	seen := make(map[int64]bool)
 
 	for _, name := range names {
 		repos := loadGroupReposSafe(db, name)
