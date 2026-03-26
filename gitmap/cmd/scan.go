@@ -146,5 +146,5 @@ func resolveOutputDir(cfgDir, scanDir string) string {
 		return cfgDir
 	}
 
-	return filepath.Join(scanDir, constants.DefaultOutputFolder)
+	return filepath.Join(scanDir, constants.GitMapDir, constants.OutputDirName)
 }
