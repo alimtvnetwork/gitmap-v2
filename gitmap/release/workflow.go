@@ -241,7 +241,11 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 		return err
 	}
 
-	// Step 3: Write metadata JSON on the original branch (picked up by auto-commit).
+	// Step 3: Re-run legacy directory migration on the original branch.
+	// Older branches may still track .release/, which checkout restores.
+	localdirs.MigrateLegacyDirs()
+
+	// Step 4: Write metadata JSON on the original branch (picked up by auto-commit).
 	if !opts.SkipMeta {
 		err = writeMetadata(v, branchName, tag, sourceName, nil, opts)
 		if err != nil {
@@ -249,7 +253,7 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 		}
 	}
 
-	// Step 4: Auto-commit the .gitmap/release/ metadata files.
+	// Step 5: Auto-commit the release metadata files.
 	if !opts.NoCommit {
 		AutoCommit(v.String(), false)
 	} else {
