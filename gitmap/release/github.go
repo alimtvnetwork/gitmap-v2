@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // CollectAssets gathers file paths for release attachment.
@@ -18,11 +19,25 @@ func CollectAssets(assetsPath string) []string {
 
 	info, err := os.Stat(assetsPath)
 	if err != nil {
+		if verbose.IsEnabled() {
+			verbose.Get().Log("assets: path not found: %s", assetsPath)
+		}
 		return nil
 	}
 
 	if info.IsDir() {
-		return collectDirFiles(assetsPath)
+		files := collectDirFiles(assetsPath)
+		if verbose.IsEnabled() {
+			verbose.Get().Log("assets: collected %d file(s) from directory %s", len(files), assetsPath)
+			for _, f := range files {
+				verbose.Get().Log("assets: %s", filepath.Base(f))
+			}
+		}
+		return files
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("assets: single file %s", assetsPath)
 	}
 
 	return []string{assetsPath}
