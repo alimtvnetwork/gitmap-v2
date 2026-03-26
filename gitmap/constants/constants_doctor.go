@@ -118,11 +118,14 @@ const (
 
 // Doctor legacy directory messages.
 const (
-	DoctorLegacyRelease      = "Legacy .release/ directory found"
+	DoctorLegacyRelease      = "Legacy .release/ directory found (should have been auto-migrated)"
 	DoctorLegacyReleaseDet   = "Release metadata has moved to .gitmap/release/"
-	DoctorLegacyReleaseFix   = "Move contents: mv .release/ .gitmap/release/"
-	DoctorLegacyOutput       = "Legacy gitmap-output/ directory found"
+	DoctorLegacyReleaseFix   = "Run any gitmap command to trigger auto-migration, or move manually: mv .release/ .gitmap/release/"
+	DoctorLegacyOutput       = "Legacy gitmap-output/ directory found (should have been auto-migrated)"
 	DoctorLegacyOutputDet    = "Scan output has moved to .gitmap/output/"
-	DoctorLegacyOutputFix    = "Move contents: mv gitmap-output/ .gitmap/output/"
-	DoctorLegacyDirsOK       = "No legacy directories (.release/, gitmap-output/)"
+	DoctorLegacyOutputFix    = "Run any gitmap command to trigger auto-migration, or move manually: mv gitmap-output/ .gitmap/output/"
+	DoctorLegacyDeployed     = "Legacy .deployed/ directory found (should have been auto-migrated)"
+	DoctorLegacyDeployedDet  = "Deploy state has moved to .gitmap/deployed/"
+	DoctorLegacyDeployedFix  = "Run any gitmap command to trigger auto-migration, or move manually: mv .deployed/ .gitmap/deployed/"
+	DoctorLegacyDirsOK       = "No legacy directories (.release/, gitmap-output/, .deployed/)"
 )
