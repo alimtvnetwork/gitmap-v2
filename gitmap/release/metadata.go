@@ -56,7 +56,7 @@ func metaFilePath(v Version) string {
 	return filepath.Join(constants.DefaultReleaseDir, filename)
 }
 
-// WriteReleaseMeta writes release metadata to .release/vX.Y.Z.json.
+// WriteReleaseMeta writes release metadata to .gitmap/release/vX.Y.Z.json.
 func WriteReleaseMeta(meta ReleaseMeta) error {
 	err := os.MkdirAll(constants.DefaultReleaseDir, constants.DirPermission)
 	if err != nil {
