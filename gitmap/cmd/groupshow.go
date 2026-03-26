@@ -29,6 +29,10 @@ func executeGroupShow(name string) {
 
 	repos, err := db.ShowGroup(name)
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrBareFmt, err)
 		os.Exit(1)
 	}

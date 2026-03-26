@@ -64,6 +64,10 @@ func loadHistory(cmdFilter string) []model.CommandHistoryRecord {
 
 	records, err := db.ListHistory()
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrHistoryQuery+"\n", err)
 		os.Exit(1)
 	}
