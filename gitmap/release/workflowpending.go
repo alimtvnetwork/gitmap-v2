@@ -112,3 +112,27 @@ func releaseFromMetadata(meta ReleaseMeta, assetsPath, notes string, draft bool,
 
 	return pushAndFinalize(v, branchName, tag, "metadata:"+meta.Commit, opts)
 }
+
+// isPendingBranch returns true when the branch has no released tag.
+func isPendingBranch(branch string) bool {
+	v, err := extractVersionFromBranch(branch)
+	if err != nil {
+		return false
+	}
+
+	tag := v.String()
+
+	return tagIsMissing(tag)
+}
+
+// tagIsMissing returns true when a tag does not exist locally or remotely.
+func tagIsMissing(tag string) bool {
+	if TagExistsLocally(tag) {
+		return false
+	}
+	if TagExistsRemote(tag) {
+		return false
+	}
+
+	return true
+}
