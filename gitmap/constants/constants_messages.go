@@ -250,3 +250,10 @@ const (
 	MsgOfflineWarning = "\n  ⚠ Network unavailable — cannot reach github.com.\n"
 	MsgOfflineHint    = "  Offline operations (scan, list, status, group) still work.\n"
 )
+
+// Legacy directory migration messages.
+const (
+	MsgMigrated          = "Migrated %s/ → %s/\n"
+	WarnMigrationSkipped = "⚠ Skipped migration of %s/ — %s/ already exists\n"
+	ErrMigrationFailed   = "failed to migrate %s/: %v\n"
+)
