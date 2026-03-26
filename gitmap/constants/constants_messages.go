@@ -206,7 +206,7 @@ const (
 
 // Release import messages.
 const (
-	MsgReleasesImported   = "Releases imported: %d from .release/\n"
+	MsgReleasesImported   = "Releases imported: %d from .gitmap/release/\n"
 	WarnReleaseImportSkip = "Warning: skipping %s: %v\n"
 	ReleaseGlob           = "v*.json"
 )
