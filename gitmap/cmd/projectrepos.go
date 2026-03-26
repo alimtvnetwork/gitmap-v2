@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"
@@ -46,6 +47,10 @@ func parseProjectReposFlags(args []string) (bool, bool) {
 func printProjectCount(db *store.DB, typeKey string) {
 	count, err := db.CountProjectsByTypeKey(typeKey)
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrProjectQuery, err)
 		os.Exit(1)
 	}
@@ -56,6 +61,10 @@ func printProjectCount(db *store.DB, typeKey string) {
 func printProjectList(db *store.DB, typeKey string, jsonOut bool) {
 	projects, err := db.SelectProjectsByTypeKey(typeKey)
 	if err != nil {
+		if isLegacyDataError(err) {
+			fmt.Fprint(os.Stderr, constants.MsgLegacyProjectData)
+			os.Exit(1)
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrProjectQuery, err)
 		os.Exit(1)
 	}
@@ -71,4 +80,9 @@ func printProjectList(db *store.DB, typeKey string, jsonOut bool) {
 	}
 	printProjectsTerminal(projects)
 	printProjectsSummary(projects)
+}
+
+// isLegacyDataError checks if a query error is caused by legacy UUID-based IDs.
+func isLegacyDataError(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "converting driver.Value type string")
 }
