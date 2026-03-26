@@ -182,10 +182,11 @@ function Resolve-PullConflict {
     Write-Host "  Choose how to proceed:" -ForegroundColor Yellow
     Write-Host "    [S] Stash changes (save for later, then pull)" -ForegroundColor Cyan
     Write-Host "    [D] Discard changes (reset working tree, then pull)" -ForegroundColor Cyan
+    Write-Host "    [C] Clean all (discard changes + remove untracked files, then pull)" -ForegroundColor Cyan
     Write-Host "    [Q] Quit (abort without changes)" -ForegroundColor Cyan
     Write-Host ""
 
-    $choice = Read-Host "  Enter choice (S/D/Q)"
+    $choice = Read-Host "  Enter choice (S/D/C/Q)"
 
     switch ($choice.ToUpper()) {
         "S" {
@@ -224,6 +225,48 @@ function Resolve-PullConflict {
                 exit 1
             }
             Write-Success "Local changes discarded"
+
+            Retry-GitPull
+        }
+        "C" {
+            Write-Warn "Discarding all local changes and removing untracked files..."
+            $prevPref = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+
+            $resetOutput = git checkout -- . 2>&1
+            $resetExit = $LASTEXITCODE
+
+            if ($resetExit -ne 0) {
+                Write-Fail "Git checkout failed"
+                foreach ($line in $resetOutput) {
+                    Write-Host "  $line" -ForegroundColor Red
+                }
+                $ErrorActionPreference = $prevPref
+                exit 1
+            }
+            Write-Success "Local changes discarded"
+
+            $cleanOutput = git clean -fd 2>&1
+            $cleanExit = $LASTEXITCODE
+            $ErrorActionPreference = $prevPref
+
+            if ($cleanExit -ne 0) {
+                Write-Fail "Git clean failed"
+                foreach ($line in $cleanOutput) {
+                    Write-Host "  $line" -ForegroundColor Red
+                }
+                exit 1
+            }
+
+            $cleanedFiles = @($cleanOutput | ForEach-Object { "$_".Trim() } | Where-Object { $_.Length -gt 0 })
+            if ($cleanedFiles.Count -gt 0) {
+                foreach ($line in $cleanedFiles) {
+                    Write-Info $line
+                }
+                Write-Success "Removed $($cleanedFiles.Count) untracked file(s)"
+            } else {
+                Write-Info "No untracked files to remove"
+            }
 
             Retry-GitPull
         }
