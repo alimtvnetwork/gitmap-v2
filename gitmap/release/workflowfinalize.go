@@ -181,20 +181,29 @@ func buildReleaseMeta(v Version, branchName, tag, sourceName, commit string, ass
 
 	zipGroups := collectZipGroupNames(opts)
 
+	var checksums map[string]string
+	if len(lastZipChecksums) > 0 {
+		checksums = make(map[string]string, len(lastZipChecksums))
+		for k, v := range lastZipChecksums {
+			checksums[k] = v
+		}
+	}
+
 	return ReleaseMeta{
-		Version:      v.CoreString(),
-		Branch:       branchName,
-		SourceBranch: sourceName,
-		Commit:       commit,
-		Tag:          tag,
-		Assets:       assetPaths,
-		Changelog:    loadChangelogNotes(v.String()),
-		Notes:        opts.Notes,
-		ZipGroups:    zipGroups,
-		Draft:        opts.Draft,
-		PreRelease:   v.IsPreRelease(),
-		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
-		IsLatest:     false,
+		Version:           v.CoreString(),
+		Branch:            branchName,
+		SourceBranch:      sourceName,
+		Commit:            commit,
+		Tag:               tag,
+		Assets:            assetPaths,
+		Changelog:         loadChangelogNotes(v.String()),
+		Notes:             opts.Notes,
+		ZipGroups:         zipGroups,
+		ZipGroupChecksums: checksums,
+		Draft:             opts.Draft,
+		PreRelease:        v.IsPreRelease(),
+		CreatedAt:         time.Now().UTC().Format(time.RFC3339),
+		IsLatest:          false,
 	}
 }
 
