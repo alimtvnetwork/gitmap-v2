@@ -132,7 +132,7 @@ func ReadVersionFile() (string, error) {
 	return vf.Version, nil
 }
 
-// ReadReleaseMeta reads and unmarshals a single .release/vX.Y.Z.json file.
+// ReadReleaseMeta reads and unmarshals a single .gitmap/release/vX.Y.Z.json file.
 func ReadReleaseMeta(path string) (ReleaseMeta, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
