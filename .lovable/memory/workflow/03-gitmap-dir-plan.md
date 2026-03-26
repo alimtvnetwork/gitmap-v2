@@ -43,4 +43,5 @@ Add warning in `doctor` if `.release/` or `gitmap-output/` exist at repo root.
 ## Status
 
 Step 1 complete — constants, display strings, comments, and test updated.
-Steps 2–9 remaining.
+Steps 4–5 complete — all helptext and spec markdown files updated to .gitmap/ paths.
+Steps 6–9 remaining.
