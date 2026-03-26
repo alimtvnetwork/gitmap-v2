@@ -922,4 +922,26 @@ export const commands: CommandDef[] = [
       { name: "list-releases", description: "Show stored releases from database" },
     ],
   },
+  {
+    category: "release",
+    name: "temp-release", alias: "tr", description: "Create lightweight temp branches from recent commits (no tags, no metadata)",
+    usage: "gitmap temp-release <count> <version-pattern> [-s N]",
+    flags: [
+      { flag: "-s, --start", description: "Starting sequence number (default: auto-increment)" },
+      { flag: "--dry-run", description: "Preview branch names without creating" },
+      { flag: "--json", description: "JSON output for list subcommand" },
+      { flag: "--verbose", description: "Detailed logging" },
+    ],
+    examples: [
+      { command: "gitmap tr 10 v1.$$ -s 5", description: "Create 10 branches starting at sequence 5" },
+      { command: "gitmap tr 1 v1.$$", description: "Create 1 branch, auto-increment from last" },
+      { command: "gitmap tr remove v1.05 to v1.10", description: "Remove a range of temp-release branches" },
+    ],
+    seeAlso: [
+      { name: "release", description: "Full release with tags and metadata" },
+      { name: "prune", description: "Delete stale release branches" },
+      { name: "release-branch", description: "Complete release from existing branch" },
+      { name: "temp-release", description: "Dedicated docs page", url: "/temp-release" },
+    ],
+  },
 ];
