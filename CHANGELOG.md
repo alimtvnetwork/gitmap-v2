@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.29.0
+- Bumped compiled version constant to v2.29.0.
+- Fixed TempReleases SQL syntax error: quoted reserved keyword `Commit` in CREATE TABLE, INSERT, and SELECT statements.
+- Documented metadata persistence and rollback log points in verbose logging spec (stages 14–15 of 15).
+
 ## v2.28.0
 - Bumped compiled version constant to v2.28.0.
 - Added verbose logging to release pipeline: version resolution, source resolution, git operations, asset collection, staging, cross-compilation, compression, checksums, zip groups, ad-hoc zips, GitHub upload, retry, metadata persistence, and rollback.

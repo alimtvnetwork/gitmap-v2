@@ -5,6 +5,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.29.0",
+    items: [
+      "Bumped compiled version constant to v2.29.0.",
+      "Fixed TempReleases SQL syntax error: quoted reserved keyword Commit in CREATE TABLE, INSERT, and SELECT statements.",
+      "Documented metadata persistence and rollback log points in verbose logging spec (stages 14–15 of 15).",
+    ],
+  },
+  {
     version: "v2.28.0",
     items: [
       "Bumped compiled version constant to v2.28.0.",
