@@ -8,6 +8,7 @@ import (
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"
+	"github.com/user/gitmap/verbose"
 )
 
 // LastMeta holds the most recent release metadata after Execute completes.
