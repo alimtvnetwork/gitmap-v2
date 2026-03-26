@@ -178,8 +178,8 @@ func persistReleaseToDB() {
 	_ = db.UpsertRelease(metaToRecord(*meta))
 }
 
-// metaToRecord converts a ReleaseMeta to a ReleaseRecord for DB storage.
-func metaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
+// releaseMetaToRecord converts a ReleaseMeta to a ReleaseRecord for DB storage.
+func releaseMetaToRecord(m release.ReleaseMeta) model.ReleaseRecord {
 	return model.ReleaseRecord{
 		Version:      m.Version,
 		Tag:          m.Tag,
