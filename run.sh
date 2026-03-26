@@ -156,6 +156,26 @@ invoke_git_pull() {
     fi
 }
 
+# -- Force pull: discard + clean without prompting -------------
+force_pull_clean() {
+    write_warn "Force-pull: discarding local changes and removing untracked files..."
+    if ! git checkout -- . 2>&1; then
+        write_fail "Git checkout failed"
+        exit 1
+    fi
+    write_success "Local changes discarded"
+
+    local clean_output
+    clean_output=$(git clean -fd 2>&1) || true
+    if [[ -n "$clean_output" ]]; then
+        local clean_count
+        clean_count=$(echo "$clean_output" | grep -c . || true)
+        write_success "Removed $clean_count untracked file(s)"
+    fi
+
+    retry_git_pull
+}
+
 # -- Resolve pull conflict with local changes ------------------
 resolve_pull_conflict() {
     write_warn "Git pull failed due to local changes"
