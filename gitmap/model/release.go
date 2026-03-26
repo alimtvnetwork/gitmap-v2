@@ -22,4 +22,5 @@ type ReleaseRecord struct {
 const (
 	SourceRelease = "release"
 	SourceImport  = "import"
+	SourceRepo    = "repo"
 )

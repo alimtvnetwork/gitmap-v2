@@ -1,6 +1,10 @@
 # gitmap list-releases
 
-List release metadata stored in the local database.
+List release metadata from the current git repo or stored database.
+
+When run inside a git repo with `.release/v*.json` files, releases are read
+directly from those files. Otherwise, releases are loaded from the gitmap
+database.
 
 ## Alias
 
@@ -8,45 +12,51 @@ lr
 
 ## Usage
 
-    gitmap list-releases [--json] [--source manual|scan]
+    gitmap list-releases [--json] [--limit N] [--source repo|release|import]
 
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | --json | false | Output as structured JSON |
-| --source \<type\> | — | Filter by release source (manual or scan) |
+| --limit \<N\> | 0 | Show only the top N releases (0 = all) |
+| --source \<type\> | — | Filter by release source (repo, release, or import) |
 
 ## Prerequisites
 
-- Run `gitmap scan` or `gitmap release` to populate release data (see scan.md, release.md)
+- Inside a git repo with `.release/v*.json` files, **or**
+- Run `gitmap scan` or `gitmap release` to populate the database
 
 ## Examples
 
-### Example 1: List all stored releases
+### Example 1: List releases from current repo
 
     gitmap list-releases
 
 **Output:**
 
-    VERSION   DATE          SOURCE   COMMITS  BRANCH            DRAFT
-    v2.22.0   2025-03-10    manual   5        release/v2.22.0   no
-    v2.21.0   2025-03-08    manual   3        release/v2.21.0   no
-    v2.20.0   2025-02-28    manual   4        release/v2.20.0   no
-    v2.19.0   2025-02-20    scan     6        release/v2.19.0   no
-    v2.18.0   2025-02-15    scan     2        release/v2.18.0   no
-    5 releases found
+    Releases (5 found)
+    ────────────────────────────────────────────────────────────────────────
+      VERSION    TAG          BRANCH              DRAFT  LATEST  SOURCE   DATE
+      2.33.0     v2.33.0      release/v2.33.0     no     yes     repo     2026-03-26
+      2.31.0     v2.31.0      release/v2.31.0     no     no      repo     2026-03-20
+      2.30.0     v2.30.0      release/v2.30.0     no     no      repo     2026-03-15
+      2.27.0     v2.27.0      release/v2.27.0     no     no      repo     2026-03-10
+      2.26.0     v2.26.0      release/v2.26.0     no     no      repo     2026-03-05
+      5 releases found
 
-### Example 2: Filter by source (scan-imported only)
+### Example 2: Show top 3 releases
 
-    gitmap lr --source scan
+    gitmap lr --limit 3
 
 **Output:**
 
-    VERSION   DATE          SOURCE   COMMITS
-    v2.19.0   2025-02-20    scan     6
-    v2.18.0   2025-02-15    scan     2
-    2 releases found (filtered: source=scan)
+    Releases (3 found)
+    ────────────────────────────────────────────────────────────────────────
+      VERSION    TAG          BRANCH              DRAFT  LATEST  SOURCE   DATE
+      2.33.0     v2.33.0      release/v2.33.0     no     yes     repo     2026-03-26
+      2.31.0     v2.31.0      release/v2.31.0     no     no      repo     2026-03-20
+      2.30.0     v2.30.0      release/v2.30.0     no     no      repo     2026-03-15
 
 ### Example 3: JSON output
 
@@ -55,9 +65,13 @@ lr
 **Output:**
 
     [
-      {"version":"v2.22.0","date":"2025-03-10","source":"manual","commits":5,"draft":false},
-      {"version":"v2.21.0","date":"2025-03-08","source":"manual","commits":3,"draft":false}
+      {"version":"2.33.0","tag":"v2.33.0","branch":"release/v2.33.0","source":"repo","draft":false,"isLatest":true},
+      {"version":"2.31.0","tag":"v2.31.0","branch":"release/v2.31.0","source":"repo","draft":false,"isLatest":false}
     ]
+
+### Example 4: Filter by source (database releases only)
+
+    gitmap lr --source release
 
 ## See Also
 
