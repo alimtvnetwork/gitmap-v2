@@ -5,6 +5,12 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.4",
+    items: [
+      "Bumped compiled version constant to v2.36.4.",
+    ],
+  },
+  {
     version: "v2.36.3",
     items: [
       "Bumped compiled version constant to v2.36.3.",
