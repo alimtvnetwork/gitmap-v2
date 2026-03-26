@@ -155,14 +155,107 @@ function Invoke-GitPull {
         }
 
         if ($pullExit -ne 0) {
-            Write-Fail "Git pull failed (exit code $pullExit)"
-            exit 1
-        }
+            $outputText = ($output | ForEach-Object { "$_" }) -join "`n"
+            $hasConflict = $outputText -match "Your local changes" -or
+                           $outputText -match "overwritten by merge" -or
+                           $outputText -match "not possible because you have unmerged" -or
+                           $outputText -match "Please commit your changes or stash them"
 
-        Write-Success "Pull complete"
+            if ($hasConflict) {
+                Resolve-PullConflict
+            } else {
+                Write-Fail "Git pull failed (exit code $pullExit)"
+                exit 1
+            }
+        } else {
+            Write-Success "Pull complete"
+        }
     } finally {
         Pop-Location
     }
+}
+
+# -- Resolve pull conflict with local changes ------------------
+function Resolve-PullConflict {
+    Write-Warn "Git pull failed due to local changes"
+    Write-Host ""
+    Write-Host "  Choose how to proceed:" -ForegroundColor Yellow
+    Write-Host "    [S] Stash changes (save for later, then pull)" -ForegroundColor Cyan
+    Write-Host "    [D] Discard changes (reset working tree, then pull)" -ForegroundColor Cyan
+    Write-Host "    [Q] Quit (abort without changes)" -ForegroundColor Cyan
+    Write-Host ""
+
+    $choice = Read-Host "  Enter choice (S/D/Q)"
+
+    switch ($choice.ToUpper()) {
+        "S" {
+            Write-Info "Stashing local changes..."
+            $prevPref = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            $stashOutput = git stash push -m "auto-stash before run.ps1 pull" 2>&1
+            $stashExit = $LASTEXITCODE
+            $ErrorActionPreference = $prevPref
+
+            if ($stashExit -ne 0) {
+                Write-Fail "Git stash failed"
+                foreach ($line in $stashOutput) {
+                    Write-Host "  $line" -ForegroundColor Red
+                }
+                exit 1
+            }
+            Write-Success "Changes stashed"
+            Write-Info "Run 'git stash pop' later to restore your changes"
+
+            Retry-GitPull
+        }
+        "D" {
+            Write-Warn "Discarding all local changes..."
+            $prevPref = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            $resetOutput = git checkout -- . 2>&1
+            $resetExit = $LASTEXITCODE
+            $ErrorActionPreference = $prevPref
+
+            if ($resetExit -ne 0) {
+                Write-Fail "Git checkout failed"
+                foreach ($line in $resetOutput) {
+                    Write-Host "  $line" -ForegroundColor Red
+                }
+                exit 1
+            }
+            Write-Success "Local changes discarded"
+
+            Retry-GitPull
+        }
+        default {
+            Write-Info "Aborted by user"
+            exit 0
+        }
+    }
+}
+
+# -- Retry git pull after stash/discard -----------------------
+function Retry-GitPull {
+    Write-Info "Retrying git pull..."
+    $prevPref = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $retryOutput = git pull 2>&1
+    $retryExit = $LASTEXITCODE
+    $ErrorActionPreference = $prevPref
+
+    foreach ($line in $retryOutput) {
+        $text = "$line".Trim()
+        if ($text.Length -gt 0) {
+            Write-Info $text
+        }
+    }
+
+    if ($retryExit -ne 0) {
+        Write-Fail "Git pull failed again (exit code $retryExit)"
+        exit 1
+    }
+
+    Write-Success "Pull complete"
 }
 
 # -- Resolve dependencies -------------------------------------
