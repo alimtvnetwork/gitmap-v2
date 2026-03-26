@@ -19,8 +19,8 @@ type AutoCommitResult struct {
 }
 
 // AutoCommit inspects working tree changes after returning to the original branch.
-// If only .release/ files changed, it commits and pushes silently.
-// If other files also changed, it prompts the user. On decline, it commits only .release/.
+// If only .gitmap/release/ files changed, it commits and pushes silently.
+// If other files also changed, it prompts the user. On decline, it commits only .gitmap/release/.
 func AutoCommit(version string, dryRun bool) AutoCommitResult {
 	fmt.Print(constants.MsgAutoCommitScanning)
 
