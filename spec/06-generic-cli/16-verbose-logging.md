@@ -204,22 +204,22 @@ All entries follow the `prefix: detail` convention.
 
 | # | Stage | Prefix | Source File |
 |---|-------|--------|-------------|
-| 1 | Version Resolution | `version:` | `workflow.go` |
-| 2 | Source Resolution | `source:` | `gitops.go` |
-| 3 | Git Operations | `git:` | `gitops.go` |
-| 4 | Asset Collection | `assets:` | `github.go` |
-| 5 | Staging Directory | `staging:` | `assets.go` |
-| 6 | Cross-Compilation | `build:` | `assets.go` |
-| 7 | Compression | `compress:` | `compress.go` |
-| 8 | Checksums | `checksum:` | `checksums.go` |
-| 9 | Zip Group Processing | `zip-group:` | `workflowfinalize.go` |
-| 10 | Ad-Hoc Zip Archives | `ad-hoc-zip:` | `workflowfinalize.go` |
-| 11 | Zip Group Archives | `zip-summary:` | `ziparchive.go` |
-| 12 | GitHub Upload | `github:` / `upload:` | `workflowfinalize.go`, `assetsupload.go` |
-| 13 | Retry | `retry:` | `retry.go` |
-| 14 | Metadata Persistence | `metadata:` | `workflowfinalize.go` |
-| 15 | Rollback | `rollback:` | `rollback.go` |
-| 16 | Autocommit | `autocommit:` | `autocommit.go` |
+| 1 | [Version Resolution](#version-resolution-workflowgo) | `version:` | `workflow.go` |
+| 2 | [Source Resolution](#source-resolution-gitopsgo) | `source:` | `gitops.go` |
+| 3 | [Git Operations](#git-operations-gitopsgo) | `git:` | `gitops.go` |
+| 4 | [Asset Collection](#asset-collection-githubgo) | `assets:` | `github.go` |
+| 5 | [Staging Directory](#staging-directory-assetsgo) | `staging:` | `assets.go` |
+| 6 | [Cross-Compilation](#cross-compilation-assetsgo) | `build:` | `assets.go` |
+| 7 | [Compression](#compression-compressgo) | `compress:` | `compress.go` |
+| 8 | [Checksums](#checksums-checksumsgo) | `checksum:` | `checksums.go` |
+| 9 | [Zip Group Processing](#zip-group-processing-workflowfinalizego) | `zip-group:` | `workflowfinalize.go` |
+| 10 | [Ad-Hoc Zip Archives](#ad-hoc-zip-archives-workflowfinalizego) | `ad-hoc-zip:` | `workflowfinalize.go` |
+| 11 | [Zip Group Archives](#zip-group-archives-ziparchivego) | `zip-summary:` | `ziparchive.go` |
+| 12 | [GitHub Upload](#github-upload-workflowfinalizego-assetsuploadgo) | `github:` / `upload:` | `workflowfinalize.go`, `assetsupload.go` |
+| 13 | [Retry](#retry-retrygo) | `retry:` | `retry.go` |
+| 14 | [Metadata Persistence](#metadata-persistence-workflowfinalizego) | `metadata:` | `workflowfinalize.go` |
+| 15 | [Rollback](#rollback-rollbackgo) | `rollback:` | `rollback.go` |
+| 16 | [Autocommit](#autocommit-autocommitgo) | `autocommit:` | `autocommit.go` |
 
 ### Version Resolution (`workflow.go`)
 
