@@ -1,0 +1,9 @@
+{
+  "version": "2.36.1",
+  "tag": "v2.36.1",
+  "branch": "release/v2.36.1",
+  "changelog": [
+    "Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT.",
+    "Fixed FK constraint violation during scan with legacy UUID data."
+  ]
+}
