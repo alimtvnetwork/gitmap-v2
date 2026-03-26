@@ -33,10 +33,10 @@ const SQLCreateTempReleases = `CREATE TABLE IF NOT EXISTS TempReleases (
 
 // SQL: temp-release operations.
 const (
-	SQLInsertTempRelease = `INSERT INTO TempReleases (Id, Branch, VersionPrefix, SequenceNumber, Commit, CommitMessage)
+	SQLInsertTempRelease = `INSERT INTO TempReleases (Id, Branch, VersionPrefix, SequenceNumber, "Commit", CommitMessage)
 		VALUES (?, ?, ?, ?, ?, ?)`
 
-	SQLSelectAllTempReleases = `SELECT Id, Branch, VersionPrefix, SequenceNumber, Commit, CommitMessage, CreatedAt
+	SQLSelectAllTempReleases = `SELECT Id, Branch, VersionPrefix, SequenceNumber, "Commit", CommitMessage, CreatedAt
 		FROM TempReleases ORDER BY SequenceNumber`
 
 	SQLSelectMaxSeqByPrefix = `SELECT COALESCE(MAX(SequenceNumber), 0) FROM TempReleases WHERE VersionPrefix = ?`
