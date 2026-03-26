@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"

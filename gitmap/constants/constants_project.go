@@ -120,6 +120,14 @@ const (
 	ErrCSharpKeyUpsert     = "failed to upsert C# key file: %v"
 )
 
+// Legacy data recovery messages.
+const (
+	MsgLegacyProjectData = "Database contains legacy project data from a previous version.\n" +
+		"To fix, run one of:\n\n" +
+		"  gitmap rescan          Re-scan repos and rebuild project data\n" +
+		"  gitmap db-reset --confirm   Reset the entire database\n"
+)
+
 // React indicator dependencies.
 var ReactIndicatorDeps = []string{
 	"react",
