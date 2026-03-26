@@ -8,7 +8,9 @@ export const changelog: ChangelogEntry[] = [
     version: "v2.36.4",
     items: [
       "Split workflowfinalize.go (498 lines) into four domain-specific files: workflowfinalize.go, workflowdryrun.go, workflowzip.go, workflowgithub.go.",
-      "All release/ workflow files now comply with the 200-line limit.",
+      "Split root.go (388 lines) into seven domain-specific dispatch files: root.go, rootcore.go, rootrelease.go, rootutility.go, rootdata.go, roottooling.go, rootprojectrepos.go.",
+      "Eliminated dispatchMisc (166 lines); replaced by dispatchData + dispatchTooling.",
+      "All cmd/ and release/ files now comply with the 200-line limit.",
       "Added refactoring specs for workflowfinalize.go and root.go dispatch modularization.",
     ],
   },

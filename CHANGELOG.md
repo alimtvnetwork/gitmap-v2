@@ -6,6 +6,18 @@
   - `workflowdryrun.go` (~123 lines): dry-run preview functions and `returnToBranch`.
   - `workflowzip.go` (~108 lines): zip group building, ad-hoc archives, and checksum collection.
   - `workflowgithub.go` (~104 lines): GitHub release uploads and Go cross-compilation.
+- Split `root.go` (388 lines) into seven domain-specific dispatch files under `cmd/`:
+  - `root.go` (72 lines): entry point and top-level router.
+  - `rootcore.go` (44 lines): scan, clone, pull, status, exec commands.
+  - `rootrelease.go` (48 lines): release workflow commands.
+  - `rootutility.go` (56 lines): update, revert, version, help, docs.
+  - `rootdata.go` (98 lines): data management, history, profiles, TUI.
+  - `roottooling.go` (91 lines): dev tooling and maintenance commands.
+  - `rootprojectrepos.go` (38 lines): project type query commands.
+- Eliminated `dispatchMisc` (166 lines); replaced by `dispatchData` + `dispatchTooling`.
+  - `workflowdryrun.go` (~123 lines): dry-run preview functions and `returnToBranch`.
+  - `workflowzip.go` (~108 lines): zip group building, ad-hoc archives, and checksum collection.
+  - `workflowgithub.go` (~104 lines): GitHub release uploads and Go cross-compilation.
 - All files comply with the 200-line limit; no functional changes.
 - Added refactoring specs: `spec/01-app/58-refactor-workflowfinalize.md`, `spec/01-app/59-refactor-root-dispatch.md`.
 
