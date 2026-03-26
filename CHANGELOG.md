@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.36.2
+- Bumped compiled version constant to v2.36.2.
+- Fixed legacy directory migration to merge files when target already exists instead of skipping.
+- Legacy directories (`.release/`, `gitmap-output/`, `.deployed/`) are now fully removed after merging into `.gitmap/`.
+- Added `mergeAndRemoveLegacy()` with file-walk merge and `os.RemoveAll` cleanup.
+- Replaced Unicode characters in migration messages with ASCII for Windows console compatibility.
+
 ## v2.36.1
 - Bumped compiled version constant to v2.36.1.
 - Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT IDs.
