@@ -136,4 +136,18 @@ func formatDuration(d time.Duration) string {
 	}
 
 	return fmt.Sprintf("%dm", m)
+
+// shouldStop checks if the loop should terminate.
+func shouldStop(stop <-chan bool, maxCommits, count int) bool {
+	select {
+	case <-stop:
+		return true
+	default:
+	}
+
+	if maxCommits > 0 && count >= maxCommits {
+		return true
+	}
+
+	return false
 }
