@@ -175,7 +175,7 @@ func persistReleaseToDB() {
 	defer db.Close()
 
 	_ = db.Migrate()
-	_ = db.UpsertRelease(metaToRecord(*meta))
+	_ = db.UpsertRelease(releaseMetaToRecord(*meta))
 }
 
 // releaseMetaToRecord converts a ReleaseMeta to a ReleaseRecord for DB storage.
