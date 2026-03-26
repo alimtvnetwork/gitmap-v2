@@ -2,7 +2,7 @@
 
 ## Problem
 
-Running `gitmap lr` inside a git repo with `.release/v*.json` files would
+Running `gitmap lr` inside a git repo with `.gitmap/release/v*.json` files would
 ignore those files and query only the gitmap SQLite database. This meant
 releases created in the current repo were invisible unless a `gitmap scan`
 had been run to import them.
@@ -11,17 +11,17 @@ had been run to import them.
 
 `loadReleases()` in `cmd/listreleases.go` unconditionally opened the
 database via `openDB()` and called `db.ListReleases()`. It never checked
-for `.release/` files in the working directory.
+for `.gitmap/release/` files in the working directory.
 
 ## Fix
 
 Changed `loadReleases()` to use a dual-source resolution:
 
 1. **Repo-first**: call `release.ListReleaseMetaFiles()` to read all
-   `.release/v*.json` files. Convert each `ReleaseMeta` to a
+   `.gitmap/release/v*.json` files. Convert each `ReleaseMeta` to a
    `model.ReleaseRecord` with `Source = "repo"`, sort by `CreatedAt DESC`,
    and mark `IsLatest` from `latest.json`.
-2. **DB fallback**: only if no `.release/` files are found, fall back to
+2. **DB fallback**: only if no `.gitmap/release/` files are found, fall back to
    `db.ListReleases()`.
 
 Added `model.SourceRepo = "repo"` constant alongside existing

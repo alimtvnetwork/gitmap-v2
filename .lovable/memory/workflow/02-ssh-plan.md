@@ -44,4 +44,4 @@ Spec: `spec/01-app/50-ssh-keys.md`
 21. **Update `README.md`** — add SSH section to command table.
 22. **Update docs site** — add SSH page (`src/pages/SSH.tsx`), route, sidebar entry.
 23. **Update `src/data/commands.ts`** — add SSH command entry with flags and examples.
-24. **Create release JSON** — `.release/v2.25.0.json` with SSH changelog entries.
+24. **Create release JSON** — `.gitmap/release/v2.25.0.json` with SSH changelog entries.

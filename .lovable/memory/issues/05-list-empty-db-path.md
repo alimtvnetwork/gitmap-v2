@@ -21,7 +21,7 @@ to `"default"` → `gitmap.db`), it means:
 
 1. Profile switching via `OpenDefault()` is silently broken.
 2. If the user scanned with an older binary version (pre-v2.15.1) that
-   used CWD-relative paths (`gitmap-output/data/gitmap.db`), the new
+   used CWD-relative paths (`.gitmap/output/data/gitmap.db`), the new
    binary looks at `<binary-dir>/data/gitmap.db` — a completely different
    file.
 
