@@ -3,7 +3,7 @@ package model
 
 // BookmarkRecord represents a saved command+flags combination.
 type BookmarkRecord struct {
-	ID        string `json:"id"`
+	ID        int64  `json:"id"`
 	Name      string `json:"name"`
 	Command   string `json:"command"`
 	Args      string `json:"args,omitempty"`

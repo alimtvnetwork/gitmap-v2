@@ -3,7 +3,7 @@ package model
 
 // Group represents a named collection of repositories.
 type Group struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Color       string `json:"color"`
@@ -12,6 +12,6 @@ type Group struct {
 
 // GroupRepo links a group to a repository.
 type GroupRepo struct {
-	GroupID string `json:"groupId"`
-	RepoID  string `json:"repoId"`
+	GroupID int64 `json:"groupId"`
+	RepoID  int64 `json:"repoId"`
 }

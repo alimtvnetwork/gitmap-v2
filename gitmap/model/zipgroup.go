@@ -3,7 +3,7 @@ package model
 
 // ZipGroup represents a named collection of files/folders for archiving.
 type ZipGroup struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	ArchiveName string `json:"archiveName"`
 	CreatedAt   string `json:"createdAt"`
@@ -11,7 +11,7 @@ type ZipGroup struct {
 
 // ZipGroupItem links a file or folder path to a zip group.
 type ZipGroupItem struct {
-	GroupID      string `json:"groupId"`
+	GroupID      int64  `json:"groupId"`
 	RepoPath     string `json:"repoPath"`
 	RelativePath string `json:"relativePath"`
 	FullPath     string `json:"fullPath"`

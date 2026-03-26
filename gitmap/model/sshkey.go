@@ -3,7 +3,7 @@ package model
 
 // SSHKey represents a stored SSH key pair.
 type SSHKey struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	PrivatePath string `json:"privatePath"`
 	PublicKey   string `json:"publicKey"`

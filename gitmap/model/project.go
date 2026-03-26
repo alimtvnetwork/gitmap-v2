@@ -3,10 +3,10 @@ package model
 
 // DetectedProject represents a project detected inside a Git repository.
 type DetectedProject struct {
-	ID               string `json:"id"`
-	RepoID           string `json:"repoId"`
+	ID               int64  `json:"id"`
+	RepoID           int64  `json:"repoId"`
 	RepoName         string `json:"repoName"`
-	ProjectTypeID    string `json:"projectTypeId"`
+	ProjectTypeID    int64  `json:"projectTypeId"`
 	ProjectType      string `json:"projectType"`
 	ProjectName      string `json:"projectName"`
 	AbsolutePath     string `json:"absolutePath"`
