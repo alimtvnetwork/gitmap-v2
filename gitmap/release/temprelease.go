@@ -27,11 +27,11 @@ func ListRecentCommits(count int) ([]TempReleaseCommit, error) {
 		return nil, fmt.Errorf("failed to list recent commits: %w", err)
 	}
 
-	return parseCommitLines(strings.TrimSpace(string(out))), nil
+	return parseTempReleaseCommitLines(strings.TrimSpace(string(out))), nil
 }
 
-// parseCommitLines parses git log output into commit structs.
-func parseCommitLines(output string) []TempReleaseCommit {
+// parseTempReleaseCommitLines parses git log output into commit structs.
+func parseTempReleaseCommitLines(output string) []TempReleaseCommit {
 	if len(output) == 0 {
 		return nil
 	}
