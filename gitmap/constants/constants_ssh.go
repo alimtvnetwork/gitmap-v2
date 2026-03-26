@@ -27,8 +27,8 @@ const SQLCreateSSHKeys = `CREATE TABLE IF NOT EXISTS SSHKeys (
 
 // SQL: SSH key operations.
 const (
-	SQLInsertSSHKey = `INSERT INTO SSHKeys (Id, Name, PrivatePath, PublicKey, Fingerprint, Email)
-		VALUES (?, ?, ?, ?, ?, ?)`
+	SQLInsertSSHKey = `INSERT INTO SSHKeys (Name, PrivatePath, PublicKey, Fingerprint, Email)
+		VALUES (?, ?, ?, ?, ?)`
 
 	SQLUpdateSSHKey = `UPDATE SSHKeys SET PrivatePath = ?, PublicKey = ?, Fingerprint = ?, Email = ?
 		WHERE Name = ?`

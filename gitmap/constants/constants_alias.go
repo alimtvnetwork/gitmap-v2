@@ -24,7 +24,7 @@ const SQLCreateAliases = `CREATE TABLE IF NOT EXISTS Aliases (
 
 // SQL: alias operations.
 const (
-	SQLInsertAlias = `INSERT INTO Aliases (Id, Alias, RepoId) VALUES (?, ?, ?)`
+	SQLInsertAlias = `INSERT INTO Aliases (Alias, RepoId) VALUES (?, ?)`
 
 	SQLUpdateAlias = `UPDATE Aliases SET RepoId = ? WHERE Alias = ?`
 

@@ -22,8 +22,8 @@ const SQLCreateCommandHistory = `CREATE TABLE IF NOT EXISTS CommandHistory (
 // SQL: command history operations.
 const (
 	SQLInsertHistory = `INSERT INTO CommandHistory
-		(Id, Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		(Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	SQLUpdateHistory = `UPDATE CommandHistory
 		SET FinishedAt = ?, DurationMs = ?, ExitCode = ?, Summary = ?, RepoCount = ?

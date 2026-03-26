@@ -15,8 +15,8 @@ const SQLCreateBookmarks = `CREATE TABLE IF NOT EXISTS Bookmarks (
 
 // SQL: bookmark operations.
 const (
-	SQLInsertBookmark = `INSERT INTO Bookmarks (Id, Name, Command, Args, Flags)
-		VALUES (?, ?, ?, ?, ?)`
+	SQLInsertBookmark = `INSERT INTO Bookmarks (Name, Command, Args, Flags)
+		VALUES (?, ?, ?, ?)`
 
 	SQLSelectAllBookmarks = `SELECT Id, Name, Command, Args, Flags, CreatedAt
 		FROM Bookmarks ORDER BY Name`

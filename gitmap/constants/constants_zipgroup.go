@@ -48,7 +48,7 @@ const (
 
 // SQL: zip group operations.
 const (
-	SQLInsertZipGroup = `INSERT INTO ZipGroups (Id, Name, ArchiveName) VALUES (?, ?, ?)`
+	SQLInsertZipGroup = `INSERT INTO ZipGroups (Name, ArchiveName) VALUES (?, ?)`
 
 	SQLSelectAllZipGroups = `SELECT Id, Name, ArchiveName, CreatedAt FROM ZipGroups ORDER BY Name`
 

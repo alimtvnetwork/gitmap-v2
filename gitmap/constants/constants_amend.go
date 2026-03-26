@@ -117,8 +117,8 @@ const SQLCreateAmendments = `CREATE TABLE IF NOT EXISTS Amendments (
 )`
 
 const (
-	SQLInsertAmendment = `INSERT INTO Amendments (Id, Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	SQLInsertAmendment = `INSERT INTO Amendments (Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	SQLSelectAllAmendments = `SELECT Id, Branch, FromCommit, ToCommit, TotalCommits, PreviousName, PreviousEmail, NewName, NewEmail, Mode, ForcePushed, CreatedAt
 		FROM Amendments ORDER BY CreatedAt DESC`
