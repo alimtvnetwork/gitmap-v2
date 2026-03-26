@@ -107,6 +107,18 @@
 - ✅ Added 12th doctor check for legacy directories
 - ✅ Updated all helptext, specs, docs site, and memory files
 
+### v2.36.0 → v2.36.3 — Migration Hardening & Output Path Fix
+- ✅ Auto-migration of legacy directories (`.release/`, `gitmap-output/`, `.deployed/`) at CLI startup
+- ✅ Post-release migration: re-runs `MigrateLegacyDirs()` after returning to original branch
+- ✅ Prevents `.release/` from persisting when older branches restore tracked legacy files
+- ✅ Doctor legacy directory check simplified — confirms auto-migration succeeded
+- ✅ Removed standalone legacy directory warning from doctor (migration handles cleanup)
+- ✅ Scan output now always writes to `.gitmap/output/` relative to scan root
+- ✅ `resolveOutputDir` enforces `.gitmap/output/` path (ignores config unless absolute)
+- ✅ Updated all helptext output examples to use `.gitmap/output/` paths
+- ✅ Audited all specs, memory docs, and helptext for stale `gitmap-output/` references
+- ✅ CHANGELOG.md updated with v2.36.3 entry
+
 ## Pending Work
 
 ### Next Up: Temp Release Command
