@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // GenerateChecksums computes SHA256 hashes for all assets and writes
