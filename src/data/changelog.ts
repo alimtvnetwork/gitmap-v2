@@ -5,6 +5,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.34.0",
+    items: [
+      "Bumped compiled version constant to v2.34.0.",
+      "Fixed list-releases to read .release/v*.json from the current repo first, falling back to the database only when no local files exist.",
+      "Added SourceRepo constant to release model for repo-sourced release records.",
+    ],
+  },
+  {
     version: "v2.33.0",
     items: [
       "Bumped compiled version constant to v2.33.0.",
