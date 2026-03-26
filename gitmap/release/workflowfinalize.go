@@ -174,11 +174,17 @@ func writeMetadata(v Version, branchName, tag, sourceName string, assets []strin
 	commit, _ := CurrentCommitSHA()
 	meta := buildReleaseMeta(v, branchName, tag, sourceName, commit, assets, opts)
 
+	metaPath := constants.DefaultReleaseDir + "/" + v.String() + constants.ExtJSON
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("metadata: writing %s", metaPath)
+	}
+
 	err := WriteReleaseMeta(meta)
 	if err != nil {
 		return fmt.Errorf(constants.ErrReleaseMetaWrite, err)
 	}
-	fmt.Printf(constants.MsgReleaseMeta, constants.DefaultReleaseDir+"/"+v.String()+constants.ExtJSON)
+	fmt.Printf(constants.MsgReleaseMeta, metaPath)
 
 	LastMeta = &meta
 
@@ -252,6 +258,9 @@ func loadChangelogNotes(version string) []string {
 // updateLatestIfStable marks the release as latest if stable.
 func updateLatestIfStable(v Version) error {
 	if v.IsPreRelease() {
+		if verbose.IsEnabled() {
+			verbose.Get().Log("metadata: skipping latest.json (pre-release %s)", v.String())
+		}
 		fmt.Printf(constants.MsgReleaseComplete, v.String())
 
 		return nil
@@ -259,6 +268,10 @@ func updateLatestIfStable(v Version) error {
 
 	if LastMeta != nil {
 		LastMeta.IsLatest = true
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("metadata: updating latest.json to %s", v.String())
 	}
 
 	err := WriteLatest(v)
