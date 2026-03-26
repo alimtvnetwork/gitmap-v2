@@ -161,3 +161,28 @@ func checkChangelogFile() int {
 
 	return 0
 }
+
+// checkLegacyDirs warns if old .release/ or gitmap-output/ directories exist.
+func checkLegacyDirs() int {
+	issues := 0
+
+	if info, err := os.Stat(".release"); err == nil && info.IsDir() {
+		printIssue(constants.DoctorLegacyRelease, constants.DoctorLegacyReleaseDet)
+		printFix(constants.DoctorLegacyReleaseFix)
+
+		issues++
+	}
+
+	if info, err := os.Stat("gitmap-output"); err == nil && info.IsDir() {
+		printIssue(constants.DoctorLegacyOutput, constants.DoctorLegacyOutputDet)
+		printFix(constants.DoctorLegacyOutputFix)
+
+		issues++
+	}
+
+	if issues == 0 {
+		printOK(constants.DoctorLegacyDirsOK)
+	}
+
+	return issues
+}

@@ -44,4 +44,5 @@ Add warning in `doctor` if `.release/` or `gitmap-output/` exist at repo root.
 
 Step 1 complete — constants, display strings, comments, and test updated.
 Steps 4–5 complete — all helptext and spec markdown files updated to .gitmap/ paths.
-Steps 6–9 remaining.
+Step 8 complete — doctor check for legacy .release/ and gitmap-output/ directories.
+Steps 6, 7, 9 remaining.

@@ -115,3 +115,14 @@ const (
 	DoctorNetworkOK      = "Network: github.com reachable"
 	DoctorNetworkOffline = "Network: github.com unreachable (offline mode)"
 )
+
+// Doctor legacy directory messages.
+const (
+	DoctorLegacyRelease      = "Legacy .release/ directory found"
+	DoctorLegacyReleaseDet   = "Release metadata has moved to .gitmap/release/"
+	DoctorLegacyReleaseFix   = "Move contents: mv .release/ .gitmap/release/"
+	DoctorLegacyOutput       = "Legacy gitmap-output/ directory found"
+	DoctorLegacyOutputDet    = "Scan output has moved to .gitmap/output/"
+	DoctorLegacyOutputFix    = "Move contents: mv gitmap-output/ .gitmap/output/"
+	DoctorLegacyDirsOK       = "No legacy directories (.release/, gitmap-output/)"
+)

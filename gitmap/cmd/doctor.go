@@ -39,6 +39,7 @@ func runDoctorChecks() int {
 	issues += checkDatabase()
 	issues += checkLockFile()
 	issues += checkNetwork()
+	issues += checkLegacyDirs()
 
 	return issues
 }
