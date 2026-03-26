@@ -13,19 +13,20 @@ import (
 
 // ReleaseMeta holds metadata for a single release.
 type ReleaseMeta struct {
-	Version      string   `json:"version"`
-	Branch       string   `json:"branch"`
-	SourceBranch string   `json:"sourceBranch"`
-	Commit       string   `json:"commit"`
-	Tag          string   `json:"tag"`
-	Assets       []string `json:"assets"`
-	Changelog    []string `json:"changelog,omitempty"`
-	Notes        string   `json:"notes,omitempty"`
-	ZipGroups    []string `json:"zipGroups,omitempty"`
-	Draft        bool     `json:"draft"`
-	PreRelease   bool     `json:"preRelease"`
-	CreatedAt    string   `json:"createdAt"`
-	IsLatest     bool     `json:"isLatest"`
+	Version           string            `json:"version"`
+	Branch            string            `json:"branch"`
+	SourceBranch      string            `json:"sourceBranch"`
+	Commit            string            `json:"commit"`
+	Tag               string            `json:"tag"`
+	Assets            []string          `json:"assets"`
+	Changelog         []string          `json:"changelog,omitempty"`
+	Notes             string            `json:"notes,omitempty"`
+	ZipGroups         []string          `json:"zipGroups,omitempty"`
+	ZipGroupChecksums map[string]string `json:"zipGroupChecksums,omitempty"`
+	Draft             bool              `json:"draft"`
+	PreRelease        bool              `json:"preRelease"`
+	CreatedAt         string            `json:"createdAt"`
+	IsLatest          bool              `json:"isLatest"`
 }
 
 // LatestMeta holds the pointer to the latest stable release.
