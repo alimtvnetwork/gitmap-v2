@@ -4,6 +4,8 @@ package release
 
 import (
 	"archive/zip"
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"os"
@@ -188,6 +190,8 @@ func createMaxCompressZip(archivePath string, items []model.ZipGroupItem) error 
 		return newMaxDeflateWriter(out), nil
 	})
 
+	fileCount := 0
+
 	for _, item := range items {
 		itemPath := item.FullPath
 		if len(itemPath) == 0 {
@@ -198,6 +202,7 @@ func createMaxCompressZip(archivePath string, items []model.ZipGroupItem) error 
 			err = addFolderToZip(w, itemPath)
 		} else {
 			err = addSingleFileToZip(w, itemPath, filepath.Base(itemPath))
+			fileCount++
 		}
 
 		if err != nil {
@@ -205,7 +210,51 @@ func createMaxCompressZip(archivePath string, items []model.ZipGroupItem) error 
 		}
 	}
 
+	// Close writer before reading size/hash.
+	w.Close()
+	outFile.Close()
+
+	if verbose.IsEnabled() {
+		logArchiveSummary(archivePath, fileCount)
+	}
+
 	return nil
+}
+
+// logArchiveSummary logs the final archive size, file count, and SHA-1 hash.
+func logArchiveSummary(archivePath string, fileCount int) {
+	info, err := os.Stat(archivePath)
+	if err != nil {
+		verbose.Get().Log("zip-summary: %s (stat error: %v)", filepath.Base(archivePath), err)
+
+		return
+	}
+
+	hash, err := sha1File(archivePath)
+	if err != nil {
+		hash = "error"
+	}
+
+	verbose.Get().Log("zip-summary: %s — %d file(s), %d bytes, sha1:%s",
+		filepath.Base(archivePath), fileCount, info.Size(), hash)
+}
+
+// sha1File computes the SHA-1 hex digest of a file.
+func sha1File(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	h := sha1.New()
+
+	_, err = io.Copy(h, f)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 // addSingleFileToZip adds one file entry to a zip writer.
