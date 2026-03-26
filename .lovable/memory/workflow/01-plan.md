@@ -92,6 +92,14 @@
 - ✅ Dry-run integration tests validating workflow step order
 - ✅ TUI expanded to 6 views: Repos, Actions, Groups, Status, Zip Groups, Aliases
 
+### v2.35.0 — Directory Consolidation & ID Migration
+- ✅ Consolidated `.release/` and `gitmap-output/` under `.gitmap/` (`release/`, `output/`)
+- ✅ Centralized path constants (`GitMapDir`, `DefaultReleaseDir`, `DefaultOutputDir`)
+- ✅ Migrated all DB primary keys from UUID strings to `INTEGER PRIMARY KEY AUTOINCREMENT`
+- ✅ Removed `github.com/google/uuid` dependency
+- ✅ Added 12th doctor check for legacy directories
+- ✅ Updated all helptext, specs, docs site, and memory files
+
 ## Pending Work
 
 ### Next Up: Temp Release Command
