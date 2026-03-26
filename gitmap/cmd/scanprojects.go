@@ -117,8 +117,8 @@ func upsertGoProjectMeta(db *store.DB, r detector.DetectionResult) {
 }
 
 // upsertGoRunnables persists all runnable files and returns their IDs.
-func upsertGoRunnables(db *store.DB, meta *model.GoProjectMetadata) []string {
-	var ids []string
+func upsertGoRunnables(db *store.DB, meta *model.GoProjectMetadata) []int64 {
+	var ids []int64
 	for _, run := range meta.Runnables {
 		run.GoMetadataID = meta.ID
 		if err := db.UpsertGoRunnable(run); err != nil {
@@ -154,8 +154,8 @@ func upsertCSharpProjectMeta(db *store.DB, r detector.DetectionResult) {
 }
 
 // upsertCSharpFiles persists C# project files and returns their IDs.
-func upsertCSharpFiles(db *store.DB, meta *model.CSharpProjectMetadata) []string {
-	var ids []string
+func upsertCSharpFiles(db *store.DB, meta *model.CSharpProjectMetadata) []int64 {
+	var ids []int64
 	for _, f := range meta.ProjectFiles {
 		f.CSharpMetadataID = meta.ID
 		if err := db.UpsertCSharpProjectFile(f); err != nil {
@@ -170,8 +170,8 @@ func upsertCSharpFiles(db *store.DB, meta *model.CSharpProjectMetadata) []string
 }
 
 // upsertCSharpKeyFiles persists C# key files and returns their IDs.
-func upsertCSharpKeyFiles(db *store.DB, meta *model.CSharpProjectMetadata) []string {
-	var ids []string
+func upsertCSharpKeyFiles(db *store.DB, meta *model.CSharpProjectMetadata) []int64 {
+	var ids []int64
 	for _, f := range meta.KeyFiles {
 		f.CSharpMetadataID = meta.ID
 		if err := db.UpsertCSharpKeyFile(f); err != nil {
@@ -186,8 +186,8 @@ func upsertCSharpKeyFiles(db *store.DB, meta *model.CSharpProjectMetadata) []str
 }
 
 // collectRepoIDs extracts unique repo IDs from detection results.
-func collectRepoIDs(results []detector.DetectionResult) map[string]bool {
-	ids := make(map[string]bool)
+func collectRepoIDs(results []detector.DetectionResult) map[int64]bool {
+	ids := make(map[int64]bool)
 	for _, r := range results {
 		ids[r.Project.RepoID] = true
 	}
@@ -196,7 +196,7 @@ func collectRepoIDs(results []detector.DetectionResult) map[string]bool {
 }
 
 // cleanStaleProjects removes projects no longer detected for each repo.
-func cleanStaleProjects(db *store.DB, repoIDs map[string]bool, results []detector.DetectionResult) {
+func cleanStaleProjects(db *store.DB, repoIDs map[int64]bool, results []detector.DetectionResult) {
 	for repoID := range repoIDs {
 		keepIDs := collectKeepIDs(repoID, results)
 		cleaned, err := db.DeleteStaleProjects(repoID, keepIDs)
@@ -212,8 +212,8 @@ func cleanStaleProjects(db *store.DB, repoIDs map[string]bool, results []detecto
 }
 
 // collectKeepIDs collects project IDs to keep for a given repo.
-func collectKeepIDs(repoID string, results []detector.DetectionResult) []string {
-	var ids []string
+func collectKeepIDs(repoID int64, results []detector.DetectionResult) []int64 {
+	var ids []int64
 	for _, r := range results {
 		if r.Project.RepoID == repoID {
 			ids = append(ids, r.Project.ID)

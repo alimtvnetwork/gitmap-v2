@@ -50,7 +50,6 @@ func saveBookmarkToDB(name, command, args, flags string) {
 	checkBookmarkNotExists(db, name)
 
 	record := model.BookmarkRecord{
-		ID:      fmt.Sprintf("bk-%d", timeNow().UnixNano()),
 		Name:    name,
 		Command: command,
 		Args:    args,
