@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.36.1
+- Bumped compiled version constant to v2.36.1.
+- Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT IDs.
+- Migration detects TEXT-typed `Id` column in `Repos` via `PRAGMA table_info`, rebuilds the table preserving data, and drops dependent FK tables (project detection, group-repo associations) for clean repopulation.
+- Fixed FK constraint violation (`787`) during `scan` when legacy UUID IDs were present in the `Repos` table.
+
 ## v2.36.0
 - Bumped compiled version constant to v2.36.0.
 - Added automatic legacy directory migration: `gitmap-output/` → `.gitmap/output/`, `.release/` → `.gitmap/release/`, `.deployed/` → `.gitmap/deployed/`.

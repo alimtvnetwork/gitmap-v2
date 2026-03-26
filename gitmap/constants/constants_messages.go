@@ -257,3 +257,9 @@ const (
 	WarnMigrationSkipped = "⚠ Skipped migration of %s/ — %s/ already exists\n"
 	ErrMigrationFailed   = "failed to migrate %s/: %v\n"
 )
+
+// Legacy ID migration messages.
+const (
+	MsgLegacyIDMigrationStart = "Migrating database from legacy UUID IDs to integer IDs..."
+	MsgLegacyIDMigrationDone  = "Database migration complete. Group-repo associations have been reset."
+)

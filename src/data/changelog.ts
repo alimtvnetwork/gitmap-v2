@@ -5,6 +5,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.1",
+    items: [
+      "Bumped compiled version constant to v2.36.1.",
+      "Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT IDs.",
+      "Fixed FK constraint violation (787) during scan when legacy UUID IDs were present in the Repos table.",
+    ],
+  },
+  {
     version: "v2.36.0",
     items: [
       "Bumped compiled version constant to v2.36.0.",
