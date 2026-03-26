@@ -183,12 +183,66 @@ func initVerboseLog() {
 | Timing | Operation durations, elapsed time |
 | Environment | OS, paths, config values loaded |
 | Errors (detailed) | Full error chains, stack context |
+| Compression | Archive size in bytes, SHA-1 hash per archive |
+| Checksums | Per-file SHA-256 hash during checksum generation |
+| Asset uploads | Target repo/tag, per-asset file size, HTTP status |
 
 **What NOT to log:**
 
 - Secrets, tokens, or credentials
 - Routine success paths that add no diagnostic value
 - Data that duplicates normal stdout output
+
+---
+
+## Release Pipeline Log Points
+
+The release workflow emits verbose log entries at each stage.
+All entries follow the `prefix: detail` convention.
+
+### Compression (`compress.go`)
+
+Logged after each asset is compressed into `.zip` or `.tar.gz`:
+
+```
+compress: gitmap_v2.5.0_linux_amd64.tar.gz — 4821504 bytes, sha1:a3f9c0...
+```
+
+### Checksums (`checksums.go`)
+
+Logged as each file's SHA-256 hash is computed for `checksums.txt`:
+
+```
+checksum: gitmap_v2.5.0_linux_amd64.tar.gz  sha256:e3b0c44298fc...
+```
+
+### Zip Group Archives (`ziparchive.go`)
+
+Logged after each zip group archive is created:
+
+```
+zip-summary: chrome-extension.zip — 12 files, 238471 bytes, sha1:7b2a1f...
+```
+
+### GitHub Upload (`assetsupload.go`, `workflowfinalize.go`)
+
+Logged at release creation and per-asset upload:
+
+```
+upload: creating release v2.5.0 on owner/repo with 6 assets
+upload: github release created — id: 12345
+upload-start: gitmap_v2.5.0_linux_amd64.tar.gz (4821504 bytes)
+upload: gitmap_v2.5.0_linux_amd64.tar.gz → HTTP 201
+```
+
+### Retry (`retry.go`)
+
+Logged on each failed attempt and before backoff sleep:
+
+```
+retry: gitmap_v2.5.0_linux_amd64.tar.gz attempt 1/3 failed: upload error 502: Bad Gateway
+retry: gitmap_v2.5.0_linux_amd64.tar.gz sleeping 2s before attempt 2
+```
 
 ---
 
