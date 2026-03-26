@@ -107,7 +107,7 @@ const (
 	HelpDocs              = "  docs (d)            Open documentation website in browser"
 	HelpHelp              = "  help                Show this help message"
 	HelpListVersions  = "  list-versions (lv)  Show all release tags, highest first (--limit N, --json, --source)"
-	HelpListReleases  = "  list-releases (lr)  Show releases from .release/ files or database (--limit N, --json, --source)"
+	HelpListReleases  = "  list-releases (lr)  Show releases from .gitmap/release/ files or database (--limit N, --json, --source)"
 	HelpRevert        = "  revert <version>    Revert to a specific release version"
 	HelpScanFlags     = "Scan flags:"
 	HelpConfig        = "  --config <path>     Config file (default: ./data/config.json)"
