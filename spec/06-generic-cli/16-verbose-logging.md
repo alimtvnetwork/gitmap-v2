@@ -332,6 +332,28 @@ retry: gitmap_v2.5.0_linux_amd64.tar.gz attempt 1/3 failed: upload error 502: Ba
 retry: gitmap_v2.5.0_linux_amd64.tar.gz sleeping 2s before attempt 2
 ```
 
+### Metadata Persistence (`workflowfinalize.go`)
+
+Logged when release JSON and latest.json are written after a successful release:
+
+```
+metadata: writing .release/v2.5.0.json
+metadata: updating latest.json to v2.5.0
+metadata: skipping latest.json (pre-release v2.5.0-rc.1)
+```
+
+### Rollback (`rollback.go`)
+
+Logged when the release workflow encounters a failure and rolls back
+local branches and tags:
+
+```
+rollback: starting (branch=release/v2.5.0, tag=v2.5.0, return-to=main)
+rollback: switching back to main
+rollback: deleting local branch release/v2.5.0
+rollback: deleting local tag v2.5.0
+```
+
 ---
 
 ## Constants
