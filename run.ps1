@@ -8,6 +8,7 @@
 .EXAMPLES
     .\run.ps1                                    # pull, build, deploy
     .\run.ps1 -NoPull                            # skip git pull
+    .\run.ps1 -ForcePull                         # discard local changes + pull (no prompt)
     .\run.ps1 -NoDeploy                          # skip deploy step
     .\run.ps1 -R scan                            # build + scan parent folder
     .\run.ps1 -R scan D:\repos                   # build + scan specific path
