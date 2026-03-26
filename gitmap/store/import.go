@@ -106,8 +106,8 @@ func (db *DB) importReleases(releases []model.ReleaseRecord) error {
 func (db *DB) importHistory(records []model.CommandHistoryRecord) error {
 	for _, r := range records {
 		_, err := db.conn.Exec(
-			"INSERT OR IGNORE INTO CommandHistory (Id, Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			r.ID, r.Command, r.Alias, r.Args, r.Flags,
+			"INSERT OR IGNORE INTO CommandHistory (Command, Alias, Args, Flags, StartedAt, FinishedAt, DurationMs, ExitCode, Summary, RepoCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			r.Command, r.Alias, r.Args, r.Flags,
 			r.StartedAt, r.FinishedAt, r.DurationMs, r.ExitCode, r.Summary, r.RepoCount)
 		if err != nil {
 			return err
