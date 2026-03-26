@@ -4,6 +4,8 @@ package release
 
 import (
 	"archive/zip"
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"os"
