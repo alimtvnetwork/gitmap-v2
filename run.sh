@@ -131,16 +131,108 @@ invoke_git_pull() {
     ensure_main_branch
     cd "$REPO_ROOT"
     local output
-    if output=$(git pull 2>&1); then
-        while IFS= read -r line; do
-            [[ -n "$line" ]] && write_info "$line"
-        done <<< "$output"
-        write_success "Pull complete"
+    local pull_exit=0
+    output=$(git pull 2>&1) || pull_exit=$?
+
+    while IFS= read -r line; do
+        [[ -n "$line" ]] && write_info "$line"
+    done <<< "$output"
+
+    if [[ $pull_exit -ne 0 ]]; then
+        if echo "$output" | grep -qiE "Your local changes|overwritten by merge|not possible because you have unmerged|Please commit your changes or stash them"; then
+            resolve_pull_conflict
+        else
+            write_fail "Git pull failed (exit code $pull_exit)"
+            exit 1
+        fi
     else
-        write_fail "Git pull failed"
-        echo "$output" >&2
+        write_success "Pull complete"
+    fi
+}
+
+# -- Resolve pull conflict with local changes ------------------
+resolve_pull_conflict() {
+    write_warn "Git pull failed due to local changes"
+    echo ""
+    echo -e "  ${YELLOW}Choose how to proceed:${NC}"
+    echo -e "    ${CYAN}[S] Stash changes (save for later, then pull)${NC}"
+    echo -e "    ${CYAN}[D] Discard changes (reset working tree, then pull)${NC}"
+    echo -e "    ${CYAN}[C] Clean all (discard changes + remove untracked files, then pull)${NC}"
+    echo -e "    ${CYAN}[Q] Quit (abort without changes)${NC}"
+    echo ""
+    read -rp "  Enter choice (S/D/C/Q): " choice
+
+    case "$(echo "$choice" | tr '[:lower:]' '[:upper:]')" in
+        S)
+            write_info "Stashing local changes..."
+            local stash_output
+            if stash_output=$(git stash push -m "auto-stash before run.sh pull" 2>&1); then
+                write_success "Changes stashed"
+                write_info "Run 'git stash pop' later to restore your changes"
+                retry_git_pull
+            else
+                write_fail "Git stash failed"
+                echo "$stash_output" >&2
+                exit 1
+            fi
+            ;;
+        D)
+            write_warn "Discarding all local changes..."
+            if git checkout -- . 2>&1; then
+                write_success "Local changes discarded"
+                retry_git_pull
+            else
+                write_fail "Git checkout failed"
+                exit 1
+            fi
+            ;;
+        C)
+            write_warn "Discarding all local changes and removing untracked files..."
+            if ! git checkout -- . 2>&1; then
+                write_fail "Git checkout failed"
+                exit 1
+            fi
+            write_success "Local changes discarded"
+
+            local clean_output
+            clean_output=$(git clean -fd 2>&1) || true
+            if [[ -n "$clean_output" ]]; then
+                while IFS= read -r line; do
+                    [[ -n "$line" ]] && write_info "$line"
+                done <<< "$clean_output"
+                local clean_count
+                clean_count=$(echo "$clean_output" | grep -c . || true)
+                write_success "Removed $clean_count untracked file(s)"
+            else
+                write_info "No untracked files to remove"
+            fi
+
+            retry_git_pull
+            ;;
+        *)
+            write_info "Aborted by user"
+            exit 0
+            ;;
+    esac
+}
+
+# -- Retry git pull after stash/discard -----------------------
+retry_git_pull() {
+    write_info "Retrying git pull..."
+    local output
+    local pull_exit=0
+    output=$(git pull 2>&1) || pull_exit=$?
+
+    while IFS= read -r line; do
+        [[ -n "$line" ]] && write_info "$line"
+    done <<< "$output"
+
+    if [[ $pull_exit -ne 0 ]]; then
+        write_fail "Git pull failed again (exit code $pull_exit)"
         exit 1
     fi
+
+    write_success "Pull complete"
 }
 
 # -- Resolve dependencies -------------------------------------
