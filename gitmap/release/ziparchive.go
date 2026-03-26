@@ -13,6 +13,7 @@ import (
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/store"
+	"github.com/user/gitmap/verbose"
 )
 
 // ZipGroupArchive holds the result of archiving a zip group.
@@ -57,6 +58,21 @@ func buildOneZipGroup(db *store.DB, name, stagingDir string) (string, error) {
 		fmt.Printf(constants.MsgZGSkipEmpty, name)
 
 		return "", fmt.Errorf("empty group")
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("zip-group %q: %d item(s)", name, len(items))
+		for _, item := range items {
+			p := item.FullPath
+			if len(p) == 0 {
+				p = item.Path
+			}
+			kind := "file"
+			if item.IsFolder {
+				kind = "folder"
+			}
+			verbose.Get().Log("  → %s (%s)", p, kind)
+		}
 	}
 
 	archiveName := resolveArchiveName(group)
@@ -237,6 +253,10 @@ func addFolderToZip(w *zip.Writer, folderPath string) error {
 		relPath, relErr := filepath.Rel(filepath.Dir(folderPath), path)
 		if relErr != nil {
 			relPath = path
+		}
+
+	if verbose.IsEnabled() {
+			verbose.Get().Log("  zip-add: %s → %s", path, filepath.ToSlash(relPath))
 		}
 
 		return addSingleFileToZip(w, path, filepath.ToSlash(relPath))
