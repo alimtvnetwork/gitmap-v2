@@ -51,6 +51,9 @@ const (
 // SQL: drop TempReleases table.
 const SQLDropTempReleases = "DROP TABLE IF EXISTS TempReleases"
 
+// SQL: migrate Commit → CommitSha column in TempReleases.
+const SQLMigrateTRCommitSha = `ALTER TABLE TempReleases RENAME COLUMN "Commit" TO CommitSha`
+
 // Temp-release flag descriptions.
 const (
 	FlagDescTRStart   = "Starting sequence number (default: auto-increment)"

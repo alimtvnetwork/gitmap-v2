@@ -123,6 +123,11 @@ func (db *DB) migrateZipGroupItemPaths() {
 	_, _ = db.conn.Exec(constants.SQLMigrateZGICopyPath)
 }
 
+// migrateTRCommitSha renames the Commit column to CommitSha in TempReleases.
+func (db *DB) migrateTRCommitSha() {
+	_, _ = db.conn.Exec(constants.SQLMigrateTRCommitSha)
+}
+
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
