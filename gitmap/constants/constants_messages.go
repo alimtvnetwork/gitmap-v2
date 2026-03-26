@@ -171,7 +171,7 @@ const (
 	ErrReleaseVersionRequired = "Error: version is required.\nProvide a version argument, use --bump, or create a version.json file."
 	ErrReleaseUsage           = "Usage: gitmap release [version] [--assets <path>] [--commit <sha>] [--branch <name>] [--bump major|minor|patch] [--draft] [--dry-run]"
 	ErrReleaseBranchUsage     = "Usage: gitmap release-branch <release/vX.Y.Z> [--assets <path>] [--draft]"
-	ErrReleaseAlreadyExists   = "Error: version %s is already released. See .release/%s.json for details.\n"
+	ErrReleaseAlreadyExists   = "Error: version %s is already released. See .gitmap/release/%s.json for details.\n"
 	ErrReleaseTagExists       = "Error: tag %s already exists.\n"
 	ErrReleaseBranchNotFound  = "Error: branch %s does not exist.\n"
 	ErrReleaseCommitNotFound  = "Error: commit %s not found.\n"
