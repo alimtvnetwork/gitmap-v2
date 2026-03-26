@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // GenerateChecksums computes SHA256 hashes for all assets and writes
@@ -34,6 +35,10 @@ func GenerateChecksums(assets []string) (string, error) {
 			fmt.Fprintf(os.Stderr, constants.ErrChecksumFailed, filepath.Base(asset), hashErr)
 
 			continue
+		}
+
+		if verbose.IsEnabled() {
+			verbose.Get().Log("checksum: %s  sha256:%s", filepath.Base(asset), hash)
 		}
 
 		fmt.Fprintf(file, "%s  %s\n", hash, filepath.Base(asset))
