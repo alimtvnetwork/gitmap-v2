@@ -382,6 +382,8 @@ func buildZipGroupAssets(opts Options) []string {
 		fmt.Printf(constants.MsgZGNoArchives, len(opts.ZipGroups))
 	}
 
+	collectZipChecksums(archives)
+
 	return archives
 }
 
