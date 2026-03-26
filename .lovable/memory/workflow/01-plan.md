@@ -2,6 +2,13 @@
 
 ## Completed Work
 
+### v2.36.2 — Legacy release folder cleanup follow-up
+- ✅ Re-ran legacy folder migration after `release` returns to the original branch
+- ✅ Prevented `.release/` from persisting when older branches restore tracked legacy files
+- ✅ Aligned spec and memory docs with startup + post-release migration behavior
+
+## Completed Work
+
 ### v1.1.0 → v1.1.3
 - ✅ Self-update handoff, direct SSH clone output, deploy retry logic
 - ✅ Desktop-sync command, enhanced terminal clone hints

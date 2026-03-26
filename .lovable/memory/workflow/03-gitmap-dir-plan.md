@@ -41,7 +41,8 @@ Add warning in `doctor` if `.release/` or `gitmap-output/` exist at repo root.
 ### Step 9 — Bump version and changelog
 
 ### Step 10 — Automatic legacy directory migration
-Add `cmd/migrate.go` with `migrateLegacyDirs()` called in root `PersistentPreRun`.
+Add shared migration logic and call it at CLI startup plus after `release`
+returns to the original branch.
 Moves `gitmap-output/` → `.gitmap/output/`, `.release/` → `.gitmap/release/`,
 `.deployed/` → `.gitmap/deployed/` automatically when detected.
 When target already exists, merges files and removes legacy directory.
@@ -49,4 +50,4 @@ Skipped for `version` command to keep stdout clean.
 
 ## Status
 
-Steps 1–10 complete.
+Steps 1–10 complete. Release flow cleanup verified in design: migration reruns after checkout back to original branch.

@@ -139,27 +139,26 @@ working directory, it automatically moves the contents to `.gitmap/`:
 
 ### Implementation
 
-A single `migrateLegacyDirs()` function in `cmd/migrate.go`,
-called early in the root command's `PersistentPreRun` (skipped for `version`).
-It checks all three legacy directories and migrates each independently.
+A shared `localdirs.MigrateLegacyDirs()` function handles all legacy directory
+migration. It is called in two places:
 
-When both legacy and target directories exist, `mergeAndRemoveLegacy()` walks
-the legacy directory, copies missing files into the target, and removes the
-legacy directory via `os.RemoveAll`.
+1. Early in the root command startup flow (skipped for `version` / `v` to keep stdout clean)
+2. Again in the release workflow after returning to the original branch
+
+The second call is required because checking out the original branch can restore
+tracked legacy `.release/` files from older branches. Re-running migration at
+that point guarantees `.release/` is merged into `.gitmap/release/` and removed
+before auto-commit runs.
 
 ```go
-// migrateLegacyDirs moves old directories into .gitmap/ if found.
-func migrateLegacyDirs() {
-    migrations := []struct{ old, sub string }{
-        {"gitmap-output", "output"},
-        {".release", "release"},
-        {".deployed", "deployed"},
-    }
-    for _, m := range migrations {
-        migrateSingleDir(m.old, m.sub)
-    }
+// After returning to the original branch, run migration again.
+err = returnToBranch(originalBranch)
+if err != nil {
+    return err
 }
+localdirs.MigrateLegacyDirs()
 ```
+
 
 ### Doctor Check
 
