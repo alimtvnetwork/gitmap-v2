@@ -75,7 +75,7 @@ func (db *DB) importOneGroup(ge model.GroupExport) error {
 }
 
 // linkGroupRepos links repos to a group by resolving slugs.
-func (db *DB) linkGroupRepos(groupID string, slugs []string) error {
+func (db *DB) linkGroupRepos(groupID int64, slugs []string) error {
 	for _, slug := range slugs {
 		repos, err := db.FindBySlug(slug)
 		if err != nil || len(repos) == 0 {
