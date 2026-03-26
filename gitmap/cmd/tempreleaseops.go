@@ -171,7 +171,7 @@ func printTRDryRun(commits []release.TempReleaseCommit, prefix string, start, di
 
 // runTempReleaseList lists all temp-release branches.
 func runTempReleaseList(args []string) {
-	jsonOutput := hasListFlag(args, "--json")
+	jsonOutput := hasTRListFlag(args, "--json")
 
 	db, err := openDB()
 	if err != nil {
