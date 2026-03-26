@@ -5,6 +5,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.3",
+    items: [
+      "Bumped compiled version constant to v2.36.3.",
+      "Post-release migration: re-runs legacy directory migration after returning to original branch.",
+      "Prevents `.release/` from persisting when older branches restore tracked legacy files.",
+      "Simplified doctor legacy directory check — confirms auto-migration succeeded instead of warning.",
+      "Scan output now always writes to `.gitmap/output/` relative to scan root via `resolveOutputDir`.",
+      "Updated all helptext output examples to use `.gitmap/output/` paths.",
+      "Audited all specs, memory docs, and helptext for stale legacy path references.",
+    ],
+  },
+  {
     version: "v2.36.1",
     items: [
       "Bumped compiled version constant to v2.36.1.",
