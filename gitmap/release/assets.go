@@ -244,10 +244,18 @@ func EnsureStagingDir() (string, error) {
 		return "", fmt.Errorf("create staging dir: %w", err)
 	}
 
+	if verbose.IsEnabled() {
+		verbose.Get().Log("staging: created directory %s", dir)
+	}
+
 	return dir, nil
 }
 
 // CleanupStagingDir removes the staging directory after upload.
 func CleanupStagingDir() {
+	if verbose.IsEnabled() {
+		verbose.Get().Log("staging: removing directory %s", constants.AssetsStagingDir)
+	}
+
 	os.RemoveAll(constants.AssetsStagingDir)
 }
