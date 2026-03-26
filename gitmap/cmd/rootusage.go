@@ -81,6 +81,7 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpHasAnyUpdates)
 	fmt.Println(constants.HelpDocs)
 	fmt.Println(constants.HelpPrune)
+	fmt.Println(constants.HelpTempRelease)
 	fmt.Println(constants.HelpHelp)
 }
 
