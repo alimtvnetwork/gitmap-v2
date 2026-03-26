@@ -55,6 +55,13 @@
 - ✅ GitHub Actions Release workflow: auto-release on `v*` tags with compression and checksums
 - ✅ Spec document: `spec/01-app/42-cross-platform.md`
 
+### v2.15.1 — Database Path Fix
+- ✅ Fixed DB path resolution: database now at `<binary-dir>/data/` instead of CWD-relative
+- ✅ Added `store/location.go` with `BinaryDataDir()`, `OpenDefault()`, `OpenDefaultProfile()`
+- ✅ Updated all 13 database callers across the codebase
+- ✅ Issue post-mortem: `.lovable/memory/issues/04-database-path-resolution.md`
+- ✅ Spec update: `spec/01-app/16-database.md` updated with binary-relative path
+
 ### v2.16.0 — Interactive TUI
 - ✅ Bubble Tea TUI with 4 views: repo browser, batch actions, group management, status dashboard
 - ✅ Fuzzy search via `sahilm/fuzzy`, multi-select, keyboard navigation
@@ -62,13 +69,6 @@
 - ✅ `interactive` (i) command wired into CLI dispatch, help, and shell completion
 - ✅ Spec document: `spec/01-app/43-interactive-tui.md`
 - ✅ Constants in `constants/constants_tui.go`, help text in `helptext/interactive.md`
-
-### v2.15.1 — Database Path Fix
-- ✅ Fixed DB path resolution: database now at `<binary-dir>/data/` instead of CWD-relative
-- ✅ Added `store/location.go` with `BinaryDataDir()`, `OpenDefault()`, `OpenDefaultProfile()`
-- ✅ Updated all 13 database callers across the codebase
-- ✅ Issue post-mortem: `.lovable/memory/issues/04-database-path-resolution.md`
-- ✅ Spec update: `spec/01-app/16-database.md` updated with binary-relative path
 
 ### v2.17.0 → v2.23.0
 - ✅ Enhanced group management (scoped commands, multi-group operations)
