@@ -71,4 +71,4 @@ The release command creates local archives but has no mechanism to attach them t
 
 ## Status
 
-Under review — awaiting fix implementation.
+Fixed — added error logging for `EnsureStagingDir` failure, "Processing N zip group(s)..." message before build, and "No zip archives were produced" warning when groups yield zero archives.

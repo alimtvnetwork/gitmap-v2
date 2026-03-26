@@ -354,6 +354,8 @@ func buildZipGroupAssets(opts Options) []string {
 		return nil
 	}
 
+	fmt.Printf(constants.MsgZGProcessing, len(opts.ZipGroups))
+
 	db, err := store.OpenDefault()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ Cannot open DB for zip groups: %v\n", err)
@@ -364,10 +366,18 @@ func buildZipGroupAssets(opts Options) []string {
 
 	stagingDir, err := EnsureStagingDir()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrZGStagingDir, err)
+
 		return nil
 	}
 
-	return BuildZipGroupArchives(db, opts.ZipGroups, stagingDir)
+	archives := BuildZipGroupArchives(db, opts.ZipGroups, stagingDir)
+
+	if len(archives) == 0 {
+		fmt.Printf(constants.MsgZGNoArchives, len(opts.ZipGroups))
+	}
+
+	return archives
 }
 
 // buildAdHocZipAssets creates archives from ad-hoc -Z paths.
