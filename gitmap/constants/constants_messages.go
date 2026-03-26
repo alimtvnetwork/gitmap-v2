@@ -253,8 +253,8 @@ const (
 
 // Legacy directory migration messages.
 const (
-	MsgMigrated          = "Migrated %s/ → %s/\n"
-	WarnMigrationSkipped = "⚠ Skipped migration of %s/ — %s/ already exists\n"
+	MsgMigrated          = "Migrated %s/ -> %s/\n"
+	WarnMigrationSkipped = "Skipped migration of %s/ -- %s/ already exists\n"
 	ErrMigrationFailed   = "failed to migrate %s/: %v\n"
 )
 
