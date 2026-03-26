@@ -65,6 +65,8 @@ func openDBAt(dbPath string) (*DB, error) {
 
 // Migrate creates all required tables if they don't exist.
 func (db *DB) Migrate() error {
+	db.migrateLegacyIDs()
+
 	statements := []string{
 		constants.SQLCreateRepos,
 		constants.SQLCreateAbsPathIndex,
