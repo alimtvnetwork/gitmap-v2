@@ -5,6 +5,7 @@
 # Usage:
 #   ./run.sh                          # pull, build, deploy
 #   ./run.sh --no-pull                # skip git pull
+#   ./run.sh --force-pull             # discard local changes + pull (no prompt)
 #   ./run.sh --no-deploy              # skip deploy step
 #   ./run.sh -r scan                  # build + scan parent folder
 #   ./run.sh -r scan ~/repos          # build + scan specific path
@@ -12,6 +13,8 @@
 #   ./run.sh -t                       # run all unit tests with reports
 #
 # Configuration is read from gitmap/powershell.json (same as run.ps1).
+# --force-pull automatically discards local changes and removes untracked
+# files before pulling. Useful for CI or unattended builds.
 
 set -euo pipefail
 

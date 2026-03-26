@@ -8,6 +8,7 @@
 .EXAMPLES
     .\run.ps1                                    # pull, build, deploy
     .\run.ps1 -NoPull                            # skip git pull
+    .\run.ps1 -ForcePull                         # discard local changes + pull (no prompt)
     .\run.ps1 -NoDeploy                          # skip deploy step
     .\run.ps1 -R scan                            # build + scan parent folder
     .\run.ps1 -R scan D:\repos                   # build + scan specific path
@@ -21,6 +22,8 @@
     -R accepts ALL gitmap CLI arguments after it (scan, clone, help, flags, paths).
     If -R is used with no arguments, it defaults to: scan <parent folder>
     -t runs all Go unit tests and writes reports to gitmap/data/unit-test-reports/.
+    -ForcePull automatically discards local changes and removes untracked files
+    before pulling. Useful for CI or unattended builds.
 #>
 
 [CmdletBinding(PositionalBinding=$false)]
