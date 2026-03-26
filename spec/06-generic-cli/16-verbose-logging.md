@@ -257,6 +257,18 @@ zip-group: processing group "chrome-extension-v2"
 zip-group: 2 group(s) produced 2 archive(s)
 ```
 
+### Ad-Hoc Zip Archives (`workflowfinalize.go`)
+
+Logged when ad-hoc `-Z` items are bundled:
+
+```
+ad-hoc-zip: 3 item(s), bundle=my-bundle
+ad-hoc-zip: item src/config.json
+ad-hoc-zip: item assets/logo.png
+ad-hoc-zip: item docs/
+ad-hoc-zip: produced 1 archive(s)
+```
+
 ### Zip Group Archives (`ziparchive.go`)
 
 Logged after each zip group archive is created:
