@@ -87,6 +87,7 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateZipGroups,
 		constants.SQLCreateZipGroupItems,
 		constants.SQLCreateSSHKeys,
+		constants.SQLCreateTempReleases,
 	}
 
 	for _, stmt := range statements {
