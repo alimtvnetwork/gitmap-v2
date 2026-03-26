@@ -245,5 +245,107 @@ func pushCurrentBranch() error {
 		return err
 	}
 
-	return runGitCmd(constants.GitPush, constants.GitOrigin, branch)
+	pushOutput, err := runGitCmdCombined(constants.GitPush, constants.GitOrigin, branch)
+	if err == nil {
+		return nil
+	}
+
+	if !isNonFastForwardPushError(pushOutput) {
+		return formatGitCommandError(pushOutput, err)
+	}
+
+	return syncBranchAndRetryPush(branch, pushOutput)
+}
+
+func syncBranchAndRetryPush(branch, pushOutput string) error {
+	if verbose.IsEnabled() {
+		verbose.Get().Log(
+			"autocommit: push rejected for %s, attempting rebase sync: %s",
+			branch,
+			singleLineGitOutput(pushOutput),
+		)
+	}
+
+	fmt.Printf(constants.MsgAutoCommitSyncRetry, branch)
+
+	pullOutput, err := runGitCmdCombined(
+		constants.GitPull,
+		constants.GitPullRebaseFlag,
+		constants.GitOrigin,
+		branch,
+	)
+	if err != nil {
+		abortRebaseAfterFailure()
+
+		return fmt.Errorf(
+			"remote branch advanced; pull --rebase failed: %s",
+			trimGitOutput(pullOutput),
+		)
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: rebase sync completed for %s", branch)
+	}
+
+	retryOutput, err := runGitCmdCombined(constants.GitPush, constants.GitOrigin, branch)
+	if err != nil {
+		return fmt.Errorf(
+			"push retry after rebase failed: %s",
+			trimGitOutput(retryOutput),
+		)
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: push retry succeeded for %s", branch)
+	}
+
+	return nil
+}
+
+func runGitCmdCombined(args ...string) (string, error) {
+	cmd := exec.Command(constants.GitBin, args...)
+	out, err := cmd.CombinedOutput()
+
+	return string(out), err
+}
+
+func isNonFastForwardPushError(output string) bool {
+	lower := strings.ToLower(output)
+
+	return strings.Contains(lower, "fetch first") ||
+		strings.Contains(lower, "non-fast-forward") ||
+		strings.Contains(lower, "failed to push some refs")
+}
+
+func formatGitCommandError(output string, err error) error {
+	trimmed := trimGitOutput(output)
+	if len(trimmed) > 0 {
+		return fmt.Errorf("%s", trimmed)
+	}
+
+	return err
+}
+
+func trimGitOutput(output string) string {
+	trimmed := strings.TrimSpace(output)
+	if len(trimmed) > 0 {
+		return trimmed
+	}
+
+	return "unknown git error"
+}
+
+func singleLineGitOutput(output string) string {
+	return strings.Join(strings.Fields(trimGitOutput(output)), " ")
+}
+
+func abortRebaseAfterFailure() {
+	_, err := runGitCmdCombined(constants.GitRebase, constants.GitRebaseAbortFlag)
+	if err != nil {
+		return
+	}
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("autocommit: aborted failed rebase")
+	}
 }
