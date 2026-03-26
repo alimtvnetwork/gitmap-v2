@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/verbose"
 )
 
 // retryable determines if an HTTP status code should trigger a retry.
@@ -31,6 +32,10 @@ func withRetry(label string, maxAttempts int, fn func() error) error {
 			return nil
 		}
 
+		if verbose.IsEnabled() {
+			verbose.Get().Log("retry: %s attempt %d/%d failed: %v", label, attempt, maxAttempts, lastErr)
+		}
+
 		if attempt < maxAttempts {
 			waitAndLog(label, attempt, maxAttempts)
 		}
@@ -43,6 +48,11 @@ func withRetry(label string, maxAttempts int, fn func() error) error {
 func waitAndLog(label string, attempt, maxAttempts int) {
 	delay := computeDelay(attempt)
 	fmt.Printf(constants.MsgRetryAttempt, attempt, maxAttempts, label, delay)
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("retry: %s sleeping %v before attempt %d", label, delay, attempt+1)
+	}
+
 	time.Sleep(delay)
 }
 
