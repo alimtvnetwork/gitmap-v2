@@ -32,6 +32,7 @@ RUN_ARGS=()
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --no-pull)    NO_PULL=true; shift ;;
+        --force-pull) FORCE_PULL=true; shift ;;
         --no-deploy)  NO_DEPLOY=true; shift ;;
         --deploy-path)
             DEPLOY_PATH="$2"; shift 2 ;;
