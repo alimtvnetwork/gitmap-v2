@@ -182,10 +182,11 @@ function Resolve-PullConflict {
     Write-Host "  Choose how to proceed:" -ForegroundColor Yellow
     Write-Host "    [S] Stash changes (save for later, then pull)" -ForegroundColor Cyan
     Write-Host "    [D] Discard changes (reset working tree, then pull)" -ForegroundColor Cyan
+    Write-Host "    [C] Clean all (discard changes + remove untracked files, then pull)" -ForegroundColor Cyan
     Write-Host "    [Q] Quit (abort without changes)" -ForegroundColor Cyan
     Write-Host ""
 
-    $choice = Read-Host "  Enter choice (S/D/Q)"
+    $choice = Read-Host "  Enter choice (S/D/C/Q)"
 
     switch ($choice.ToUpper()) {
         "S" {
