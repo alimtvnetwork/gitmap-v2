@@ -5,7 +5,7 @@ const TableBookmarks = "Bookmarks"
 
 // SQL: create Bookmarks table.
 const SQLCreateBookmarks = `CREATE TABLE IF NOT EXISTS Bookmarks (
-	Id        TEXT PRIMARY KEY,
+	Id        INTEGER PRIMARY KEY AUTOINCREMENT,
 	Name      TEXT NOT NULL UNIQUE,
 	Command   TEXT NOT NULL,
 	Args      TEXT DEFAULT '',
