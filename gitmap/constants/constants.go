@@ -49,8 +49,16 @@ const GitMapDir = ".gitmap"
 
 // Subdirectory names within .gitmap/.
 const (
-	ReleaseDirName = "release"
-	OutputDirName  = "output"
+	ReleaseDirName  = "release"
+	OutputDirName   = "output"
+	DeployedDirName = "deployed"
+)
+
+// Legacy directory names (pre-.gitmap migration).
+const (
+	LegacyOutputDir   = "gitmap-output"
+	LegacyReleaseDir  = ".release"
+	LegacyDeployedDir = ".deployed"
 )
 
 // Default file names.

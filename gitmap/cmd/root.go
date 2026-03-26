@@ -10,6 +10,8 @@ import (
 
 // Run is the main entry point for the CLI.
 func Run() {
+	migrateLegacyDirs()
+
 	if len(os.Args) < 2 {
 		printUsage()
 		os.Exit(1)
