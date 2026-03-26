@@ -99,6 +99,7 @@ func (db *DB) Migrate() error {
 	db.migrateSourceColumn()
 	db.migrateNotesColumn()
 	db.migrateZipGroupItemPaths()
+	db.migrateTRCommitSha()
 
 	return db.SeedProjectTypes()
 }
