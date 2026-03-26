@@ -174,11 +174,17 @@ func writeMetadata(v Version, branchName, tag, sourceName string, assets []strin
 	commit, _ := CurrentCommitSHA()
 	meta := buildReleaseMeta(v, branchName, tag, sourceName, commit, assets, opts)
 
+	metaPath := constants.DefaultReleaseDir + "/" + v.String() + constants.ExtJSON
+
+	if verbose.IsEnabled() {
+		verbose.Get().Log("metadata: writing %s", metaPath)
+	}
+
 	err := WriteReleaseMeta(meta)
 	if err != nil {
 		return fmt.Errorf(constants.ErrReleaseMetaWrite, err)
 	}
-	fmt.Printf(constants.MsgReleaseMeta, constants.DefaultReleaseDir+"/"+v.String()+constants.ExtJSON)
+	fmt.Printf(constants.MsgReleaseMeta, metaPath)
 
 	LastMeta = &meta
 
