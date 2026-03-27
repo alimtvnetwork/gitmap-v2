@@ -110,8 +110,18 @@ const (
 
 // TUI release messages.
 const (
-	TUIRelEmpty    = "No releases found. Use 'gitmap release' to create one."
-	TUIRelHint     = "enter: detail  r: refresh  n: new release"
+	TUIRelEmpty = "No releases found. Use 'gitmap release' to create one."
+	TUIRelHint  = "enter: detail  r: refresh  n: new release"
+)
+
+// TUI temp-release messages.
+const (
+	TUITREmpty   = "No temp-release branches found. Use 'gitmap tr <count> <pattern>' to create."
+	TUITRHint    = "enter: detail  g: group by prefix  r: refresh"
+	TUIColTRBranch = "Branch"
+	TUIColTRPrefix = "Prefix"
+	TUIColTRSeq    = "Seq"
+	TUIColTRCommit = "Commit"
 )
 
 // TUI release trigger messages.

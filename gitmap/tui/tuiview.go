@@ -87,6 +87,8 @@ func (m rootModel) renderStatusBar() string {
 		hints = append(hints, constants.TUIDashHint)
 	case viewReleases:
 		hints = append(hints, constants.TUIRelHint)
+	case viewTempReleases:
+		hints = append(hints, constants.TUITRHint)
 	case viewZipGroups:
 		hints = append(hints, constants.TUIZGHint)
 	case viewAliases:
