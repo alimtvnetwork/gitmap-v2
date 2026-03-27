@@ -41,6 +41,9 @@ func runExec(args []string) {
 func execAllReposTracked(records []model.ScanRecord, gitArgs []string, prog *cloner.BatchProgress) (int, int, int) {
 	var succeeded, failed, missing int
 	for _, rec := range records {
+		if prog.Stopped() {
+			break
+		}
 		prog.BeginItem(rec.RepoName)
 		s, f, m := execOneRepoTracked(rec, gitArgs, prog)
 		succeeded += s
