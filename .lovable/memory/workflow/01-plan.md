@@ -147,25 +147,6 @@
 
 ## Pending Work
 
-### Next Up: Temp Release Command
-- ⬜ **`temp-release` (`tr`) command**: create lightweight branches from recent commits without tags
-  - `tr <count> <pattern> [-s N]` — batch-create temp-release branches from last N commits
-  - `tr list [--json]` — list all temp-release branches with SHA, message, date
-  - `tr remove <version>` / `tr remove <v1> to <v2>` / `tr remove all` — cleanup with confirmation
-  - `$$` placeholder for zero-padded sequence (digit count matches dollar count)
-  - Auto-increment from DB/remote when `-s` not provided
-  - No checkout, no tags, no metadata — branches created via `git branch <name> <sha>`
-  - Batch push to origin
-  - `TempReleases` SQLite table for tracking
-  - Spec: `spec/01-app/55-temp-release.md`
-
-### CLI Robustness
-- ⬜ **Partial failure rollback**: auto-cleanup branch/tag on push failure in the release workflow
-- ⬜ **Graceful offline mode**: detect no-network and skip remote operations with clear warnings
-
 ### Testing Coverage
-- ⬜ **SkipMeta integration test**: verify metadata writing is suppressed when the flag is true
-- ⬜ **Alias suggest tests**: cover auto-suggestion and conflict detection during scan
-- ⬜ **TUI interaction tests**: automated key-press simulation using a TUI testing framework
 - ⬜ **Release rollback test**: simulate push failure and verify branch/tag cleanup
 - ⬜ **End-to-end release test**: full cycle from bump through metadata commit on a temp repo
