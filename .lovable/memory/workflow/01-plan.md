@@ -151,8 +151,8 @@
 - ✅ End-to-end release test: 5 test cases covering full release cycle, duplicates, dry-run, no-commit, skip-meta
 - ✅ Edge-case tests: pre-release parsing/comparison, bump resolution (all levels + from-zero + from-prerelease), multi-release sequences, out-of-order metadata, rc-to-stable promotion
 - ✅ TUI Temp Releases view: 9th tab with list/detail/grouped-by-prefix views for temp-release branches
+- ✅ Partial failure rollback hardening: failure detail tracking, failure reports, `--stop-on-fail` flag, exit code 3 on partial failures for pull and exec
 
 ## Pending Work
 
-### CLI Hardening
-- ⬜ Partial failure rollback hardening for non-release commands
+(No pending items — all roadmap tasks complete.)

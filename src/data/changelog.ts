@@ -13,6 +13,8 @@ export const changelog: ChangelogEntry[] = [
       "E2E edge-case coverage: dry-run, no-commit, skip-meta, and duplicate version blocking.",
       "Added edge-case test suite: pre-release parsing/comparison, bump resolution, version ordering, multi-release sequences, and rc-to-stable promotion.",
       "Added TUI Temp Releases view: 9th tab with flat list, detail panel, and grouped-by-prefix aggregation.",
+      "Added --stop-on-fail flag to pull and exec: halts batch after first failure.",
+      "Enhanced BatchProgress with per-item failure tracking, detailed failure reports, and exit code 3 on partial failures.",
     ],
   },
   {

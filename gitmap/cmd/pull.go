@@ -18,34 +18,44 @@ import (
 func runPull(args []string) {
 	checkHelp("pull", args)
 	requireOnline()
-	slug, groupName, all, verboseMode := parsePullFlags(args)
+	slug, groupName, all, verboseMode, stopOnFail := parsePullFlags(args)
 	if verboseMode {
 		initVerboseLog()
 	}
 	records := resolvePullTargets(slug, groupName, all)
 
 	prog := cloner.NewBatchProgress(len(records), "Pull", false)
+	prog.SetStopOnFail(stopOnFail)
 	for _, rec := range records {
+		if prog.Stopped() {
+			break
+		}
 		prog.BeginItem(rec.RepoName)
 		pullOneRepoTracked(rec, prog)
 	}
 	prog.PrintSummary()
+	prog.PrintFailureReport()
+
+	if code := prog.ExitCodeForBatch(); code != 0 {
+		os.Exit(code)
+	}
 }
 
 // parsePullFlags parses flags for the pull command.
-func parsePullFlags(args []string) (slug, group string, all, verboseFlag bool) {
+func parsePullFlags(args []string) (slug, group string, all, verboseFlag, stopOnFail bool) {
 	fs := flag.NewFlagSet(constants.CmdPull, flag.ExitOnError)
 	vFlag := fs.Bool("verbose", false, constants.FlagDescVerbose)
 	gFlag := fs.String("group", "", constants.FlagDescGroup)
 	fs.StringVar(gFlag, "g", "", constants.FlagDescGroup)
 	aFlag := fs.Bool("all", false, constants.FlagDescAll)
+	sFlag := fs.Bool(constants.FlagStopOnFail, false, constants.FlagDescStopOnFail)
 	fs.Parse(args)
 
 	if fs.NArg() > 0 {
 		slug = fs.Arg(0)
 	}
 
-	return slug, *gFlag, *aFlag, *vFlag
+	return slug, *gFlag, *aFlag, *vFlag, *sFlag
 }
 
 // initVerboseLog sets up verbose logging, warning on failure.
@@ -181,7 +191,7 @@ func pullOneRepoTracked(rec model.ScanRecord, prog *cloner.BatchProgress) {
 	if result.Success {
 		prog.Succeed()
 	} else {
-		prog.Fail()
+		prog.FailWithError(rec.RepoName, result.Error)
 	}
 }
 

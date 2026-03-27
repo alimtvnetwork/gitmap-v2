@@ -17,4 +17,19 @@ const (
 	BatchProgressSkipFmt    = " skipped\n"
 	BatchProgressSummaryFmt = "\n%s complete: %d/%d in %s\n"
 	BatchProgressDetailFmt  = "  Succeeded: %d | Failed: %d | Skipped: %d\n"
+	BatchStoppedMsg         = "  ⚠ Halted early (--stop-on-fail)\n"
+)
+
+// Batch failure report format strings.
+const (
+	BatchFailureHeader    = "  ── Failed Items ──"
+	BatchFailureEntryFmt  = "  %d. %s: %s\n"
+	BatchFailureFooterFmt = "  ── %d failure(s) total ──\n"
+	ExitPartialFailure    = 3
+)
+
+// Batch flag constants.
+const (
+	FlagStopOnFail     = "stop-on-fail"
+	FlagDescStopOnFail = "Stop batch operation after first failure"
 )

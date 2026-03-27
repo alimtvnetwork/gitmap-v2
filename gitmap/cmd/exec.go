@@ -16,7 +16,7 @@ import (
 // runExec handles the "exec" subcommand.
 func runExec(args []string) {
 	checkHelp("exec", args)
-	groupName, all, gitArgs := parseExecFlags(args)
+	groupName, all, stopOnFail, gitArgs := parseExecFlags(args)
 	if len(gitArgs) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrExecUsage)
 		os.Exit(1)
@@ -26,15 +26,24 @@ func runExec(args []string) {
 	printExecBanner(gitArgs, len(records))
 
 	prog := cloner.NewBatchProgress(len(records), "Exec", false)
+	prog.SetStopOnFail(stopOnFail)
 	succeeded, failed, missing := execAllReposTracked(records, gitArgs, prog)
 	prog.PrintSummary()
+	prog.PrintFailureReport()
 	printExecSummary(succeeded, failed, missing, len(records))
+
+	if code := prog.ExitCodeForBatch(); code != 0 {
+		os.Exit(code)
+	}
 }
 
 // execAllReposTracked runs a git command across all repos with progress.
 func execAllReposTracked(records []model.ScanRecord, gitArgs []string, prog *cloner.BatchProgress) (int, int, int) {
 	var succeeded, failed, missing int
 	for _, rec := range records {
+		if prog.Stopped() {
+			break
+		}
 		prog.BeginItem(rec.RepoName)
 		s, f, m := execOneRepoTracked(rec, gitArgs, prog)
 		succeeded += s
@@ -60,7 +69,7 @@ func execOneRepoTracked(rec model.ScanRecord, gitArgs []string, prog *cloner.Bat
 		return 1, 0, 0
 	}
 
-	prog.Fail()
+	prog.FailWithError(rec.RepoName, "command exited with non-zero status")
 
 	return 0, 1, 0
 }
@@ -95,15 +104,16 @@ func execOneRepo(rec model.ScanRecord, gitArgs []string) (int, int, int) {
 	return 0, 0, 1
 }
 
-// parseExecFlags parses --group and --all flags, returning remaining args as git args.
-func parseExecFlags(args []string) (groupName string, all bool, gitArgs []string) {
+// parseExecFlags parses --group, --all, and --stop-on-fail flags, returning remaining args as git args.
+func parseExecFlags(args []string) (groupName string, all, stopOnFail bool, gitArgs []string) {
 	fs := flag.NewFlagSet(constants.CmdExec, flag.ExitOnError)
 	gFlag := fs.String("group", "", constants.FlagDescGroup)
 	fs.StringVar(gFlag, "g", "", constants.FlagDescGroup)
 	aFlag := fs.Bool("all", false, constants.FlagDescAll)
+	sFlag := fs.Bool(constants.FlagStopOnFail, false, constants.FlagDescStopOnFail)
 	fs.Parse(args)
 
-	return *gFlag, *aFlag, fs.Args()
+	return *gFlag, *aFlag, *sFlag, fs.Args()
 }
 
 // loadExecByScope returns records filtered by alias, group, all DB repos, or JSON fallback.

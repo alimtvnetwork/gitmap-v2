@@ -8,6 +8,9 @@
 - E2E edge-case coverage: dry-run (no side effects), no-commit (staged only), skip-meta (no JSON), and duplicate version blocking.
 - Added edge-case test suite (`edgecase_test.go`): pre-release parsing/comparison, bump resolution (all levels, from-zero, from-prerelease), parse validation, version ordering, multi-release sequences, out-of-order metadata, and rc-to-stable promotion.
 - Added TUI Temp Releases view (`tempreleases.go`, `trformat.go`): 9th tab with flat list, detail panel, and grouped-by-prefix aggregation.
+- Added `--stop-on-fail` flag to `pull` and `exec` commands: halts batch after first failure.
+- Enhanced `BatchProgress` with per-item failure tracking (`FailWithError`), detailed failure reports, and exit code 3 on partial failures.
+- Added `batchreport.go` with `PrintFailureReport()` and `ExitCodeForBatch()` helpers.
 
 ## v2.36.6 — Wave 2 Refactoring (14 Files)
 - Split `assets.go` → `assets.go` + `assetsbuild.go` (build helpers: `buildSingleTarget`, `buildEnv`).
