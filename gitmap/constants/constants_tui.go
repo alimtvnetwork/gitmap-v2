@@ -24,14 +24,15 @@ const (
 
 // TUI view labels.
 const (
-	TUIViewBrowser   = "Repos"
-	TUIViewActions   = "Actions"
-	TUIViewGroups    = "Groups"
-	TUIViewDashboard = "Status"
-	TUIViewReleases  = "Releases"
-	TUIViewZipGroups = "Zip Groups"
-	TUIViewAliases   = "Aliases"
-	TUIViewLogs      = "Logs"
+	TUIViewBrowser      = "Repos"
+	TUIViewActions      = "Actions"
+	TUIViewGroups       = "Groups"
+	TUIViewDashboard    = "Status"
+	TUIViewReleases     = "Releases"
+	TUIViewTempReleases = "Temp"
+	TUIViewZipGroups    = "Zip Groups"
+	TUIViewAliases      = "Aliases"
+	TUIViewLogs         = "Logs"
 )
 
 // TUI status messages.
