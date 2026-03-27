@@ -30,6 +30,7 @@ func (m rootModel) renderTabs() string {
 		constants.TUIViewGroups,
 		constants.TUIViewDashboard,
 		constants.TUIViewReleases,
+		constants.TUIViewTempReleases,
 		constants.TUIViewZipGroups,
 		constants.TUIViewAliases,
 		constants.TUIViewLogs,
