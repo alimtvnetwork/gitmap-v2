@@ -148,8 +148,9 @@
 ### v2.36.7 — Integration Tests
 - ✅ SkipMeta integration test: 6 test cases verifying metadata suppression (spec 57)
 - ✅ Release rollback test: 5 test cases verifying branch/tag cleanup after simulated push failure
+- ✅ End-to-end release test: 5 test cases covering full release cycle, duplicates, dry-run, no-commit, skip-meta
 
 ## Pending Work
 
 ### Testing Coverage
-- ⬜ **End-to-end release test**: full cycle from bump through metadata commit on a temp repo
+- ⬜ **Additional edge-case tests**: pre-release versions, bump resolution, multi-release sequences
