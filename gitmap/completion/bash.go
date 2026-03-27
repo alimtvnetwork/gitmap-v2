@@ -59,6 +59,9 @@ func generateBash() string {
                 COMPREPLY=($(compgen -W "create add remove list show delete rename $(gitmap completion --list-zip-groups)" -- "$cur"))
             fi
             ;;
+        dashboard|db)
+            COMPREPLY=($(compgen -W "--limit --since --no-merges --out-dir --open" -- "$cur"))
+            ;;
         ssh)
             if [[ "$prev" == "--name" || "$prev" == "-n" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-ssh-keys)" -- "$cur"))

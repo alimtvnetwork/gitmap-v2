@@ -71,6 +71,7 @@ func AllCommands() []string {
 		"clear-release-json", "crj",
 		"alias", "a",
 		"zip-group", "z",
+		"dashboard", "db",
 		"ssh",
 		"prune", "pr",
 		"temp-release", "tr",

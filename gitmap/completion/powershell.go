@@ -99,6 +99,13 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "dashboard" -or $cmd -eq "db") {
+        $items = @("--limit", "--since", "--no-merges", "--out-dir", "--open")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     if ($cmd -eq "ssh") {
         if ($sub -eq "cat" -or $sub -eq "delete" -or $sub -eq "rm") {
             if ($prev -eq "--name" -or $prev -eq "-n") {
