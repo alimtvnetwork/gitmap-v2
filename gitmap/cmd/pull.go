@@ -42,19 +42,20 @@ func runPull(args []string) {
 }
 
 // parsePullFlags parses flags for the pull command.
-func parsePullFlags(args []string) (slug, group string, all, verboseFlag bool) {
+func parsePullFlags(args []string) (slug, group string, all, verboseFlag, stopOnFail bool) {
 	fs := flag.NewFlagSet(constants.CmdPull, flag.ExitOnError)
 	vFlag := fs.Bool("verbose", false, constants.FlagDescVerbose)
 	gFlag := fs.String("group", "", constants.FlagDescGroup)
 	fs.StringVar(gFlag, "g", "", constants.FlagDescGroup)
 	aFlag := fs.Bool("all", false, constants.FlagDescAll)
+	sFlag := fs.Bool(constants.FlagStopOnFail, false, constants.FlagDescStopOnFail)
 	fs.Parse(args)
 
 	if fs.NArg() > 0 {
 		slug = fs.Arg(0)
 	}
 
-	return slug, *gFlag, *aFlag, *vFlag
+	return slug, *gFlag, *aFlag, *vFlag, *sFlag
 }
 
 // initVerboseLog sets up verbose logging, warning on failure.
