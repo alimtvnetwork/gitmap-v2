@@ -145,8 +145,11 @@
 - ✅ Split `compress.go` → `compress.go` + `compresstar.go`
 - ✅ Refactoring specs 65–78 added for all 14 file splits
 
+### v2.36.7 — Integration Tests
+- ✅ SkipMeta integration test: 6 test cases verifying metadata suppression (spec 57)
+- ✅ Release rollback test: 5 test cases verifying branch/tag cleanup after simulated push failure
+
 ## Pending Work
 
 ### Testing Coverage
-- ⬜ **Release rollback test**: simulate push failure and verify branch/tag cleanup
 - ⬜ **End-to-end release test**: full cycle from bump through metadata commit on a temp repo
