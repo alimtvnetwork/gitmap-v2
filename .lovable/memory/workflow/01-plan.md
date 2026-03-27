@@ -128,6 +128,23 @@
 - ✅ Split `workflow.go` (291→183) into `workflow.go`, `workflowvalidate.go`
 - ✅ Refactoring specs 60–64 added for all five splits
 
+### v2.36.6 — Wave 2 Refactoring (14 Files)
+- ✅ Split `assets.go` → `assets.go` + `assetsbuild.go`
+- ✅ Split `zipgroupops.go` → `zipgroupops.go` + `zipgroupshow.go`
+- ✅ Split `tui.go` → `tui.go` + `tuiview.go`
+- ✅ Split `aliasops.go` → `aliasops.go` + `aliassuggest.go`
+- ✅ Split `tempreleaseops.go` → `tempreleaseops.go` + `tempreleaselist.go`
+- ✅ Split `listreleases.go` → `listreleases.go` + `listreleasesload.go`
+- ✅ Split `listversions.go` → `listversions.go` + `listversionsutil.go`
+- ✅ Split `sshgen.go` → `sshgen.go` + `sshgenutil.go`
+- ✅ Split `scanprojects.go` → `scanprojects.go` + `scanprojectsmeta.go`
+- ✅ Split `amendexec.go` → `amendexec.go` + `amendexecprint.go`
+- ✅ Split `status.go` → `status.go` + `statusprint.go`
+- ✅ Split `exec.go` → `exec.go` + `execprint.go`
+- ✅ Split `logs.go` → `logs.go` + `logsview.go`
+- ✅ Split `compress.go` → `compress.go` + `compresstar.go`
+- ✅ Refactoring specs 65–78 added for all 14 file splits
+
 ## Pending Work
 
 ### Next Up: Temp Release Command
