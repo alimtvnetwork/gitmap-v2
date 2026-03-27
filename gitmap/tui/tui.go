@@ -63,18 +63,19 @@ func Run(db *store.DB, cfg model.Config) error {
 
 func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, cfg model.Config) rootModel {
 	return rootModel{
-		db:        db,
-		repos:     repos,
-		groups:    groups,
-		activeTab: viewBrowser,
-		browser:   newBrowserModel(repos),
-		actions:   newActionsModel(),
-		groupsMgr: newGroupsModel(groups),
-		dashboard: newDashboardModel(repos, cfg.DashboardRefresh),
-		releases:  newReleasesModel(db),
-		zipGroups: newZipGroupsModel(db),
-		aliases:   newAliasesModel(db),
-		logs:      newLogsModel(db),
+		db:           db,
+		repos:        repos,
+		groups:       groups,
+		activeTab:    viewBrowser,
+		browser:      newBrowserModel(repos),
+		actions:      newActionsModel(),
+		groupsMgr:    newGroupsModel(groups),
+		dashboard:    newDashboardModel(repos, cfg.DashboardRefresh),
+		releases:     newReleasesModel(db),
+		tempReleases: newTempReleasesModel(db),
+		zipGroups:    newZipGroupsModel(db),
+		aliases:      newAliasesModel(db),
+		logs:         newLogsModel(db),
 	}
 }
 
