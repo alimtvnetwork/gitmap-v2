@@ -60,6 +60,8 @@ func (m rootModel) renderContent() string {
 		return m.dashboard.View()
 	case viewReleases:
 		return m.releases.View()
+	case viewTempReleases:
+		return m.tempReleases.View()
 	case viewZipGroups:
 		return m.zipGroups.View()
 	case viewAliases:
