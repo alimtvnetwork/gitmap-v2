@@ -93,6 +93,11 @@ func dispatchData(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdDashboard || command == constants.CmdDashboardAlias {
+		runDashboard(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
