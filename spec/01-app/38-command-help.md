@@ -237,6 +237,7 @@ For full details, each entry links to `gitmap/helptext/<command>.md`.
 | completion.md | completion | cmp |
 | interactive.md | interactive | i |
 | multi-group.md | multi-group | mg |
+| dashboard.md | dashboard | db |
 
 ---
 
