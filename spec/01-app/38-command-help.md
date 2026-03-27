@@ -174,6 +174,7 @@ in the docs site:
 | History & Stats | history, history-reset, stats, amend, amend-list |
 | Project Detection | go-repos, node-repos, react-repos, cpp-repos, csharp-repos |
 | Data & Profiles | export, import, profile, bookmark, alias, db-reset |
+| Visualization | dashboard |
 | Utilities | setup, doctor, update, update-cleanup, version, seo-write, gomod, completion, interactive, zip-group |
 
 Each command entry in the README includes:
@@ -237,6 +238,7 @@ For full details, each entry links to `gitmap/helptext/<command>.md`.
 | completion.md | completion | cmp |
 | interactive.md | interactive | i |
 | multi-group.md | multi-group | mg |
+| dashboard.md | dashboard | db |
 
 ---
 

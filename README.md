@@ -254,6 +254,25 @@ gitmap seo-write --csv data.csv --max-commits 5
 
 → Full details: [setup](gitmap/helptext/setup.md) · [doctor](gitmap/helptext/doctor.md) · [update](gitmap/helptext/update.md) · [version](gitmap/helptext/version.md) · [seo-write](gitmap/helptext/seo-write.md) · [gomod](gitmap/helptext/gomod.md) · [ssh](gitmap/helptext/ssh.md) · [prune](gitmap/helptext/prune.md)
 
+### Visualization
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `dashboard` | `db` | Generate an interactive HTML dashboard for a repo |
+
+```bash
+# Generate a full dashboard
+gitmap dashboard
+
+# Last 100 commits, open in browser
+gitmap db --limit 100 --open
+
+# Commits since a date, no merges
+gitmap dashboard --since 2025-01-01 --no-merges
+```
+
+→ Full details: [dashboard](gitmap/helptext/dashboard.md)
+
 ---
 
 ## Build & Deploy
