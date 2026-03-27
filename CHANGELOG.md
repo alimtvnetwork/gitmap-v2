@@ -1,5 +1,23 @@
 # Changelog
 
+## v2.36.6 — Wave 2 Refactoring (14 Files)
+- Split `assets.go` → `assets.go` + `assetsbuild.go` (build helpers: `buildSingleTarget`, `buildEnv`).
+- Split `zipgroupops.go` → `zipgroupops.go` + `zipgroupshow.go` (display: `runZipGroupList`, `expandFolder`).
+- Split `tui.go` → `tui.go` + `tuiview.go` (rendering: `View`, `renderTabs`, `renderContent`).
+- Split `aliasops.go` → `aliasops.go` + `aliassuggest.go` (interactive: `runAliasSuggest`, `promptAliasSuggestion`).
+- Split `tempreleaseops.go` → `tempreleaseops.go` + `tempreleaselist.go` (listing: `runTempReleaseList`, `printTRList`).
+- Split `listreleases.go` → `listreleases.go` + `listreleasesload.go` (data: `loadReleasesFromRepo`, `sortRecordsByDate`).
+- Split `listversions.go` → `listversions.go` + `listversionsutil.go` (collection: `collectVersionTags`, `printVersionEntriesJSON`).
+- Split `sshgen.go` → `sshgen.go` + `sshgenutil.go` (utils: `validateSSHKeygen`, `resolveGitEmail`).
+- Split `scanprojects.go` → `scanprojects.go` + `scanprojectsmeta.go` (metadata: `upsertGoProjectMeta`, `cleanStaleProjects`).
+- Split `amendexec.go` → `amendexec.go` + `amendexecprint.go` (output: `buildEnvFilter`, `printAmendProgress`).
+- Split `status.go` → `status.go` + `statusprint.go` (formatting: `printStatusTable`, `buildSummaryParts`).
+- Split `exec.go` → `exec.go` + `execprint.go` (formatting: `printExecResult`, `printExecBanner`).
+- Split `logs.go` → `logs.go` + `logsview.go` (view: `viewList`, `viewDetail`).
+- Split `compress.go` → `compress.go` + `compresstar.go` (tar logic: `createTarGz`, `addFileToTar`).
+- Added refactoring specs 65–78 for all 14 file splits.
+- All source files comply with the 200-line limit; no functional changes.
+
 ## v2.36.5 — Extended Refactoring
 - Split `ziparchive.go` (362 lines) into three files under `release/`:
   - `ziparchive.go` (~171 lines): orchestration, DB group routing, ad-hoc path resolution.

@@ -5,6 +5,27 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.36.6",
+    items: [
+      "Split assets.go into assets.go + assetsbuild.go (build helpers).",
+      "Split zipgroupops.go into zipgroupops.go + zipgroupshow.go (display logic).",
+      "Split tui.go into tui.go + tuiview.go (rendering logic).",
+      "Split aliasops.go into aliasops.go + aliassuggest.go (interactive suggestions).",
+      "Split tempreleaseops.go into tempreleaseops.go + tempreleaselist.go (listing).",
+      "Split listreleases.go into listreleases.go + listreleasesload.go (data loading).",
+      "Split listversions.go into listversions.go + listversionsutil.go (collection utils).",
+      "Split sshgen.go into sshgen.go + sshgenutil.go (validation utils).",
+      "Split scanprojects.go into scanprojects.go + scanprojectsmeta.go (metadata).",
+      "Split amendexec.go into amendexec.go + amendexecprint.go (output formatting).",
+      "Split status.go into status.go + statusprint.go (table formatting).",
+      "Split exec.go into exec.go + execprint.go (result formatting).",
+      "Split logs.go into logs.go + logsview.go (view rendering).",
+      "Split compress.go into compress.go + compresstar.go (tar logic).",
+      "Added refactoring specs 65–78 for all 14 file splits.",
+      "All source files comply with the 200-line limit; no functional changes.",
+    ],
+  },
+  {
     version: "v2.36.5",
     items: [
       "Split ziparchive.go (362 lines) into three files: ziparchive.go, zipio.go, zipdryrun.go.",
