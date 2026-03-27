@@ -80,6 +80,10 @@ _gitmap() {
                 _describe 'subcommand' subs
             fi
             ;;
+        dashboard|db)
+            local -a flags=(--limit --since --no-merges --out-dir --open)
+            _describe 'flag' flags
+            ;;
         ssh)
             if [[ "${words[CURRENT-1]}" == "--name" || "${words[CURRENT-1]}" == "-n" ]]; then
                 local -a sshkeys=($(gitmap completion --list-ssh-keys))
