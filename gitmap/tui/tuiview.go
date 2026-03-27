@@ -30,6 +30,7 @@ func (m rootModel) renderTabs() string {
 		constants.TUIViewGroups,
 		constants.TUIViewDashboard,
 		constants.TUIViewReleases,
+		constants.TUIViewTempReleases,
 		constants.TUIViewZipGroups,
 		constants.TUIViewAliases,
 		constants.TUIViewLogs,
@@ -59,6 +60,8 @@ func (m rootModel) renderContent() string {
 		return m.dashboard.View()
 	case viewReleases:
 		return m.releases.View()
+	case viewTempReleases:
+		return m.tempReleases.View()
 	case viewZipGroups:
 		return m.zipGroups.View()
 	case viewAliases:
@@ -84,6 +87,8 @@ func (m rootModel) renderStatusBar() string {
 		hints = append(hints, constants.TUIDashHint)
 	case viewReleases:
 		hints = append(hints, constants.TUIRelHint)
+	case viewTempReleases:
+		hints = append(hints, constants.TUITRHint)
 	case viewZipGroups:
 		hints = append(hints, constants.TUIZGHint)
 	case viewAliases:

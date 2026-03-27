@@ -7,6 +7,7 @@
 - Added end-to-end release test (`e2e_test.go`): full cycle from version bump through metadata commit on a temp repo with bare remote.
 - E2E edge-case coverage: dry-run (no side effects), no-commit (staged only), skip-meta (no JSON), and duplicate version blocking.
 - Added edge-case test suite (`edgecase_test.go`): pre-release parsing/comparison, bump resolution (all levels, from-zero, from-prerelease), parse validation, version ordering, multi-release sequences, out-of-order metadata, and rc-to-stable promotion.
+- Added TUI Temp Releases view (`tempreleases.go`, `trformat.go`): 9th tab with flat list, detail panel, and grouped-by-prefix aggregation.
 
 ## v2.36.6 — Wave 2 Refactoring (14 Files)
 - Split `assets.go` → `assets.go` + `assetsbuild.go` (build helpers: `buildSingleTarget`, `buildEnv`).

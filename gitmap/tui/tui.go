@@ -10,37 +10,39 @@ import (
 	"github.com/user/gitmap/store"
 )
 
-const viewCount = 8
+const viewCount = 9
 
 // view indices.
 const (
-	viewBrowser   = 0
-	viewActions   = 1
-	viewGroups    = 2
-	viewDashboard = 3
-	viewReleases  = 4
-	viewZipGroups = 5
-	viewAliases   = 6
-	viewLogs      = 7
+	viewBrowser      = 0
+	viewActions      = 1
+	viewGroups       = 2
+	viewDashboard    = 3
+	viewReleases     = 4
+	viewTempReleases = 5
+	viewZipGroups    = 6
+	viewAliases      = 7
+	viewLogs         = 8
 )
 
 // rootModel is the top-level Bubble Tea model.
 type rootModel struct {
-	db        *store.DB
-	repos     []model.ScanRecord
-	groups    []model.Group
-	activeTab int
-	width     int
-	height    int
-	browser   browserModel
-	actions   actionsModel
-	groupsMgr groupsModel
-	dashboard dashboardModel
-	releases  releasesModel
-	zipGroups zipGroupsModel
-	aliases   aliasesModel
-	logs      logsModel
-	quitting  bool
+	db           *store.DB
+	repos        []model.ScanRecord
+	groups       []model.Group
+	activeTab    int
+	width        int
+	height       int
+	browser      browserModel
+	actions      actionsModel
+	groupsMgr    groupsModel
+	dashboard    dashboardModel
+	releases     releasesModel
+	tempReleases tempReleasesModel
+	zipGroups    zipGroupsModel
+	aliases      aliasesModel
+	logs         logsModel
+	quitting     bool
 }
 
 // Run launches the interactive TUI.
@@ -61,18 +63,19 @@ func Run(db *store.DB, cfg model.Config) error {
 
 func newRootModel(db *store.DB, repos []model.ScanRecord, groups []model.Group, cfg model.Config) rootModel {
 	return rootModel{
-		db:        db,
-		repos:     repos,
-		groups:    groups,
-		activeTab: viewBrowser,
-		browser:   newBrowserModel(repos),
-		actions:   newActionsModel(),
-		groupsMgr: newGroupsModel(groups),
-		dashboard: newDashboardModel(repos, cfg.DashboardRefresh),
-		releases:  newReleasesModel(db),
-		zipGroups: newZipGroupsModel(db),
-		aliases:   newAliasesModel(db),
-		logs:      newLogsModel(db),
+		db:           db,
+		repos:        repos,
+		groups:       groups,
+		activeTab:    viewBrowser,
+		browser:      newBrowserModel(repos),
+		actions:      newActionsModel(),
+		groupsMgr:    newGroupsModel(groups),
+		dashboard:    newDashboardModel(repos, cfg.DashboardRefresh),
+		releases:     newReleasesModel(db),
+		tempReleases: newTempReleasesModel(db),
+		zipGroups:    newZipGroupsModel(db),
+		aliases:      newAliasesModel(db),
+		logs:         newLogsModel(db),
 	}
 }
 
@@ -133,6 +136,11 @@ func (m rootModel) updateActiveView(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case viewReleases:
 		rm, cmd := m.releases.Update(msg)
 		m.releases = rm
+
+		return m, cmd
+	case viewTempReleases:
+		tm, cmd := m.tempReleases.Update(msg)
+		m.tempReleases = tm
 
 		return m, cmd
 	case viewZipGroups:

@@ -12,6 +12,7 @@ export const changelog: ChangelogEntry[] = [
       "Added end-to-end release test: full cycle from version bump through metadata commit on a temp repo.",
       "E2E edge-case coverage: dry-run, no-commit, skip-meta, and duplicate version blocking.",
       "Added edge-case test suite: pre-release parsing/comparison, bump resolution, version ordering, multi-release sequences, and rc-to-stable promotion.",
+      "Added TUI Temp Releases view: 9th tab with flat list, detail panel, and grouped-by-prefix aggregation.",
     ],
   },
   {
