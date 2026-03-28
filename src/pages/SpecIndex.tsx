@@ -157,6 +157,27 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } 
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 const SpecIndexPage = () => {
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q) return sections;
+    return sections
+      .map((section) => ({
+        ...section,
+        entries: section.entries.filter(
+          (e) =>
+            e.title.toLowerCase().includes(q) ||
+            e.id.toLowerCase().includes(q) ||
+            section.folder.toLowerCase().includes(q) ||
+            section.title.toLowerCase().includes(q)
+        ),
+      }))
+      .filter((s) => s.entries.length > 0);
+  }, [query]);
+
+  const totalResults = filtered.reduce((sum, s) => sum + s.entries.length, 0);
+
   return (
     <DocsLayout>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
@@ -164,8 +185,29 @@ const SpecIndexPage = () => {
         <p className="text-muted-foreground mb-2">
           Complete table of contents for all specification documents, issue post-mortems, design guidelines, and the generic CLI blueprint.
         </p>
-        <p className="text-xs text-muted-foreground/60 font-mono mb-8">
-          {sections.reduce((sum, s) => sum + s.entries.length, 0)} documents across {sections.length} sections
+
+        {/* Search bar */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter specs… (e.g. release, database, TUI)"
+            className="w-full pl-9 pr-9 py-2.5 text-sm font-mono bg-muted/30 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-colors"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        <p className="text-xs text-muted-foreground/60 font-mono mb-6">
+          {query ? `${totalResults} result${totalResults !== 1 ? "s" : ""} matching "${query}"` : `${totalResults} documents across ${sections.length} sections`}
         </p>
       </motion.div>
 
