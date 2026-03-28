@@ -260,7 +260,9 @@ const SpecIndexPage = () => {
             <p className="text-sm font-mono">No specs matching "{query}"</p>
           </div>
         )}
-        {filtered.map((section) => (
+        {filtered.map((section) => {
+          const isCollapsed = !query && collapsed[section.folder];
+          return (
           <motion.div key={section.folder} variants={item}>
             <div className="border border-border rounded-lg overflow-hidden">
               {/* Section header */}
