@@ -29,7 +29,7 @@ const SpecSectionCard = ({ section, isCollapsed, onToggle }: SpecSectionCardProp
   <div id={anchorId} className="border border-border rounded-lg overflow-hidden scroll-mt-20">
     <button
       onClick={onToggle}
-      className="w-full bg-muted/30 px-5 py-4 border-b border-border text-left hover:bg-muted/40 transition-colors"
+      className="group/header w-full bg-muted/30 px-5 py-4 border-b border-border text-left hover:bg-muted/40 transition-colors"
     >
       <div className="flex items-center gap-3 mb-1">
         <ChevronDown

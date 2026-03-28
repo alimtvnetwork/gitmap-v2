@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DocsLayout from "@/components/docs/DocsLayout";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
