@@ -4,7 +4,7 @@
 
 ## Problem
 
-Repeated mismatch between general specs (`spec/02-general/`) and app-specific specs (`spec/01-app/`) for the update flow, causing implementation drift — lock/retry loops, async/foreground oscillation, missing version checks.
+Repeated mismatch between general specs (`spec/03-general/`) and app-specific specs (`spec/01-app/`) for the update flow, causing implementation drift — lock/retry loops, async/foreground oscillation, missing version checks.
 
 ## Root Cause
 
