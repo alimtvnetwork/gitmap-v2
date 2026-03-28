@@ -224,7 +224,6 @@ const SpecIndexPage = () => {
           ) : (
             <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-muted-foreground/50 border border-border rounded px-1.5 py-0.5 pointer-events-none">/</kbd>
           )}
-          )}
         </div>
 
         <p className="text-xs text-muted-foreground/60 font-mono mb-6">
