@@ -1,8 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DocsLayout from "@/components/docs/DocsLayout";
-import { motion } from "framer-motion";
-import { FileText, AlertTriangle, Compass, Terminal, ChevronRight, Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileText, AlertTriangle, Compass, Terminal, ChevronRight, ChevronDown, Search, X } from "lucide-react";
 
 interface SpecEntry {
   id: string;
@@ -159,7 +159,19 @@ const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 const SpecIndexPage = () => {
   const [query, setQuery] = useState("");
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const toggleSection = (folder: string) => {
+    setCollapsed((prev) => ({ ...prev, [folder]: !prev[folder] }));
+  };
+
+  const allCollapsed = sections.every((s) => collapsed[s.folder]);
+  const toggleAll = () => {
+    const next: Record<string, boolean> = {};
+    sections.forEach((s) => (next[s.folder] = !allCollapsed));
+    setCollapsed(next);
+  };
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -226,9 +238,19 @@ const SpecIndexPage = () => {
           )}
         </div>
 
-        <p className="text-xs text-muted-foreground/60 font-mono mb-6">
-          {query ? `${totalResults} result${totalResults !== 1 ? "s" : ""} matching "${query}"` : `${totalResults} documents across ${sections.length} sections`}
-        </p>
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-xs text-muted-foreground/60 font-mono">
+            {query ? `${totalResults} result${totalResults !== 1 ? "s" : ""} matching "${query}"` : `${totalResults} documents across ${sections.length} sections`}
+          </p>
+          {!query && (
+            <button
+              onClick={toggleAll}
+              className="text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {allCollapsed ? "Expand all" : "Collapse all"}
+            </button>
+          )}
+        </div>
       </motion.div>
 
       <motion.div variants={container} initial="hidden" animate="show" className="space-y-8" key={query}>
@@ -238,12 +260,18 @@ const SpecIndexPage = () => {
             <p className="text-sm font-mono">No specs matching "{query}"</p>
           </div>
         )}
-        {filtered.map((section) => (
+        {filtered.map((section) => {
+          const isCollapsed = !query && collapsed[section.folder];
+          return (
           <motion.div key={section.folder} variants={item}>
             <div className="border border-border rounded-lg overflow-hidden">
               {/* Section header */}
-              <div className="bg-muted/30 px-5 py-4 border-b border-border">
+              <button
+                onClick={() => toggleSection(section.folder)}
+                className="w-full bg-muted/30 px-5 py-4 border-b border-border text-left hover:bg-muted/40 transition-colors"
+              >
                 <div className="flex items-center gap-3 mb-1">
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isCollapsed ? "-rotate-90" : ""}`} />
                   <span className={section.color}>{section.icon}</span>
                   <h2 className="text-lg font-mono font-semibold text-foreground">
                     <span className="text-muted-foreground">{section.folder}/</span> {section.title}
@@ -252,29 +280,42 @@ const SpecIndexPage = () => {
                     {section.entries.length} docs
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground ml-8">{section.description}</p>
-              </div>
+                <p className="text-sm text-muted-foreground ml-9">{section.description}</p>
+              </button>
 
               {/* Entries */}
-              <div className="divide-y divide-border">
-                {section.entries.map((entry) => (
-                  <div key={entry.id} className="flex items-center gap-3 px-5 py-2.5 hover:bg-muted/20 transition-colors group">
-                    <span className="text-xs font-mono text-muted-foreground w-10 shrink-0">{entry.id}</span>
-                    <span className="text-sm text-foreground">{entry.title}</span>
-                    {entry.link && (
-                      <Link
-                        to={entry.link}
-                        className="ml-auto flex items-center gap-1 text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        docs <ChevronRight className="h-3 w-3" />
-                      </Link>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <AnimatePresence initial={false}>
+                {!isCollapsed && (
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: "auto" }}
+                    exit={{ height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="divide-y divide-border">
+                      {section.entries.map((entry) => (
+                        <div key={entry.id} className="flex items-center gap-3 px-5 py-2.5 hover:bg-muted/20 transition-colors group">
+                          <span className="text-xs font-mono text-muted-foreground w-10 shrink-0">{entry.id}</span>
+                          <span className="text-sm text-foreground">{entry.title}</span>
+                          {entry.link && (
+                            <Link
+                              to={entry.link}
+                              className="ml-auto flex items-center gap-1 text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              docs <ChevronRight className="h-3 w-3" />
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
-        ))}
+          );
+        })}
       </motion.div>
 
       {/* See Also */}
