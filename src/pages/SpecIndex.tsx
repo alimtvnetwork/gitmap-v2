@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DocsLayout from "@/components/docs/DocsLayout";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
@@ -11,6 +11,7 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } 
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
 
 const SpecIndexPage = () => {
+  const location = useLocation();
   const [query, setQuery] = useState("");
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,17 @@ const SpecIndexPage = () => {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+
+  // Scroll to hash anchor and auto-expand that section
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+    if (hash) {
+      setCollapsed((prev) => ({ ...prev, [hash]: false }));
+      requestAnimationFrame(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [location.hash]);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
