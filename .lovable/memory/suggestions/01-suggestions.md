@@ -15,7 +15,7 @@
 - ✅ Nested deploy structure
 - ✅ Update enhancements: skip-if-current, version comparison, rollback safety
 - ✅ `update-cleanup` command with auto-run
-- ✅ Made all `spec/02-general/` files fully generic
+- ✅ Made all `spec/03-general/` files fully generic
 - ✅ Full compliance audit (Wave 1 + Wave 2)
 - ✅ Constants inventory documentation
 - ✅ `list-versions` and `revert` commands

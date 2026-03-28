@@ -12,7 +12,7 @@ Last updated: 2026-03-10
 | 4 | One responsibility per package | 01-overview §Code Style |
 | 5 | Blank line before `return` (unless sole line in `if`) | 01-overview §Code Style |
 | 6 | No magic strings — all literals in `constants` | 01-overview §Code Style |
-| 7 | No `switch` statements — use `if`/`else if` chains | 02-general/06 §Conditionals |
+| 7 | No `switch` statements — use `if`/`else if` chains | 03-general/06 §Conditionals |
 
 ## Package: `cmd`
 

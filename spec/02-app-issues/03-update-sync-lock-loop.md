@@ -32,4 +32,4 @@ The parent holds a lock on `E:\bin-run\gitmap.exe`. The handoff runs from `gitma
 3. **Always use rename-first for PATH sync during update** — copy-overwrite is unreliable on Windows
 4. **Never add interactive prompts to generated scripts** — they run in non-interactive PowerShell
 5. **After switching between `cmd.Run()` and `cmd.Start()`, verify closing brace** — mechanical error that breaks build
-6. **Any update-flow change must update ALL of:** `cmd/update.go`, `run.ps1`, `spec/01-app/09-build-deploy.md`, `spec/02-general/02-powershell-build-deploy.md`, `spec/02-general/03-self-update-mechanism.md`, `.lovable/memory/issues/`
+6. **Any update-flow change must update ALL of:** `cmd/update.go`, `run.ps1`, `spec/01-app/09-build-deploy.md`, `spec/03-general/02-powershell-build-deploy.md`, `spec/03-general/03-self-update-mechanism.md`, `spec/02-app-issues/`

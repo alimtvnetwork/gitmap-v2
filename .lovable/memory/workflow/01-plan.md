@@ -9,7 +9,7 @@
 ### v2.0.0 → v2.1.0
 - ✅ Removed GitHub Release integration (Git-only + local metadata)
 - ✅ Nested deploy structure, update enhancements, update-cleanup command
-- ✅ Generic spec files in `spec/02-general/`
+- ✅ Generic spec files in `spec/03-general/`
 
 ### v2.2.0 → v2.9.0
 - ✅ Release-pending, changelog, doctor, latest-branch commands
