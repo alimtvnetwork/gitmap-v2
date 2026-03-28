@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FileText, AlertTriangle, Compass, Terminal, ChevronRight } from "lucide-react";
+import { FileText, AlertTriangle, Compass, Terminal, ChevronRight, Search, X } from "lucide-react";
 
 interface SpecEntry {
   id: string;
