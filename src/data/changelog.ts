@@ -406,7 +406,7 @@ export const changelog: ChangelogEntry[] = [
     items: [
       "Release-pending, changelog, doctor commands.",
       "Database with repos and group management.",
-      "Generic spec files in `spec/02-general/`.",
+      "Generic spec files in `spec/03-general/`.",
     ],
   },
 ];

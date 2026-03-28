@@ -8,14 +8,14 @@
 - ✅ Document `version` command in specs
 - ✅ Bump version on every code change
 - ✅ Update all spec docs for new features
-- ✅ Create `spec/02-general/` with reusable design guidelines
+- ✅ Create `spec/03-general/` with reusable design guidelines
 - ✅ Add `desktop-sync` command
 - ✅ Enhanced terminal output with HTTPS and SSH clone instructions
 - ✅ Remove GitHub Release integration
 - ✅ Nested deploy structure
 - ✅ Update enhancements: skip-if-current, version comparison, rollback safety
 - ✅ `update-cleanup` command with auto-run
-- ✅ Made all `spec/02-general/` files fully generic
+- ✅ Made all `spec/03-general/` files fully generic
 - ✅ Full compliance audit (Wave 1 + Wave 2)
 - ✅ Constants inventory documentation
 - ✅ `list-versions` and `revert` commands

@@ -4,7 +4,7 @@
 
 ## Problem
 
-Repeated mismatch between general specs (`spec/02-general/`) and app-specific specs (`spec/01-app/`) for the update flow, causing implementation drift — lock/retry loops, async/foreground oscillation, missing version checks.
+Repeated mismatch between general specs (`spec/03-general/`) and app-specific specs (`spec/01-app/`) for the update flow, causing implementation drift — lock/retry loops, async/foreground oscillation, missing version checks.
 
 ## Root Cause
 
@@ -40,6 +40,6 @@ Repeated mismatch between general specs (`spec/02-general/`) and app-specific sp
 
 ## Prevention — Do Not Repeat
 
-- Any update-flow change must update ALL of: `spec/02-general/02-powershell-build-deploy.md`, `spec/02-general/03-self-update-mechanism.md`, `spec/01-app/09-build-deploy.md`, `spec/01-app/02-cli-interface.md`, and `.lovable/memory/issues/`
+- Any update-flow change must update ALL of: `spec/03-general/02-powershell-build-deploy.md`, `spec/03-general/03-self-update-mechanism.md`, `spec/01-app/09-build-deploy.md`, `spec/01-app/02-cli-interface.md`, and `spec/02-app-issues/`
 - Keep one source-of-truth sequence and mirror verbatim across specs
 - Explicit prohibitions must be documented (e.g., "never use `cmd.Run()`", "never add `Read-Host`")

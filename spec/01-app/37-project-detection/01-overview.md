@@ -41,7 +41,7 @@ detected projects by type using dedicated commands.
 
 ## Constraints
 
-- All code style rules from `spec/02-general/06-code-style-rules.md`.
+- All code style rules from `spec/03-general/06-code-style-rules.md`.
 - Functions 8–15 lines. Files under 200 lines.
 - All string literals in `constants` package.
 - Positive conditions only.

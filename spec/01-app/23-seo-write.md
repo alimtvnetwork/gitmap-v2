@@ -288,6 +288,6 @@ a total.
 
 ## Code Style
 
-All rules from `spec/02-general/06-code-style-rules.md` apply:
+All rules from `spec/03-general/06-code-style-rules.md` apply:
 positive-only `if` conditions, 8–15 line functions, 100–200 line files,
 no magic strings, blank line before `return`.
