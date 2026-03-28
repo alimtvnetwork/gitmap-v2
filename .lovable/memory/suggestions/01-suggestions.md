@@ -8,7 +8,7 @@
 - ✅ Document `version` command in specs
 - ✅ Bump version on every code change
 - ✅ Update all spec docs for new features
-- ✅ Create `spec/02-general/` with reusable design guidelines
+- ✅ Create `spec/03-general/` with reusable design guidelines
 - ✅ Add `desktop-sync` command
 - ✅ Enhanced terminal output with HTTPS and SSH clone instructions
 - ✅ Remove GitHub Release integration
