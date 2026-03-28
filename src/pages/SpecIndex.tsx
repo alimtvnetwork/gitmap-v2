@@ -42,6 +42,17 @@ const SpecIndexPage = () => {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  // Scroll to hash anchor and auto-expand that section
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+    if (hash) {
+      setCollapsed((prev) => ({ ...prev, [hash]: false }));
+      requestAnimationFrame(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [location.hash]);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     if (!q) return sections;
