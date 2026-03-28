@@ -1,8 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DocsLayout from "@/components/docs/DocsLayout";
-import { motion } from "framer-motion";
-import { FileText, AlertTriangle, Compass, Terminal, ChevronRight, Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileText, AlertTriangle, Compass, Terminal, ChevronRight, ChevronDown, Search, X } from "lucide-react";
 
 interface SpecEntry {
   id: string;
