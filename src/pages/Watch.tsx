@@ -102,24 +102,24 @@ const TerminalPreview = () => {
         </div>
 
         {/* Rows */}
-        {MOCK_REPOS.map((r) => (
-          <div key={r.name} className="text-terminal-foreground">
+        {MOCK_REPOS.map((repo) => (
+          <div key={repo.name} className="text-terminal-foreground">
             {"  "}
-            <span className="inline-block w-[170px]">{r.name}</span>
-            <span className={`inline-block w-[72px] ${statusColor(r.status)}`}>
-              {r.status === "dirty" ? "●" : "✔"} {r.status}
+            <span className="inline-block w-[170px]">{repo.name}</span>
+            <span className={`inline-block w-[72px] ${statusColor(repo.status)}`}>
+              {isDirty(repo.status) ? STATUS_ICON_DIRTY : STATUS_ICON_CLEAN} {repo.status}
             </span>
             <span className="inline-block w-[130px] text-muted-foreground">
-              {r.branch}
+              {repo.branch}
             </span>
-            <span className={`inline-block w-[48px] ${countColor(r.ahead)}`}>
-              {r.ahead}
+            <span className={`inline-block w-[48px] ${countColor(repo.ahead)}`}>
+              {repo.ahead}
             </span>
-            <span className={`inline-block w-[56px] ${countColor(r.behind)}`}>
-              {r.behind}
+            <span className={`inline-block w-[56px] ${countColor(repo.behind)}`}>
+              {repo.behind}
             </span>
-            <span className={`inline-block w-[40px] ${countColor(r.stash)}`}>
-              {r.stash}
+            <span className={`inline-block w-[40px] ${countColor(repo.stash)}`}>
+              {repo.stash}
             </span>
           </div>
         ))}
