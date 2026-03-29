@@ -8,7 +8,7 @@ export interface SpecSection {
   folder: string;
   title: string;
   description: string;
-  iconName: "file-text" | "alert-triangle" | "compass" | "terminal";
+  iconName: "file-text" | "alert-triangle" | "compass" | "terminal" | "shield-check";
   color: string;
   entries: SpecEntry[];
 }
