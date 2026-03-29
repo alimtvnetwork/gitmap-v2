@@ -115,8 +115,8 @@ const ProjectsPage = () => {
           className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3"
         >
           <Card
-            className={`cursor-pointer transition-all ${activeFilter === "all" ? "ring-2 ring-primary shadow-sm" : "hover:border-primary/40"}`}
-            onClick={() => setActiveFilter("all")}
+            className={`cursor-pointer transition-all ${activeFilter === FILTER_ALL ? "ring-2 ring-primary shadow-sm" : "hover:border-primary/40"}`}
+            onClick={() => setActiveFilter(FILTER_ALL)}
           >
             <CardContent className="p-2 sm:p-3 text-center">
               <div className="text-xl sm:text-2xl font-mono font-bold text-foreground">{SAMPLE_PROJECTS.length}</div>
