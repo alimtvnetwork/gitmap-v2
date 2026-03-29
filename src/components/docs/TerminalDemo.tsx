@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Play, RotateCcw } from "lucide-react";
 import { TerminalLineType, TERMINAL_INPUT_DELAY, TERMINAL_OUTPUT_DELAY } from "@/constants";
 
-interface TerminalLine {
+export interface TerminalLine {
   text: string;
   type?: TerminalLineType;
   delay?: number;
