@@ -158,6 +158,7 @@ export const sections: SpecSection[] = [
       { id: "03", title: "Naming Conventions" },
       { id: "04", title: "Error Handling Patterns" },
       { id: "05", title: "File & Project Structure" },
+      { id: "06", title: "Testing Patterns" },
     ],
   },
 ];
