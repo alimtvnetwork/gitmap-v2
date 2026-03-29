@@ -8,7 +8,7 @@ export interface SpecSection {
   folder: string;
   title: string;
   description: string;
-  iconName: "file-text" | "alert-triangle" | "compass" | "terminal";
+  iconName: "file-text" | "alert-triangle" | "compass" | "terminal" | "shield-check";
   color: string;
   entries: SpecEntry[];
 }
@@ -144,6 +144,16 @@ export const sections: SpecSection[] = [
       { id: "17", title: "Progress Tracking" },
       { id: "18", title: "Batch Execution" },
       { id: "19", title: "Shell Completion" },
+    ],
+  },
+  {
+    folder: "05-coding-guidelines",
+    title: "Coding Guidelines",
+    description: "Universal code quality rules — naming, structure, and maintainability standards for all languages.",
+    iconName: "shield-check",
+    color: "text-orange-500",
+    entries: [
+      { id: "01", title: "Code Quality Improvement" },
     ],
   },
 ];
