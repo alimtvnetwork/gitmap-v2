@@ -7,8 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import ProjectDetailDialog from "@/components/projects/ProjectDetailDialog";
 import RepoGroup from "@/components/projects/RepoGroup";
-import { PROJECT_TYPES } from "@/components/projects/TypeBadge";
-import type { DetectedProject, ProjectType } from "@/components/projects/types";
+import { ProjectTypes } from "@/components/projects/TypeBadge";
+import type { DetectedProject, ProjectType, ProjectFilter } from "@/components/projects/types";
+import { FILTER_ALL } from "@/constants";
 
 const SAMPLE_PROJECTS: DetectedProject[] = [
   {
