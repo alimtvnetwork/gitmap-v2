@@ -4,18 +4,34 @@ export interface CommandSeeAlso {
   url?: string;
 }
 
+export interface CommandFlag {
+  flag: string;
+  description: string;
+}
+
+export interface CommandExample {
+  command: string;
+  description?: string;
+}
+
 export interface CommandDef {
   name: string;
   alias?: string;
   description: string;
   usage?: string;
-  flags?: { flag: string; description: string }[];
-  examples?: { command: string; description?: string }[];
+  flags?: CommandFlag[];
+  examples?: CommandExample[];
   category: string;
   seeAlso?: CommandSeeAlso[];
 }
 
-export const categories = [
+export interface CommandCategory {
+  key: string;
+  label: string;
+  description: string;
+}
+
+export const Categories: CommandCategory[] = [
   { key: "scanning", label: "Scanning & Cloning", description: "Discover, clone, and re-scan repositories" },
   { key: "monitoring", label: "Monitoring & Status", description: "Track repo state in real time" },
   { key: "release", label: "Release & Versioning", description: "Tag, branch, and publish releases" },
