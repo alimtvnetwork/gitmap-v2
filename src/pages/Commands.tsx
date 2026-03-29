@@ -65,7 +65,7 @@ const CommandsPage = () => {
 
       {/* Category summary banner */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
-        {categories.map((cat) => {
+        {Categories.map((cat) => {
           const count = commands.filter((c) => c.category === cat.key).length;
           return (
             <button
