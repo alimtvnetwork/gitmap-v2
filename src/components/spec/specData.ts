@@ -154,6 +154,9 @@ export const sections: SpecSection[] = [
     color: "text-orange-500",
     entries: [
       { id: "01", title: "Code Quality Improvement" },
+      { id: "02", title: "Go Code Style" },
+      { id: "03", title: "Naming Conventions" },
+      { id: "04", title: "Error Handling Patterns" },
     ],
   },
 ];
