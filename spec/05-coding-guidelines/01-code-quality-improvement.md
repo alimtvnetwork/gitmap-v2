@@ -259,8 +259,104 @@ responsibility into focused files.
 
 ---
 
+## Real Refactoring Examples
+
+### A. Inline type → Named type (TypeBadge.tsx)
+
+**Before:**
+```ts
+export const PROJECT_TYPES: Record<ProjectType, { label: string; color: string; icon: typeof Code2 }> = { ... };
+```
+
+**After:**
+```ts
+// types.ts
+export interface ProjectTypeConfig {
+  label: string;
+  color: string;
+  icon: typeof Code2;
+}
+
+// TypeBadge.tsx
+export const ProjectTypes: Record<ProjectType, ProjectTypeConfig> = { ... };
+```
+
+### B. Magic strings → Constants (Watch.tsx)
+
+**Before:**
+```ts
+const MOCK_REPOS = [
+  { name: "api-gateway", status: "clean", ... },
+  { name: "frontend-app", status: "dirty", ... },
+];
+const statusColor = (s: string) => s === "dirty" ? "text-yellow-400" : "text-primary";
+```
+
+**After:**
+```ts
+// constants/index.ts
+export const RepoStatus = { Clean: "clean", Dirty: "dirty" } as const;
+export type RepoStatus = (typeof RepoStatus)[keyof typeof RepoStatus];
+
+// Watch.tsx
+const isDirty = (status: RepoStatus): boolean => status === RepoStatus.Dirty;
+const statusColor = (status: RepoStatus) => isDirty(status) ? "text-yellow-400" : "text-primary";
+```
+
+### C. Duplicate constant → Single import (ProjectDetailDialog.tsx)
+
+**Before:** `PROJECT_TYPES` was defined identically in both `TypeBadge.tsx` and `ProjectDetailDialog.tsx`.
+
+**After:** Defined once in `TypeBadge.tsx`, imported in `ProjectDetailDialog.tsx`:
+```ts
+import { ProjectTypes } from "@/components/projects/TypeBadge";
+```
+
+### D. Single-char variables → Meaningful names
+
+**Before:**
+```ts
+const filtered = SAMPLE_PROJECTS.filter((p) => { const q = search.toLowerCase(); ... });
+const stash = MOCK_REPOS.reduce((a, r) => a + r.stash, 0);
+```
+
+**After:**
+```ts
+const filtered = SAMPLE_PROJECTS.filter((project) => { const searchLower = search.toLowerCase(); ... });
+const stash = MOCK_REPOS.reduce((acc, repo) => acc + repo.stash, 0);
+```
+
+### E. Switch → Positive if/else (TerminalDemo.tsx)
+
+**Before:**
+```ts
+const colorFor = (type?: string) => {
+  switch (type) {
+    case "input": return "text-[hsl(var(--terminal-foreground))]";
+    case "header": return "text-primary font-bold";
+    default: return "text-[hsl(var(--foreground))]/70";
+  }
+};
+```
+
+**After:**
+```ts
+const colorFor = (type?: TerminalLineType) => {
+  if (type === TerminalLineType.Input) return "text-[hsl(var(--terminal-foreground))]";
+  if (type === TerminalLineType.Header) return "text-primary font-bold";
+  if (type === TerminalLineType.Accent) return "text-primary";
+
+  return "text-[hsl(var(--foreground))]/70";
+};
+```
+
+---
+
 ## References
 
 - Go-specific rules: `spec/03-general/06-code-style-rules.md`
 - Go CLI rules: `spec/04-generic-cli/08-code-style.md`
 - Compliance audit: `spec/01-app/18-compliance-audit.md`
+- TypeScript constants: `src/constants/index.ts`
+- Project types: `src/components/projects/types.ts`
+- Command types: `src/data/commands.ts` (CommandFlag, CommandExample, CommandCategory)
