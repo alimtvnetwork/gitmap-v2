@@ -5,12 +5,14 @@ export enum RepoStatus {
 }
 
 /** Terminal line type for animated demos. */
-export enum TerminalLineType {
-  Input = "input",
-  Output = "output",
-  Header = "header",
-  Accent = "accent",
-}
+export const TerminalLineType = {
+  Input: "input",
+  Output: "output",
+  Header: "header",
+  Accent: "accent",
+} as const;
+
+export type TerminalLineType = (typeof TerminalLineType)[keyof typeof TerminalLineType];
 
 /** Project filter including the "all" option. */
 export const FILTER_ALL = "all" as const;
