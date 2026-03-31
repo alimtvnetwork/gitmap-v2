@@ -163,6 +163,7 @@ export const sections: SpecSection[] = [
       { id: "08", title: "Security & Secrets" },
       { id: "09", title: "Performance & Optimization" },
       { id: "10", title: "API Design" },
+      { id: "11", title: "Database Patterns" },
     ],
   },
 ];
