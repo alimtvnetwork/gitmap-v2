@@ -2,9 +2,9 @@
 
 ## Overview
 
-Standards for structured logging, verbose mode, and diagnostic output
-across CLI and application code. Logs are for operators — make them
-useful, consistent, and actionable.
+Standards for structured logging, log levels, correlation IDs, and
+sensitive data redaction across CLI and application code. Logs are for
+operators — make them useful, consistent, and actionable.
 
 ---
 
@@ -18,6 +18,15 @@ Use a clear hierarchy. Never log everything at the same level.
 | Warn | Degraded but recoverable | `"legacy directory found, migrating"` |
 | Info | Key lifecycle events | `"scan complete: 42 repos found"` |
 | Debug | Detailed internals (verbose only) | `"checking path: /home/user/projects/api"` |
+| Trace | Ultra-fine-grained (dev only) | `"entering parseRecord: line 47"` |
+
+### Rules
+
+- Default production level: **Info**.
+- Debug/Trace require explicit opt-in (`--verbose`, `LOG_LEVEL=debug`).
+- Never log at Error for expected conditions (e.g., "no results found").
+- Warn must be actionable — if no one will act on it, it's Debug.
+- A single request should produce ≤5 Info lines under normal flow.
 
 ---
 
@@ -36,8 +45,8 @@ verbose.Log("clone", "cloned %d/%d repos in %s", completed, total, elapsed)
 ### TypeScript
 
 ```ts
-console.info("[scan] discovered repo:", { name: repoName, branch });
-console.error("[release] upload failed:", { version, statusCode, error });
+logger.info({ component: "scan", repo: repoName, branch }, "discovered repo");
+logger.error({ component: "release", version, statusCode, err }, "upload failed");
 ```
 
 ### Required Fields
@@ -49,10 +58,166 @@ console.error("[release] upload failed:", { version, statusCode, error });
 | Count/progress | When processing a batch |
 | Duration | When timing an operation |
 | Error detail | On failures — include the original error |
+| Correlation ID | On all entries within a request/operation |
+
+### Output Format
+
+- **CLI tools**: `[HH:MM:SS] [component] message key=value` to log files.
+- **Services/APIs**: JSON to stdout — one object per line.
+- **Never** mix formats within the same output stream.
+
+```json
+{
+  "timestamp": "2025-01-15T14:30:22.123Z",
+  "level": "info",
+  "component": "scan",
+  "correlation_id": "req-a1b2c3",
+  "message": "scan complete",
+  "repos_found": 42,
+  "duration_ms": 1200
+}
+```
 
 ---
 
-## 3. Verbose Mode Pattern
+## 3. Correlation IDs
+
+Every operation that spans multiple stages or services must carry a
+correlation ID for end-to-end tracing.
+
+### Generation
+
+```go
+// Go — generate at operation entry point
+correlationID := fmt.Sprintf("op-%s", uuid.New().String()[:8])
+ctx := context.WithValue(parentCtx, ctxKeyCorrelation, correlationID)
+```
+
+```ts
+// TypeScript — generate at request boundary
+const correlationId = `req-${crypto.randomUUID().slice(0, 8)}`;
+req.headers["x-correlation-id"] = correlationId;
+```
+
+### Propagation Rules
+
+| Boundary | Mechanism |
+|----------|-----------|
+| HTTP requests | `X-Correlation-ID` header |
+| CLI pipeline stages | Context value / struct field |
+| Background jobs | Job metadata field |
+| Log entries | Always included as `correlation_id` |
+
+### Rules
+
+- Generate at the **outermost** entry point only — never mid-pipeline.
+- Accept incoming correlation IDs from callers; generate only if absent.
+- Use short IDs (8 chars) for CLI; full UUIDs for distributed services.
+- Log the correlation ID in the **first** and **last** log line of every operation.
+- Never reuse correlation IDs across independent operations.
+
+### Go Context Pattern
+
+```go
+func scanRepos(ctx context.Context, root string) error {
+    cid := correlationFrom(ctx)
+    verbose.Log("scan", "[%s] starting directory walk: %s", cid, root)
+    // ... work ...
+    verbose.Log("scan", "[%s] complete: %d repos in %s", cid, count, elapsed)
+    return nil
+}
+```
+
+---
+
+## 4. Sensitive Data Redaction
+
+Secrets, credentials, and PII must never appear in logs, diagnostics,
+or error messages — at any log level.
+
+### Must Redact
+
+| Category | Examples |
+|----------|----------|
+| Credentials | API keys, tokens, passwords, SSH keys |
+| PII | Email addresses, names, IP addresses (in privacy contexts) |
+| Financial | Card numbers, account IDs |
+| Internal paths | Full server filesystem paths (use relative) |
+
+### Redaction Patterns
+
+```go
+// Go — redact function
+func redact(s string) string {
+    if len(s) <= 4 {
+        return "****"
+    }
+    return s[:2] + strings.Repeat("*", len(s)-4) + s[len(s)-2:]
+}
+
+// Usage
+verbose.Log("auth", "token: %s (source: %s)", redact(token), source)
+// Output: "token: gh**********3f (source: env)"
+```
+
+```ts
+// TypeScript — redact utility
+function redact(value: string): string {
+  if (value.length <= 4) return "****";
+  return value.slice(0, 2) + "*".repeat(value.length - 4) + value.slice(-2);
+}
+
+// Usage
+logger.info({ token: redact(apiKey), source: "env" }, "authenticated");
+```
+
+### Automated Detection
+
+Build a pre-log scanner that catches common secret patterns before they
+reach the log output.
+
+```go
+var sensitivePatterns = []*regexp.Regexp{
+    regexp.MustCompile(`(?i)(ghp_|gho_|github_pat_)[a-zA-Z0-9_]+`),  // GitHub tokens
+    regexp.MustCompile(`(?i)(sk-|pk_live_|pk_test_)[a-zA-Z0-9]+`),   // API keys
+    regexp.MustCompile(`(?i)bearer\s+[a-zA-Z0-9\-._~+/]+=*`),       // Bearer tokens
+    regexp.MustCompile(`(?i)password\s*[:=]\s*\S+`),                  // Password assignments
+}
+
+func containsSensitive(msg string) bool {
+    for _, pat := range sensitivePatterns {
+        if pat.MatchString(msg) {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```ts
+const SENSITIVE_PATTERNS = [
+  /(?:ghp_|gho_|github_pat_)[a-zA-Z0-9_]+/gi,
+  /(?:sk-|pk_live_|pk_test_)[a-zA-Z0-9]+/gi,
+  /bearer\s+[a-zA-Z0-9\-._~+/]+=*/gi,
+  /password\s*[:=]\s*\S+/gi,
+];
+
+function containsSensitive(msg: string): boolean {
+  return SENSITIVE_PATTERNS.some((pat) => pat.test(msg));
+}
+```
+
+### Rules
+
+- Redact **before** the value reaches any log call — not after.
+- Never log raw HTTP request/response bodies containing auth headers.
+- Environment variable **names** may be logged; **values** must not.
+- In error messages, reference secrets by source (`"env:GITHUB_TOKEN"`) not value.
+- Automated pattern detection must run in CI as a lint check.
+
+---
+
+## 5. Verbose Mode Pattern
 
 Verbose output is opt-in via a global `--verbose` flag and writes
 to timestamped files while showing summaries on stderr.
@@ -66,9 +231,9 @@ User runs: gitmap scan --verbose
   │    "✓ Scanned 42 repos in 1.2s"
   │
   └─ file: .gitmap/output/scan-2025-01-15-143022.log
-       [14:30:22] [scan] starting directory walk: /home/user
-       [14:30:22] [scan] found .git: /home/user/api/.git
-       [14:30:23] [scan] remote: https://github.com/user/api.git
+       [14:30:22] [scan] [op-a1b2c3] starting directory walk: /home/user
+       [14:30:22] [scan] [op-a1b2c3] found .git: /home/user/api/.git
+       [14:30:23] [scan] [op-a1b2c3] remote: https://github.com/user/api.git
        ...
 ```
 
@@ -78,18 +243,18 @@ User runs: gitmap scan --verbose
 - Stderr shows colored summaries regardless of verbose flag.
 - Stdout is reserved for machine-readable output (JSON, CSV).
 - Log file names include timestamp to prevent overwrites.
-- Each log line has a timestamp and stage prefix.
+- Each log line has a timestamp, stage prefix, and correlation ID.
 
 ---
 
-## 4. Pipeline Stage Logging
+## 6. Pipeline Stage Logging
 
 For multi-stage operations, log entry and exit of each stage.
 
 ```go
-verbose.Log("stage", "starting: %s", stageName)
+verbose.Log("stage", "[%s] starting: %s", cid, stageName)
 // ... work ...
-verbose.Log("stage", "completed: %s (%d items, %s)", stageName, count, elapsed)
+verbose.Log("stage", "[%s] completed: %s (%d items, %s)", cid, stageName, count, elapsed)
 ```
 
 ### Standard Stages (Release Example)
@@ -106,7 +271,7 @@ verbose.Log("stage", "completed: %s (%d items, %s)", stageName, count, elapsed)
 
 ---
 
-## 5. Diagnostic Output (Doctor Pattern)
+## 7. Diagnostic Output (Doctor Pattern)
 
 Health checks follow a consistent pass/fail format.
 
@@ -128,7 +293,7 @@ Health checks follow a consistent pass/fail format.
 
 ---
 
-## 6. Progress Reporting
+## 8. Progress Reporting
 
 Use `[current/total]` counters on stderr for batch operations.
 
@@ -150,7 +315,7 @@ Use `[current/total]` counters on stderr for batch operations.
 
 ---
 
-## 7. Error Logging
+## 9. Error Logging
 
 ### Context Wrapping
 
@@ -174,12 +339,23 @@ return fmt.Errorf("error: %w", err)
 
 ---
 
-## 8. What NOT to Log
+## 10. What NOT to Log
 
-- Secrets, tokens, or credentials — never.
+- Secrets, tokens, or credentials — never (see §4).
 - Redundant success messages for trivial operations.
 - Stack traces in user-facing output (log file only).
 - Raw HTTP response bodies (log truncated previews).
+- PII without explicit user consent and redaction.
+
+---
+
+## Constraints
+
+- Every log call must include a component/stage prefix.
+- Correlation IDs are mandatory for operations spanning 2+ stages.
+- Sensitive data redaction must be enforced at the logger level.
+- Log format must not change between verbose and quiet modes — only volume.
+- CI must include a lint step that scans for leaked secret patterns.
 
 ---
 
@@ -188,4 +364,5 @@ return fmt.Errorf("error: %w", err)
 - Verbose Logging Spec: `spec/04-generic-cli/16-verbose-logging.md`
 - Progress Tracking: `spec/04-generic-cli/17-progress-tracking.md`
 - Error Handling: `spec/05-coding-guidelines/04-error-handling.md`
+- Security & Secrets: `spec/05-coding-guidelines/08-security-secrets.md`
 - Code Quality: `spec/05-coding-guidelines/01-code-quality-improvement.md`
