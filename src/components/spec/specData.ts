@@ -179,6 +179,7 @@ export const sections: SpecSection[] = [
       { id: "24", title: "Data Migration" },
       { id: "25", title: "Code Review" },
       { id: "26", title: "Feature Flags" },
+      { id: "27", title: "Dependency Management" },
     ],
   },
 ];
