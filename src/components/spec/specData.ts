@@ -167,6 +167,7 @@ export const sections: SpecSection[] = [
       { id: "12", title: "Documentation Standards" },
       { id: "13", title: "Dependency Management" },
       { id: "14", title: "Git Workflow" },
+      { id: "15", title: "Monitoring & Alerting" },
     ],
   },
 ];
