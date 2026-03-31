@@ -171,6 +171,7 @@ export const sections: SpecSection[] = [
       { id: "16", title: "Concurrency Patterns" },
       { id: "17", title: "CI/CD Patterns" },
       { id: "18", title: "Resilience Patterns" },
+      { id: "19", title: "Internationalization" },
     ],
   },
 ];
