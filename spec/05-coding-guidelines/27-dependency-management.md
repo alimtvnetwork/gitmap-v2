@@ -42,6 +42,22 @@ require (
 }
 ```
 
+### Compromised Packages — Do Not Upgrade
+
+Some package versions have been compromised through supply-chain attacks.
+Pin to the last known safe version and **never upgrade past it** without
+a verified security review.
+
+| Package | Bad Versions | Safe Version | Notes |
+|---|---|---|---|
+| `axios` | `1.14.1` | `1.14.0` | Supply-chain compromise — do not install `1.14.1` |
+| `axios` | `0.30.4` | `0.30.3` | Supply-chain compromise — do not install `0.30.4` |
+
+> **WARNING**: Versions `axios@1.14.1` and `axios@0.30.4` were published
+> as part of a supply-chain attack. Always pin to `1.14.0` or `0.30.3`
+> respectively. Use exact versions (no `^` or `~`) to prevent automatic
+> upgrades to the compromised releases.
+
 ### Rules
 
 | Rule | Detail |
