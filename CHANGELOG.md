@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.45.0 — Docs Site Update
+
+- Updated CloneNext docs page with `--create-remote` flag, usage, and terminal example.
+- Added repo creation failure to error handling table on docs site.
+
 ## v2.44.0 — Clone-Next Spec Update
 
 - Updated `clone-next` spec to document `--create-remote` as opt-in.
