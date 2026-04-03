@@ -149,7 +149,7 @@ func registerCloneNextDesktop(name, absPath string) {
 
 // handleCloneNextRemoval manages removal of the current version folder.
 // It changes to the parent directory first to release file locks on Windows.
-func handleCloneNextRemoval(folderName, fullPath string, deleteFlag, keepFlag bool) {
+func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag, keepFlag bool) {
 	if keepFlag {
 		return
 	}
@@ -160,17 +160,28 @@ func handleCloneNextRemoval(folderName, fullPath string, deleteFlag, keepFlag bo
 		fmt.Fprintf(os.Stderr, "Warning: could not cd to %s: %v\n", parentDir, chErr)
 	}
 
+	removed := false
 	if deleteFlag {
 		removeFolder(folderName, fullPath)
-
-		return
+		removed = true
+	} else {
+		// Prompt
+		fmt.Printf(constants.MsgCloneNextRemovePrompt, folderName)
+		var answer string
+		fmt.Scanln(&answer)
+		if strings.ToLower(strings.TrimSpace(answer)) == "y" {
+			removeFolder(folderName, fullPath)
+			removed = true
+		}
 	}
-	// Prompt
-	fmt.Printf(constants.MsgCloneNextRemovePrompt, folderName)
-	var answer string
-	fmt.Scanln(&answer)
-	if strings.ToLower(strings.TrimSpace(answer)) == "y" {
-		removeFolder(folderName, fullPath)
+
+	// After removing the old folder, move into the newly cloned directory.
+	if removed {
+		if chErr := os.Chdir(targetPath); chErr != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not cd to %s: %v\n", targetPath, chErr)
+		} else {
+			fmt.Printf(constants.MsgCloneNextMovedTo, filepath.Base(targetPath))
+		}
 	}
 }
 

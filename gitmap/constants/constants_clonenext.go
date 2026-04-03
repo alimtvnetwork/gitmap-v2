@@ -9,6 +9,7 @@ const (
 	MsgCloneNextDesktop      = "✓ Registered %s with GitHub Desktop\n"
 	MsgCloneNextRemovePrompt = "Remove current folder %s? [y/N] "
 	MsgCloneNextRemoved      = "✓ Removed %s\n"
+	MsgCloneNextMovedTo      = "→ Now in %s\n"
 )
 
 // Clone-next error and warning messages.
