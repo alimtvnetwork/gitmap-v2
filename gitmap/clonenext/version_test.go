@@ -26,19 +26,57 @@ func TestParseRepoName(t *testing.T) {
 func TestResolveTarget(t *testing.T) {
 	p := ParsedRepo{BaseName: "macro-ahk", CurrentVersion: 11, HasVersion: true}
 
+	// v++ increments by 1
 	v, err := ResolveTarget(p, "v++")
 	if err != nil || v != 12 {
 		t.Errorf("v++ = %d, %v; want 12, nil", v, err)
 	}
 
+	// v+1 is an alias for v++
+	v, err = ResolveTarget(p, "v+1")
+	if err != nil || v != 12 {
+		t.Errorf("v+1 = %d, %v; want 12, nil", v, err)
+	}
+
+	// Explicit version
 	v, err = ResolveTarget(p, "v15")
 	if err != nil || v != 15 {
 		t.Errorf("v15 = %d, %v; want 15, nil", v, err)
 	}
 
+	// Invalid: not a version arg
 	_, err = ResolveTarget(p, "xyz")
 	if err == nil {
-		t.Error("expected error for invalid arg")
+		t.Error("expected error for invalid arg 'xyz'")
+	}
+
+	// Invalid: v0
+	_, err = ResolveTarget(p, "v0")
+	if err == nil {
+		t.Error("expected error for v0")
+	}
+
+	// Invalid: negative
+	_, err = ResolveTarget(p, "v-3")
+	if err == nil {
+		t.Error("expected error for v-3")
+	}
+
+	// Invalid: malformed
+	_, err = ResolveTarget(p, "vabc")
+	if err == nil {
+		t.Error("expected error for vabc")
+	}
+
+	// Case insensitive
+	v, err = ResolveTarget(p, "V++")
+	if err != nil || v != 12 {
+		t.Errorf("V++ = %d, %v; want 12, nil", v, err)
+	}
+
+	v, err = ResolveTarget(p, "V+1")
+	if err != nil || v != 12 {
+		t.Errorf("V+1 = %d, %v; want 12, nil", v, err)
 	}
 }
 
