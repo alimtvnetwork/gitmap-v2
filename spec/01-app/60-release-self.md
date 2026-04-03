@@ -2,7 +2,7 @@
 
 ## Overview
 
-`gitmap release-self` (alias `rself`) provides explicit self-release capability.
+`gitmap release-self` (alias `rs`, `rself`) provides explicit self-release capability.
 It resolves the gitmap executable's own source repository and performs a full
 release workflow from that directory, regardless of the user's current working
 directory.
