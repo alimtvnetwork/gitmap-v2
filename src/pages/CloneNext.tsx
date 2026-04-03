@@ -19,6 +19,8 @@ const TerminalPreview = ({ title, lines }: { title: string; lines: string[] }) =
           className={
             line.startsWith("✓")
               ? "text-green-400"
+              : line.startsWith("→")
+              ? "text-blue-400"
               : line.startsWith("Error")
               ? "text-red-400"
               : line.startsWith("Remove")
