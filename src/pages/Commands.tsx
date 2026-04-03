@@ -58,7 +58,7 @@ const CommandsPage = () => {
 
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-mono font-bold mb-2">Command Reference</h1>
+      <h1 className="text-3xl font-mono font-bold mb-2 docs-h1">Command Reference</h1>
       <p className="text-muted-foreground mb-6">
         All {commands.length} gitmap commands organized by category.
       </p>

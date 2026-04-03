@@ -4,14 +4,14 @@ import CodeBlock from "@/components/docs/CodeBlock";
 const ArchitecturePage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-mono font-bold mb-2">Architecture</h1>
+      <h1 className="text-3xl font-mono font-bold mb-2 docs-h1">Architecture</h1>
       <p className="text-muted-foreground mb-8">
         High-level overview of gitmap's design and data flow.
       </p>
 
       <section className="space-y-8">
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Project Structure</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Project Structure</h2>
           <CodeBlock
             title="Directory Layout"
             code={`gitmap/
@@ -42,8 +42,10 @@ const ArchitecturePage = () => {
           />
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Data Flow</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Data Flow</h2>
           <div className="bg-card border border-border rounded-lg p-6">
             <div className="space-y-4 font-mono text-sm">
               <div className="flex items-center gap-3">
@@ -70,14 +72,17 @@ const ArchitecturePage = () => {
           </div>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Database Schema</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Database Schema</h2>
           <p className="text-muted-foreground mb-3">
-            SQLite database at <code className="font-mono text-primary">.gitmap/output/data/gitmap.db</code> with
+            SQLite database at <code className="docs-inline-code">.gitmap/output/data/gitmap.db</code> with
             PascalCase naming convention:
           </p>
           <CodeBlock
             title="Tables"
+            language="sql"
             code={`Repos          — Id, Slug, RepoName, HttpsUrl, SshUrl, Branch,
                  RelativePath, AbsolutePath, CloneInstruction, Notes
 
@@ -90,17 +95,19 @@ Releases       — Id, Version, Tag, Branch, SourceBranch,
           />
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Output Artifacts</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Output Artifacts</h2>
           <p className="text-muted-foreground mb-3">
-            A scan generates the following in <code className="font-mono text-primary">.gitmap/output/</code>:
+            A scan generates the following in <code className="docs-inline-code">.gitmap/output/</code>:
           </p>
           <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm docs-table">
               <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">File</th>
-                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Purpose</th>
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-2">File</th>
+                  <th className="text-left px-4 py-2">Purpose</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -125,18 +132,20 @@ Releases       — Id, Version, Tag, Branch, SourceBranch,
           </div>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Build System</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Build System</h2>
           <p className="text-muted-foreground mb-3">
             Cross-platform build scripts with feature parity:
           </p>
           <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm docs-table">
               <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Script</th>
-                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Platform</th>
-                  <th className="text-left px-4 py-2 font-mono font-semibold text-foreground">Purpose</th>
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-2">Script</th>
+                  <th className="text-left px-4 py-2">Platform</th>
+                  <th className="text-left px-4 py-2">Purpose</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -159,8 +168,10 @@ Releases       — Id, Version, Tag, Branch, SourceBranch,
           </p>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Code Style</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Code Style</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex gap-2"><span className="text-primary">•</span> All files under 200 lines</li>
             <li className="flex gap-2"><span className="text-primary">•</span> Functions 8–15 lines (focused, single-purpose)</li>

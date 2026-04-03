@@ -8,8 +8,8 @@ const HomePage = () => {
   return (
     <DocsLayout>
       <section className="py-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-mono font-bold mb-4">
-          <span className="text-primary">gitmap</span>
+        <h1 className="text-4xl md:text-5xl font-mono font-bold mb-4 docs-h1">
+          gitmap
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
           Scan a folder tree for Git repos, generate structured clone files, and
@@ -34,6 +34,8 @@ const HomePage = () => {
           </Link>
         </div>
       </section>
+
+      <hr className="docs-hr" />
 
       <section className="grid md:grid-cols-2 gap-4 py-8">
         <FeatureCard

@@ -4,14 +4,14 @@ import CodeBlock from "@/components/docs/CodeBlock";
 const ConfigPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-mono font-bold mb-2">Configuration</h1>
+      <h1 className="text-3xl font-mono font-bold mb-2 docs-h1">Configuration</h1>
       <p className="text-muted-foreground mb-8">
         Customize gitmap behavior through JSON config files, profiles, and the three-layer merge pattern.
       </p>
 
       <section className="space-y-8">
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Three-Layer Config</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Three-Layer Config</h2>
           <div className="bg-card border border-border rounded-lg p-4 mb-4">
             <div className="space-y-2 font-mono text-sm">
               <div className="flex items-center gap-3">
@@ -28,18 +28,21 @@ const ConfigPage = () => {
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <div className="docs-blockquote mb-4">
             Missing config file → use defaults silently. Flags always override config file values.
-          </p>
+          </div>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">config.json</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">config.json</h2>
           <p className="text-muted-foreground mb-3">
-            The main config file controls scan defaults and release settings. Located at <code className="font-mono text-primary">./data/config.json</code>:
+            The main config file controls scan defaults and release settings. Located at <code className="docs-inline-code">./data/config.json</code>:
           </p>
           <CodeBlock
             title="data/config.json"
+            language="json"
             code={`{
   "defaultMode": "https",
   "defaultOutput": "terminal",
@@ -59,16 +62,18 @@ const ConfigPage = () => {
           />
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Config Fields</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Config Fields</h2>
           <div className="rounded-lg border border-border overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm docs-table">
               <thead>
-                <tr className="bg-muted/50">
-                  <th className="text-left font-mono font-semibold px-4 py-2">Field</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Type</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Default</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Description</th>
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-2">Field</th>
+                  <th className="text-left px-4 py-2">Type</th>
+                  <th className="text-left px-4 py-2">Default</th>
+                  <th className="text-left px-4 py-2">Description</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,21 +97,23 @@ const ConfigPage = () => {
           </div>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Release Config</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Release Config</h2>
           <p className="text-muted-foreground mb-3">
-            The <code className="font-mono text-primary">release</code> section configures cross-compilation defaults.
-            CLI flags (<code className="font-mono text-primary">--targets</code>, <code className="font-mono text-primary">--compress</code>,{" "}
-            <code className="font-mono text-primary">--checksums</code>) always override these values.
+            The <code className="docs-inline-code">release</code> section configures cross-compilation defaults.
+            CLI flags (<code className="docs-inline-code">--targets</code>, <code className="docs-inline-code">--compress</code>,{" "}
+            <code className="docs-inline-code">--checksums</code>) always override these values.
           </p>
           <div className="rounded-lg border border-border overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm docs-table">
               <thead>
-                <tr className="bg-muted/50">
-                  <th className="text-left font-mono font-semibold px-4 py-2">Field</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Type</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Default</th>
-                  <th className="text-left font-mono font-semibold px-4 py-2">Description</th>
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-2">Field</th>
+                  <th className="text-left px-4 py-2">Type</th>
+                  <th className="text-left px-4 py-2">Default</th>
+                  <th className="text-left px-4 py-2">Description</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,20 +133,23 @@ const ConfigPage = () => {
             </table>
           </div>
           <p className="text-sm text-muted-foreground mt-3">
-            Each target object has <code className="font-mono text-primary">goos</code> and{" "}
-            <code className="font-mono text-primary">goarch</code> string fields. Use{" "}
-            <code className="font-mono text-primary">gitmap release --list-targets</code> to verify
+            Each target object has <code className="docs-inline-code">goos</code> and{" "}
+            <code className="docs-inline-code">goarch</code> string fields. Use{" "}
+            <code className="docs-inline-code">gitmap release --list-targets</code> to verify
             the resolved matrix.
           </p>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">git-setup.json</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">git-setup.json</h2>
           <p className="text-muted-foreground mb-3">
-            Configure global Git settings applied by <code className="font-mono text-primary">gitmap setup</code>:
+            Configure global Git settings applied by <code className="docs-inline-code">gitmap setup</code>:
           </p>
           <CodeBlock
             title="data/git-setup.json"
+            language="json"
             code={`{
   "settings": [
     { "key": "core.autocrlf", "value": "true" },
@@ -150,8 +160,10 @@ const ConfigPage = () => {
           />
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">Profiles</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">Profiles</h2>
           <p className="text-muted-foreground mb-3">
             Maintain separate database environments (work, personal, client) using profiles:
           </p>
@@ -160,14 +172,16 @@ const ConfigPage = () => {
             title="Terminal"
           />
           <p className="text-sm text-muted-foreground mt-2">
-            Each profile has its own SQLite database file. The <code className="font-mono text-primary">default</code> profile
+            Each profile has its own SQLite database file. The <code className="docs-inline-code">default</code> profile
             always exists and cannot be deleted. Profile config is stored in{" "}
-            <code className="font-mono text-primary">.gitmap/output/data/profiles.json</code>.
+            <code className="docs-inline-code">.gitmap/output/data/profiles.json</code>.
           </p>
         </div>
 
+        <hr className="docs-hr" />
+
         <div>
-          <h2 className="text-xl font-mono font-semibold mb-3 text-foreground">CD Defaults</h2>
+          <h2 className="text-xl font-mono font-semibold mb-3 docs-h2">CD Defaults</h2>
           <p className="text-muted-foreground mb-3">
             Set default navigation paths for repos cloned to multiple locations:
           </p>
