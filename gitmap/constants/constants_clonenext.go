@@ -3,6 +3,8 @@ package constants
 // Clone-next command messages.
 const (
 	MsgCloneNextCloning      = "Cloning %s into %s...\n"
+	MsgCloneNextCreating     = "Creating GitHub repo %s...\n"
+	MsgCloneNextCreated      = "✓ Created GitHub repo %s\n"
 	MsgCloneNextDone         = "✓ Cloned %s\n"
 	MsgCloneNextDesktop      = "✓ Registered %s with GitHub Desktop\n"
 	MsgCloneNextRemovePrompt = "Remove current folder %s? [y/N] "
