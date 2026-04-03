@@ -249,7 +249,14 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
                 style={{ background: "hsl(220, 14%, 9%)", color: "hsl(220, 10%, 35%)" }}
               >
                 {lines.map((_, i) => (
-                  <span key={i} className="leading-relaxed code-line-num" data-line={i}>{i + 1}</span>
+                  <span
+                    key={i}
+                    className={`leading-relaxed code-line-num cursor-pointer ${pinnedLines.has(i) ? "code-line-num-pinned" : ""}`}
+                    data-line={i}
+                    onClick={() => togglePin(i)}
+                  >
+                    {i + 1}
+                  </span>
                 ))}
               </div>
             )}
