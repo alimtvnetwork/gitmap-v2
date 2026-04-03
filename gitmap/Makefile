@@ -11,6 +11,9 @@ build: ## Build and deploy (full pipeline)
 run: ## Build, deploy, and run with optional ARGS (make run ARGS="list --json")
 	@bash ../run.sh -r $(ARGS)
 
+lint: ## Check for duplicate type declarations across package files
+	@bash scripts/check-duplicate-types.sh .
+
 test: ## Run tests with report
 	@bash ../run.sh -t
 
