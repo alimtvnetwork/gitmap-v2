@@ -134,6 +134,8 @@ instead of guessing.
     - remove the current folder automatically with `--delete`
     - keep it automatically with `--keep`
     - otherwise prompt the user interactively
+12. If the current folder was removed, change into the newly cloned directory
+    and print a confirmation (`→ Now in <target>`).
 
 ## Flags
 
