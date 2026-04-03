@@ -93,7 +93,7 @@ const (
 	HelpVersion       = "  version (v)         Show version number"
 	HelpDesktopSync   = "  desktop-sync (ds)   Sync repos to GitHub Desktop from output"
 	HelpPull          = "  pull (p) <name>     Pull a specific repo by its name"
-	HelpRescan        = "  rescan (rs)         Re-run last scan with cached flags"
+	HelpRescan        = "  rescan (rsc)        Re-run last scan with cached flags"
 	HelpSetup         = "  setup               Configure Git diff/merge tool, aliases & core settings"
 	HelpStatus        = "  status (st)         Show dirty/clean, ahead/behind, stash for all repos"
 	HelpExec          = "  exec (x) <args...>  Run any git command across all repos"
