@@ -64,6 +64,7 @@ const (
 	CmdCloneNextAlias        = "cn"
 	CmdReleaseSelf           = "release-self"
 	CmdReleaseSelfAlias      = "rself"
+	CmdReleaseSelfAlias2     = "rs"
 )
 
 // Clone shorthands.
