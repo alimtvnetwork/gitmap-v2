@@ -18,7 +18,10 @@ const (
 	ErrCloneNextNoRemote    = "Error: not a git repo or no remote origin: %v\n"
 	ErrCloneNextBadVersion  = "Error: %v\n"
 	ErrCloneNextExists      = "Error: target directory already exists: %s\nUse 'cd' to switch to it.\n"
-	ErrCloneNextFailed      = "Error: clone failed for %s\n"
+	ErrCloneNextFailed        = "Error: clone failed for %s\n"
+	ErrCloneNextRemoteParse   = "Error: cannot parse remote URL: %v\n"
+	ErrCloneNextRepoCheck     = "Error: cannot check target repo: %v\n"
+	ErrCloneNextRepoCreate    = "Error: cannot create GitHub repo %s: %v\n"
 	WarnCloneNextRemoveFailed = "Warning: could not remove %s: %v\n"
 )
 
