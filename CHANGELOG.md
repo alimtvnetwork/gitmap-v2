@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.46.0 — Release Self
+
+- Added `release-self` (`rself`) command: release gitmap itself from any directory.
+- Auto-fallback: `gitmap release` outside a Git repo now triggers self-release automatically.
+- Source repo discovery via `os.Executable()` + symlink resolution + `.git` root walk.
+- Returns to original working directory after release with confirmation message.
+- Full flag parity with `release` (--bump, --assets, --draft, --dry-run, etc.).
+- Added React docs page for release-self with terminal demos and error scenarios.
+
 ## v2.45.0 — Docs Site Update
 
 - Updated CloneNext docs page with `--create-remote` flag, usage, and terminal example.
