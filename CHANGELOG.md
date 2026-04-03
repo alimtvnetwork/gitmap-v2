@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.47.0 — Release Self Hardening
+
+- Changed `release-self` primary alias from `rself` to `rs` (rescan moved to `rsc`).
+- Added SQLite DB fallback for source repo discovery (`source_repo_path` in Settings table).
+- Skip directory switch if already in the gitmap source repo directory.
+- Updated spec, helptext, React docs page, and commands catalog to reflect changes.
+
 ## v2.46.0 — Release Self
 
 - Added `release-self` (`rself`) command: release gitmap itself from any directory.
