@@ -281,6 +281,34 @@ export const commands: CommandDef[] = [
   },
   {
     category: "release",
+    name: "release-self", alias: "rself", description: "Release gitmap itself from any directory",
+    usage: "gitmap release-self [version] [--bump major|minor|patch] [--draft] [--dry-run]",
+    flags: [
+      { flag: "--assets <path>", description: "Attach files to release" },
+      { flag: "--commit <sha>", description: "Release from specific commit" },
+      { flag: "--branch <name>", description: "Release from branch" },
+      { flag: "--bump major|minor|patch", description: "Auto-increment version" },
+      { flag: "--draft", description: "Create unpublished draft" },
+      { flag: "--dry-run", description: "Preview without executing" },
+      { flag: "--compress", description: "Wrap assets in .zip or .tar.gz archives" },
+      { flag: "--checksums", description: "Generate SHA256 checksums.txt for assets" },
+      { flag: "--no-assets", description: "Skip Go binary cross-compilation" },
+      { flag: "--targets <list>", description: "Cross-compile targets" },
+      { flag: "--verbose", description: "Write detailed debug log" },
+    ],
+    examples: [
+      { command: "gitmap rself --bump patch", description: "Self-release with patch bump from any directory" },
+      { command: "gitmap release-self v2.46.0 --dry-run", description: "Preview self-release without executing" },
+      { command: "gitmap rself --bump minor --draft", description: "Draft self-release" },
+    ],
+    seeAlso: [
+      { name: "Spec: release-self", description: "Full release-self documentation", url: "/release-self" },
+      { name: "release", description: "Standard release workflow", url: "/release" },
+      { name: "release-branch", description: "Complete from existing branch" },
+    ],
+  },
+  {
+    category: "release",
     name: "release-branch", alias: "rb", description: "Create a release branch without tagging",
     usage: "gitmap release-branch [version] [--bump major|minor|patch] [--draft] [--verbose]",
     flags: [
