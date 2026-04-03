@@ -195,3 +195,65 @@
     transform: translateY(-2px);
   }
 }
+
+/* Highlight.js — github-dark inspired token colors */
+.hljs {
+  color: hsl(220, 20%, 92%);
+}
+.hljs-keyword,
+.hljs-type,
+.hljs-built_in,
+.hljs-selector-tag {
+  color: hsl(207, 82%, 66%);
+}
+.hljs-string,
+.hljs-attr,
+.hljs-property {
+  color: hsl(95, 38%, 62%);
+}
+.hljs-number,
+.hljs-variable,
+.hljs-regexp,
+.hljs-template-variable {
+  color: hsl(29, 54%, 61%);
+}
+.hljs-comment,
+.hljs-quote {
+  color: hsl(220, 10%, 45%);
+  font-style: italic;
+}
+.hljs-title,
+.hljs-section,
+.hljs-tag {
+  color: hsl(220, 20%, 85%);
+}
+.hljs-title.function_,
+.hljs-title.class_ {
+  color: hsl(39, 67%, 69%);
+}
+.hljs-literal,
+.hljs-symbol {
+  color: hsl(207, 82%, 66%);
+}
+.hljs-meta,
+.hljs-meta .hljs-keyword {
+  color: hsl(355, 65%, 65%);
+}
+.hljs-params {
+  color: hsl(220, 20%, 92%);
+}
+.hljs-attribute {
+  color: hsl(39, 67%, 69%);
+}
+.hljs-selector-class,
+.hljs-selector-id {
+  color: hsl(95, 38%, 62%);
+}
+.hljs-addition {
+  color: hsl(135, 52%, 60%);
+  background: hsl(135, 52%, 60% / 0.1);
+}
+.hljs-deletion {
+  color: hsl(355, 65%, 65%);
+  background: hsl(355, 65%, 65% / 0.1);
+}
