@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.40.0 — Clone-Next Command
+
+- Added `clone-next` (alias `cn`) command: clone the next versioned iteration of a repo into its parent directory.
+- Supports `v++` and `v+1` (increment current version by 1) and `vN` (jump to explicit version).
+- Remote-first repo name resolution: derives base name and version from `remote.origin.url`, not the local folder name.
+- GitHub repo existence check before clone: queries `GET /repos/{owner}/{repo}` via GitHub API.
+- Automatic GitHub repo creation when target does not exist: creates under org (fallback to user) via GitHub API.
+- Requires `GITHUB_TOKEN` environment variable for repo creation.
+- Added `ParseOwnerRepo` utility to extract owner/repo from HTTPS and SSH remote URLs.
+- Added `--delete` flag: auto-remove current version folder after successful clone.
+- Added `--keep` flag: keep current folder without prompting for removal.
+- Added `--no-desktop` flag: skip GitHub Desktop registration.
+- Added `--ssh-key` / `-K` flag: use a named SSH key for Git operations.
+- Added `--verbose` flag: show detailed clone-next diagnostics.
+- Clone-Next Flags section added to `gitmap help` output.
+- Version argument validation: rejects `v0`, negative values, and malformed inputs with clear errors.
+- Case-insensitive version parsing (`V++`, `V+1` accepted).
+- No-suffix repos default to `-v2` on increment.
+- Added constants for all clone-next messages, errors, and flag descriptions.
+- Added unit tests for `ParseRepoName`, `ResolveTarget`, `TargetRepoName`, and `ReplaceRepoInURL`.
+- Spec: `spec/01-app/59-clone-next.md` with full workflow, examples, and acceptance criteria.
+
+## v2.37.0 — v2.39.0
+
+- Internal improvements and minor fixes (see individual commits).
+
 ## v2.36.7 — Integration Tests
 
 - Added SkipMeta integration test (`skipmeta_test.go`): 6 test cases verifying `SkipMeta: true` prevents metadata and `latest.json` creation.
