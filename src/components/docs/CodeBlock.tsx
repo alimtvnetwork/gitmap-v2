@@ -201,8 +201,19 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
               <span className="text-xs font-mono text-[hsl(220,10%,50%)] ml-2">— {title}</span>
             )}
             <span className="text-xs font-mono text-[hsl(220,10%,40%)] ml-2">
-              {lines.length} {lines.length === 1 ? "line" : "lines"}
+              {hasPinned
+                ? `${pinnedLines.size} selected`
+                : `${lines.length} ${lines.length === 1 ? "line" : "lines"}`}
             </span>
+            {hasPinned && (
+              <button
+                onClick={() => setPinnedLines(new Set())}
+                className="text-xs font-mono ml-2 px-1.5 py-0.5 rounded hover:bg-white/10 transition-colors"
+                style={{ color: `hsl(${accent})` }}
+              >
+                Clear
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-1">
             <button
