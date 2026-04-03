@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.44.0 — Clone-Next Spec Update
+
+- Updated `clone-next` spec to document `--create-remote` as opt-in.
+- Removed mandatory repo creation from default workflow and examples.
+- Added Example 5 showing `--create-remote` usage in spec.
+- Marked deferred implementation phases 1–3 as complete.
+
 ## v2.43.0 — Clone-Next Hardening
 
 - Auto-cd to parent directory before folder removal to prevent Windows file lock errors.
