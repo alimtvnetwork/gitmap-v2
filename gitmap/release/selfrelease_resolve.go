@@ -134,12 +134,6 @@ func isGitmapSourceRepo(root string) bool {
 	return strings.Contains(string(goMod), gitmapModuleMarker)
 }
 
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-
-	return err == nil
-}
-
 // saveSourceRepoDB persists the source repo path in the Settings table.
 func saveSourceRepoDB(path string) {
 	db, err := store.OpenDefault()
