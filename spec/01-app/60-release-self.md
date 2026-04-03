@@ -27,15 +27,29 @@ enters self-release mode instead of failing.
 
 ### 1. Source Repository Discovery
 
-The command resolves the source repository by:
+The command resolves the source repository using a two-tier strategy:
 
+**Strategy 1 — Executable path:**
 1. Call `os.Executable()` to get the running binary path.
 2. Resolve symlinks via `filepath.EvalSymlinks()`.
 3. Walk up the directory tree from the executable's location to find the
    nearest `.git` directory — that directory is the source repo root.
+4. On success, persist the resolved path to the `Settings` table
+   (`source_repo_path` key) for future fallback.
 
-If no `.git` root is found, the command exits with an error:
-`could not locate gitmap source repository from executable path`.
+**Strategy 2 — Database fallback:**
+1. If the executable path strategy fails (e.g., binary moved/installed
+   outside source tree), read `source_repo_path` from the `Settings` table.
+2. Verify the stored path still contains a `.git` root.
+
+If both strategies fail, the command exits with an error:
+`could not locate gitmap source repository`.
+
+### 2. Same-Directory Skip
+
+If the resolved source repo root matches the current working directory,
+skip the directory switch entirely. Print:
+`→ Self-release: already in source repo /path` and proceed directly.
 
 ### 2. Directory Switch
 
