@@ -32,22 +32,29 @@ func ParseRepoName(name string) ParsedRepo {
 
 // ResolveTarget computes the target version from a version argument.
 // "v++"  → current + 1
+// "v+1"  → current + 1 (alias)
 // "v15"  → 15
 func ResolveTarget(parsed ParsedRepo, arg string) (int, error) {
 	lower := strings.ToLower(arg)
-	if lower == "v++" {
+
+	if lower == "v++" || lower == "v+1" {
 		return parsed.CurrentVersion + 1, nil
 	}
+
 	if strings.HasPrefix(lower, "v") {
-		n, err := strconv.Atoi(lower[1:])
-		if err != nil || n < 1 {
-			return 0, fmt.Errorf("invalid version argument: %s", arg)
+		numStr := lower[1:]
+		n, err := strconv.Atoi(numStr)
+		if err != nil {
+			return 0, fmt.Errorf("invalid version argument: %s (expected v++, v+1, or vN)", arg)
+		}
+		if n < 1 {
+			return 0, fmt.Errorf("invalid version argument: %s (version must be a positive integer)", arg)
 		}
 
 		return n, nil
 	}
 
-	return 0, fmt.Errorf("invalid version argument: %s (expected v++ or vN)", arg)
+	return 0, fmt.Errorf("invalid version argument: %s (expected v++, v+1, or vN)", arg)
 }
 
 // TargetRepoName builds the full repo name for the target version.
