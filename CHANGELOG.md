@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.47.1 — Tag Discovery & DB Caching
+
+- `list-releases` now scans git tags via `git for-each-ref` and includes tag-only releases with `source=tag`.
+- All discovered releases (repo metadata + tags) are automatically upserted into the SQLite `Releases` table on every `lr` invocation.
+- Added `--source tag` filter to `list-releases` for viewing tag-discovered releases.
+- Updated helptext and spec to document three-source resolution order and caching behavior.
+
 ## v2.47.0 — Release Self Hardening
 
 - Changed `release-self` primary alias from `rself` to `rs` (rescan moved to `rsc`).

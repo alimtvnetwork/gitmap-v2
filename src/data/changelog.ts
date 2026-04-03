@@ -5,6 +5,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.47.1",
+    items: [
+      "`list-releases` now scans git tags via `git for-each-ref` and includes tag-only releases with `source=tag`.",
+      "All discovered releases (repo metadata + tags) are automatically upserted into the SQLite Releases table on every `lr` invocation.",
+      "Added `--source tag` filter to `list-releases` for viewing tag-discovered releases.",
+      "Updated helptext and spec to document three-source resolution order and caching behavior.",
+    ],
+  },
+  {
     version: "v2.36.7",
     items: [
       "Added SkipMeta integration test: 6 test cases verifying SkipMeta prevents metadata and latest.json creation.",
