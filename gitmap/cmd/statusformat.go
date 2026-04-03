@@ -122,14 +122,3 @@ func buildFileCountParts(rs gitutil.RepoStatus) string {
 
 	return strings.Join(parts, constants.StatusFileCountSep)
 }
-
-// truncate shortens a string to maxLen, adding ellipsis if needed.
-func truncate(s string, maxLen int) string {
-	if len(s) <= maxLen {
-		return s
-	}
-
-	trimmed := s[:maxLen-1] + constants.TruncateEllipsis
-
-	return trimmed
-}

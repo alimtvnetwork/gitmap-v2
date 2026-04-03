@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+	
 
 	"github.com/user/gitmap/cloner"
 	"github.com/user/gitmap/constants"

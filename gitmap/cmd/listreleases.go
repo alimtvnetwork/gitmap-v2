@@ -3,7 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	
 	"strconv"
 
 	"github.com/user/gitmap/constants"
