@@ -31,6 +31,7 @@ func printUsageCloneNextFlags() {
 	fmt.Println(constants.HelpCNNoDesktop)
 	fmt.Println(constants.HelpCNSSHKey)
 	fmt.Println(constants.HelpCNVerbose)
+	fmt.Println(constants.HelpCNCreateRemote)
 }
 
 // printUsageInteractiveFlags prints the interactive flags section.

@@ -18,7 +18,7 @@ import (
 // runCloneNext handles the "clone-next" subcommand.
 func runCloneNext(args []string) {
 	checkHelp("clone-next", args)
-	versionArg, deleteFlag, keepFlag, noDesktop, sshKeyName, verboseMode := parseCloneNextFlags(args)
+	versionArg, deleteFlag, keepFlag, noDesktop, createRemote, sshKeyName, verboseMode := parseCloneNextFlags(args)
 	if len(versionArg) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrCloneNextUsage)
 		os.Exit(1)
@@ -68,6 +68,31 @@ func runCloneNext(args []string) {
 	if _, statErr := os.Stat(targetPath); statErr == nil {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneNextExists, targetPath)
 		os.Exit(1)
+	}
+
+	// Optionally check and create the target GitHub repo when --create-remote is set.
+	if createRemote {
+		owner, _, parseErr := clonenext.ParseOwnerRepo(remoteURL)
+		if parseErr != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrCloneNextRemoteParse, parseErr)
+			os.Exit(1)
+		}
+
+		exists, checkErr := clonenext.RepoExists(owner, targetName)
+		if checkErr != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrCloneNextRepoCheck, checkErr)
+			os.Exit(1)
+		}
+
+		if !exists {
+			fmt.Printf(constants.MsgCloneNextCreating, targetName)
+			createErr := clonenext.CreateRepo(owner, targetName, true)
+			if createErr != nil {
+				fmt.Fprintf(os.Stderr, constants.ErrCloneNextRepoCreate, targetName, createErr)
+				os.Exit(1)
+			}
+			fmt.Printf(constants.MsgCloneNextCreated, targetName)
+		}
 	}
 
 	fmt.Printf(constants.MsgCloneNextCloning, targetName, parentDir)

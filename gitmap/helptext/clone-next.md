@@ -19,6 +19,7 @@ cn
 | --no-desktop | false | Skip GitHub Desktop registration |
 | --ssh-key \<name\> | (none) | Use a named SSH key for the clone |
 | --verbose | false | Write detailed debug log |
+| --create-remote | false | Create target GitHub repo if missing (requires GITHUB_TOKEN) |
 
 ## Prerequisites
 

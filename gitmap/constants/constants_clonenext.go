@@ -30,6 +30,7 @@ const (
 	FlagDescCloneNextDelete    = "Auto-remove current folder after clone"
 	FlagDescCloneNextKeep      = "Keep current folder without prompting"
 	FlagDescCloneNextNoDesktop = "Skip GitHub Desktop registration"
+	FlagDescCloneNextCreateRemote = "Create target GitHub repo if it does not exist (requires GITHUB_TOKEN)"
 )
 
 // Clone-next help strings for usage output.
@@ -40,4 +41,5 @@ const (
 	HelpCNNoDesktop      = "  --no-desktop        Skip GitHub Desktop registration"
 	HelpCNSSHKey         = "  --ssh-key, -K       SSH key name to use for clone"
 	HelpCNVerbose        = "  --verbose           Show detailed clone-next output"
+	HelpCNCreateRemote   = "  --create-remote     Create target GitHub repo if missing (needs GITHUB_TOKEN)"
 )
