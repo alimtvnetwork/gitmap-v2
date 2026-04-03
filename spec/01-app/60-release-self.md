@@ -78,8 +78,8 @@ Self-release prints a preamble before the standard release output:
 
 | Scenario | Behavior |
 |----------|----------|
-| Executable path unresolvable | Exit 1: `could not resolve executable path` |
-| No .git root found | Exit 1: `could not locate gitmap source repository from executable path` |
+| Executable path unresolvable + no DB fallback | Exit 1: `could not locate gitmap source repository` |
+| DB path stale (no .git) | Falls through to error |
 | Release fails | Standard release error handling (rollback); still returns to original dir |
 | Return chdir fails | Warning printed; exit 0 (release succeeded) |
 
