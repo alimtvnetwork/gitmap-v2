@@ -13,7 +13,7 @@ const features = [
 const selfReleaseDemo = {
   title: "gitmap release-self --bump patch",
   lines: [
-    { text: "$ gitmap rself --bump patch", type: "input" as const, delay: 0 },
+    { text: "$ gitmap rs --bump patch", type: "input" as const, delay: 0 },
     { text: "→ Self-release: switching to /home/user/go/src/gitmap", type: "accent" as const, delay: 600 },
     { text: "v2.45.0 → v2.45.1", type: "output" as const, delay: 400 },
     { text: "Creating release v2.45.1...", type: "header" as const, delay: 400 },
