@@ -51,11 +51,14 @@ const (
 
 // Self-release messages.
 const (
-	MsgSelfReleaseSwitch  = "\n  → Self-release: switching to %s\n"
-	MsgSelfReleaseReturn  = "  ✓ Returned to %s\n"
-	MsgSelfReleaseSameDir = "\n  → Self-release: already in source repo %s\n"
-	ErrSelfReleaseExec    = "could not resolve executable path: %w"
-	ErrSelfReleaseNoRepo  = "could not locate gitmap source repository"
+	MsgSelfReleaseSwitch      = "\n  → Self-release: switching to %s\n"
+	MsgSelfReleaseReturn      = "  ✓ Returned to %s\n"
+	MsgSelfReleaseSameDir     = "\n  → Self-release: already in source repo %s\n"
+	MsgSelfReleasePromptPath  = "  → Enter gitmap source repo path: "
+	MsgSelfReleaseSavedPath   = "  ✓ Saved gitmap source repo path: %s\n"
+	MsgSelfReleaseInvalidPath = "  ✗ Invalid gitmap source repo path: %s\n"
+	ErrSelfReleaseExec        = "could not resolve executable path: %w"
+	ErrSelfReleaseNoRepo      = "could not locate gitmap source repository"
 )
 
 // Release rollback messages.
