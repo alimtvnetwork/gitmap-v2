@@ -288,7 +288,7 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
                     <span
                       key={i}
                       className={`code-line block px-4 cursor-pointer ${pinnedLines.has(i) ? "code-line-pinned" : ""}`}
-                      onClick={() => togglePin(i)}
+                      onClick={(e) => togglePin(i, e)}
                       style={{ color: "hsl(220, 20%, 92%)" }}
                     >
                       {line || "\n"}
