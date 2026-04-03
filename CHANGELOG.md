@@ -1,13 +1,5 @@
 # Changelog
 
-## v2.40.1 — Visibility Inheritance
-
-- Clone-next now inherits source repo visibility (public/private) when creating target GitHub repos.
-- Added `RepoIsPrivate` function querying GitHub API for repo metadata.
-- Refactored `RepoExists` and `RepoIsPrivate` to share a common `getRepoJSON` helper.
-- Falls back to private with a warning if visibility detection fails.
-- Added `WarnCloneNextVisibility` constant for the fallback warning message.
-
 ## v2.40.0 — Clone-Next Command
 
 - Added `clone-next` (alias `cn`) command: clone the next versioned iteration of a repo into its parent directory.

@@ -22,7 +22,6 @@ const (
 	ErrCloneNextRemoteParse   = "Error: cannot parse remote URL: %v\n"
 	ErrCloneNextRepoCheck     = "Error: cannot check target repo: %v\n"
 	ErrCloneNextRepoCreate    = "Error: cannot create GitHub repo %s: %v\n"
-	WarnCloneNextVisibility   = "Warning: could not detect visibility of %s: %v — defaulting to private\n"
 	WarnCloneNextRemoveFailed = "Warning: could not remove %s: %v\n"
 )
 

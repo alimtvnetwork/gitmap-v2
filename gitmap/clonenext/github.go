@@ -15,44 +15,11 @@ import (
 // RepoExists checks whether a GitHub repository exists via the API.
 // Returns true if the repo responds with 200, false on 404, error otherwise.
 func RepoExists(owner, repo string) (bool, error) {
-	_, _, err := getRepoJSON(owner, repo)
-	if err != nil {
-		if strings.Contains(err.Error(), "404") {
-			return false, nil
-		}
-
-		return false, err
-	}
-
-	return true, nil
-}
-
-// RepoIsPrivate returns whether the given GitHub repo is private.
-// Returns an error if the repo cannot be queried.
-func RepoIsPrivate(owner, repo string) (bool, error) {
-	_, body, err := getRepoJSON(owner, repo)
-	if err != nil {
-		return false, err
-	}
-
-	var meta struct {
-		Private bool `json:"private"`
-	}
-	if jsonErr := json.Unmarshal(body, &meta); jsonErr != nil {
-		return false, fmt.Errorf("parse repo metadata: %w", jsonErr)
-	}
-
-	return meta.Private, nil
-}
-
-// getRepoJSON fetches repo metadata from the GitHub API.
-// Returns status code, response body, and any error.
-func getRepoJSON(owner, repo string) (int, []byte, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s", owner, repo)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return 0, nil, fmt.Errorf("create request: %w", err)
+		return false, fmt.Errorf("create request: %w", err)
 	}
 
 	token := os.Getenv(constants.GitHubTokenEnv)
@@ -63,17 +30,18 @@ func getRepoJSON(owner, repo string) (int, []byte, error) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return 0, nil, fmt.Errorf("check repo: %w", err)
+		return false, fmt.Errorf("check repo existence: %w", err)
 	}
 	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
-
-	if resp.StatusCode >= 300 {
-		return resp.StatusCode, body, fmt.Errorf("GitHub API %d: %s", resp.StatusCode, string(body))
+	if resp.StatusCode == http.StatusOK {
+		return true, nil
+	}
+	if resp.StatusCode == http.StatusNotFound {
+		return false, nil
 	}
 
-	return resp.StatusCode, body, nil
+	return false, fmt.Errorf("GitHub API returned %d checking %s/%s", resp.StatusCode, owner, repo)
 }
 
 // CreateRepo creates a new GitHub repository under the given owner.

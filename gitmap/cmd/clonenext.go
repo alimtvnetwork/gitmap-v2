@@ -84,21 +84,16 @@ func runCloneNext(args []string) {
 	}
 
 	if !exists {
-		// Inherit visibility from source repo.
-		srcPrivate, visErr := clonenext.RepoIsPrivate(owner, repoShort)
-		if visErr != nil {
-			fmt.Fprintf(os.Stderr, constants.WarnCloneNextVisibility, repoShort, visErr)
-			srcPrivate = true // safe default
-		}
-
 		fmt.Printf(constants.MsgCloneNextCreating, targetName)
-		createErr := clonenext.CreateRepo(owner, targetName, srcPrivate)
+		createErr := clonenext.CreateRepo(owner, targetName, true)
 		if createErr != nil {
 			fmt.Fprintf(os.Stderr, constants.ErrCloneNextRepoCreate, targetName, createErr)
 			os.Exit(1)
 		}
 		fmt.Printf(constants.MsgCloneNextCreated, targetName)
 	}
+
+	_ = repoShort // owner extracted; repoShort unused but validates URL structure.
 
 	fmt.Printf(constants.MsgCloneNextCloning, targetName, parentDir)
 	cloneResult := runGitClone(targetURL, targetPath)
