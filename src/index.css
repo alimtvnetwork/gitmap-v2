@@ -257,3 +257,21 @@
   color: hsl(355, 65%, 65%);
   background: hsl(355, 65%, 65% / 0.1);
 }
+
+/* Code line hover highlight */
+.code-line {
+  transition: background 0.15s ease;
+  border-left: 2px solid transparent;
+  margin-left: -2px;
+}
+.code-line:hover {
+  background: hsl(220, 15%, 16%);
+  border-left-color: hsl(var(--primary) / 0.6);
+}
+.code-line-num {
+  transition: color 0.15s ease;
+}
+.code-line:hover ~ .code-line-num,
+pre:has(.code-line:hover) + .code-line-numbers .code-line-num {
+  color: hsl(220, 10%, 35%);
+}
