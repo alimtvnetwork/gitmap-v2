@@ -39,6 +39,11 @@ func dispatchCore(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdCloneNext || command == constants.CmdCloneNextAlias {
+		runCloneNext(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
