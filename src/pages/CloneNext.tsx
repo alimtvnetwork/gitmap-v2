@@ -19,6 +19,8 @@ const TerminalPreview = ({ title, lines }: { title: string; lines: string[] }) =
           className={
             line.startsWith("✓")
               ? "text-green-400"
+              : line.startsWith("→")
+              ? "text-blue-400"
               : line.startsWith("Error")
               ? "text-red-400"
               : line.startsWith("Remove")
@@ -193,6 +195,7 @@ const CloneNextPage = () => {
               "✓ Cloned macro-ahk-v15",
               "✓ Registered macro-ahk-v15 with GitHub Desktop",
               "✓ Removed macro-ahk-v12",
+              "→ Now in macro-ahk-v15",
             ]}
           />
 
@@ -205,6 +208,7 @@ const CloneNextPage = () => {
               "✓ Registered macro-ahk-v2 with GitHub Desktop",
               "Remove current folder macro-ahk? [y/N] y",
               "✓ Removed macro-ahk",
+              "→ Now in macro-ahk-v2",
             ]}
           />
 
@@ -218,6 +222,7 @@ const CloneNextPage = () => {
               "✓ Cloned macro-ahk-v15",
               "✓ Registered macro-ahk-v15 with GitHub Desktop",
               "✓ Removed macro-ahk-v12",
+              "→ Now in macro-ahk-v15",
             ]}
           />
         </section>
