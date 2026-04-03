@@ -29,37 +29,44 @@ export interface CommandCategory {
   key: string;
   label: string;
   description: string;
+  icon?: string;
 }
 
 export const Categories: CommandCategory[] = [
-  { key: "scanning", label: "Scanning & Cloning", description: "Discover, clone, and re-scan repositories" },
-  { key: "monitoring", label: "Monitoring & Status", description: "Track repo state in real time" },
-  { key: "release", label: "Release & Versioning", description: "Tag, branch, and publish releases" },
-  { key: "navigation", label: "Navigation & Organization", description: "Move between repos and manage groups" },
-  { key: "history", label: "History & Stats", description: "Audit trail and usage analytics" },
-  { key: "detection", label: "Project Detection", description: "Query detected project types" },
-  { key: "data", label: "Data & Profiles", description: "Import, export, and manage profiles" },
-  { key: "utilities", label: "Utilities", description: "Setup, diagnostics, and maintenance" },
+  { key: "scanning", label: "Scanning & Discovery", description: "Find and catalog Git repositories on disk", icon: "🔍" },
+  { key: "cloning", label: "Cloning & Pulling", description: "Clone, pull, and sync repositories", icon: "📥" },
+  { key: "monitoring", label: "Monitoring & Status", description: "Track repo state and run batch git commands", icon: "📡" },
+  { key: "release", label: "Release & Versioning", description: "Create releases, tags, and branches", icon: "🚀" },
+  { key: "changelog", label: "Changelog & Tags", description: "View release notes, list tags, and manage metadata", icon: "📋" },
+  { key: "navigation", label: "Navigation & Groups", description: "Move between repos and organize them into groups", icon: "🧭" },
+  { key: "history", label: "History & Analytics", description: "Audit trail, usage stats, and dashboards", icon: "📊" },
+  { key: "detection", label: "Project Detection", description: "Query repos by detected language or framework", icon: "🔬" },
+  { key: "data", label: "Data & Profiles", description: "Export, import, bookmark, and manage profiles", icon: "💾" },
+  { key: "tools", label: "Tools & Setup", description: "Setup, diagnostics, updates, SSH, and shell completions", icon: "🔧" },
 ];
 
 export const commands: CommandDef[] = [
-  // --- Scanning & Cloning ---
+  // ═══════════════════════════════════════════
+  // Scanning & Discovery
+  // ═══════════════════════════════════════════
   {
     category: "scanning",
-    name: "scan", alias: "s", description: "Scan directory for Git repos",
+    name: "scan", alias: "s", description: "Scan directory tree for Git repositories and generate output files",
     usage: "gitmap scan [dir] [--output csv|json|terminal] [--mode ssh|https]",
     flags: [
       { flag: "--config <path>", description: "Config file path" },
       { flag: "--mode ssh|https", description: "Clone URL style (default: https)" },
       { flag: "--output csv|json|terminal", description: "Output format (default: terminal)" },
       { flag: "--output-path <dir>", description: "Output directory" },
-      { flag: "--github-desktop", description: "Add repos to GitHub Desktop" },
+      { flag: "--github-desktop", description: "Register repos in GitHub Desktop" },
       { flag: "--open", description: "Open output folder after scan" },
       { flag: "--quiet", description: "Suppress clone help section" },
     ],
     examples: [
-      { command: "gitmap scan ~/projects", description: "Scan a directory" },
-      { command: "gitmap s --output json --mode ssh", description: "JSON output with SSH URLs" },
+      { command: "gitmap scan ~/projects", description: "Scan all repos under ~/projects" },
+      { command: "gitmap s --output json --mode ssh", description: "JSON output with SSH clone URLs" },
+      { command: "gitmap scan C:\\dev --github-desktop --open", description: "Scan, register in GitHub Desktop, open folder" },
+      { command: "gitmap s --output csv --output-path ./backup", description: "CSV output to custom directory" },
     ],
     seeAlso: [
       { name: "rescan", description: "Re-scan using cached parameters" },
@@ -71,74 +78,11 @@ export const commands: CommandDef[] = [
   },
   {
     category: "scanning",
-    name: "clone", alias: "c", description: "Re-clone repos from structured file",
-    usage: "gitmap clone <source|json|csv|text> [--target-dir <dir>] [--safe-pull]",
-    flags: [
-      { flag: "--target-dir <dir>", description: "Base directory for clones" },
-      { flag: "--safe-pull", description: "Pull existing repos with retry + diagnostics" },
-      { flag: "--verbose", description: "Write detailed debug log" },
-    ],
-    examples: [
-      { command: "gitmap clone json --target-dir ./projects" },
-      { command: "gitmap c csv" },
-    ],
-    seeAlso: [
-      { name: "scan", description: "Scan directories to create clone source" },
-      { name: "pull", description: "Pull updates for existing repos" },
-      { name: "desktop-sync", description: "Sync cloned repos to GitHub Desktop" },
-    ],
-  },
-  {
-    category: "scanning",
-    name: "clone-next", alias: "cn", description: "Clone next or specific versioned iteration of current repo",
-    usage: "gitmap clone-next <v++|vN> [--delete] [--keep] [--no-desktop]",
-    flags: [
-      { flag: "--delete", description: "Auto-remove current folder after clone" },
-      { flag: "--keep", description: "Keep current folder without prompting" },
-      { flag: "--no-desktop", description: "Skip GitHub Desktop registration" },
-      { flag: "--ssh-key <name>", description: "Use a named SSH key for the clone" },
-      { flag: "--verbose", description: "Write detailed debug log" },
-    ],
-    examples: [
-      { command: "gitmap cn v++", description: "Increment version by one (e.g. v11 → v12)" },
-      { command: "gitmap cn v15 --delete", description: "Jump to v15 and auto-remove current folder" },
-      { command: "gitmap clone-next v++ --keep", description: "Increment version, keep current folder" },
-    ],
-    seeAlso: [
-      { name: "clone", description: "Clone repos from structured file" },
-      { name: "desktop-sync", description: "Sync repos to GitHub Desktop" },
-      { name: "ssh", description: "Manage named SSH keys" },
-    ],
-  },
-  {
-    category: "scanning",
-    name: "pull", alias: "p", description: "Pull a specific repo by name",
-    usage: "gitmap pull <repo-name> [--group <name>] [--all] [--verbose]",
-    flags: [
-      { flag: "--group <name>", description: "Pull all repos in a group" },
-      { flag: "--all", description: "Pull all tracked repos" },
-      { flag: "--verbose", description: "Enable verbose logging" },
-    ],
-    examples: [
-      { command: "gitmap pull my-api-service", description: "Pull a single repo by name" },
-      { command: "gitmap p my-api", description: "Partial match works" },
-      { command: "gitmap pull --group backend", description: "Pull all repos in a group" },
-      { command: "gitmap pull --all", description: "Pull every tracked repo" },
-    ],
-    seeAlso: [
-      { name: "scan", description: "Scan directories to populate the database" },
-      { name: "clone", description: "Clone repos from structured file" },
-      { name: "status", description: "View repo statuses" },
-      { name: "group", description: "Manage repo groups for targeted pulls" },
-    ],
-  },
-  {
-    category: "scanning",
-    name: "rescan", alias: "rsc", description: "Re-scan previously scanned directories",
+    name: "rescan", alias: "rsc", description: "Re-run the last scan using cached parameters (same dir, flags, output)",
     usage: "gitmap rescan",
     examples: [
-      { command: "gitmap rescan", description: "Re-run the last scan with the same flags" },
-      { command: "gitmap rs", description: "Alias shorthand" },
+      { command: "gitmap rescan", description: "Repeat last scan with identical settings" },
+      { command: "gitmap rsc", description: "Alias shorthand" },
     ],
     seeAlso: [
       { name: "scan", description: "Initial directory scan" },
@@ -148,10 +92,10 @@ export const commands: CommandDef[] = [
   },
   {
     category: "scanning",
-    name: "desktop-sync", alias: "ds", description: "Sync tracked repos with GitHub Desktop",
+    name: "desktop-sync", alias: "ds", description: "Register all tracked repos with GitHub Desktop",
     usage: "gitmap desktop-sync",
     examples: [
-      { command: "gitmap desktop-sync", description: "Sync existing scan output to GitHub Desktop" },
+      { command: "gitmap desktop-sync", description: "Sync all tracked repos to GitHub Desktop" },
       { command: "gitmap ds", description: "Alias shorthand" },
     ],
     seeAlso: [
@@ -161,19 +105,92 @@ export const commands: CommandDef[] = [
     ],
   },
 
-  // --- Monitoring & Status ---
+  // ═══════════════════════════════════════════
+  // Cloning & Pulling
+  // ═══════════════════════════════════════════
+  {
+    category: "cloning",
+    name: "clone", alias: "c", description: "Re-clone repos from a structured scan output file (JSON, CSV, or text)",
+    usage: "gitmap clone <source|json|csv|text> [--target-dir <dir>] [--safe-pull]",
+    flags: [
+      { flag: "--target-dir <dir>", description: "Base directory for cloned repos" },
+      { flag: "--safe-pull", description: "Pull existing repos with retry + diagnostics" },
+      { flag: "--verbose", description: "Write detailed debug log" },
+    ],
+    examples: [
+      { command: "gitmap clone json --target-dir ./projects", description: "Clone all repos from JSON to ./projects" },
+      { command: "gitmap c csv", description: "Clone from CSV scan output" },
+      { command: "gitmap clone json --safe-pull", description: "Pull existing, clone missing" },
+      { command: "gitmap c text --target-dir D:\\repos --verbose", description: "Clone from text with logging" },
+    ],
+    seeAlso: [
+      { name: "scan", description: "Scan directories to create clone source" },
+      { name: "pull", description: "Pull updates for existing repos" },
+      { name: "desktop-sync", description: "Sync cloned repos to GitHub Desktop" },
+    ],
+  },
+  {
+    category: "cloning",
+    name: "clone-next", alias: "cn", description: "Clone the next versioned iteration of the current repo (e.g. v11 → v12)",
+    usage: "gitmap clone-next <v++|vN> [--delete] [--keep] [--no-desktop]",
+    flags: [
+      { flag: "--delete", description: "Auto-remove current folder after successful clone" },
+      { flag: "--keep", description: "Keep current folder without prompting" },
+      { flag: "--no-desktop", description: "Skip GitHub Desktop registration" },
+      { flag: "--ssh-key <name>", description: "Use a named SSH key for the clone" },
+      { flag: "--verbose", description: "Write detailed debug log" },
+    ],
+    examples: [
+      { command: "gitmap cn v++", description: "Increment version by one (v11 → v12)" },
+      { command: "gitmap cn v15 --delete", description: "Jump to v15, auto-remove current folder, navigate to new" },
+      { command: "gitmap clone-next v++ --keep", description: "Increment version, keep current folder" },
+      { command: "gitmap cn v++ --ssh-key work", description: "Clone next version using work SSH key" },
+    ],
+    seeAlso: [
+      { name: "clone", description: "Clone repos from structured file" },
+      { name: "desktop-sync", description: "Sync repos to GitHub Desktop" },
+      { name: "ssh", description: "Manage named SSH keys" },
+    ],
+  },
+  {
+    category: "cloning",
+    name: "pull", alias: "p", description: "Pull latest changes for specific repos, groups, or all tracked repos",
+    usage: "gitmap pull <repo-name> [--group <name>] [--all] [--verbose]",
+    flags: [
+      { flag: "--group <name>", description: "Pull all repos in a group" },
+      { flag: "--all", description: "Pull all tracked repos" },
+      { flag: "--verbose", description: "Enable verbose logging" },
+    ],
+    examples: [
+      { command: "gitmap pull my-api-service", description: "Pull a single repo by exact name" },
+      { command: "gitmap p my-api", description: "Partial match — finds my-api-service" },
+      { command: "gitmap pull --group backend", description: "Pull all repos in the backend group" },
+      { command: "gitmap pull --all", description: "Pull every tracked repo" },
+      { command: "gitmap p --all --verbose", description: "Pull all with detailed logging" },
+    ],
+    seeAlso: [
+      { name: "scan", description: "Scan directories to populate the database" },
+      { name: "clone", description: "Clone repos from structured file" },
+      { name: "status", description: "View repo statuses" },
+      { name: "group", description: "Manage repo groups for targeted pulls" },
+    ],
+  },
+
+  // ═══════════════════════════════════════════
+  // Monitoring & Status
+  // ═══════════════════════════════════════════
   {
     category: "monitoring",
-    name: "status", alias: "st", description: "Show repo status dashboard",
+    name: "status", alias: "st", description: "Show a one-shot status dashboard for tracked repos (dirty/clean, ahead/behind)",
     usage: "gitmap status [--group <name>] [--all]",
     flags: [
       { flag: "--group <name>", description: "Show status for repos in a specific group" },
       { flag: "--all", description: "Show status for every repo in the database" },
     ],
     examples: [
-      { command: "gitmap status", description: "Show status dashboard" },
-      { command: "gitmap st --group backend", description: "Status for a specific group" },
-      { command: "gitmap status --all", description: "Status for all tracked repos" },
+      { command: "gitmap status", description: "Status dashboard for default group" },
+      { command: "gitmap st --group backend", description: "Status for backend group only" },
+      { command: "gitmap status --all", description: "Status for every tracked repo" },
     ],
     seeAlso: [
       { name: "watch", description: "Live-refresh status dashboard", url: "/watch" },
@@ -184,13 +201,18 @@ export const commands: CommandDef[] = [
   },
   {
     category: "monitoring",
-    name: "watch", alias: "w", description: "Live-refresh repo status dashboard",
+    name: "watch", alias: "w", description: "Live-refresh status dashboard with configurable interval and group filter",
     usage: "gitmap watch [--interval <seconds>] [--group <name>] [--no-fetch] [--json]",
     flags: [
       { flag: "--interval <seconds>", description: "Refresh interval (default: 30, min: 5)" },
       { flag: "--group <name>", description: "Monitor only repos in a group" },
-      { flag: "--no-fetch", description: "Skip git fetch" },
-      { flag: "--json", description: "Output single snapshot as JSON" },
+      { flag: "--no-fetch", description: "Skip git fetch on each refresh" },
+      { flag: "--json", description: "Output single snapshot as JSON (no loop)" },
+    ],
+    examples: [
+      { command: "gitmap watch", description: "Live dashboard, 30s refresh" },
+      { command: "gitmap w --interval 10 --group frontend", description: "Fast refresh for frontend group" },
+      { command: "gitmap watch --no-fetch --json", description: "Snapshot without fetching, as JSON" },
     ],
     seeAlso: [
       { name: "Spec: watch", description: "Live monitor documentation", url: "/watch" },
@@ -201,11 +223,11 @@ export const commands: CommandDef[] = [
   },
   {
     category: "monitoring",
-    name: "has-any-updates", alias: "hau / hac", description: "Check if remote has new commits you haven't pulled",
+    name: "has-any-updates", alias: "hau / hac", description: "Check if the remote has new commits you haven't pulled yet",
     usage: "gitmap has-any-updates\ngitmap hau\ngitmap hac",
     examples: [
-      { command: "gitmap hau", description: "Check for remote updates" },
-      { command: "gitmap hac", description: "Same check (alias)" },
+      { command: "gitmap hau", description: "Quick check — are there unpulled remote commits?" },
+      { command: "gitmap hac", description: "Same check (alternate alias)" },
     ],
     seeAlso: [
       { name: "status", description: "Show repo status dashboard" },
@@ -215,9 +237,14 @@ export const commands: CommandDef[] = [
   },
   {
     category: "monitoring",
-    name: "exec", alias: "x", description: "Run git command across all repos",
+    name: "exec", alias: "x", description: "Run any git command across all tracked repos simultaneously",
     usage: "gitmap exec <git-args...>",
-    examples: [{ command: "gitmap exec fetch --prune" }],
+    examples: [
+      { command: "gitmap exec fetch --prune", description: "Fetch and prune all repos" },
+      { command: "gitmap x remote -v", description: "Show remotes for every tracked repo" },
+      { command: "gitmap exec status --short", description: "Quick git status across all repos" },
+      { command: "gitmap x branch --list", description: "List branches in every repo" },
+    ],
     seeAlso: [
       { name: "scan", description: "Scan directories to populate the database" },
       { name: "pull", description: "Pull repos (built-in alternative)" },
@@ -226,24 +253,25 @@ export const commands: CommandDef[] = [
   },
   {
     category: "monitoring",
-    name: "latest-branch", alias: "lb", description: "Find most recently updated remote branch",
+    name: "latest-branch", alias: "lb", description: "Find the most recently updated remote branches with filtering and sorting",
     usage: "gitmap latest-branch [--top N] [--format json|csv|terminal] [--filter <pattern>]",
     flags: [
-      { flag: "--remote <name>", description: "Remote to filter branches against (default: origin)" },
+      { flag: "--remote <name>", description: "Remote to filter against (default: origin)" },
       { flag: "--all-remotes", description: "Include branches from all remotes" },
       { flag: "--contains-fallback", description: "Fall back to --contains if --points-at is empty" },
       { flag: "--top <n>", description: "Show top N most recently updated branches" },
       { flag: "--format <fmt>", description: "Output format: terminal, json, csv" },
       { flag: "--json", description: "Shorthand for --format json" },
-      { flag: "--no-fetch", description: "Skip git fetch, use existing remote refs" },
-      { flag: "--sort <order>", description: "Sort order: date (descending) or name (A-Z)" },
-      { flag: "--filter <pattern>", description: "Filter branches by glob or substring pattern" },
+      { flag: "--no-fetch", description: "Skip git fetch, use existing refs" },
+      { flag: "--sort <order>", description: "Sort: date (descending) or name (A-Z)" },
+      { flag: "--filter <pattern>", description: "Filter branches by glob or substring" },
     ],
     examples: [
-      { command: "gitmap lb", description: "Latest branch (single)" },
-      { command: "gitmap lb --top 5 --json", description: "Top 5 as JSON" },
+      { command: "gitmap lb", description: "Show the single most recent branch" },
+      { command: "gitmap lb --top 5 --json", description: "Top 5 branches as JSON" },
       { command: "gitmap lb --filter 'feature/*'", description: "Only feature branches" },
-      { command: "gitmap lb 3 --no-fetch --json", description: "Fast: no fetch, top 3 as JSON" },
+      { command: "gitmap lb 3 --no-fetch --json", description: "Fast: skip fetch, top 3 as JSON" },
+      { command: "gitmap lb --all-remotes --top 10", description: "Top 10 across all remotes" },
     ],
     seeAlso: [
       { name: "status", description: "View repo statuses" },
@@ -252,10 +280,12 @@ export const commands: CommandDef[] = [
     ],
   },
 
-  // --- Release & Versioning ---
+  // ═══════════════════════════════════════════
+  // Release & Versioning
+  // ═══════════════════════════════════════════
   {
     category: "release",
-    name: "release", alias: "r", description: "Create release branch, tag, and push",
+    name: "release", alias: "r", description: "Create a release: branch, tag, push, and optionally attach compiled assets",
     usage: "gitmap release [version] [--bump major|minor|patch] [--draft] [--dry-run]",
     flags: [
       { flag: "--assets <path>", description: "Attach files to release" },
@@ -264,12 +294,19 @@ export const commands: CommandDef[] = [
       { flag: "--bump major|minor|patch", description: "Auto-increment version" },
       { flag: "--draft", description: "Create unpublished draft" },
       { flag: "--dry-run", description: "Preview without executing" },
-      { flag: "--compress", description: "Wrap assets in .zip (Windows) or .tar.gz archives" },
-      { flag: "--checksums", description: "Generate SHA256 checksums.txt for assets" },
+      { flag: "--compress", description: "Wrap assets in .zip (Windows) or .tar.gz" },
+      { flag: "--checksums", description: "Generate SHA256 checksums.txt" },
       { flag: "--no-assets", description: "Skip Go binary cross-compilation" },
       { flag: "--targets <list>", description: "Cross-compile targets (e.g. windows/amd64,linux/arm64)" },
       { flag: "--list-targets", description: "Print resolved target matrix and exit" },
       { flag: "--verbose", description: "Write detailed debug log" },
+    ],
+    examples: [
+      { command: "gitmap release --bump patch", description: "Patch release with auto-incremented version" },
+      { command: "gitmap r v2.5.0 --draft", description: "Draft release for v2.5.0" },
+      { command: "gitmap release --bump minor --dry-run", description: "Preview a minor release" },
+      { command: "gitmap r --bump patch --compress --checksums", description: "Release with compressed assets and checksums" },
+      { command: "gitmap release --targets windows/amd64,linux/arm64", description: "Cross-compile for specific platforms" },
     ],
     seeAlso: [
       { name: "Spec: release", description: "Full release workflow documentation", url: "/release" },
@@ -282,7 +319,7 @@ export const commands: CommandDef[] = [
   },
   {
     category: "release",
-    name: "release-self", alias: "rs / rself", description: "Release gitmap itself from any directory",
+    name: "release-self", alias: "rs / rself", description: "Release gitmap itself from any directory (uses embedded repo path)",
     usage: "gitmap release-self [version] [--bump major|minor|patch] [--draft] [--dry-run]",
     flags: [
       { flag: "--assets <path>", description: "Attach files to release" },
@@ -291,8 +328,8 @@ export const commands: CommandDef[] = [
       { flag: "--bump major|minor|patch", description: "Auto-increment version" },
       { flag: "--draft", description: "Create unpublished draft" },
       { flag: "--dry-run", description: "Preview without executing" },
-      { flag: "--compress", description: "Wrap assets in .zip or .tar.gz archives" },
-      { flag: "--checksums", description: "Generate SHA256 checksums.txt for assets" },
+      { flag: "--compress", description: "Wrap assets in .zip or .tar.gz" },
+      { flag: "--checksums", description: "Generate SHA256 checksums.txt" },
       { flag: "--no-assets", description: "Skip Go binary cross-compilation" },
       { flag: "--targets <list>", description: "Cross-compile targets" },
       { flag: "--verbose", description: "Write detailed debug log" },
@@ -300,7 +337,8 @@ export const commands: CommandDef[] = [
     examples: [
       { command: "gitmap rs --bump patch", description: "Self-release with patch bump from any directory" },
       { command: "gitmap release-self v2.46.0 --dry-run", description: "Preview self-release without executing" },
-      { command: "gitmap rs --bump minor --draft", description: "Draft self-release" },
+      { command: "gitmap rs --bump minor --draft", description: "Draft minor self-release" },
+      { command: "gitmap rs --bump patch --compress --checksums", description: "Full self-release with assets" },
     ],
     seeAlso: [
       { name: "Spec: release-self", description: "Full release-self documentation", url: "/release-self" },
@@ -310,7 +348,7 @@ export const commands: CommandDef[] = [
   },
   {
     category: "release",
-    name: "release-branch", alias: "rb", description: "Create a release branch without tagging",
+    name: "release-branch", alias: "rb", description: "Complete a release from an existing release/* branch (no new branch created)",
     usage: "gitmap release-branch [version] [--bump major|minor|patch] [--draft] [--verbose]",
     flags: [
       { flag: "--assets <path>", description: "Directory or file to attach" },
@@ -319,7 +357,8 @@ export const commands: CommandDef[] = [
     ],
     examples: [
       { command: "gitmap release-branch release/v1.2.0", description: "Complete release from existing branch" },
-      { command: "gitmap rb release/v1.2.0", description: "Alias shorthand" },
+      { command: "gitmap rb release/v1.2.0 --draft", description: "Complete as draft release" },
+      { command: "gitmap rb release/v1.2.0 --assets ./dist", description: "Attach dist folder to release" },
     ],
     seeAlso: [
       { name: "release", description: "Full release with tag and push", url: "/release" },
@@ -329,7 +368,7 @@ export const commands: CommandDef[] = [
   },
   {
     category: "release",
-    name: "release-pending", alias: "rp", description: "Release pending versions from branches and metadata files",
+    name: "release-pending", alias: "rp", description: "Find and release untagged release branches and metadata-only versions",
     usage: "gitmap release-pending [--assets <path>] [--draft] [--dry-run] [--verbose]",
     flags: [
       { flag: "--assets <path>", description: "Directory or file to attach" },
@@ -338,8 +377,9 @@ export const commands: CommandDef[] = [
       { flag: "--verbose", description: "Write detailed debug log" },
     ],
     examples: [
-      { command: "gitmap release-pending", description: "Release untagged branches and metadata-only versions" },
+      { command: "gitmap release-pending", description: "Release all pending versions" },
       { command: "gitmap rp --dry-run", description: "Preview what would be released" },
+      { command: "gitmap rp --draft --verbose", description: "Release as drafts with logging" },
     ],
     seeAlso: [
       { name: "release", description: "Create a release", url: "/release" },
@@ -350,7 +390,56 @@ export const commands: CommandDef[] = [
   },
   {
     category: "release",
-    name: "changelog", alias: "cl", description: "Show release notes",
+    name: "temp-release", alias: "tr", description: "Create lightweight temp branches from recent commits (no tags, no metadata)",
+    usage: "gitmap temp-release <count> <version-pattern> [-s N]",
+    flags: [
+      { flag: "-s, --start", description: "Starting sequence number (default: auto-increment)" },
+      { flag: "--dry-run", description: "Preview branch names without creating" },
+      { flag: "--json", description: "JSON output for list subcommand" },
+      { flag: "--verbose", description: "Detailed logging" },
+    ],
+    examples: [
+      { command: "gitmap tr 10 v1.$$ -s 5", description: "Create 10 branches: v1.05 through v1.14" },
+      { command: "gitmap tr 1 v1.$$", description: "Create 1 branch, auto-increment from last" },
+      { command: "gitmap tr list", description: "List all temp-release branches" },
+      { command: "gitmap tr remove v1.05 to v1.10", description: "Remove a range of temp-release branches" },
+      { command: "gitmap tr 5 v2.$$ --dry-run", description: "Preview 5 branch names without creating" },
+    ],
+    seeAlso: [
+      { name: "release", description: "Full release with tags and metadata" },
+      { name: "prune", description: "Delete stale release branches" },
+      { name: "release-branch", description: "Complete release from existing branch" },
+      { name: "temp-release", description: "Dedicated docs page", url: "/temp-release" },
+    ],
+  },
+  {
+    category: "release",
+    name: "prune", alias: "pr", description: "Delete stale release/* branches that already have a matching tag",
+    usage: "gitmap prune [flags]",
+    flags: [
+      { flag: "--dry-run", description: "List stale branches without deleting" },
+      { flag: "--confirm", description: "Skip interactive confirmation prompt" },
+      { flag: "--remote", description: "Also delete remote release branches" },
+    ],
+    examples: [
+      { command: "gitmap prune --dry-run", description: "Preview which branches would be deleted" },
+      { command: "gitmap prune --confirm", description: "Delete stale branches without prompting" },
+      { command: "gitmap prune --confirm --remote", description: "Delete locally and remotely" },
+      { command: "gitmap pr --dry-run", description: "Alias shorthand preview" },
+    ],
+    seeAlso: [
+      { name: "release", description: "Create release branches and tags" },
+      { name: "clear-release-json", description: "Remove release metadata files" },
+      { name: "list-releases", description: "Show stored releases from database" },
+    ],
+  },
+
+  // ═══════════════════════════════════════════
+  // Changelog & Tags
+  // ═══════════════════════════════════════════
+  {
+    category: "changelog",
+    name: "changelog", alias: "cl", description: "View release notes from CHANGELOG.md with filtering and version lookup",
     usage: "gitmap changelog [version] [--latest] [--limit N] [--open] [--source <type>]",
     flags: [
       { flag: "--latest", description: "Show only the most recent version" },
@@ -361,8 +450,9 @@ export const commands: CommandDef[] = [
     examples: [
       { command: "gitmap changelog", description: "Show last 5 versions" },
       { command: "gitmap cl --latest", description: "Most recent version only" },
-      { command: "gitmap changelog v2.3.0", description: "Notes for specific version" },
-      { command: "gitmap cl --source release", description: "Only entries from gitmap release" },
+      { command: "gitmap changelog v2.3.0", description: "Notes for a specific version" },
+      { command: "gitmap cl --source release --limit 10", description: "Last 10 release-sourced entries" },
+      { command: "gitmap cl --open", description: "Open CHANGELOG.md in your editor" },
     ],
     seeAlso: [
       { name: "release", description: "Create a release", url: "/release" },
@@ -371,12 +461,36 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "release",
-    name: "list-versions", alias: "lv", description: "List all available Git release tags",
+    category: "changelog",
+    name: "changelog-generate", alias: "cg", description: "Auto-generate CHANGELOG.md entries from commits between Git tags",
+    usage: "gitmap changelog-generate [--from <tag>] [--to <tag>]",
+    flags: [
+      { flag: "--from <tag>", description: "Start tag (default: second-latest)" },
+      { flag: "--to <tag>", description: "End tag (default: latest)" },
+    ],
+    examples: [
+      { command: "gitmap changelog-generate", description: "Generate entries between last two tags" },
+      { command: "gitmap cg --from v2.40.0 --to v2.45.0", description: "Generate entries for a specific range" },
+      { command: "gitmap cg --from v1.0.0", description: "Everything from v1.0.0 to latest" },
+    ],
+    seeAlso: [
+      { name: "changelog", description: "View generated changelog" },
+      { name: "release", description: "Create a release" },
+      { name: "list-versions", description: "List available tags" },
+    ],
+  },
+  {
+    category: "changelog",
+    name: "list-versions", alias: "lv", description: "List all Git release tags with optional notes from CHANGELOG.md",
     usage: "gitmap list-versions [--json] [--limit N]",
     flags: [
       { flag: "--json", description: "Output as structured JSON" },
       { flag: "--limit N", description: "Show only the top N versions (0 = all)" },
+    ],
+    examples: [
+      { command: "gitmap list-versions", description: "List all release tags" },
+      { command: "gitmap lv --limit 10", description: "Last 10 versions" },
+      { command: "gitmap lv --json", description: "JSON output for scripting" },
     ],
     seeAlso: [
       { name: "list-releases", description: "List stored release metadata" },
@@ -386,12 +500,17 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "release",
-    name: "list-releases", alias: "lr", description: "List release metadata from the database",
+    category: "changelog",
+    name: "list-releases", alias: "lr", description: "List release metadata records stored in the database",
     usage: "gitmap list-releases [--json] [--source manual|scan]",
     flags: [
       { flag: "--json", description: "Output as structured JSON" },
       { flag: "--source <type>", description: "Filter by release source" },
+    ],
+    examples: [
+      { command: "gitmap list-releases", description: "List all stored releases" },
+      { command: "gitmap lr --json", description: "JSON output" },
+      { command: "gitmap lr --source manual", description: "Only manually created releases" },
     ],
     seeAlso: [
       { name: "list-versions", description: "List Git tags" },
@@ -400,15 +519,34 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "release",
-    name: "revert", alias: undefined, description: "Revert to a specific release version",
-    usage: "gitmap revert <version>",
-    examples: [
-      { command: "gitmap revert v2.9.0", description: "Checkout tag v2.9.0 and rebuild/deploy" },
-      { command: "gitmap revert 2.8.0", description: "Version auto-prefixed with v" },
-    ],
+    category: "changelog",
+    name: "clear-release-json", alias: "crj", description: "Remove a .gitmap/release/vX.Y.Z.json metadata file",
+    usage: "gitmap clear-release-json <version> [--dry-run]",
     flags: [
-      { flag: "<version>", description: "Release tag to revert to (e.g. v2.9.0). Auto-prefixed with 'v' if missing. Must exist as a local tag." },
+      { flag: "--dry-run", description: "Preview which file would be removed without deleting" },
+    ],
+    examples: [
+      { command: "gitmap clear-release-json v2.20.0", description: "Remove v2.20.0 release metadata" },
+      { command: "gitmap crj v1.0.0 --dry-run", description: "Preview removal without deleting" },
+      { command: "gitmap crj v1.0.0", description: "Remove using alias" },
+    ],
+    seeAlso: [
+      { name: "release", description: "Create a release", url: "/release" },
+      { name: "list-releases", description: "Show stored releases" },
+      { name: "db-reset", description: "Reset entire database" },
+      { name: "Spec: clear-release-json", description: "Full specification", url: "/clear-release-json" },
+    ],
+  },
+  {
+    category: "changelog",
+    name: "revert", alias: undefined, description: "Revert to a specific release version by checking out its tag",
+    usage: "gitmap revert <version>",
+    flags: [
+      { flag: "<version>", description: "Release tag to revert to (auto-prefixed with 'v' if missing)" },
+    ],
+    examples: [
+      { command: "gitmap revert v2.9.0", description: "Checkout tag v2.9.0" },
+      { command: "gitmap revert 2.8.0", description: "Version auto-prefixed with v" },
     ],
     seeAlso: [
       { name: "list-versions", description: "List available versions" },
@@ -418,15 +556,18 @@ export const commands: CommandDef[] = [
     ],
   },
 
-  // --- Navigation & Organization ---
+  // ═══════════════════════════════════════════
+  // Navigation & Groups
+  // ═══════════════════════════════════════════
   {
     category: "navigation",
-    name: "cd", alias: "go", description: "Navigate to a tracked repo directory",
+    name: "cd", alias: "go", description: "Navigate your shell to a tracked repo directory (supports interactive picker)",
     usage: "gitmap cd <repo-name|repos> [--group <name>] [--pick]",
     examples: [
-      { command: "gitmap cd myrepo", description: "Navigate to repo" },
-      { command: "gitmap cd repos", description: "Interactive repo picker" },
-      { command: "gitmap cd repos --group work", description: "Pick from group" },
+      { command: "gitmap cd myrepo", description: "Jump to myrepo's directory" },
+      { command: "gitmap cd repos", description: "Interactive repo picker (fzf-style)" },
+      { command: "gitmap cd repos --group work", description: "Pick from work group only" },
+      { command: "gitmap go myrepo", description: "Alias shorthand" },
     ],
     seeAlso: [
       { name: "list", description: "List all tracked repos with slugs" },
@@ -437,8 +578,8 @@ export const commands: CommandDef[] = [
   },
   {
     category: "navigation",
-    name: "list", alias: "ls", description: "Show all tracked repos with slugs (supports type filtering)",
-    usage: "gitmap list [--group <name>] [--verbose]\ngitmap ls go|node|react|cpp|csharp    Filter by project type\ngitmap ls groups                       List all groups",
+    name: "list", alias: "ls", description: "Show all tracked repos with slugs, supports filtering by project type or group",
+    usage: "gitmap list [--group <name>] [--verbose]\ngitmap ls go|node|react|cpp|csharp\ngitmap ls groups",
     flags: [
       { flag: "--group <name>", description: "Filter by group name" },
       { flag: "--verbose", description: "Show full paths and URLs" },
@@ -447,8 +588,9 @@ export const commands: CommandDef[] = [
       { command: "gitmap list", description: "List all tracked repos" },
       { command: "gitmap ls go", description: "List only Go projects" },
       { command: "gitmap ls node", description: "List only Node.js projects" },
+      { command: "gitmap ls react", description: "List only React projects" },
       { command: "gitmap ls groups", description: "List all defined groups" },
-      { command: "gitmap ls --group backend", description: "Filter by group" },
+      { command: "gitmap ls --group backend --verbose", description: "Verbose list for backend group" },
     ],
     seeAlso: [
       { name: "cd", description: "Navigate to a tracked repo" },
@@ -459,19 +601,20 @@ export const commands: CommandDef[] = [
   },
   {
     category: "navigation",
-    name: "group", alias: "g", description: "Manage repo groups / activate a group for batch operations",
+    name: "group", alias: "g", description: "Create, manage, and activate repo groups for batch operations",
     usage: "gitmap group <create|add|remove|list|show|delete|pull|status|exec|clear> [args]\ngitmap g <name>    Activate a group\ngitmap g           Show active group",
     flags: [
       { flag: "--description <text>", description: "Group description (for create)" },
       { flag: "--color <name>", description: "Terminal color for the group (for create)" },
     ],
     examples: [
-      { command: "gitmap g backend", description: "Activate a group" },
-      { command: "gitmap g pull", description: "Pull all repos in active group" },
+      { command: "gitmap group create backend --description \"Backend services\"", description: "Create a named group" },
+      { command: "gitmap group add backend my-api my-worker", description: "Add repos to backend group" },
+      { command: "gitmap g backend", description: "Activate backend as the current group" },
+      { command: "gitmap g pull", description: "Pull all repos in the active group" },
       { command: "gitmap g status", description: "Status for active group" },
-      { command: "gitmap g exec fetch --prune", description: "Run git across active group" },
-      { command: "gitmap group create backend --description \"Backend services\"", description: "Create a group" },
-      { command: "gitmap group add backend my-api my-worker", description: "Add repos to a group" },
+      { command: "gitmap g exec fetch --prune", description: "Run git fetch across active group" },
+      { command: "gitmap group list", description: "Show all groups" },
       { command: "gitmap g clear", description: "Clear active group" },
     ],
     seeAlso: [
@@ -483,12 +626,13 @@ export const commands: CommandDef[] = [
   },
   {
     category: "navigation",
-    name: "multi-group", alias: "mg", description: "Select multiple groups for batch operations",
+    name: "multi-group", alias: "mg", description: "Select and operate on multiple groups at once",
     usage: "gitmap multi-group <group1,group2,...|clear|pull|status|exec>",
     examples: [
       { command: "gitmap mg backend,frontend", description: "Select multiple groups" },
       { command: "gitmap mg pull", description: "Pull repos from all selected groups" },
       { command: "gitmap mg status", description: "Status for all selected groups" },
+      { command: "gitmap mg exec fetch --prune", description: "Fetch across all selected groups" },
       { command: "gitmap mg clear", description: "Clear multi-group selection" },
     ],
     seeAlso: [
@@ -497,34 +641,22 @@ export const commands: CommandDef[] = [
       { name: "status", description: "View repo statuses" },
     ],
   },
-  {
-    category: "navigation",
-    name: "diff-profiles", alias: "dp", description: "Compare repos across two profiles",
-    usage: "gitmap diff-profiles <profileA> <profileB> [--all] [--json]",
-    flags: [
-      { flag: "--all", description: "Include identical repos in the output" },
-      { flag: "--json", description: "Output as structured JSON" },
-    ],
-    examples: [
-      { command: "gitmap diff-profiles default work", description: "Compare default and work profiles" },
-      { command: "gitmap dp work personal --json", description: "JSON diff output" },
-    ],
-    seeAlso: [
-      { name: "Spec: diff-profiles", description: "Full diff-profiles specification", url: "/diff-profiles" },
-      { name: "profile", description: "Manage database profiles", url: "/profile" },
-      { name: "list", description: "List tracked repos" },
-      { name: "export", description: "Export database", url: "/export" },
-    ],
-  },
 
-  // --- History & Stats ---
+  // ═══════════════════════════════════════════
+  // History & Analytics
+  // ═══════════════════════════════════════════
   {
     category: "history",
-    name: "history", alias: "hi", description: "Show CLI command execution history",
+    name: "history", alias: "hi", description: "Browse the full CLI command execution history with timestamps and durations",
     usage: "gitmap history [--limit N] [--json]",
     flags: [
       { flag: "--limit N", description: "Number of entries to show" },
       { flag: "--json", description: "Output as structured JSON" },
+    ],
+    examples: [
+      { command: "gitmap history", description: "Show recent command history" },
+      { command: "gitmap hi --limit 20", description: "Last 20 commands" },
+      { command: "gitmap hi --json", description: "JSON output for scripting" },
     ],
     seeAlso: [
       { name: "Spec: history", description: "Full history documentation", url: "/history" },
@@ -535,13 +667,14 @@ export const commands: CommandDef[] = [
   },
   {
     category: "history",
-    name: "history-reset", alias: "hr", description: "Clear command execution history",
+    name: "history-reset", alias: "hr", description: "Clear all command execution history (requires --confirm)",
     usage: "gitmap history-reset --confirm",
     flags: [
       { flag: "--confirm", description: "Required flag to confirm destructive reset" },
     ],
     examples: [
       { command: "gitmap history-reset --confirm", description: "Clear all command history" },
+      { command: "gitmap hr --confirm", description: "Alias shorthand" },
     ],
     seeAlso: [
       { name: "history", description: "View command history", url: "/history" },
@@ -550,7 +683,7 @@ export const commands: CommandDef[] = [
   },
   {
     category: "history",
-    name: "stats", alias: "ss", description: "Show aggregated usage and performance metrics",
+    name: "stats", alias: "ss", description: "Show aggregated usage and performance metrics for all commands",
     usage: "gitmap stats [--command <name>] [--json]",
     flags: [
       { flag: "--command <name>", description: "Show stats for a specific command only" },
@@ -559,28 +692,51 @@ export const commands: CommandDef[] = [
     examples: [
       { command: "gitmap stats", description: "Show usage stats for all commands" },
       { command: "gitmap stats --command scan", description: "Stats for scan only" },
-      { command: "gitmap ss --json", description: "JSON output" },
+      { command: "gitmap ss --json", description: "JSON output for dashboards" },
+      { command: "gitmap stats --command release", description: "How many releases have you done?" },
     ],
     seeAlso: [
       { name: "Spec: stats", description: "Full stats documentation", url: "/stats" },
       { name: "history", description: "View command history", url: "/history" },
-      { name: "scan", description: "Scan directories" },
-      { name: "status", description: "View repo statuses" },
+      { name: "dashboard", description: "Interactive HTML dashboard" },
     ],
   },
   {
     category: "history",
-    name: "amend", alias: "am", description: "Rewrite commit author info",
-    usage: "gitmap amend [commit-hash] --name <name> --email <email> [--branch <branch>]",
-    examples: [
-      { command: "gitmap amend --name \"John\" --email \"john@example.com\"", description: "Rewrite all commits on current branch" },
-      { command: "gitmap amend abc123 --name \"John\" --email \"john@example.com\"", description: "Rewrite from commit abc123 onwards" },
-      { command: "gitmap amend --name \"Bot\" --email \"bot@ci.com\" --branch main", description: "Rewrite all commits on main branch" },
+    name: "dashboard", alias: "db", description: "Generate an interactive HTML dashboard with charts, tables, and heatmap for a repo",
+    usage: "gitmap dashboard [flags]",
+    flags: [
+      { flag: "--limit <n>", description: "Maximum number of commits to include" },
+      { flag: "--since <date>", description: "Only include commits after this date (YYYY-MM-DD)" },
+      { flag: "--no-merges", description: "Exclude merge commits from the output" },
+      { flag: "--out-dir <path>", description: "Output directory for dashboard files" },
+      { flag: "--open", description: "Open the generated dashboard in the default browser" },
     ],
+    examples: [
+      { command: "gitmap dashboard --open", description: "Generate and open dashboard in browser" },
+      { command: "gitmap db --limit 100 --open", description: "Last 100 commits, open immediately" },
+      { command: "gitmap dashboard --since 2025-01-01 --no-merges", description: "2025 commits, no merges" },
+      { command: "gitmap db --out-dir ./reports", description: "Save dashboard to custom directory" },
+    ],
+    seeAlso: [
+      { name: "stats", description: "Aggregated command usage statistics" },
+      { name: "history", description: "Command execution history" },
+      { name: "dashboard", description: "Dedicated docs page", url: "/dashboard" },
+    ],
+  },
+  {
+    category: "history",
+    name: "amend", alias: "am", description: "Rewrite commit author info (name/email) across a branch",
+    usage: "gitmap amend [commit-hash] --name <name> --email <email> [--branch <branch>]",
     flags: [
       { flag: "--name <name>", description: "New author name for rewritten commits" },
       { flag: "--email <email>", description: "New author email for rewritten commits" },
       { flag: "--branch <branch>", description: "Target branch (default: current branch)" },
+    ],
+    examples: [
+      { command: "gitmap amend --name \"John\" --email \"john@example.com\"", description: "Rewrite all commits on current branch" },
+      { command: "gitmap amend abc123 --name \"John\" --email \"john@example.com\"", description: "Rewrite from commit abc123 onwards" },
+      { command: "gitmap amend --name \"Bot\" --email \"bot@ci.com\" --branch main", description: "Rewrite all commits on main" },
     ],
     seeAlso: [
       { name: "amend-list", description: "List previous amendments" },
@@ -589,16 +745,16 @@ export const commands: CommandDef[] = [
   },
   {
     category: "history",
-    name: "amend-list", alias: "al", description: "List previous author amendments",
+    name: "amend-list", alias: "al", description: "List all previous author amendment audit records",
     usage: "gitmap amend-list [--json] [--limit <n>]",
-    examples: [
-      { command: "gitmap amend-list", description: "Show all amendment audit records" },
-      { command: "gitmap amend-list --json", description: "Output amendments as JSON" },
-      { command: "gitmap amend-list --limit 5", description: "Show last 5 amendments" },
-    ],
     flags: [
       { flag: "--json", description: "Output in JSON format" },
       { flag: "--limit <n>", description: "Limit number of results" },
+    ],
+    examples: [
+      { command: "gitmap amend-list", description: "Show all amendment records" },
+      { command: "gitmap amend-list --json", description: "JSON output" },
+      { command: "gitmap al --limit 5", description: "Last 5 amendments" },
     ],
     seeAlso: [
       { name: "amend", description: "Rewrite commit author info" },
@@ -606,11 +762,17 @@ export const commands: CommandDef[] = [
     ],
   },
 
-  // --- Project Detection ---
+  // ═══════════════════════════════════════════
+  // Project Detection
+  // ═══════════════════════════════════════════
   {
     category: "detection",
-    name: "go-repos", alias: "gr", description: "List detected Go projects",
+    name: "go-repos", alias: "gr", description: "List all detected Go projects (repos with go.mod)",
     usage: "gitmap go-repos [--json]",
+    examples: [
+      { command: "gitmap go-repos", description: "List all Go projects" },
+      { command: "gitmap gr --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "node-repos", description: "List Node.js projects" },
       { name: "react-repos", description: "List React projects" },
@@ -620,8 +782,12 @@ export const commands: CommandDef[] = [
   },
   {
     category: "detection",
-    name: "node-repos", alias: "nr", description: "List detected Node.js projects",
+    name: "node-repos", alias: "nr", description: "List all detected Node.js projects (repos with package.json)",
     usage: "gitmap node-repos [--json]",
+    examples: [
+      { command: "gitmap node-repos", description: "List all Node.js projects" },
+      { command: "gitmap nr --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "react-repos", description: "List React projects" },
       { name: "go-repos", description: "List Go projects" },
@@ -630,8 +796,12 @@ export const commands: CommandDef[] = [
   },
   {
     category: "detection",
-    name: "react-repos", alias: "rr", description: "List detected React projects",
+    name: "react-repos", alias: "rr", description: "List all detected React projects (Node.js repos with react dependency)",
     usage: "gitmap react-repos [--json]",
+    examples: [
+      { command: "gitmap react-repos", description: "List all React projects" },
+      { command: "gitmap rr --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "node-repos", description: "List Node.js projects" },
       { name: "go-repos", description: "List Go projects" },
@@ -640,8 +810,12 @@ export const commands: CommandDef[] = [
   },
   {
     category: "detection",
-    name: "cpp-repos", alias: "cr", description: "List detected C++ projects",
+    name: "cpp-repos", alias: "cr", description: "List all detected C++ projects (repos with CMakeLists.txt or .vcxproj)",
     usage: "gitmap cpp-repos [--json]",
+    examples: [
+      { command: "gitmap cpp-repos", description: "List all C++ projects" },
+      { command: "gitmap cr --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "csharp-repos", description: "List C# projects" },
       { name: "go-repos", description: "List Go projects" },
@@ -650,8 +824,12 @@ export const commands: CommandDef[] = [
   },
   {
     category: "detection",
-    name: "csharp-repos", alias: "csr", description: "List detected C# projects",
+    name: "csharp-repos", alias: "csr", description: "List all detected C# projects (repos with .csproj or .sln)",
     usage: "gitmap csharp-repos [--json]",
+    examples: [
+      { command: "gitmap csharp-repos", description: "List all C# projects" },
+      { command: "gitmap csr --json", description: "JSON output" },
+    ],
     seeAlso: [
       { name: "cpp-repos", description: "List C++ projects" },
       { name: "go-repos", description: "List Go projects" },
@@ -659,14 +837,17 @@ export const commands: CommandDef[] = [
     ],
   },
 
-  // --- Data & Profiles ---
+  // ═══════════════════════════════════════════
+  // Data & Profiles
+  // ═══════════════════════════════════════════
   {
     category: "data",
-    name: "export", alias: "ex", description: "Export database to file",
+    name: "export", alias: "ex", description: "Export the full database to a portable JSON file",
     usage: "gitmap export [file]",
     examples: [
-      { command: "gitmap export", description: "Export to gitmap-export.json" },
-      { command: "gitmap ex backup.json", description: "Export to custom file" },
+      { command: "gitmap export", description: "Export to default gitmap-export.json" },
+      { command: "gitmap ex backup.json", description: "Export to custom filename" },
+      { command: "gitmap ex ~/Desktop/repos-backup.json", description: "Export to specific path" },
     ],
     seeAlso: [
       { name: "Spec: export", description: "Full export specification", url: "/export" },
@@ -677,14 +858,15 @@ export const commands: CommandDef[] = [
   },
   {
     category: "data",
-    name: "import", alias: "im", description: "Import repos from file",
+    name: "import", alias: "im", description: "Import repos from a previously exported JSON file",
     usage: "gitmap import [file] --confirm",
     flags: [
       { flag: "--confirm", description: "Confirm the import (required, prevents accidents)" },
     ],
     examples: [
-      { command: "gitmap import --confirm", description: "Import from gitmap-export.json" },
+      { command: "gitmap import --confirm", description: "Import from default gitmap-export.json" },
       { command: "gitmap im backup.json --confirm", description: "Import from custom file" },
+      { command: "gitmap im ~/Desktop/repos-backup.json --confirm", description: "Import from specific path" },
     ],
     seeAlso: [
       { name: "Spec: import", description: "Full import specification", url: "/import" },
@@ -695,13 +877,14 @@ export const commands: CommandDef[] = [
   },
   {
     category: "data",
-    name: "profile", alias: "pf", description: "Manage database profiles",
+    name: "profile", alias: "pf", description: "Create, switch, and manage isolated database profiles",
     usage: "gitmap profile <create|list|switch|delete|show> [name]",
     examples: [
-      { command: "gitmap profile create work", description: "Create a new profile" },
-      { command: "gitmap pf list", description: "List all profiles" },
-      { command: "gitmap profile switch work", description: "Switch active profile" },
-      { command: "gitmap profile show", description: "Show current profile" },
+      { command: "gitmap profile create work", description: "Create a new profile called 'work'" },
+      { command: "gitmap pf list", description: "List all available profiles" },
+      { command: "gitmap profile switch work", description: "Switch to the work profile" },
+      { command: "gitmap profile show", description: "Show the currently active profile" },
+      { command: "gitmap pf delete old-profile", description: "Delete a profile" },
     ],
     seeAlso: [
       { name: "Spec: profile", description: "Full profile specification", url: "/profile" },
@@ -712,24 +895,43 @@ export const commands: CommandDef[] = [
   },
   {
     category: "data",
-    name: "bookmark", alias: "bk", description: "Save and run bookmarked commands",
+    name: "diff-profiles", alias: "dp", description: "Compare repos between two profiles and show added/removed/changed",
+    usage: "gitmap diff-profiles <profileA> <profileB> [--all] [--json]",
+    flags: [
+      { flag: "--all", description: "Include identical repos in the output" },
+      { flag: "--json", description: "Output as structured JSON" },
+    ],
+    examples: [
+      { command: "gitmap diff-profiles default work", description: "Compare default and work profiles" },
+      { command: "gitmap dp work personal --json", description: "JSON diff output" },
+      { command: "gitmap dp home office --all", description: "Full comparison including identical repos" },
+    ],
+    seeAlso: [
+      { name: "Spec: diff-profiles", description: "Full diff-profiles specification", url: "/diff-profiles" },
+      { name: "profile", description: "Manage database profiles", url: "/profile" },
+      { name: "list", description: "List tracked repos" },
+      { name: "export", description: "Export database", url: "/export" },
+    ],
+  },
+  {
+    category: "data",
+    name: "bookmark", alias: "bk", description: "Save, list, replay, and delete bookmarked commands",
     usage: "gitmap bookmark <save|list|run|delete> [args]",
     examples: [
-      { command: "gitmap bookmark save ssh-scan scan --mode ssh", description: "Save a command bookmark" },
-      { command: "gitmap bk list", description: "List all bookmarks" },
-      { command: "gitmap bookmark run ssh-scan", description: "Replay a saved bookmark" },
+      { command: "gitmap bookmark save ssh-scan scan --mode ssh", description: "Save a scan command as 'ssh-scan'" },
+      { command: "gitmap bk list", description: "List all saved bookmarks" },
+      { command: "gitmap bookmark run ssh-scan", description: "Replay the 'ssh-scan' bookmark" },
       { command: "gitmap bk delete ssh-scan", description: "Remove a bookmark" },
     ],
     seeAlso: [
       { name: "Spec: bookmarks", description: "Full bookmarks documentation", url: "/bookmarks" },
       { name: "history", description: "View command execution history", url: "/history" },
       { name: "scan", description: "Scan directories (common bookmark target)" },
-      { name: "pull", description: "Pull repos (common bookmark target)" },
     ],
   },
   {
     category: "data",
-    name: "db-reset", alias: undefined, description: "Reset the local SQLite database",
+    name: "db-reset", alias: undefined, description: "Completely reset the local SQLite database (requires --confirm)",
     usage: "gitmap db-reset --confirm",
     flags: [
       { flag: "--confirm", description: "Required flag to confirm destructive reset" },
@@ -743,34 +945,22 @@ export const commands: CommandDef[] = [
       { name: "setup", description: "Re-run setup wizard" },
     ],
   },
-  {
-    category: "data",
-    name: "clear-release-json", alias: "crj", description: "Remove a .gitmap/release/vX.Y.Z.json metadata file",
-    usage: "gitmap clear-release-json <version> [--dry-run]",
-    flags: [
-      { flag: "--dry-run", description: "Preview which file would be removed without deleting it" },
-    ],
-    examples: [
-      { command: "gitmap clear-release-json v2.20.0", description: "Remove the v2.20.0 release JSON file" },
-      { command: "gitmap crj v1.0.0 --dry-run", description: "Preview removal without deleting" },
-      { command: "gitmap crj v1.0.0", description: "Remove using alias" },
-    ],
-    seeAlso: [
-      { name: "release", description: "Create a release", url: "/release" },
-      { name: "list-releases", description: "Show stored releases" },
-      { name: "db-reset", description: "Reset entire database" },
-      { name: "Spec: clear-release-json", description: "Full specification with edge cases and constants", url: "/clear-release-json" },
-    ],
-  },
 
-  // --- Utilities ---
+  // ═══════════════════════════════════════════
+  // Tools & Setup
+  // ═══════════════════════════════════════════
   {
-    category: "utilities",
-    name: "setup", alias: undefined, description: "Configure Git settings and install shell completions",
+    category: "tools",
+    name: "setup", alias: undefined, description: "Configure Git global settings and install shell tab-completion scripts",
     usage: "gitmap setup [--config <path>] [--dry-run]",
     flags: [
       { flag: "--config <path>", description: "Path to git-setup.json config file" },
       { flag: "--dry-run", description: "Preview changes without applying" },
+    ],
+    examples: [
+      { command: "gitmap setup", description: "Run the interactive setup wizard" },
+      { command: "gitmap setup --dry-run", description: "Preview what setup would change" },
+      { command: "gitmap setup --config ./custom-setup.json", description: "Use custom config file" },
     ],
     seeAlso: [
       { name: "completion", description: "Generate completion scripts manually" },
@@ -780,15 +970,15 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
+    category: "tools",
     name: "doctor", alias: undefined, description: "Run 11 health checks: binary, Git, Go, config, database, lock file, and network",
     usage: "gitmap doctor [--fix-path]",
     flags: [
       { flag: "--fix-path", description: "Attempt to fix PATH issues automatically" },
     ],
     examples: [
-      { command: "gitmap doctor", description: "Run diagnostic checks" },
-      { command: "gitmap doctor --fix-path", description: "Diagnose and fix PATH issues" },
+      { command: "gitmap doctor", description: "Run all 11 diagnostic checks" },
+      { command: "gitmap doctor --fix-path", description: "Diagnose and auto-fix PATH issues" },
     ],
     seeAlso: [
       { name: "setup", description: "Re-run setup wizard" },
@@ -797,8 +987,8 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "update", alias: undefined, description: "Self-update from source repo",
+    category: "tools",
+    name: "update", alias: undefined, description: "Self-update gitmap from its source repo (go install)",
     usage: "gitmap update [--verbose]",
     flags: [
       { flag: "--verbose", description: "Write detailed debug log during update" },
@@ -814,14 +1004,11 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "update-cleanup", alias: undefined, description: "Remove leftover update artifacts",
+    category: "tools",
+    name: "update-cleanup", alias: undefined, description: "Remove leftover temp binaries and .old backups from previous updates",
     usage: "gitmap update-cleanup",
     examples: [
-      {
-        command: "gitmap update-cleanup",
-        description: "Remove temp binaries and .old backups from previous updates",
-      },
+      { command: "gitmap update-cleanup", description: "Remove temp binaries and .old backups" },
     ],
     seeAlso: [
       { name: "update", description: "Self-update to latest version" },
@@ -829,11 +1016,11 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "version", alias: "v", description: "Show version number",
+    category: "tools",
+    name: "version", alias: "v", description: "Print the installed gitmap version",
     usage: "gitmap version",
     examples: [
-      { command: "gitmap version", description: "Print current version" },
+      { command: "gitmap version", description: "Print current version (e.g. v2.48.2)" },
       { command: "gitmap v", description: "Alias shorthand" },
     ],
     seeAlso: [
@@ -842,63 +1029,8 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "seo-write", alias: "sw", description: "Auto-commit SEO messages",
-    usage: "gitmap seo-write [--url <url>] [--csv <path>] [--dry-run]",
-    flags: [
-      { flag: "--csv <path>", description: "Read title/description pairs from a CSV file" },
-      { flag: "--url <url>", description: "Target website URL (required in template mode)" },
-      { flag: "--service <name>", description: "Service name for {service} placeholder" },
-      { flag: "--area <name>", description: "Area/location for {area} placeholder" },
-      { flag: "--company <name>", description: "Company name for {company} placeholder" },
-      { flag: "--phone <number>", description: "Phone number for {phone} placeholder" },
-      { flag: "--email <address>", description: "Email for {email} placeholder" },
-      { flag: "--address <text>", description: "Address for {address} placeholder" },
-      { flag: "--max-commits <n>", description: "Stop after N commits (0 = unlimited)" },
-      { flag: "--interval <min-max>", description: "Random delay range in seconds (default: 60-120)" },
-      { flag: "--dry-run", description: "Preview commit messages without executing" },
-      { flag: "--template <path>", description: "Load templates from a custom JSON file" },
-      { flag: "--create-template", description: "Write starter seo-templates.json to current dir" },
-      { flag: "--author-name <name>", description: "Git author name for commits" },
-      { flag: "--author-email <email>", description: "Git author email for commits" },
-    ],
-    examples: [
-      { command: "gitmap sw --url example.com --service Plumbing --area London", description: "Template mode with placeholders" },
-      { command: "gitmap seo-write --csv ./commits.csv", description: "CSV mode" },
-      { command: "gitmap sw --url example.com --service SEO --area Bristol --dry-run", description: "Preview without committing" },
-      { command: "gitmap seo-write --create-template", description: "Generate starter template file" },
-    ],
-    seeAlso: [
-      { name: "scan", description: "Scan directories" },
-      { name: "history", description: "View command history", url: "/history" },
-    ],
-  },
-  {
-    category: "utilities",
-    name: "gomod", alias: "gm", description: "Rename Go module path across repo with branch safety",
-    usage: "gitmap gomod <new-module-path> [--ext *.go,*.md] [--dry-run] [--no-merge] [--no-tidy] [--verbose]",
-    flags: [
-      { flag: "--ext <exts>", description: "Comma-separated extensions to filter (e.g. *.go,*.md); default: all files" },
-      { flag: "--dry-run", description: "Preview changes without modifying files or branches" },
-      { flag: "--no-merge", description: "Commit on feature branch but do not merge back" },
-      { flag: "--no-tidy", description: "Skip go mod tidy after replacement" },
-      { flag: "--verbose", description: "Print each file path as it is modified" },
-    ],
-    examples: [
-      { command: 'gitmap gomod "x/y"', description: "Rename module path in all files" },
-      { command: 'gitmap gomod "x/y" --ext "*.go,*.md"', description: "Only replace in .go and .md files" },
-      { command: 'gitmap gomod "github.com/new/name" --dry-run', description: "Preview what would change" },
-      { command: 'gitmap gomod "github.com/new/name" --no-merge', description: "Replace but stay on feature branch" },
-    ],
-    seeAlso: [
-      { name: "Spec: gomod", description: "Go module rename documentation", url: "/gomod" },
-      { name: "go-repos", description: "List detected Go projects" },
-      { name: "scan", description: "Scan directories" },
-    ],
-  },
-  {
-    category: "utilities",
-    name: "completion", alias: "cmp", description: "Generate or install shell tab-completion scripts",
+    category: "tools",
+    name: "completion", alias: "cmp", description: "Generate or install shell tab-completion scripts for Bash, Zsh, or PowerShell",
     usage: "gitmap completion <powershell|bash|zsh> [--list-repos] [--list-groups] [--list-commands]",
     flags: [
       { flag: "--list-repos", description: "Print repo slugs, one per line (for script use)" },
@@ -908,6 +1040,7 @@ export const commands: CommandDef[] = [
     examples: [
       { command: "gitmap completion powershell", description: "Print PowerShell completion script" },
       { command: "gitmap completion bash", description: "Print Bash completion script" },
+      { command: "gitmap cmp zsh", description: "Print Zsh completion script" },
       { command: "gitmap completion --list-repos", description: "List repo slugs for scripting" },
     ],
     seeAlso: [
@@ -917,11 +1050,15 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "interactive", alias: "i", description: "Launch interactive TUI with repo browser, batch actions, and group management",
-    usage: "gitmap interactive",
+    category: "tools",
+    name: "interactive", alias: "i", description: "Launch the full-screen interactive TUI with 9 views for browsing, actions, and management",
+    usage: "gitmap interactive [--refresh <seconds>]",
+    flags: [
+      { flag: "--refresh <seconds>", description: "Dashboard auto-refresh interval (default: 30)" },
+    ],
     examples: [
-      { command: "gitmap i", description: "Launch the full-screen interactive mode" },
+      { command: "gitmap i", description: "Launch the interactive TUI" },
+      { command: "gitmap interactive --refresh 10", description: "Launch with 10s dashboard refresh" },
     ],
     seeAlso: [
       { name: "list", description: "Non-interactive repo listing" },
@@ -931,21 +1068,20 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "utilities",
-    name: "docs", alias: "d", description: "Open the gitmap documentation website in the default browser",
+    category: "tools",
+    name: "docs", alias: "d", description: "Open the gitmap documentation website in your default browser",
     usage: "gitmap docs",
     examples: [
       { command: "gitmap docs", description: "Open docs in browser" },
       { command: "gitmap d", description: "Open docs (short alias)" },
     ],
     seeAlso: [
-      { name: "help", description: "Show CLI usage summary" },
       { name: "version", description: "Show installed version" },
     ],
   },
   {
-    category: "utilities",
-    name: "ssh", description: "Generate and manage SSH keys for Git authentication",
+    category: "tools",
+    name: "ssh", description: "Generate, list, and manage SSH keys for Git authentication",
     usage: "gitmap ssh [subcommand] [flags]",
     flags: [
       { flag: "--name, -n <label>", description: "Key label in database (default: 'default')" },
@@ -970,69 +1106,58 @@ export const commands: CommandDef[] = [
     ],
   },
   {
-    category: "release",
-    name: "prune", alias: "pr", description: "Delete stale release branches that have been tagged",
-    usage: "gitmap prune [flags]",
+    category: "tools",
+    name: "gomod", alias: "gm", description: "Rename Go module path across the entire repo with branch safety",
+    usage: "gitmap gomod <new-module-path> [--ext *.go,*.md] [--dry-run] [--no-merge] [--no-tidy] [--verbose]",
     flags: [
-      { flag: "--dry-run", description: "List stale branches without deleting" },
-      { flag: "--confirm", description: "Skip interactive confirmation prompt" },
-      { flag: "--remote", description: "Also delete remote release branches" },
+      { flag: "--ext <exts>", description: "Comma-separated extensions to filter (e.g. *.go,*.md)" },
+      { flag: "--dry-run", description: "Preview changes without modifying files" },
+      { flag: "--no-merge", description: "Commit on feature branch but do not merge back" },
+      { flag: "--no-tidy", description: "Skip go mod tidy after replacement" },
+      { flag: "--verbose", description: "Print each file path as it is modified" },
     ],
     examples: [
-      { command: "gitmap prune --dry-run", description: "Preview which branches would be deleted" },
-      { command: "gitmap prune --confirm", description: "Delete stale branches without prompting" },
-      { command: "gitmap prune --confirm --remote", description: "Delete stale branches locally and remotely" },
+      { command: 'gitmap gomod "github.com/new/name"', description: "Rename module path in all files" },
+      { command: 'gitmap gomod "x/y" --ext "*.go,*.md"', description: "Only replace in .go and .md files" },
+      { command: 'gitmap gomod "github.com/new/name" --dry-run', description: "Preview what would change" },
+      { command: 'gitmap gomod "github.com/new/name" --no-merge --verbose', description: "Replace on feature branch with logging" },
     ],
     seeAlso: [
-      { name: "release", description: "Create release branches and tags" },
-      { name: "clear-release-json", description: "Remove release metadata files" },
-      { name: "list-releases", description: "Show stored releases from database" },
+      { name: "Spec: gomod", description: "Go module rename documentation", url: "/gomod" },
+      { name: "go-repos", description: "List detected Go projects" },
+      { name: "scan", description: "Scan directories" },
     ],
   },
   {
-    category: "release",
-    name: "temp-release", alias: "tr", description: "Create lightweight temp branches from recent commits (no tags, no metadata)",
-    usage: "gitmap temp-release <count> <version-pattern> [-s N]",
+    category: "tools",
+    name: "seo-write", alias: "sw", description: "Auto-generate and commit SEO-optimized messages with templates or CSV",
+    usage: "gitmap seo-write [--url <url>] [--csv <path>] [--dry-run]",
     flags: [
-      { flag: "-s, --start", description: "Starting sequence number (default: auto-increment)" },
-      { flag: "--dry-run", description: "Preview branch names without creating" },
-      { flag: "--json", description: "JSON output for list subcommand" },
-      { flag: "--verbose", description: "Detailed logging" },
+      { flag: "--csv <path>", description: "Read title/description pairs from a CSV file" },
+      { flag: "--url <url>", description: "Target website URL (required in template mode)" },
+      { flag: "--service <name>", description: "Service name for {service} placeholder" },
+      { flag: "--area <name>", description: "Area/location for {area} placeholder" },
+      { flag: "--company <name>", description: "Company name for {company} placeholder" },
+      { flag: "--phone <number>", description: "Phone number for {phone} placeholder" },
+      { flag: "--email <address>", description: "Email for {email} placeholder" },
+      { flag: "--address <text>", description: "Address for {address} placeholder" },
+      { flag: "--max-commits <n>", description: "Stop after N commits (0 = unlimited)" },
+      { flag: "--interval <min-max>", description: "Random delay range in seconds (default: 60-120)" },
+      { flag: "--dry-run", description: "Preview commit messages without executing" },
+      { flag: "--template <path>", description: "Load templates from a custom JSON file" },
+      { flag: "--create-template", description: "Write starter seo-templates.json to current dir" },
+      { flag: "--author-name <name>", description: "Git author name for commits" },
+      { flag: "--author-email <email>", description: "Git author email for commits" },
     ],
     examples: [
-      { command: "gitmap tr 10 v1.$$ -s 5", description: "Create 10 branches starting at sequence 5" },
-      { command: "gitmap tr 1 v1.$$", description: "Create 1 branch, auto-increment from last" },
-      { command: "gitmap tr remove v1.05 to v1.10", description: "Remove a range of temp-release branches" },
+      { command: "gitmap sw --url example.com --service Plumbing --area London", description: "Template mode with placeholders" },
+      { command: "gitmap seo-write --csv ./commits.csv", description: "CSV mode — read from file" },
+      { command: "gitmap sw --url example.com --dry-run", description: "Preview without committing" },
+      { command: "gitmap seo-write --create-template", description: "Generate starter template file" },
     ],
     seeAlso: [
-      { name: "release", description: "Full release with tags and metadata" },
-      { name: "prune", description: "Delete stale release branches" },
-      { name: "release-branch", description: "Complete release from existing branch" },
-      { name: "temp-release", description: "Dedicated docs page", url: "/temp-release" },
-    ],
-  },
-
-  // --- Visualization ---
-  {
-    category: "history",
-    name: "dashboard", alias: "db", description: "Generate an interactive HTML dashboard for a repo",
-    usage: "gitmap dashboard [flags]",
-    flags: [
-      { flag: "--limit <n>", description: "Maximum number of commits to include" },
-      { flag: "--since <date>", description: "Only include commits after this date (YYYY-MM-DD)" },
-      { flag: "--no-merges", description: "Exclude merge commits from the output" },
-      { flag: "--out-dir <path>", description: "Output directory for dashboard files" },
-      { flag: "--open", description: "Open the generated dashboard in the default browser" },
-    ],
-    examples: [
-      { command: "gitmap dashboard", description: "Generate full dashboard" },
-      { command: "gitmap db --limit 100 --open", description: "Last 100 commits, open in browser" },
-      { command: "gitmap dashboard --since 2025-01-01 --no-merges", description: "Filtered output" },
-    ],
-    seeAlso: [
-      { name: "stats", description: "Aggregated command usage statistics" },
-      { name: "history", description: "Command execution history" },
-      { name: "dashboard", description: "Dedicated docs page", url: "/dashboard" },
+      { name: "scan", description: "Scan directories" },
+      { name: "history", description: "View command history", url: "/history" },
     ],
   },
 ];
