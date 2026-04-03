@@ -93,6 +93,10 @@ _gitmap() {
                 _describe 'subcommand' subs
             fi
             ;;
+        clone-next|cn)
+            local -a hints=("v++" "--delete" "--keep" "--no-desktop" "--ssh-key" "--verbose")
+            _describe 'arg' hints
+            ;;
         *)
             if [[ "${words[CURRENT-1]}" == "-A" || "${words[CURRENT-1]}" == "--alias" ]]; then
                 local -a aliases=($(gitmap completion --list-aliases))

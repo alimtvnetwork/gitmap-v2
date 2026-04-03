@@ -69,6 +69,9 @@ func generateBash() string {
                 COMPREPLY=($(compgen -W "cat list ls delete rm config --name --path --email --force" -- "$cur"))
             fi
             ;;
+        clone-next|cn)
+            COMPREPLY=($(compgen -W "v++ --delete --keep --no-desktop --ssh-key --verbose" -- "$cur"))
+            ;;
         *)
             if [[ "$prev" == "-A" || "$prev" == "--alias" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-aliases)" -- "$cur"))

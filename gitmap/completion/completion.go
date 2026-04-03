@@ -75,6 +75,7 @@ func AllCommands() []string {
 		"ssh",
 		"prune", "pr",
 		"temp-release", "tr",
+		"clone-next", "cn",
 		"help",
 	}
 }
