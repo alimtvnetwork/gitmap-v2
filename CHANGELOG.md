@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.47.1 — Tag Discovery & DB Caching
+## v2.48.0 — Tag Discovery & DB Caching
 
 - `list-releases` now scans git tags via `git for-each-ref` and includes tag-only releases with `source=tag`.
 - All discovered releases (repo metadata + tags) are automatically upserted into the SQLite `Releases` table on every `lr` invocation.
