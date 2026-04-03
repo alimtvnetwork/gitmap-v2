@@ -90,6 +90,28 @@ export const commands: CommandDef[] = [
   },
   {
     category: "scanning",
+    name: "clone-next", alias: "cn", description: "Clone next or specific versioned iteration of current repo",
+    usage: "gitmap clone-next <v++|vN> [--delete] [--keep] [--no-desktop]",
+    flags: [
+      { flag: "--delete", description: "Auto-remove current folder after clone" },
+      { flag: "--keep", description: "Keep current folder without prompting" },
+      { flag: "--no-desktop", description: "Skip GitHub Desktop registration" },
+      { flag: "--ssh-key <name>", description: "Use a named SSH key for the clone" },
+      { flag: "--verbose", description: "Write detailed debug log" },
+    ],
+    examples: [
+      { command: "gitmap cn v++", description: "Increment version by one (e.g. v11 → v12)" },
+      { command: "gitmap cn v15 --delete", description: "Jump to v15 and auto-remove current folder" },
+      { command: "gitmap clone-next v++ --keep", description: "Increment version, keep current folder" },
+    ],
+    seeAlso: [
+      { name: "clone", description: "Clone repos from structured file" },
+      { name: "desktop-sync", description: "Sync repos to GitHub Desktop" },
+      { name: "ssh", description: "Manage named SSH keys" },
+    ],
+  },
+  {
+    category: "scanning",
     name: "pull", alias: "p", description: "Pull a specific repo by name",
     usage: "gitmap pull <repo-name> [--group <name>] [--all] [--verbose]",
     flags: [
