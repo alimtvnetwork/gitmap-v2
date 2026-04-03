@@ -123,10 +123,18 @@ func registerCloneNextDesktop(name, absPath string) {
 }
 
 // handleCloneNextRemoval manages removal of the current version folder.
+// It changes to the parent directory first to release file locks on Windows.
 func handleCloneNextRemoval(folderName, fullPath string, deleteFlag, keepFlag bool) {
 	if keepFlag {
 		return
 	}
+
+	// Move out of the folder before attempting removal to avoid Windows file locks.
+	parentDir := filepath.Dir(fullPath)
+	if chErr := os.Chdir(parentDir); chErr != nil {
+		fmt.Fprintf(os.Stderr, "Warning: could not cd to %s: %v\n", parentDir, chErr)
+	}
+
 	if deleteFlag {
 		removeFolder(folderName, fullPath)
 
