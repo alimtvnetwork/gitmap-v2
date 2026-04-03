@@ -1,7 +1,7 @@
 # Memory: features/cli-commands
 Updated: now
 
-The CLI supports 55 subcommands with aliases: 'scan' (s), 'clone' (c), 'pull' (p), 'rescan' (rs), 'setup', 'status' (st), 'exec' (x), 'desktop-sync' (ds), 'release' (r), 'release-branch' (rb), 'release-pending' (rp), 'latest-branch' (lb), 'list' (ls), 'group' (g), 'multi-group' (mg), 'db-reset', 'version' (v), 'changelog' (cl), 'list-versions' (lv), 'list-releases' (lr), 'revert', 'doctor', 'update', 'seo-write' (sw), 'amend' (am), 'amend-list' (al), 'history' (hi), 'history-reset' (hr), 'stats' (ss), 'bookmark' (bk), 'export' (ex), 'import' (im), 'profile' (pf), 'cd' (go), 'watch' (w), 'diff-profiles' (dp), 'gomod' (gm), 'go-repos' (gr), 'node-repos' (nr), 'react-repos' (rr), 'cpp-repos' (cr), 'csharp-repos' (csr), 'alias' (a), 'zip-group' (z), 'completion' (cmp), 'interactive' (i), 'clear-release-json' (crj), 'update-cleanup', 'has-any-updates' (hau/hac), 'docs' (d), 'changelog-generate' (cg), 'ssh', 'prune' (pr), and 'temp-release' (tr). Current version: v2.36.7.
+The CLI supports 56 subcommands with aliases: 'scan' (s), 'clone' (c), 'clone-next' (cn), 'pull' (p), 'rescan' (rs), 'setup', 'status' (st), 'exec' (x), 'desktop-sync' (ds), 'release' (r), 'release-branch' (rb), 'release-pending' (rp), 'latest-branch' (lb), 'list' (ls), 'group' (g), 'multi-group' (mg), 'db-reset', 'version' (v), 'changelog' (cl), 'list-versions' (lv), 'list-releases' (lr), 'revert', 'doctor', 'update', 'seo-write' (sw), 'amend' (am), 'amend-list' (al), 'history' (hi), 'history-reset' (hr), 'stats' (ss), 'bookmark' (bk), 'export' (ex), 'import' (im), 'profile' (pf), 'cd' (go), 'watch' (w), 'diff-profiles' (dp), 'gomod' (gm), 'go-repos' (gr), 'node-repos' (nr), 'react-repos' (rr), 'cpp-repos' (cr), 'csharp-repos' (csr), 'alias' (a), 'zip-group' (z), 'completion' (cmp), 'interactive' (i), 'clear-release-json' (crj), 'update-cleanup', 'has-any-updates' (hau/hac), 'docs' (d), 'changelog-generate' (cg), 'ssh', 'prune' (pr), 'temp-release' (tr), and 'dashboard' (db). Current version: v2.36.7.
 
 The release workflow re-runs legacy directory migration after returning to the original branch, ensuring old `.release/` files are merged into `.gitmap/release/` and removed before auto-commit.
 
@@ -16,3 +16,7 @@ Lightweight temporary branch creation from recent commits. Creates branches from
 ## interactive (i)
 
 Full-screen TUI with 9 views: Repos, Actions, Groups, Status, Releases, Temp Releases, Zip Groups, Aliases, Logs. See `features/interactive-tui.md` for details.
+
+## clone-next (cn)
+
+Clone the next or a specific versioned iteration of the current repo into the parent directory. Parses `-vN` suffix from folder name and remote URL, increments (`v++`) or jumps (`vN`), clones, registers with GitHub Desktop, and optionally removes the old folder. Flags: `--delete`, `--keep`, `--no-desktop`, `--ssh-key`, `--verbose`. Spec: `spec/01-app/59-clone-next.md`.
