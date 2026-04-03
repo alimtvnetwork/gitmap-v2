@@ -70,6 +70,31 @@ func runCloneNext(args []string) {
 		os.Exit(1)
 	}
 
+	// Phase 3: Check if target repo exists on GitHub; create if missing.
+	owner, repoShort, parseErr := clonenext.ParseOwnerRepo(remoteURL)
+	if parseErr != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrCloneNextRemoteParse, parseErr)
+		os.Exit(1)
+	}
+
+	exists, checkErr := clonenext.RepoExists(owner, targetName)
+	if checkErr != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrCloneNextRepoCheck, checkErr)
+		os.Exit(1)
+	}
+
+	if !exists {
+		fmt.Printf(constants.MsgCloneNextCreating, targetName)
+		createErr := clonenext.CreateRepo(owner, targetName, true)
+		if createErr != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrCloneNextRepoCreate, targetName, createErr)
+			os.Exit(1)
+		}
+		fmt.Printf(constants.MsgCloneNextCreated, targetName)
+	}
+
+	_ = repoShort // owner extracted; repoShort unused but validates URL structure.
+
 	fmt.Printf(constants.MsgCloneNextCloning, targetName, parentDir)
 	cloneResult := runGitClone(targetURL, targetPath)
 	if !cloneResult {

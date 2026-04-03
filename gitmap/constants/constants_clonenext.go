@@ -3,6 +3,8 @@ package constants
 // Clone-next command messages.
 const (
 	MsgCloneNextCloning      = "Cloning %s into %s...\n"
+	MsgCloneNextCreating     = "Creating GitHub repo %s...\n"
+	MsgCloneNextCreated      = "✓ Created GitHub repo %s\n"
 	MsgCloneNextDone         = "✓ Cloned %s\n"
 	MsgCloneNextDesktop      = "✓ Registered %s with GitHub Desktop\n"
 	MsgCloneNextRemovePrompt = "Remove current folder %s? [y/N] "
@@ -16,7 +18,10 @@ const (
 	ErrCloneNextNoRemote    = "Error: not a git repo or no remote origin: %v\n"
 	ErrCloneNextBadVersion  = "Error: %v\n"
 	ErrCloneNextExists      = "Error: target directory already exists: %s\nUse 'cd' to switch to it.\n"
-	ErrCloneNextFailed      = "Error: clone failed for %s\n"
+	ErrCloneNextFailed        = "Error: clone failed for %s\n"
+	ErrCloneNextRemoteParse   = "Error: cannot parse remote URL: %v\n"
+	ErrCloneNextRepoCheck     = "Error: cannot check target repo: %v\n"
+	ErrCloneNextRepoCreate    = "Error: cannot create GitHub repo %s: %v\n"
 	WarnCloneNextRemoveFailed = "Warning: could not remove %s: %v\n"
 )
 
