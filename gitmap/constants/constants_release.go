@@ -49,6 +49,14 @@ const (
 	ErrReleaseAborted         = "release aborted by user"
 )
 
+// Self-release messages.
+const (
+	MsgSelfReleaseSwitch = "\n  → Self-release: switching to %s\n"
+	MsgSelfReleaseReturn = "  ✓ Returned to %s\n"
+	ErrSelfReleaseExec   = "could not resolve executable path: %w"
+	ErrSelfReleaseNoRepo = "could not locate gitmap source repository from executable path"
+)
+
 // Release rollback messages.
 const (
 	MsgRollbackStart  = "\n  ⚠ Push failed — rolling back local branch and tag...\n"

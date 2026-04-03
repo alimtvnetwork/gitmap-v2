@@ -13,6 +13,11 @@ func dispatchRelease(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdReleaseSelf || command == constants.CmdReleaseSelfAlias {
+		runReleaseSelf(os.Args[2:])
+
+		return true
+	}
 	if command == constants.CmdReleaseBranch || command == constants.CmdReleaseBranchAlias {
 		runReleaseBranch(os.Args[2:])
 
