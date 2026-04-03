@@ -12,7 +12,7 @@ repository and falls back to self-release mode.
 
 ## Commands
 
-### release-self (rself)
+### release-self (rs / rself)
 
     gitmap release-self [version] [flags]
 
