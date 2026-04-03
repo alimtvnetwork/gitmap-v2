@@ -273,6 +273,7 @@ export const commands: CommandDef[] = [
     ],
     seeAlso: [
       { name: "Spec: release", description: "Full release workflow documentation", url: "/release" },
+      { name: "release-self", description: "Release gitmap itself from any directory", url: "/release-self" },
       { name: "release-branch", description: "Create branch without tagging" },
       { name: "release-pending", description: "Show unreleased commits" },
       { name: "changelog", description: "View release notes" },
