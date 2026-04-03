@@ -26,3 +26,13 @@ const (
 	FlagDescCloneNextKeep      = "Keep current folder without prompting"
 	FlagDescCloneNextNoDesktop = "Skip GitHub Desktop registration"
 )
+
+// Clone-next help strings for usage output.
+const (
+	HelpCloneNextFlags   = "Clone-Next Flags:"
+	HelpCNDelete         = "  --delete            Auto-remove current version folder after clone"
+	HelpCNKeep           = "  --keep              Keep current folder without prompting for removal"
+	HelpCNNoDesktop      = "  --no-desktop        Skip GitHub Desktop registration"
+	HelpCNSSHKey         = "  --ssh-key, -K       SSH key name to use for clone"
+	HelpCNVerbose        = "  --verbose           Show detailed clone-next output"
+)

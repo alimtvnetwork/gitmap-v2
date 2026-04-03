@@ -19,6 +19,18 @@ func printUsage() {
 	printUsageAmendFlags()
 	printUsageGoModFlags()
 	printUsageInteractiveFlags()
+	printUsageCloneNextFlags()
+}
+
+// printUsageCloneNextFlags prints the clone-next flags section.
+func printUsageCloneNextFlags() {
+	fmt.Println()
+	fmt.Println(constants.HelpCloneNextFlags)
+	fmt.Println(constants.HelpCNDelete)
+	fmt.Println(constants.HelpCNKeep)
+	fmt.Println(constants.HelpCNNoDesktop)
+	fmt.Println(constants.HelpCNSSHKey)
+	fmt.Println(constants.HelpCNVerbose)
 }
 
 // printUsageInteractiveFlags prints the interactive flags section.
