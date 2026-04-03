@@ -110,12 +110,16 @@ If false, delegate to `runReleaseSelf(args)` and return.
 
 - `CmdReleaseSelf = "release-self"`
 - `CmdReleaseSelfAlias = "rself"`
-- Messages: `MsgSelfReleaseSwitch`, `MsgSelfReleaseReturn`
+- `CmdReleaseSelfAlias2 = "rs"`
+- `SettingSourceRepoPath = "source_repo_path"`
+- Messages: `MsgSelfReleaseSwitch`, `MsgSelfReleaseReturn`, `MsgSelfReleaseSameDir`
 
 ## Acceptance Criteria
 
-1. `gitmap release-self --bump patch` releases gitmap itself from any directory.
+1. `gitmap rs --bump patch` releases gitmap itself from any directory.
 2. `gitmap release` outside a Git repo triggers self-release automatically.
 3. `gitmap release` inside a Git repo behaves exactly as before.
 4. After self-release, the user is returned to their original directory with confirmation.
 5. All release flags work identically in self-release mode.
+6. If executable is outside source tree, DB fallback resolves the repo path.
+7. If already in the source repo directory, skip the chdir round-trip.
