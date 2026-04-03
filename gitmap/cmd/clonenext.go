@@ -103,10 +103,11 @@ func extractRepoName(remoteURL string) string {
 
 // runGitClone executes git clone and returns success status.
 func runGitClone(url, dest string) bool {
-	_, err := gitutil.RunGitPublic(".",
-		constants.GitClone, url, dest)
+	cmd := exec.Command(constants.GitBin, constants.GitClone, url, dest)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	return err == nil
+	return cmd.Run() == nil
 }
 
 // registerCloneNextDesktop registers the cloned repo with GitHub Desktop.
