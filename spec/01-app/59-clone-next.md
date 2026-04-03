@@ -1,144 +1,213 @@
 # Clone Next
 
+## Status
+
+Pending behavior correction after spec approval.
+
 ## Command
 
-```
-gitmap clone-next <version-arg> [flags]
+```text
+gitmap clone-next <v++|v+1|vN> [flags]
 ```
 
 ## Alias
 
-```
+```text
 cn
 ```
 
 ## Responsibility
 
-Clone the next (or a specific) versioned iteration of the current repository
-into the parent directory, optionally removing the current version folder and
-registering the new clone with GitHub Desktop.
+From inside an existing Git repository, derive the source repository from
+`remote.origin.url`, resolve the next or explicit versioned target repository,
+create the target GitHub repository if it does not exist yet, clone it into the
+parent directory, register it with GitHub Desktop, and optionally remove the
+current local folder.
+
+## Source of Truth
+
+The command must use the Git remote as the authoritative source for repo name
+resolution.
+
+1. Read the current repo URL using:
+   - `git config --get remote.origin.url`
+   - fallback: `.git/config` origin parsing if needed
+2. Parse the host, owner/org, and repo name from that remote URL.
+3. Derive the base repo name and current version from the **remote repo name**.
+4. Use the current local folder name only for:
+   - determining the parent directory for the clone
+   - prompting/removing the current folder after success
+
+This avoids incorrect behavior when the local folder name and remote repo name
+are not perfectly aligned.
 
 ## Terminology
 
 | Term | Meaning |
 |------|---------|
-| Base name | Repo name without version suffix (e.g., `macro-ahk`) |
-| Version suffix | Trailing `-vN` or `-vNN` on the repo name (e.g., `-v11`) |
-| Current version | Version suffix of the repo in the current working directory |
-| Target version | The version to clone, derived from the argument |
+| Base name | Repo name without version suffix, e.g. `macro-ahk` |
+| Current version | Version implied by the current remote repo name |
+| Target version | Version requested by the user |
+| Target repo | New repo name in the form `<base>-vN` |
 
-## Version Argument
+## Version Arguments
 
 | Argument | Meaning | Example |
 |----------|---------|---------|
-| `v++` | Increment current version by 1 | `v11` → `v12` |
-| `v<N>` | Jump to exact version N | `v15` → clones `-v15` |
+| `v++` | Increment current version by 1 | `macro-ahk-v11` → `macro-ahk-v12` |
+| `v+1` | Alias for increment-by-one | `coding-guidelines-v7` → `coding-guidelines-v8` |
+| `vN` | Jump directly to an explicit version | `macro-ahk-v12` + `v15` → `macro-ahk-v15` |
 
-### Edge Case: No Existing Suffix
+## Version Rules
 
-If the current repo has **no** version suffix (e.g., `macro-ahk`), then:
+1. `v++` and `v+1` mean the same thing.
+2. `vN` must accept only positive integers (`v1`, `v2`, `v15`, ...).
+3. `v0`, negative values, and malformed inputs must fail with a clear error.
+4. If the current repo has no suffix, the unsuffixed repo is treated as the
+   original repo and the first increment target is `-v2`.
 
-- `v++` treats the current version as `0` and clones `macro-ahk-v2`
-  (first explicit version is v2; the un-suffixed repo is conceptually v1).
-- `v<N>` clones `macro-ahk-vN` directly.
+### No-Suffix Behavior
 
-If the current repo ends with `-v1`, `v++` clones `-v2`.
+| Current repo | Argument | Target repo |
+|--------------|----------|-------------|
+| `macro-ahk` | `v++` | `macro-ahk-v2` |
+| `macro-ahk` | `v+1` | `macro-ahk-v2` |
+| `macro-ahk` | `v15` | `macro-ahk-v15` |
 
-## Behavior
+## Target Resolution
 
-1. **Detect current repo**
-   a. Read `git config --get remote.origin.url` from the current directory.
-   b. Extract the repo owner/org and repo name from the remote URL.
-   c. Parse the folder name to identify base name and current version.
+After parsing the current remote:
 
-2. **Compute target**
-   a. Apply the version argument to derive the target version number.
-   b. Construct the target repo name: `<base-name>-v<target>`.
-   c. Construct the target remote URL using the same host and owner.
-   d. Construct the target local path: `<parent-dir>/<target-repo-name>`.
+1. Compute the target version.
+2. Build the target repo name: `<base-name>-v<target-version>`.
+3. Build the target local path: `<parent-of-current-working-directory>/<target-repo-name>`.
+4. Build the target remote URL by preserving the same host, owner/org, and URL
+   scheme as the current remote.
 
-3. **Clone**
-   a. Verify the target directory does not already exist.
-   b. Run `git clone <target-url> <target-path>`.
-   c. Print progress: `Cloning <target-repo-name> into <parent-dir>...`
+### URL Examples
 
-4. **GitHub Desktop registration**
-   a. After a successful clone, register the new repo with GitHub Desktop
-      (same mechanism as `clone --github-desktop`).
-   b. Print: `✓ Registered <target-repo-name> with GitHub Desktop`
+| Current remote | Target remote |
+|----------------|---------------|
+| `https://github.com/alimtvnetwork/macro-ahk-v11.git` | `https://github.com/alimtvnetwork/macro-ahk-v12.git` |
+| `git@github.com:alimtvnetwork/macro-ahk-v11.git` | `git@github.com:alimtvnetwork/macro-ahk-v12.git` |
+| `https://github.com/alimtvnetwork/coding-guidelines-v7.git` | `https://github.com/alimtvnetwork/coding-guidelines-v8.git` |
 
-5. **Optional: Remove current version**
-   a. After successful clone, prompt the user:
-      `Remove current folder <current-folder>? [y/N]`
-   b. If confirmed, delete the current directory recursively.
-   c. Print: `✓ Removed <current-folder>`
+## Required GitHub Creation Step
+
+If the target GitHub repository does not already exist, the command must create
+it **before** attempting to clone.
+
+### Required behavior
+
+1. Check whether the target remote repository exists.
+2. If it does not exist and the host is GitHub, create it under the same
+   owner/org as the source repo.
+3. The created repo should use the target repo name exactly.
+4. The command must not attempt `git clone` first when the target repo is known
+   to be missing.
+5. If repo creation fails, stop with a clear error and do not prompt for local
+   deletion.
+
+### Visibility
+
+The preferred behavior is to inherit the visibility of the source repository.
+If that cannot be determined safely, the command should fail with a clear error
+instead of guessing.
+
+## Workflow
+
+1. Confirm the current directory is a Git repo.
+2. Resolve `remote.origin.url`.
+3. Parse the current remote repo name and current version.
+4. Resolve the target version from `v++`, `v+1`, or `vN`.
+5. Compute the target repo name and target local path in the parent directory.
+6. Check that the local target directory does not already exist.
+7. Check whether the target remote exists.
+8. If missing, create the target GitHub repo.
+9. Clone the target repo into the parent directory.
+10. Register the cloned repo with GitHub Desktop unless `--no-desktop` is set.
+11. If clone succeeds, either:
+    - remove the current folder automatically with `--delete`
+    - keep it automatically with `--keep`
+    - otherwise prompt the user interactively
 
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--delete` | false | Skip prompt and auto-remove current folder after clone |
-| `--keep` | false | Skip prompt and keep current folder (no removal question) |
+| `--delete` | false | Remove the current folder automatically after successful clone |
+| `--keep` | false | Keep the current folder and skip the removal prompt |
 | `--no-desktop` | false | Skip GitHub Desktop registration |
-| `--verbose` | false | Enable verbose debug logging |
-| `--ssh-key <name>` | (none) | Use a named SSH key for the clone |
+| `--ssh-key <name>` / `-K <name>` | (none) | Use a named SSH key for Git operations |
+| `--verbose` | false | Show detailed clone-next diagnostics |
 
-If neither `--delete` nor `--keep` is provided, the command prompts interactively.
-
-## URL Construction
-
-The target URL mirrors the current remote's scheme and host:
-
-| Current remote | Target URL |
-|----------------|------------|
-| `https://github.com/user/repo-v11.git` | `https://github.com/user/repo-v12.git` |
-| `git@github.com:user/repo-v11.git` | `git@github.com:user/repo-v12.git` |
+If neither `--delete` nor `--keep` is provided, the command must prompt after a
+successful clone.
 
 ## Examples
 
-### Example 1: Increment version
+### Example 1: Increment from a versioned repo with `v+1`
 
+```text
+D:\wp-work\riseup-asia\coding-guidelines-v7> gitmap cn v+1
+
+Cloning coding-guidelines-v8 into D:\wp-work\riseup-asia...
+✓ Created GitHub repo coding-guidelines-v8
+✓ Cloned coding-guidelines-v8
+✓ Registered coding-guidelines-v8 with GitHub Desktop
+Remove current folder coding-guidelines-v7? [y/N] n
 ```
+
+### Example 2: Increment from a versioned repo with `v++`
+
+```text
 D:\wp-work\riseup-asia\macro-ahk-v11> gitmap cn v++
 
 Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
+✓ Created GitHub repo macro-ahk-v12
 ✓ Cloned macro-ahk-v12
 ✓ Registered macro-ahk-v12 with GitHub Desktop
 Remove current folder macro-ahk-v11? [y/N] n
 ```
 
-### Example 2: Jump to specific version with auto-delete
+### Example 3: Repo without an existing suffix
 
-```
-D:\wp-work\riseup-asia\macro-ahk-v12> gitmap cn v15 --delete
-
-Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v15
-✓ Registered macro-ahk-v15 with GitHub Desktop
-✓ Removed macro-ahk-v12
-```
-
-### Example 3: No existing suffix
-
-```
+```text
 D:\wp-work\riseup-asia\macro-ahk> gitmap cn v++
 
 Cloning macro-ahk-v2 into D:\wp-work\riseup-asia...
+✓ Created GitHub repo macro-ahk-v2
 ✓ Cloned macro-ahk-v2
 ✓ Registered macro-ahk-v2 with GitHub Desktop
 Remove current folder macro-ahk? [y/N] y
 ✓ Removed macro-ahk
 ```
 
+### Example 4: Jump to an exact version
+
+```text
+D:\wp-work\riseup-asia\macro-ahk-v12> gitmap cn v15 --delete
+
+Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
+✓ Created GitHub repo macro-ahk-v15
+✓ Cloned macro-ahk-v15
+✓ Registered macro-ahk-v15 with GitHub Desktop
+✓ Removed macro-ahk-v12
+```
+
 ## Error Handling
 
-| Condition | Behavior |
-|-----------|----------|
-| Not inside a git repo | Print error, exit 1 |
-| Cannot parse remote URL | Print error, exit 1 |
-| Target directory already exists | Print error, suggest using `cd`, exit 1 |
-| Clone fails (network/auth) | Print error, do not prompt for deletion, exit 1 |
-| Deletion fails | Print warning, exit 0 (clone already succeeded) |
+| Condition | Required behavior |
+|-----------|-------------------|
+| Not inside a Git repo | Print a clear error and exit 1 |
+| `remote.origin.url` missing | Print a clear error and exit 1 |
+| Remote URL cannot be parsed | Print a clear error and exit 1 |
+| Invalid version argument | Print a clear error and exit 1 |
+| Local target directory already exists | Print a clear error and suggest `cd` into it |
+| Target GitHub repo creation fails | Print a clear error and stop before clone |
+| Clone fails | Print a clear error and do not delete current folder |
+| GitHub Desktop registration fails | Warn, but keep clone success |
+| Folder deletion fails | Warn, but keep clone success |
 
 ## Implementation Scope
 
@@ -146,24 +215,29 @@ Remove current folder macro-ahk? [y/N] y
 |-----------|------|
 | Command handler | `cmd/clonenext.go` |
 | Version parser | `clonenext/version.go` |
-| Dispatch registration | `cmd/rootcore.go` |
-| Constants | `constants/constants_cli.go` |
+| Completion hints | `completion/*` and command completion sources |
 | Help text | `helptext/clone-next.md` |
+| Command usage output | `cmd/rootusage.go` and constants |
+| Spec | `spec/01-app/59-clone-next.md` |
 
 ## Acceptance Criteria
 
-1. `gitmap cn v++` increments the version suffix and clones into the parent directory.
-2. `gitmap cn v<N>` clones the exact version N into the parent directory.
-3. Repos without a version suffix are handled correctly (treated as v1).
-4. The new clone is registered with GitHub Desktop by default.
-5. User is prompted to remove the current folder unless `--delete` or `--keep` is specified.
-6. URL scheme (HTTPS or SSH) is preserved from the current remote.
-7. All error conditions produce clear messages and correct exit codes.
-8. `--verbose` writes a debug log file.
-9. Shell completion is provided for the version argument and flags.
+1. `gitmap cn v++` increments the current version correctly.
+2. `gitmap cn v+1` behaves exactly like `v++`.
+3. `gitmap cn v15` clones the exact target version.
+4. The source repo name is derived from the Git remote, not guessed from the
+   local folder name.
+5. The local clone target is always the parent directory of the current repo.
+6. Missing target GitHub repos are created before clone.
+7. GitHub Desktop registration happens by default after a successful clone.
+8. Current-folder removal happens only after a successful clone.
+9. `--delete` and `--keep` override the interactive removal prompt.
+10. Help text, completion hints, and tests cover `v++`, `v+1`, and `vN`.
 
-## See Also
+## Deferred Implementation Phases
 
-- [Cloner](05-cloner.md) — Core clone-from-file logic
-- [GitHub Desktop](10-github-desktop.md) — Desktop registration
-- [SSH Keys](50-ssh.md) — Named SSH key support
+1. Version parsing and resolution fixes
+2. Target GitHub repo existence check and creation
+3. Clone workflow hardening and better errors
+4. Help, completion, and automated test updates
+
