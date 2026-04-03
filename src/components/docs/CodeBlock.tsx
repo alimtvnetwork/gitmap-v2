@@ -110,14 +110,36 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
   const label = language.toUpperCase();
   const showLineNumbers = lines.length > 1;
 
-  const highlightedHtml = useMemo(() => {
+  const highlightedLines = useMemo(() => {
     const lang = language.toLowerCase();
+    let html: string | null = null;
     try {
       if (hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang }).value;
+        html = hljs.highlight(code, { language: lang }).value;
       }
     } catch {
       // fall through
+    }
+    if (html) {
+      // Split highlighted HTML by newlines, preserving open spans across lines
+      const result: string[] = [];
+      let openSpans: string[] = [];
+      const rawLines = html.split("\n");
+      for (const line of rawLines) {
+        // Prepend any spans that were open from previous lines
+        const prefix = openSpans.join("");
+        const full = prefix + line;
+        // Track open/close spans
+        const opens = line.match(/<span[^>]*>/g) || [];
+        const closes = line.match(/<\/span>/g) || [];
+        // Update stack
+        for (const o of opens) openSpans.push(o);
+        for (let i = 0; i < closes.length; i++) openSpans.pop();
+        // Close any still-open spans for this line's HTML
+        const suffix = "</span>".repeat(openSpans.length);
+        result.push(full + suffix);
+      }
+      return result;
     }
     return null;
   }, [code, language]);
