@@ -1,5 +1,45 @@
 import { useState, useCallback, useMemo } from "react";
 import { Copy, Check, Download, Maximize2, Minimize2 } from "lucide-react";
+import hljs from "highlight.js/lib/core";
+import go from "highlight.js/lib/languages/go";
+import typescript from "highlight.js/lib/languages/typescript";
+import javascript from "highlight.js/lib/languages/javascript";
+import bash from "highlight.js/lib/languages/bash";
+import json from "highlight.js/lib/languages/json";
+import sql from "highlight.js/lib/languages/sql";
+import css from "highlight.js/lib/languages/css";
+import xml from "highlight.js/lib/languages/xml";
+import yaml from "highlight.js/lib/languages/yaml";
+import markdown from "highlight.js/lib/languages/markdown";
+import powershell from "highlight.js/lib/languages/powershell";
+import rust from "highlight.js/lib/languages/rust";
+import php from "highlight.js/lib/languages/php";
+import cpp from "highlight.js/lib/languages/cpp";
+import csharp from "highlight.js/lib/languages/csharp";
+
+hljs.registerLanguage("go", go);
+hljs.registerLanguage("typescript", typescript);
+hljs.registerLanguage("ts", typescript);
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("js", javascript);
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("shell", bash);
+hljs.registerLanguage("sh", bash);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("sql", sql);
+hljs.registerLanguage("css", css);
+hljs.registerLanguage("html", xml);
+hljs.registerLanguage("xml", xml);
+hljs.registerLanguage("yaml", yaml);
+hljs.registerLanguage("yml", yaml);
+hljs.registerLanguage("markdown", markdown);
+hljs.registerLanguage("md", markdown);
+hljs.registerLanguage("powershell", powershell);
+hljs.registerLanguage("ps1", powershell);
+hljs.registerLanguage("rust", rust);
+hljs.registerLanguage("php", php);
+hljs.registerLanguage("cpp", cpp);
+hljs.registerLanguage("csharp", csharp);
 
 interface CodeBlockProps {
   code: string;
@@ -29,6 +69,8 @@ const LANG_COLORS: Record<string, string> = {
   md: "252 85% 60%",
   powershell: "210 60% 55%",
   ps1: "210 60% 55%",
+  cpp: "200 50% 55%",
+  csharp: "270 60% 55%",
 };
 
 const LANG_EXTENSIONS: Record<string, string> = {
@@ -37,6 +79,7 @@ const LANG_EXTENSIONS: Record<string, string> = {
   bash: "sh", shell: "sh", sh: "sh", sql: "sql",
   rust: "rs", html: "html", xml: "xml", yaml: "yml",
   yml: "yml", markdown: "md", md: "md", powershell: "ps1", ps1: "ps1",
+  cpp: "cpp", csharp: "cs",
 };
 
 const DEFAULT_ACCENT = "220 10% 50%";
@@ -66,6 +109,18 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
   const accent = LANG_COLORS[language.toLowerCase()] ?? DEFAULT_ACCENT;
   const label = language.toUpperCase();
   const showLineNumbers = lines.length > 1;
+
+  const highlightedHtml = useMemo(() => {
+    const lang = language.toLowerCase();
+    try {
+      if (hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+    } catch {
+      // fall through
+    }
+    return null;
+  }, [code, language]);
 
   const wrapperClass = fullscreen
     ? "fixed inset-8 z-[999] rounded-xl flex flex-col"
@@ -148,9 +203,16 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
               </div>
             )}
             <pre className="flex-1 p-4 overflow-x-auto text-sm leading-relaxed">
-              <code className="font-mono" style={{ color: "hsl(220, 20%, 92%)" }}>
-                {code}
-              </code>
+              {highlightedHtml ? (
+                <code
+                  className="font-mono hljs"
+                  dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                />
+              ) : (
+                <code className="font-mono" style={{ color: "hsl(220, 20%, 92%)" }}>
+                  {code}
+                </code>
+              )}
             </pre>
           </div>
         </div>
