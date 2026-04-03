@@ -16,8 +16,8 @@ type AmendmentRecord struct {
 	Commits       []CommitEntry   `json:"commits"`
 }
 
-// AuthorInfo holds a name/email pair.
-type AuthorInfo struct {
+// AmendAuthor holds a name/email pair for amendment records.
+type AmendAuthor struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
