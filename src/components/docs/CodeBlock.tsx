@@ -88,17 +88,29 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [pinnedLines, setPinnedLines] = useState<Set<number>>(new Set());
+  const [lastPinned, setLastPinned] = useState<number | null>(null);
 
   const hasPinned = pinnedLines.size > 0;
 
-  const togglePin = useCallback((lineIndex: number) => {
-    setPinnedLines((prev) => {
-      const next = new Set(prev);
-      if (next.has(lineIndex)) next.delete(lineIndex);
-      else next.add(lineIndex);
-      return next;
-    });
-  }, []);
+  const togglePin = useCallback((lineIndex: number, e?: React.MouseEvent) => {
+    if (e?.shiftKey && lastPinned !== null) {
+      const start = Math.min(lastPinned, lineIndex);
+      const end = Math.max(lastPinned, lineIndex);
+      setPinnedLines((prev) => {
+        const next = new Set(prev);
+        for (let i = start; i <= end; i++) next.add(i);
+        return next;
+      });
+    } else {
+      setPinnedLines((prev) => {
+        const next = new Set(prev);
+        if (next.has(lineIndex)) next.delete(lineIndex);
+        else next.add(lineIndex);
+        return next;
+      });
+    }
+    setLastPinned(lineIndex);
+  }, [lastPinned]);
 
   const handleCopy = useCallback(() => {
     const textToCopy = hasPinned
