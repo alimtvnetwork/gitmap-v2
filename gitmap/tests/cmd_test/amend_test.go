@@ -226,11 +226,11 @@ func buildAuditRecord(f testAmendFlags, commits []model.CommitEntry, branch, mod
 		FromCommit: fromCommit,
 		ToCommit:   toCommit,
 		TotalCommits: len(commits),
-		PreviousAuthor: model.AuthorInfo{
+		PreviousAuthor: model.AmendAuthor{
 			Name:  prevName,
 			Email: prevEmail,
 		},
-		NewAuthor: model.AuthorInfo{
+		NewAuthor: model.AmendAuthor{
 			Name:  f.name,
 			Email: f.email,
 		},

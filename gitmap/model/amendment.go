@@ -9,15 +9,15 @@ type AmendmentRecord struct {
 	FromCommit    string          `json:"fromCommit"`
 	ToCommit      string          `json:"toCommit"`
 	TotalCommits  int             `json:"totalCommits"`
-	PreviousAuthor AuthorInfo     `json:"previousAuthor"`
-	NewAuthor      AuthorInfo     `json:"newAuthor"`
+	PreviousAuthor AmendAuthor    `json:"previousAuthor"`
+	NewAuthor      AmendAuthor    `json:"newAuthor"`
 	Mode          string          `json:"mode"`
 	ForcePushed   bool            `json:"forcePushed"`
 	Commits       []CommitEntry   `json:"commits"`
 }
 
-// AuthorInfo holds a name/email pair.
-type AuthorInfo struct {
+// AmendAuthor holds a name/email pair for amendment records.
+type AmendAuthor struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
