@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.42.0 — Clone-Next Simplification
+
+- Removed forced GitHub repo existence check and automatic creation from `clone-next`.
+- `gitmap cn v+1` now clones directly without requiring `GITHUB_TOKEN`.
+- Repo creation is no longer a blocking prerequisite before clone.
+
 ## v2.41.0 — Clone-Next Phase 3
 
 - GitHub repo existence check and automatic creation before clone via GitHub API.
