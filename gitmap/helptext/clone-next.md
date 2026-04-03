@@ -61,6 +61,7 @@ cn
     ✓ Registered macro-ahk-v2 with GitHub Desktop
     Remove current folder macro-ahk? [y/N] y
     ✓ Removed macro-ahk
+    → Now in macro-ahk-v2
 
 ## See Also
 
