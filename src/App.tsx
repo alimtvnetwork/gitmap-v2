@@ -40,6 +40,7 @@ import ReleaseSelfPage from "./pages/ReleaseSelf";
 import DashboardPage from "./pages/Dashboard";
 import CloneNextPage from "./pages/CloneNext";
 import SpecIndexPage from "./pages/SpecIndex";
+import CdPage from "./pages/Cd";
 
 const queryClient = new QueryClient();
 
