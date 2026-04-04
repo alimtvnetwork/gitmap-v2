@@ -73,6 +73,7 @@ const navItems = [
   { title: "Diff Profiles", url: "/diff-profiles", icon: FileText },
   { title: "Zip Groups", url: "/zip-group", icon: Archive },
   { title: "Aliases", url: "/alias", icon: Link2 },
+  { title: "CD / Navigate", url: "/cd", icon: FolderOpen },
   { title: "SSH Keys", url: "/ssh", icon: KeyRound },
   { title: "Prune", url: "/prune", icon: Archive },
   { title: "Temp Release", url: "/temp-release", icon: Layers },
