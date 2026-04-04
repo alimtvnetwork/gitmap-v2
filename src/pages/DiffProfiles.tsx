@@ -48,7 +48,7 @@ const DiffProfilesPage = () => (
       <div className="flex items-center gap-3 mb-2">
         <GitCompareArrows className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">Diff Profiles</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Diff Profiles</h1>
           <p className="text-muted-foreground font-mono text-sm">gitmap diff-profiles (dp)</p>
         </div>
       </div>
@@ -60,7 +60,7 @@ const DiffProfilesPage = () => (
 
       {/* Features */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Features</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Features</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {features.map((f) => (
             <div key={f.title} className="border border-border rounded-lg p-4 bg-card">
@@ -76,7 +76,7 @@ const DiffProfilesPage = () => (
 
       {/* Resolution Logic */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Profile Resolution Logic</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Profile Resolution Logic</h2>
         <div className="border border-border rounded-lg p-4 bg-card">
           <div className="flex items-center gap-3 mb-3 flex-wrap">
             <span className="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-mono">1. Open Profile A DB</span>
@@ -99,7 +99,7 @@ const DiffProfilesPage = () => (
 
       {/* Comparison Categories */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Comparison Categories</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Comparison Categories</h2>
         <div className="space-y-3">
           {categories.map((cat) => (
             <div key={cat.label} className="border border-border rounded-lg p-4 bg-card flex items-start gap-3">
@@ -112,7 +112,7 @@ const DiffProfilesPage = () => (
 
       {/* Usage */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Usage</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
         <CodeBlock code="gitmap diff-profiles <profileA> <profileB> [--all] [--json]" />
         <div className="mt-4">
           <h3 className="font-mono font-semibold text-foreground mb-2">Flags</h3>
@@ -144,7 +144,7 @@ const DiffProfilesPage = () => (
 
       {/* JSON Output */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">JSON Output</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">JSON Output</h2>
         <p className="text-sm text-muted-foreground mb-3">
           Use <code className="text-primary">--json</code> for structured output suitable for scripting and CI pipelines:
         </p>
@@ -153,7 +153,7 @@ const DiffProfilesPage = () => (
 
       {/* Examples */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Examples</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Examples</h2>
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Compare two profiles:</p>
@@ -172,7 +172,7 @@ const DiffProfilesPage = () => (
 
       {/* File Layout */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">File Layout</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">File Layout</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -199,7 +199,7 @@ const DiffProfilesPage = () => (
 
       {/* See Also */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">See Also</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">See Also</h2>
         <ul className="space-y-1 text-sm font-mono">
           <li><a href="/profile" className="text-primary hover:underline">profile</a> — Create and manage database profiles</li>
           <li><a href="/export" className="text-primary hover:underline">export</a> — Export current profile data</li>

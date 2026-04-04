@@ -79,7 +79,7 @@ const CloneNextPage = () => {
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <GitBranch className="w-8 h-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold">clone-next</h1>
+          <h1 className="text-3xl font-heading font-bold docs-h1">clone-next</h1>
           <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded">cn</span>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
@@ -96,7 +96,7 @@ const CloneNextPage = () => {
 
         {/* How it works */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">How It Works</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[
               { icon: FolderGit2, title: "Detect", desc: "Reads remote origin URL and folder name from the current repo" },
@@ -115,7 +115,7 @@ const CloneNextPage = () => {
 
         {/* Version logic diagram */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">Version Logic</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Version Logic</h2>
           <p className="text-muted-foreground text-sm mb-4">
             The version argument determines how the target repo name is computed from the current folder.
           </p>
@@ -151,7 +151,7 @@ const CloneNextPage = () => {
 
         {/* Flags */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">Flags</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Flags</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
               <thead>
@@ -174,7 +174,7 @@ const CloneNextPage = () => {
 
         {/* Examples */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">Examples</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Examples</h2>
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Increment version by one</h3>
           <TerminalPreview
@@ -229,7 +229,7 @@ const CloneNextPage = () => {
 
         {/* URL Preservation */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">URL Preservation</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">URL Preservation</h2>
           <p className="text-muted-foreground text-sm mb-4">
             The remote URL scheme (HTTPS or SSH) is automatically preserved from the current repo:
           </p>
@@ -286,7 +286,7 @@ const CloneNextPage = () => {
 
         {/* See also */}
         <section className="mb-10">
-          <h2 className="text-xl font-heading font-semibold mb-3">See Also</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">See Also</h2>
           <ul className="space-y-1 text-sm">
             <li><a href="/commands" className="text-primary hover:underline font-mono">clone</a> — Clone repos from structured file</li>
             <li><a href="/ssh" className="text-primary hover:underline font-mono">ssh</a> — Manage named SSH keys</li>

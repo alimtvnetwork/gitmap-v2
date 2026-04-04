@@ -58,7 +58,7 @@ const ExportPage = () => (
       <div className="flex items-center gap-3 mb-2">
         <Download className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">Export</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Export</h1>
           <p className="text-muted-foreground font-mono text-sm">gitmap export (ex)</p>
         </div>
       </div>
@@ -70,7 +70,7 @@ const ExportPage = () => (
 
       {/* Features */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Features</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Features</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {features.map((f) => (
             <div key={f.title} className="border border-border rounded-lg p-4 bg-card">
@@ -86,7 +86,7 @@ const ExportPage = () => (
 
       {/* Usage */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Usage</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
         <CodeBlock code="gitmap export [file]" />
         <div className="mt-4 space-y-3">
           <div>
@@ -115,7 +115,7 @@ const ExportPage = () => (
 
       {/* Examples */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Examples</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Examples</h2>
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Export to default file:</p>
@@ -130,7 +130,7 @@ const ExportPage = () => (
 
       {/* Export Schema */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Export Schema (DatabaseExport)</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Export Schema (DatabaseExport)</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -155,13 +155,13 @@ const ExportPage = () => (
 
       {/* JSON Sample */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Sample Output</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Sample Output</h2>
         <CodeBlock code={JSON.stringify(MOCK_EXPORT, null, 2)} />
       </section>
 
       {/* File Layout */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">File Layout</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">File Layout</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -190,7 +190,7 @@ const ExportPage = () => (
 
       {/* See Also */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">See Also</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">See Also</h2>
         <ul className="space-y-1 text-sm font-mono">
           <li><a href="/import" className="text-primary hover:underline">import</a> — Restore database from backup</li>
           <li><a href="/commands" className="text-primary hover:underline">scan</a> — Scan directories to populate the database</li>

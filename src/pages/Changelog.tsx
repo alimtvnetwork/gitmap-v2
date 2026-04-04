@@ -48,7 +48,7 @@ const ChangelogPage = () => {
     <DocsLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-heading font-bold">Changelog</h1>
+          <h1 className="text-3xl font-heading font-bold docs-h1">Changelog</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {changelog.length} releases tracked
           </p>

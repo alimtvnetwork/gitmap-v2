@@ -64,7 +64,7 @@ const InteractiveTUI = () => {
       <div className="max-w-4xl">
         <div className="flex items-center gap-3 mb-2">
           <Terminal className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold text-foreground">Interactive TUI</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Interactive TUI</h1>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
           A full-screen terminal interface for browsing, searching, and managing repositories — built with Bubble Tea.

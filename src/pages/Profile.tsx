@@ -75,7 +75,7 @@ const ProfilePage = () => (
       <div className="flex items-center gap-3 mb-2">
         <UserCircle className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">Profile</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Profile</h1>
           <p className="text-muted-foreground font-mono text-sm">gitmap profile (pf)</p>
         </div>
       </div>
@@ -87,7 +87,7 @@ const ProfilePage = () => (
 
       {/* Features */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Features</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Features</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {features.map((f) => (
             <div key={f.title} className="border border-border rounded-lg p-4 bg-card">
@@ -103,7 +103,7 @@ const ProfilePage = () => (
 
       {/* Switch Behavior */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Switch Behavior</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Switch Behavior</h2>
         <div className="border border-border rounded-lg p-4 bg-card">
           <div className="flex items-center gap-3 mb-3 flex-wrap">
             <span className="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-mono">1. Update profiles.json</span>
@@ -124,7 +124,7 @@ const ProfilePage = () => (
 
       {/* Subcommands */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Subcommands</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Subcommands</h2>
         <div className="space-y-6">
           {subcommands.map((sub) => (
             <div key={sub.name} className="border border-border rounded-lg p-4 bg-card">
@@ -150,7 +150,7 @@ const ProfilePage = () => (
 
       {/* Database Mapping */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Database Mapping</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Database Mapping</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -177,7 +177,7 @@ const ProfilePage = () => (
 
       {/* Constraints */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Constraints</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Constraints</h2>
         <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
           <li>Default profile always exists and cannot be deleted.</li>
           <li>Cannot delete the currently active profile.</li>
@@ -188,7 +188,7 @@ const ProfilePage = () => (
 
       {/* File Layout */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">File Layout</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">File Layout</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -218,7 +218,7 @@ const ProfilePage = () => (
 
       {/* See Also */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">See Also</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">See Also</h2>
         <ul className="space-y-1 text-sm font-mono">
           <li><a href="/commands" className="text-primary hover:underline">diff-profiles</a> — Compare repos across profiles</li>
           <li><a href="/export" className="text-primary hover:underline">export</a> — Export current profile data</li>

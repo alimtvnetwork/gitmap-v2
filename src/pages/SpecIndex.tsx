@@ -75,7 +75,7 @@ const SpecIndexPage = () => {
   return (
     <DocsLayout>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-        <h1 className="text-3xl font-heading font-bold mb-2">Spec Index</h1>
+        <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Spec Index</h1>
         <p className="text-muted-foreground mb-2">
           Complete table of contents for all specification documents, issue post-mortems, design guidelines, and the generic CLI blueprint.
         </p>

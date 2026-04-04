@@ -58,7 +58,7 @@ const schema = [
 
 const BookmarksPage = () => (
   <DocsLayout>
-    <h1 className="text-3xl font-heading font-bold mb-2">Bookmarks</h1>
+    <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Bookmarks</h1>
     <p className="text-muted-foreground mb-6">
       Save and replay frequently-used CLI command+flag combinations by name.
     </p>

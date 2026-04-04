@@ -59,7 +59,7 @@ const features = [
 
 const HistoryPage = () => (
   <DocsLayout>
-    <h1 className="text-3xl font-heading font-bold mb-2">Command History</h1>
+    <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Command History</h1>
     <p className="text-muted-foreground mb-6">
       Automatic audit trail of every gitmap CLI execution with queryable history and usage tracking.
     </p>

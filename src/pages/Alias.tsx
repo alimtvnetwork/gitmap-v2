@@ -100,7 +100,7 @@ const commandInteraction = [
 
 const AliasPage = () => (
   <DocsLayout>
-    <h1 className="text-3xl font-heading font-bold mb-2">Repo Aliases</h1>
+    <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Repo Aliases</h1>
     <p className="text-muted-foreground mb-6">
       Assign short, memorable names to repositories for quick access from anywhere.
     </p>

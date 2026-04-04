@@ -104,7 +104,7 @@ const demos = [
 const InteractiveExamplesPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2">Interactive Examples</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Interactive Examples</h1>
       <p className="text-muted-foreground mb-8">
         Live terminal demos for key gitmap commands. Click <strong>▶</strong> to play.
       </p>

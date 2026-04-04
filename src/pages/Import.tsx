@@ -47,7 +47,7 @@ const ImportPage = () => (
       <div className="flex items-center gap-3 mb-2">
         <Upload className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="text-3xl font-heading font-bold text-foreground">Import</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Import</h1>
           <p className="text-muted-foreground font-mono text-sm">gitmap import (im)</p>
         </div>
       </div>
@@ -59,7 +59,7 @@ const ImportPage = () => (
 
       {/* Features */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Features</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Features</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {features.map((f) => (
             <div key={f.title} className="border border-border rounded-lg p-4 bg-card">
@@ -75,7 +75,7 @@ const ImportPage = () => (
 
       {/* Usage */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Usage</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
         <CodeBlock code="gitmap import [file] --confirm" />
         <div className="mt-4 space-y-3">
           <div>
@@ -125,7 +125,7 @@ const ImportPage = () => (
 
       {/* Examples */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Examples</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Examples</h2>
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Import from default file:</p>
@@ -144,7 +144,7 @@ const ImportPage = () => (
 
       {/* Import Strategies */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Import Behavior</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Import Behavior</h2>
         <p className="text-sm text-muted-foreground mb-3">
           Each table uses a specific merge strategy to safely restore data without data loss:
         </p>
@@ -172,7 +172,7 @@ const ImportPage = () => (
 
       {/* Group Resolution */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">Group Slug Resolution</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Group Slug Resolution</h2>
         <div className="border border-border rounded-lg p-4 bg-card">
           <div className="flex items-center gap-3 mb-3">
             <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ const ImportPage = () => (
 
       {/* File Layout */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">File Layout</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">File Layout</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-mono">
             <thead>
@@ -220,7 +220,7 @@ const ImportPage = () => (
 
       {/* See Also */}
       <section className="mb-10">
-        <h2 className="text-xl font-heading font-bold text-foreground mb-4">See Also</h2>
+        <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">See Also</h2>
         <ul className="space-y-1 text-sm font-mono">
           <li><a href="/export" className="text-primary hover:underline">export</a> — Export the database to a file</li>
           <li><a href="/commands" className="text-primary hover:underline">scan</a> — Scan directories as an alternative to import</li>

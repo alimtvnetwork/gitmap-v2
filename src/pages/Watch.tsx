@@ -154,7 +154,7 @@ const features = [
 const WatchPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2">Watch Command</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Watch Command</h1>
       <p className="text-muted-foreground mb-6">
         Real-time monitoring dashboard for all your tracked repositories.
       </p>

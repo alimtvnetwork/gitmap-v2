@@ -47,7 +47,7 @@ const targets = [
 const MakefilePage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2">Makefile</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Makefile</h1>
       <p className="text-muted-foreground mb-8">
         A thin wrapper around <code className="font-mono text-primary">run.sh</code> for
         standard <code className="font-mono text-primary">make</code> workflows on Linux and macOS.

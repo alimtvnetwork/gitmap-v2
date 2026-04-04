@@ -8,7 +8,7 @@ const ChangelogGenerate = () => {
       <div className="max-w-4xl">
         <div className="flex items-center gap-3 mb-2">
           <GitCommit className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold text-foreground">Changelog Generate</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Changelog Generate</h1>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
           Auto-generate changelog entries from commit messages between Git tags.

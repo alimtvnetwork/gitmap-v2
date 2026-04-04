@@ -56,7 +56,7 @@ const demoFilterLines = [
 
 const DashboardPage = () => (
   <DocsLayout>
-    <h1 className="text-3xl font-heading font-bold mb-2">Dashboard Command</h1>
+    <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Dashboard Command</h1>
     <p className="text-muted-foreground mb-6">
       Generate an interactive, self-contained HTML dashboard for repository analytics.
       <span className="ml-2 text-xs font-mono bg-muted px-2 py-0.5 rounded">alias: db</span>

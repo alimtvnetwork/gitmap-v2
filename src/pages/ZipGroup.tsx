@@ -96,7 +96,7 @@ const releaseFlags = [
 
 const ZipGroupPage = () => (
   <DocsLayout>
-    <h1 className="text-3xl font-heading font-bold mb-2">Zip Groups</h1>
+    <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Zip Groups</h1>
     <p className="text-muted-foreground mb-6">
       Define named collections of files and folders that are automatically compressed
       into ZIP archives during a release. Supports one-step creation with paths and
@@ -271,7 +271,7 @@ const ZipGroupPage = () => (
 
     {/* See Also */}
     <section className="mt-10">
-      <h2 className="text-xl font-heading font-bold text-foreground mb-4">See Also</h2>
+      <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">See Also</h2>
       <ul className="space-y-1 text-sm font-mono">
         <li><a href="/release" className="text-primary hover:underline">release</a> — Create a release with zip group assets <span className="text-muted-foreground">↗</span></li>
       </ul>

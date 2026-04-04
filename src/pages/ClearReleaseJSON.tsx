@@ -41,7 +41,7 @@ const ClearReleaseJSONPage = () => {
     <DocsLayout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-heading font-bold mb-2">Clear Release JSON</h1>
+          <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Clear Release JSON</h1>
           <p className="text-muted-foreground text-lg">
             Remove a specific release metadata JSON file from the <code className="text-primary font-mono text-base">.gitmap/release/</code> directory.
           </p>
@@ -49,7 +49,7 @@ const ClearReleaseJSONPage = () => {
 
         {/* Command & Alias */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Command</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Command</h2>
           <CodeBlock code="gitmap clear-release-json <version> [--dry-run]" />
           <p className="text-sm text-muted-foreground mt-2">
             Alias: <code className="font-mono text-primary">crj</code>
@@ -74,7 +74,7 @@ const ClearReleaseJSONPage = () => {
 
         {/* Flags */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Flags</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Flags</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -97,7 +97,7 @@ const ClearReleaseJSONPage = () => {
 
         {/* Version Resolution */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Version Resolution</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Version Resolution</h2>
           <p className="text-muted-foreground mb-3">
             The version argument is parsed through <code className="font-mono text-primary">release.Parse</code>, which applies standard semver normalisation:
           </p>
@@ -110,7 +110,7 @@ const ClearReleaseJSONPage = () => {
 
         {/* Behaviour */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Behaviour</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Behaviour</h2>
 
           <h3 className="text-lg font-mono font-medium mb-2 mt-4">Normal Mode</h3>
           <CodeBlock code={`# Remove release metadata for v2.20.0
@@ -125,7 +125,7 @@ gitmap clear-release-json v2.20.0 --dry-run
 
         {/* Edge Cases */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Edge Cases</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Edge Cases</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -148,7 +148,7 @@ gitmap clear-release-json v2.20.0 --dry-run
 
         {/* Exit Codes */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Exit Codes</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Exit Codes</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -171,7 +171,7 @@ gitmap clear-release-json v2.20.0 --dry-run
 
         {/* Output Constants */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Output Constants</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Output Constants</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -194,7 +194,7 @@ gitmap clear-release-json v2.20.0 --dry-run
 
         {/* Implementation */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">Implementation</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Implementation</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -223,7 +223,7 @@ gitmap clear-release-json v2.20.0 --dry-run
 
         {/* See Also */}
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-3">See Also</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">See Also</h2>
           <ul className="space-y-1 text-sm">
             <li><a href="/release" className="text-primary hover:underline font-mono">release</a> — Create a release</li>
             <li><a href="/commands" className="text-primary hover:underline font-mono">list-releases</a> — Show stored releases</li>

@@ -28,7 +28,7 @@ const features = [
 const GoModPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2">GoMod Command</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">GoMod Command</h1>
       <p className="text-muted-foreground mb-6">
         Rename a Go module path across an entire repository — updates{" "}
         <code className="text-primary font-mono">go.mod</code> and every file

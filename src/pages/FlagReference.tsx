@@ -56,7 +56,7 @@ const FlagReferencePage = () => {
 
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2">Flag Reference</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Flag Reference</h1>
       <p className="text-muted-foreground mb-6">
         {allFlags.length} flags across {commands.filter((c) => c.flags?.length).length} commands.
       </p>
