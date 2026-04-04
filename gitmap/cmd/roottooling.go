@@ -96,6 +96,11 @@ func dispatchTooling(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdInstall || command == constants.CmdInstallAlias {
+		runInstall(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
