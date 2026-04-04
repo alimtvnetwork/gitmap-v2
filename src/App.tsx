@@ -40,6 +40,7 @@ import ReleaseSelfPage from "./pages/ReleaseSelf";
 import DashboardPage from "./pages/Dashboard";
 import CloneNextPage from "./pages/CloneNext";
 import SpecIndexPage from "./pages/SpecIndex";
+import CdPage from "./pages/Cd";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,7 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/clone-next" element={<CloneNextPage />} />
           <Route path="/spec" element={<SpecIndexPage />} />
+          <Route path="/cd" element={<CdPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
