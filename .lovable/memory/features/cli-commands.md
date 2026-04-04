@@ -1,13 +1,25 @@
 # Memory: features/cli-commands
 Updated: now
 
-The CLI supports 57 subcommands with aliases: 'scan' (s), 'clone' (c), 'clone-next' (cn), 'pull' (p), 'rescan' (rsc), 'setup', 'status' (st), 'exec' (x), 'desktop-sync' (ds), 'release' (r), 'release-self' (rs/rself), 'release-branch' (rb), 'release-pending' (rp), 'latest-branch' (lb), 'list' (ls), 'group' (g), 'multi-group' (mg), 'db-reset', 'version' (v), 'changelog' (cl), 'list-versions' (lv), 'list-releases' (lr), 'revert', 'doctor', 'update', 'seo-write' (sw), 'amend' (am), 'amend-list' (al), 'history' (hi), 'history-reset' (hr), 'stats' (ss), 'bookmark' (bk), 'export' (ex), 'import' (im), 'profile' (pf), 'cd' (go), 'watch' (w), 'diff-profiles' (dp), 'gomod' (gm), 'go-repos' (gr), 'node-repos' (nr), 'react-repos' (rr), 'cpp-repos' (cr), 'csharp-repos' (csr), 'alias' (a), 'zip-group' (z), 'completion' (cmp), 'interactive' (i), 'clear-release-json' (crj), 'update-cleanup', 'has-any-updates' (hau/hac), 'docs' (d), 'changelog-generate' (cg), 'ssh', 'prune' (pr), 'temp-release' (tr), and 'dashboard' (db). Current version: v2.46.0.
+The CLI supports 60 subcommands with aliases: 'scan' (s), 'clone' (c), 'clone-next' (cn), 'pull' (p), 'rescan' (rsc), 'setup', 'status' (st), 'exec' (x), 'desktop-sync' (ds), 'release' (r), 'release-self' (rs/rself), 'release-branch' (rb), 'release-pending' (rp), 'latest-branch' (lb), 'list' (ls), 'group' (g), 'multi-group' (mg), 'db-reset', 'version' (v), 'changelog' (cl), 'list-versions' (lv), 'list-releases' (lr), 'revert', 'doctor', 'update', 'seo-write' (sw), 'amend' (am), 'amend-list' (al), 'history' (hi), 'history-reset' (hr), 'stats' (ss), 'bookmark' (bk), 'export' (ex), 'import' (im), 'profile' (pf), 'cd' (go), 'watch' (w), 'diff-profiles' (dp), 'gomod' (gm), 'go-repos' (gr), 'node-repos' (nr), 'react-repos' (rr), 'cpp-repos' (cr), 'csharp-repos' (csr), 'alias' (a), 'zip-group' (z), 'completion' (cmp), 'interactive' (i), 'clear-release-json' (crj), 'update-cleanup', 'has-any-updates' (hau/hac), 'docs' (d), 'changelog-generate' (cg), 'ssh', 'prune' (pr), 'temp-release' (tr), 'dashboard' (db), 'task' (tk), 'env' (ev), and 'install' (in). Current version: v2.48.1.
 
 The release workflow re-runs legacy directory migration after returning to the original branch, ensuring old `.release/` files are merged into `.gitmap/release/` and removed before auto-commit.
 
 ## Batch Operations
 
 The `pull` and `exec` commands support `--stop-on-fail` to halt batch operations after the first failure. Failed items are tracked with `FailWithError` and reported via `PrintFailureReport`. Partial failures exit with code 3 (`ExitPartialFailure`).
+
+## task (tk) — File Sync Watch
+
+Named, persistent file-sync tasks with one-way timestamp-based synchronization. Source-to-destination folder sync with configurable interval (default 5s), parallel goroutines, and .gitignore-based filtering. Tasks stored in `.gitmap/tasks.json`. Spec: `spec/01-app/79-task-watch.md`.
+
+## env (ev) — Environment Variable Management
+
+Cross-platform persistent environment variable and PATH management. Windows: User/System level via setx/registry. Unix: writes to shell profiles (.bashrc/.zshrc). Tracks managed variables in `.gitmap/env-registry.json`. Spec: `spec/01-app/80-env.md`.
+
+## install (in) — Developer Tool Installer
+
+Automated installation of dev tools (VS Code, Node.js, Go, Git, Python, etc.) using platform package managers (Chocolatey/Winget on Windows, apt/brew on Linux/macOS). Spec: `spec/01-app/81-install.md`.
 
 ## temp-release (tr)
 

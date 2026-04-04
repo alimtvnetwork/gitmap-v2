@@ -68,6 +68,10 @@ Feature specs, command designs, and refactor documentation for the gitmap CLI.
 | 56 | [unified-gitmap-dir.md](01-app/56-unified-gitmap-dir.md) | Unified .gitmap directory |
 | 57 | [skipmeta-integration-test.md](01-app/57-skipmeta-integration-test.md) | Skip-meta integration test |
 | 58–78 | refactor-*.md | Code refactors (workflow, dispatch, archive, autocommit, SEO, branches, assets, TUI, aliases, ops, status, exec, logs, compress) |
+| 79 | [task-watch.md](01-app/79-task-watch.md) | Task watch file sync |
+| 80 | [env.md](01-app/80-env.md) | Environment variable management |
+| 81 | [install.md](01-app/81-install.md) | Developer tool installer |
+| 82 | [future-features.md](01-app/82-future-features.md) | Future features (pending) |
 
 ---
 
