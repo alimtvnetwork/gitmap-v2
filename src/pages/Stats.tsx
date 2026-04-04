@@ -65,7 +65,7 @@ const StatsPage = () => (
     </p>
     <TerminalPreview />
 
-    <h2 className="text-xl font-mono font-semibold mt-10 mb-4">Features</h2>
+    <h2 className="text-xl font-heading font-semibold mt-10 mb-4 docs-h2">Features</h2>
     <div className="grid md:grid-cols-2 gap-4 mb-8">
       {features.map((f) => (
         <div key={f.title} className="rounded-lg border border-border bg-card p-4">

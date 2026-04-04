@@ -8,10 +8,10 @@ const HomePage = () => {
   return (
     <DocsLayout>
       <section className="py-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-mono font-bold mb-4 docs-h1">
+        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4 docs-h1">
           gitmap
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
           Scan a folder tree for Git repos, generate structured clone files, and
           re-clone the exact layout on any machine. Track, group, release, and
           manage repositories from a single CLI.
