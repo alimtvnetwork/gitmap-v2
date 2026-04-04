@@ -91,6 +91,11 @@ func dispatchTooling(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdEnv || command == constants.CmdEnvAlias {
+		runEnv(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
