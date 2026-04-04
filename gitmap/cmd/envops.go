@@ -1,19 +1,13 @@
 package cmd
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
-	"regexp"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/model"
 )
-
-// envNamePattern validates environment variable names.
-var envNamePattern = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*$`)
 
 // runEnvSet sets an environment variable persistently.
 func runEnvSet(args []string) {
@@ -177,42 +171,5 @@ func runEnvPathList() {
 
 	for _, p := range registry.Paths {
 		fmt.Printf(constants.MsgEnvPathRow, p.Path)
-	}
-}
-
-// validateEnvName checks variable name is valid.
-func validateEnvName(name string) {
-	if name == "" {
-		fmt.Fprint(os.Stderr, constants.ErrEnvNameRequired)
-		os.Exit(1)
-	}
-
-	if envNamePattern.MatchString(name) {
-		return
-	}
-
-	fmt.Fprintf(os.Stderr, constants.ErrEnvInvalidName, name)
-	os.Exit(1)
-}
-
-// validateEnvValue checks value is provided.
-func validateEnvValue(value string) {
-	if value == "" {
-		fmt.Fprint(os.Stderr, constants.ErrEnvValueRequired)
-		os.Exit(1)
-	}
-}
-
-// validateEnvPathDir checks the directory exists.
-func validateEnvPathDir(dir string) {
-	if dir == "" {
-		fmt.Fprint(os.Stderr, constants.ErrEnvPathRequired)
-		os.Exit(1)
-	}
-
-	_, err := os.Stat(dir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvPathNotExist, dir)
-		os.Exit(1)
 	}
 }
