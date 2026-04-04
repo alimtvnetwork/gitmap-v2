@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback } from "react";
+import { Copy, Check, Download } from "lucide-react";
 import DocsLayout from "@/components/docs/DocsLayout";
 import CommandCard from "@/components/docs/CommandCard";
 import CommandCategoryGroup from "@/components/docs/CommandCategoryGroup";

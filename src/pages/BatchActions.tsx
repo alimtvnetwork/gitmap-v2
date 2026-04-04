@@ -55,14 +55,14 @@ const BatchActions = () => {
       <div className="max-w-4xl">
         <div className="flex items-center gap-3 mb-2">
           <Zap className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-mono font-bold text-foreground">Batch Actions</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Batch Actions</h1>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
           Perform git operations across multiple repositories at once from the Interactive TUI's Actions view.
         </p>
 
         {/* Terminal Demo */}
-        <section className="mb-10 animate-fade-in">
+        <section className="mb-10 ">
           <TerminalDemo
             title="gitmap interactive — batch pull"
             lines={[
@@ -101,7 +101,7 @@ const BatchActions = () => {
         </section>
 
         {/* Terminal Demo 2 — exec */}
-        <section className="mb-10 animate-fade-in">
+        <section className="mb-10 ">
           <TerminalDemo
             title="gitmap interactive — batch exec"
             lines={[
@@ -124,7 +124,7 @@ const BatchActions = () => {
         </section>
 
         {/* Terminal Demo 3 — status */}
-        <section className="mb-10 animate-fade-in">
+        <section className="mb-10 ">
           <TerminalDemo
             title="gitmap interactive — batch status"
             lines={[
