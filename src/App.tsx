@@ -87,6 +87,7 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/clone-next" element={<CloneNextPage />} />
           <Route path="/spec" element={<SpecIndexPage />} />
+          <Route path="/cd" element={<CdPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

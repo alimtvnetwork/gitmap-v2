@@ -4,6 +4,7 @@ import {
   Rocket,
   Settings,
   Boxes,
+  FolderOpen,
   Monitor,
   Hammer,
   GitBranch,

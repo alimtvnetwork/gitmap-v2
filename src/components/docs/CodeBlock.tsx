@@ -305,7 +305,7 @@ const CodeBlock = ({ code, language = "bash", title }: CodeBlockProps) => {
                 ))}
               </div>
             )}
-            <pre className="flex-1 overflow-x-auto text-sm leading-relaxed m-0 py-4">
+            <pre className="flex-1 overflow-x-auto leading-relaxed m-0 py-4" style={{ fontSize }}>
               <code className="font-mono hljs block">
                 {highlightedLines ? (
                   highlightedLines.map((lineHtml, i) => (
