@@ -65,12 +65,6 @@ const (
 	CmdReleaseSelf           = "release-self"
 	CmdReleaseSelfAlias      = "rself"
 	CmdReleaseSelfAlias2     = "rs"
-	CmdTask                  = "task"
-	CmdTaskAlias             = "tk"
-	CmdEnv                   = "env"
-	CmdEnvAlias              = "ev"
-	CmdInstall               = "install"
-	CmdInstallAlias          = "in"
 )
 
 // Clone shorthands.
