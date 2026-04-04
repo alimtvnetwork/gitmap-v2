@@ -86,6 +86,11 @@ func dispatchTooling(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdTask || command == constants.CmdTaskAlias {
+		runTask(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

@@ -97,6 +97,10 @@ func printUsageCommands() {
 	fmt.Println(constants.HelpTempRelease)
 	fmt.Println(constants.HelpDashboard)
 	fmt.Println(constants.HelpCloneNext)
+	fmt.Println(constants.HelpReleaseSelf)
+	fmt.Println(constants.HelpTask)
+	fmt.Println(constants.HelpEnv)
+	fmt.Println(constants.HelpInstall)
 	fmt.Println(constants.HelpHelp)
 }
 
