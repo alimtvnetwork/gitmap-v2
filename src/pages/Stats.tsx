@@ -136,9 +136,9 @@ const StatsPage = () => (
       </table>
     </div>
 
-    <h2 className="text-xl font-mono font-semibold mt-10 mb-3">File Layout</h2>
+    <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">File Layout</h2>
     <div className="rounded-lg border border-border overflow-hidden">
-      <table className="w-full text-sm">
+      <table className="w-full text-sm docs-table">
         <thead>
           <tr className="bg-muted/50">
             <th className="text-left font-mono font-semibold px-4 py-2">File</th>
