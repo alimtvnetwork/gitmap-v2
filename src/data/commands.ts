@@ -1160,4 +1160,78 @@ export const commands: CommandDef[] = [
       { name: "history", description: "View command history", url: "/history" },
     ],
   },
+  // ═══════════════════════════════════════════
+  // Tools & Setup (new commands)
+  // ═══════════════════════════════════════════
+  {
+    category: "tools",
+    name: "task", alias: "tk", description: "Manage named file-sync watch tasks for one-way folder synchronization",
+    usage: "gitmap task <create|list|run|show|delete> [flags]",
+    flags: [
+      { flag: "--src <path>", description: "Source directory path (create)" },
+      { flag: "--dest <path>", description: "Destination directory path (create)" },
+      { flag: "--interval <seconds>", description: "Sync interval in seconds, minimum 2 (run, default: 5)" },
+      { flag: "--verbose", description: "Show detailed sync output (run)" },
+      { flag: "--dry-run", description: "Preview sync actions without copying (run)" },
+    ],
+    examples: [
+      { command: "gitmap task create my-sync --src ./src --dest ./backup", description: "Create a sync task" },
+      { command: "gitmap tk run my-sync --interval 10 --verbose", description: "Run with 10s interval and verbose output" },
+      { command: "gitmap task list", description: "List all saved tasks" },
+      { command: "gitmap task show my-sync", description: "Show task details" },
+      { command: "gitmap task delete my-sync", description: "Remove a task" },
+    ],
+    seeAlso: [
+      { name: "watch", description: "Live-refresh dashboard of repo status" },
+      { name: "exec", description: "Run git commands across repos" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "env", alias: "ev", description: "Manage persistent environment variables and PATH entries across platforms",
+    usage: "gitmap env <set|get|delete|list|path add|path remove|path list> [flags]",
+    flags: [
+      { flag: "--system", description: "Target system-level variables (Windows, requires admin)" },
+      { flag: "--shell <name>", description: "Target shell profile: bash, zsh (Unix only)" },
+      { flag: "--verbose", description: "Show detailed operation output" },
+      { flag: "--dry-run", description: "Preview changes without applying" },
+    ],
+    examples: [
+      { command: 'gitmap env set GOPATH "/home/user/go"', description: "Set a persistent variable" },
+      { command: "gitmap ev path add /usr/local/go/bin", description: "Add directory to PATH" },
+      { command: "gitmap env list", description: "List managed variables" },
+      { command: "gitmap env path list", description: "List managed PATH entries" },
+      { command: "gitmap env delete GOPATH --dry-run", description: "Preview variable removal" },
+    ],
+    seeAlso: [
+      { name: "install", description: "Install developer tools" },
+      { name: "doctor", description: "Diagnose PATH and version issues" },
+      { name: "setup", description: "Configure Git global settings" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "install", alias: "in", description: "Install a developer tool by name using the platform package manager",
+    usage: "gitmap install <tool> [flags]",
+    flags: [
+      { flag: "--manager <name>", description: "Force package manager (choco, winget, apt, brew)" },
+      { flag: "--version <ver>", description: "Install a specific version" },
+      { flag: "--verbose", description: "Show full installer output" },
+      { flag: "--dry-run", description: "Show install command without executing" },
+      { flag: "--check", description: "Only check if tool is installed" },
+      { flag: "--list", description: "List all supported tools" },
+    ],
+    examples: [
+      { command: "gitmap install vscode", description: "Install VS Code" },
+      { command: "gitmap in go --check", description: "Check if Go is installed" },
+      { command: "gitmap install python --dry-run", description: "Preview install command" },
+      { command: "gitmap install node --verbose", description: "Install with verbose output" },
+      { command: "gitmap install --list", description: "List all supported tools" },
+    ],
+    seeAlso: [
+      { name: "env", description: "Manage environment variables and PATH" },
+      { name: "doctor", description: "Diagnose PATH and version issues" },
+      { name: "setup", description: "Configure Git global settings" },
+    ],
+  },
 ];
