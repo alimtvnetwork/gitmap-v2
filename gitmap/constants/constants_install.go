@@ -84,6 +84,7 @@ const (
 const (
 	MsgInstallChecking   = "Checking if %s is installed...\n"
 	MsgInstallFound      = "%s is already installed (version: %s)\n"
+	MsgInstallNotFound   = "%s is not installed.\n"
 	MsgInstallInstalling = "Installing %s...\n"
 	MsgInstallSuccess    = "%s installed successfully.\n"
 	MsgInstallDryCmd     = "[dry-run] Would run: %s\n"

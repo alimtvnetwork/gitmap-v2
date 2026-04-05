@@ -86,13 +86,14 @@ func executeInstall(opts installOptions) {
 	fmt.Printf(constants.MsgInstallChecking, opts.Tool)
 
 	existingVersion := detectInstalledVersion(opts.Tool)
-	if existingVersion != "" && opts.Check {
+	if existingVersion != "" {
 		fmt.Printf(constants.MsgInstallFound, opts.Tool, existingVersion)
 
 		return
 	}
-	if existingVersion != "" {
-		fmt.Printf(constants.MsgInstallFound, opts.Tool, existingVersion)
+
+	if opts.Check {
+		fmt.Printf(constants.MsgInstallNotFound, opts.Tool)
 
 		return
 	}

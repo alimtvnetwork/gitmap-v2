@@ -114,7 +114,8 @@ func syncSingleFile(srcRoot, destRoot, relPath string, srcInfo os.FileInfo, dryR
 	destPath := filepath.Join(destRoot, relPath)
 	destInfo, err := os.Stat(destPath)
 
-	isNewer := err != nil || srcInfo.ModTime().After(destInfo.ModTime())
+	isNew := err != nil
+	isNewer := isNew || srcInfo.ModTime().After(destInfo.ModTime())
 	if isNewer {
 		srcPath := filepath.Join(srcRoot, relPath)
 
