@@ -153,6 +153,17 @@
 - ✅ TUI Temp Releases view: 9th tab with list/detail/grouped-by-prefix views for temp-release branches
 - ✅ Partial failure rollback hardening: failure detail tracking, failure reports, `--stop-on-fail` flag, exit code 3 on partial failures for pull and exec
 
+### v2.49.0 — Polish & Test Coverage
+
+- ⬜ Wire `--shell` flag in env commands (`set`, `delete`, `path add`, `path remove`) to override auto-detected shell profile
+- ⬜ Unit tests for `task` commands: create, list, show, delete, validation, duplicate detection
+- ⬜ Unit tests for `env` commands: set, get, delete, list, path add/remove/list, validation, registry CRUD
+- ⬜ Unit tests for `install` commands: tool validation, manager detection, command building, version check, dry-run
+- ⬜ Unit tests for platform-specific env persistence (Unix profile read/write, Windows setx args)
+- ⬜ Fix `install --check` to print distinct "not found" message when tool is missing (constant added, wiring done)
+- ⬜ Update docs site command entries with `--shell` flag for env commands
+- ⬜ Update `helptext/env.md` examples to demonstrate `--shell` usage
+
 ## Pending Work
 
-(No pending items — all roadmap tasks complete.)
+See v2.49.0 above.
