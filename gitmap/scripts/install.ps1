@@ -37,7 +37,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Repo = "alimtvnetwork/gitmap"
+$Repo = "alimtvnetwork/git-repo-navigator"
 $BinaryName = "gitmap.exe"
 
 # --- Logging helpers ---
