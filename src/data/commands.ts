@@ -1202,6 +1202,8 @@ export const commands: CommandDef[] = [
       { command: "gitmap env list", description: "List managed variables" },
       { command: "gitmap env path list", description: "List managed PATH entries" },
       { command: "gitmap env delete GOPATH --dry-run", description: "Preview variable removal" },
+      { command: 'gitmap env set JAVA_HOME "/usr/lib/jvm/java-17" --shell zsh', description: "Write to .zshrc instead of auto-detected profile" },
+      { command: "gitmap ev path add /opt/bin --shell bash", description: "Add PATH entry targeting .bashrc explicitly" },
     ],
     seeAlso: [
       { name: "install", description: "Install developer tools" },
