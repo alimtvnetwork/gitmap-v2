@@ -1,4 +1,4 @@
-# gitmap task
+# File-Sync Watch Tasks
 
 Manage named file-sync watch tasks for one-way folder synchronization.
 
@@ -12,63 +12,66 @@ tk
 
 ## Subcommands
 
-| Subcommand | Description |
-|------------|-------------|
-| create | Create a new sync task |
-| list | List all saved tasks |
-| run | Start a task's sync loop |
-| show | Show details of a task |
-| delete | Remove a saved task |
+| Subcommand | Description                          |
+|------------|--------------------------------------|
+| create     | Create a new sync task               |
+| list       | List all saved tasks                 |
+| run        | Start a task's sync loop             |
+| show       | Show details of a task               |
+| delete     | Remove a saved task                  |
 
 ## Flags (create)
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| --src | (required) | Source directory path |
+| Flag   | Default    | Description                |
+|--------|------------|----------------------------|
+| --src  | (required) | Source directory path       |
 | --dest | (required) | Destination directory path |
 
 ## Flags (run)
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| --interval | 5 | Sync interval in seconds (minimum 2) |
-| --verbose | false | Show detailed sync output |
-| --dry-run | false | Preview sync actions without copying |
+| Flag       | Default | Description                              |
+|------------|---------|------------------------------------------|
+| --interval | 5       | Sync interval in seconds (minimum 2)     |
+| --verbose  | false   | Show detailed sync output                |
+| --dry-run  | false   | Preview sync actions without copying     |
 
 ## Prerequisites
 
-- Source directory must exist
+- Source directory must exist before creating or running a task
+- `.gitignore` patterns in the source root are respected during sync
 
 ## Examples
 
-### Example 1: Create a sync task
+### Create and verify a sync task
 
-    gitmap task create my-sync --src ./src --dest ./backup
+    $ gitmap task create my-sync --src ./src --dest ./backup
+      Task 'my-sync' created.
 
-**Output:**
+    $ gitmap task show my-sync
+      Name:     my-sync
+      Source:   ./src
+      Dest:     ./backup
 
-    Task 'my-sync' created.
+### Run a sync task with verbose output
 
-### Example 2: Run a sync task
+    $ gitmap tk run my-sync --interval 10 --verbose
+      Task 'my-sync' running — syncing every 10s (Ctrl+C to stop)
+      Synced: main.go
+      Synced: config/settings.json
+      Synced: utils/helpers.go
+      All files up to date.
+      ^C
+      Task 'my-sync' stopped.
 
-    gitmap tk run my-sync --interval 10 --verbose
+### List and delete tasks
 
-**Output:**
+    $ gitmap task list
+      Tasks:
+        my-sync              ./src → ./backup
+        docs-mirror          ./docs → /mnt/share/docs
 
-    Task 'my-sync' running — syncing every 10s (Ctrl+C to stop)
-    Synced: main.go
-    Synced: config/settings.json
-    All files up to date.
-
-### Example 3: List all tasks
-
-    gitmap task list
-
-**Output:**
-
-    Tasks:
-      my-sync              ./src → ./backup
-      docs-mirror          ./docs → /mnt/share/docs
+    $ gitmap task delete docs-mirror
+      Task 'docs-mirror' deleted.
 
 ## See Also
 
