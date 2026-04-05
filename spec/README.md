@@ -71,7 +71,8 @@ Feature specs, command designs, and refactor documentation for the gitmap CLI.
 | 79 | [task-watch.md](01-app/79-task-watch.md) | Task watch file sync |
 | 80 | [env.md](01-app/80-env.md) | Environment variable management |
 | 81 | [install.md](01-app/81-install.md) | Developer tool installer |
-| 82 | [future-features.md](01-app/82-future-features.md) | Future features (pending) |
+| 82 | [install-script.md](01-app/82-install-script.md) | One-liner install scripts |
+| 83 | [future-features.md](01-app/82-future-features.md) | Future features (pending) |
 
 ---
 
