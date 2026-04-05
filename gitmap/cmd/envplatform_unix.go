@@ -12,21 +12,21 @@ import (
 )
 
 // setEnvPersistent sets an environment variable in the shell profile.
-func setEnvPersistent(name, value string, _ bool) {
-	profilePath := detectShellProfile()
+func setEnvPersistent(name, value string, _ bool, shell string) {
+	profilePath := resolveShellProfile(shell)
 	exportLine := fmt.Sprintf(constants.EnvExportFmt, name, value)
 	appendToProfile(profilePath, name, exportLine)
 }
 
 // deleteEnvPersistent removes a variable from the shell profile.
-func deleteEnvPersistent(name string, _ bool) {
-	profilePath := detectShellProfile()
+func deleteEnvPersistent(name string, _ bool, shell string) {
+	profilePath := resolveShellProfile(shell)
 	removeFromProfile(profilePath, name)
 }
 
 // addPathPersistent adds a directory to PATH in the shell profile.
-func addPathPersistent(dir string, _ bool) {
-	profilePath := detectShellProfile()
+func addPathPersistent(dir string, _ bool, shell string) {
+	profilePath := resolveShellProfile(shell)
 	exportLine := fmt.Sprintf(constants.EnvPathExportFmt, dir)
 	marker := constants.EnvManagedComment + " path:" + dir
 
@@ -34,11 +34,31 @@ func addPathPersistent(dir string, _ bool) {
 }
 
 // removePathPersistent removes a directory from PATH in the shell profile.
-func removePathPersistent(dir string, _ bool) {
-	profilePath := detectShellProfile()
+func removePathPersistent(dir string, _ bool, shell string) {
+	profilePath := resolveShellProfile(shell)
 	marker := constants.EnvManagedComment + " path:" + dir
 
 	removeLineFromProfile(profilePath, marker)
+}
+
+// resolveShellProfile returns the profile path for the given or detected shell.
+func resolveShellProfile(shell string) string {
+	if shell != "" {
+		return profilePathForShell(shell)
+	}
+
+	return detectShellProfile()
+}
+
+// profilePathForShell maps a shell name to its profile file path.
+func profilePathForShell(shell string) string {
+	home, _ := os.UserHomeDir()
+
+	if shell == "zsh" {
+		return filepath.Join(home, constants.EnvProfileZshRC)
+	}
+
+	return filepath.Join(home, constants.EnvProfileBashRC)
 }
 
 // detectShellProfile returns the path to the active shell profile.

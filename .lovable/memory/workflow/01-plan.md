@@ -155,7 +155,7 @@
 
 ### v2.49.0 — Polish & Test Coverage
 
-- ⬜ Wire `--shell` flag in env commands (`set`, `delete`, `path add`, `path remove`) to override auto-detected shell profile
+- ✅ Wire `--shell` flag in env commands (`set`, `delete`, `path add`, `path remove`) to override auto-detected shell profile
 - ⬜ Unit tests for `task` commands: create, list, show, delete, validation, duplicate detection
 - ⬜ Unit tests for `env` commands: set, get, delete, list, path add/remove/list, validation, registry CRUD
 - ⬜ Unit tests for `install` commands: tool validation, manager detection, command building, version check, dry-run

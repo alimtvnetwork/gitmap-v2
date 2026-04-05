@@ -12,13 +12,13 @@ import (
 )
 
 // setEnvPersistent sets an environment variable on Windows via setx.
-func setEnvPersistent(name, value string, system bool) {
+func setEnvPersistent(name, value string, system bool, _ string) {
 	args := buildSetxArgs(name, value, system)
 	runSetx(args)
 }
 
 // deleteEnvPersistent removes an environment variable on Windows.
-func deleteEnvPersistent(name string, system bool) {
+func deleteEnvPersistent(name string, system bool, _ string) {
 	args := buildSetxArgs(name, "", system)
 	runSetx(args)
 }
@@ -48,21 +48,21 @@ func runSetx(args []string) {
 }
 
 // addPathPersistent adds a directory to PATH on Windows via setx.
-func addPathPersistent(dir string, system bool) {
+func addPathPersistent(dir string, system bool, _ string) {
 	currentPath := os.Getenv("PATH")
 	newPath := currentPath + ";" + dir
 
-	setEnvPersistent("PATH", newPath, system)
+	setEnvPersistent("PATH", newPath, system, "")
 }
 
 // removePathPersistent removes a directory from PATH on Windows.
-func removePathPersistent(dir string, system bool) {
+func removePathPersistent(dir string, system bool, _ string) {
 	currentPath := os.Getenv("PATH")
 	parts := strings.Split(currentPath, ";")
 	filtered := filterPathParts(parts, dir)
 	newPath := strings.Join(filtered, ";")
 
-	setEnvPersistent("PATH", newPath, system)
+	setEnvPersistent("PATH", newPath, system, "")
 }
 
 // filterPathParts removes matching entries from PATH parts.

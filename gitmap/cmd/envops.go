@@ -14,8 +14,10 @@ func runEnvSet(args []string) {
 	fs := flag.NewFlagSet("env-set", flag.ExitOnError)
 
 	var system, verbose, dryRun bool
+	var shell string
 
 	fs.BoolVar(&system, constants.FlagEnvSystem, false, constants.FlagDescEnvSystem)
+	fs.StringVar(&shell, constants.FlagEnvShell, "", constants.FlagDescEnvShell)
 	fs.BoolVar(&verbose, constants.FlagEnvVerbose, false, constants.FlagDescEnvVerbose)
 	fs.BoolVar(&dryRun, constants.FlagEnvDryRun, false, constants.FlagDescEnvDryRun)
 	fs.Parse(args)
@@ -32,7 +34,7 @@ func runEnvSet(args []string) {
 		return
 	}
 
-	setEnvPersistent(name, value, system)
+	setEnvPersistent(name, value, system, shell)
 	registry := loadEnvRegistry()
 	registry = upsertEnvVariable(registry, name, value)
 	saveEnvRegistry(registry)
@@ -59,8 +61,10 @@ func runEnvDelete(args []string) {
 	fs := flag.NewFlagSet("env-delete", flag.ExitOnError)
 
 	var system, dryRun bool
+	var shell string
 
 	fs.BoolVar(&system, constants.FlagEnvSystem, false, constants.FlagDescEnvSystem)
+	fs.StringVar(&shell, constants.FlagEnvShell, "", constants.FlagDescEnvShell)
 	fs.BoolVar(&dryRun, constants.FlagEnvDryRun, false, constants.FlagDescEnvDryRun)
 	fs.Parse(args)
 
@@ -73,7 +77,7 @@ func runEnvDelete(args []string) {
 		return
 	}
 
-	deleteEnvPersistent(name, system)
+	deleteEnvPersistent(name, system, shell)
 	registry := loadEnvRegistry()
 	registry = removeEnvVariable(registry, name)
 	saveEnvRegistry(registry)
@@ -103,8 +107,10 @@ func runEnvPathAdd(args []string) {
 	fs := flag.NewFlagSet("env-path-add", flag.ExitOnError)
 
 	var system, dryRun bool
+	var shell string
 
 	fs.BoolVar(&system, constants.FlagEnvSystem, false, constants.FlagDescEnvSystem)
+	fs.StringVar(&shell, constants.FlagEnvShell, "", constants.FlagDescEnvShell)
 	fs.BoolVar(&dryRun, constants.FlagEnvDryRun, false, constants.FlagDescEnvDryRun)
 	fs.Parse(args)
 
@@ -120,7 +126,7 @@ func runEnvPathAdd(args []string) {
 		return
 	}
 
-	addPathPersistent(dir, system)
+	addPathPersistent(dir, system, shell)
 	registry.Paths = append(registry.Paths, model.EnvPathEntry{Path: dir})
 	saveEnvRegistry(registry)
 
@@ -132,8 +138,10 @@ func runEnvPathRemove(args []string) {
 	fs := flag.NewFlagSet("env-path-remove", flag.ExitOnError)
 
 	var system, dryRun bool
+	var shell string
 
 	fs.BoolVar(&system, constants.FlagEnvSystem, false, constants.FlagDescEnvSystem)
+	fs.StringVar(&shell, constants.FlagEnvShell, "", constants.FlagDescEnvShell)
 	fs.BoolVar(&dryRun, constants.FlagEnvDryRun, false, constants.FlagDescEnvDryRun)
 	fs.Parse(args)
 
@@ -149,7 +157,7 @@ func runEnvPathRemove(args []string) {
 		return
 	}
 
-	removePathPersistent(dir, system)
+	removePathPersistent(dir, system, shell)
 	registry := loadEnvRegistry()
 	registry = removeEnvPath(registry, dir)
 	saveEnvRegistry(registry)
