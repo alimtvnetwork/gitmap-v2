@@ -81,6 +81,8 @@ export const sections: SpecSection[] = [
       { id: "58–78", title: "Refactors (workflow, dispatch, archive, autocommit, SEO, branches, assets, TUI, aliases, ops, status, exec, logs, compress)" },
       { id: "axios-version-control", title: "Axios Version Control" },
       { id: "59", title: "Clone Next", link: "/clone-next" },
+      { id: "81", title: "Developer Tool Installer" },
+      { id: "82", title: "One-Liner Install Scripts" },
     ],
   },
   {
