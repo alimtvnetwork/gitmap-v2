@@ -46,7 +46,7 @@ func updateSSHConfig(db *store.DB) {
 		return
 	}
 
-	if err := os.WriteFile(configPath, []byte(updated), 0600); err != nil {
+	if err := os.WriteFile(configPath, []byte(updated), 0o600); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, err)
 
 		return
@@ -110,12 +110,12 @@ func replaceManagedBlock(content, block string) string {
 
 // sshConfigPath returns the path to ~/.ssh/config.
 func sshConfigPath() string {
-	return sshDir() + string(os.PathSeparator) + "config"
+	return filepath.Join(sshDir(), "config")
 }
 
 // sshDir returns the path to ~/.ssh.
 func sshDir() string {
 	home, _ := os.UserHomeDir()
 
-	return home + string(os.PathSeparator) + ".ssh"
+	return filepath.Join(home, ".ssh")
 }

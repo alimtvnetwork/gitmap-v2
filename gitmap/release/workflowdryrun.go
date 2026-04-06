@@ -64,7 +64,7 @@ func printDryRunSteps(branchName, tag, sourceName string) {
 }
 
 // printDryRunAssets prints asset attachments in dry-run mode.
-func printDryRunAssets(assetsPath string, compress bool, checksums bool) {
+func printDryRunAssets(assetsPath string, compress, checksums bool) {
 	userAssets := CollectAssets(assetsPath)
 
 	if compress && len(userAssets) > 0 {

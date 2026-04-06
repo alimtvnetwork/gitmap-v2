@@ -54,7 +54,7 @@ func removeTempReleaseRange(from, to string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	db.Migrate()
+	_ = db.Migrate()
 
 	targets := collectRangeTargets(db, from, to)
 

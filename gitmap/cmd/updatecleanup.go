@@ -141,7 +141,7 @@ func removeOldFiles(deployPath string) int {
 // extractJSONString extracts a string value from JSON bytes by key.
 func extractJSONString(data []byte, key string) string {
 	s := string(data)
-	needle := fmt.Sprintf(`"%s"`, key)
+	needle := `"` + key + `"`
 	idx := findKeyValue(s, needle)
 	if idx < 0 {
 		return ""

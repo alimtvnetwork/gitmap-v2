@@ -81,7 +81,7 @@ func writeChangelogSection(section string) {
 
 	content := section + "\n" + string(existing)
 
-	err = os.WriteFile(constants.ChangelogFile, []byte(content), 0644)
+	err = os.WriteFile(constants.ChangelogFile, []byte(content), 0o644)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogGenWrite, err)
 		os.Exit(1)

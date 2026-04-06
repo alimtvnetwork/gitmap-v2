@@ -52,7 +52,7 @@ func isMetaPending(meta ReleaseMeta, branchSet map[string]bool) bool {
 }
 
 // releasePendingFromMetadata creates branch+tag from stored commit SHA.
-func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath, notes string, draft bool, dryRun bool) error {
+func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath, notes string, draft, dryRun bool) error {
 	for _, meta := range pending {
 		err := releaseFromMetadata(meta, assetsPath, notes, draft, dryRun)
 		if err != nil {
@@ -65,7 +65,7 @@ func releasePendingFromMetadata(pending []ReleaseMeta, assetsPath, notes string,
 }
 
 // releaseFromMetadata creates a release branch+tag from a metadata file's commit SHA.
-func releaseFromMetadata(meta ReleaseMeta, assetsPath, notes string, draft bool, dryRun bool) error {
+func releaseFromMetadata(meta ReleaseMeta, assetsPath, notes string, draft, dryRun bool) error {
 	v, err := Parse(meta.Tag)
 	if err != nil {
 		return fmt.Errorf("invalid version in metadata: %s", meta.Tag)
