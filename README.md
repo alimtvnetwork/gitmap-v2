@@ -24,19 +24,19 @@ All files are written to a `gitmap-output/` folder at the root of the scanned di
 **Windows (PowerShell — full bootstrap, works on any machine):**
 
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1'))
 ```
 
 **Windows (short form, PowerShell 5+):**
 
 ```powershell
-irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1 | iex
 ```
 
 **Linux / macOS (Bash):**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.sh | sh
 ```
 
 Options: pin a version with `-Version v2.48.3`, choose install dir with `-InstallDir C:\tools\gitmap`, or skip PATH with `-NoPath`.
