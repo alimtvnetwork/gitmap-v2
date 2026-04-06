@@ -12,13 +12,42 @@ All files are written to a `gitmap-output/` folder at the root of the scanned di
 **→ [GitMap Documentation](./gitmap/README.md)**
 **→ [Specifications](./spec/01-app/)**
 
-## Quick Start
+## Installation
+
+### One-Liner Install (recommended)
+
+**Windows (PowerShell):**
 
 ```powershell
-# From the repo root:
-.\run.ps1                # Pull, build, deploy to E:\bin-run
-.\run.ps1 -R scan        # Build + scan parent folder
-.\run.ps1 -R scan D:\repos --mode ssh   # Build + scan with SSH mode
+irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1 | iex
+```
+
+**Linux / macOS (Bash):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.sh | sh
+```
+
+Options: pin a version with `-Version v2.48.3`, choose install dir with `-InstallDir C:\tools\gitmap`, or skip PATH with `-NoPath`.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/alimtvnetwork/git-repo-navigator.git
+cd git-repo-navigator
+```
+
+### Build from Source
+
+```powershell
+# Full pipeline: pull, build, deploy
+.\run.ps1
+
+# Build + scan parent folder
+.\run.ps1 -R scan
+
+# Build + scan with SSH mode
+.\run.ps1 -R scan D:\repos --mode ssh
 ```
 
 Or manually:
@@ -288,13 +317,29 @@ The project uses a single PowerShell script (`run.ps1`) at the repo root for the
 
 Configuration lives in `gitmap/powershell.json`.
 
-## Web Frontend (React + Vite)
+## Web UI Dashboard
 
-A React + TypeScript + Tailwind CSS web application scaffold.
+GitMap includes a React-based documentation and dashboard UI. To run it locally:
 
-```sh
-npm i
+```bash
+# Install dependencies
+npm install
+
+# Start the dev server (opens at http://localhost:5173)
 npm run dev
+```
+
+You can also generate a per-repo HTML dashboard directly from the CLI:
+
+```bash
+# Generate and auto-open in browser
+gitmap dashboard --open
+
+# Last 50 commits, exclude merges
+gitmap db --limit 50 --no-merges --open
+
+# Commits since a specific date
+gitmap dashboard --since 2025-06-01
 ```
 
 ### Tech Stack
