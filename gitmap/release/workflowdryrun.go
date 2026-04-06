@@ -13,7 +13,13 @@ func printDryRun(v Version, branchName, tag, sourceName string, opts Options) er
 	printDryRunGoAssets(v, opts)
 	printDryRunZipGroups(opts)
 	printDryRunAssets(opts.Assets, opts.Compress, opts.Checksums)
+	fmt.Printf(constants.MsgReleaseDryRun, "Switch back to "+sourceName)
 	printDryRunMeta(v)
+	if !opts.NoCommit {
+		fmt.Print(constants.MsgAutoCommitScanning)
+	} else {
+		fmt.Print(constants.MsgAutoCommitSkipped)
+	}
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
 
 	return nil

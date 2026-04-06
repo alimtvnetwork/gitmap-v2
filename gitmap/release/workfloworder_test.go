@@ -2,7 +2,6 @@ package release
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -33,8 +32,6 @@ func TestPerformReleaseStepOrder(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "main", opts)
-		// Simulate the return-to-branch message.
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to main")
 	})
 
 	steps := []struct {
@@ -82,7 +79,6 @@ func TestPerformReleaseMetadataAfterReturn(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "develop", opts)
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to develop")
 	})
 
 	switchIdx := strings.Index(output, "Switch back to develop")
@@ -118,9 +114,6 @@ func TestPerformReleaseAutoCommitAfterMetadata(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "main", opts)
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to main")
-		// Simulate auto-commit scanning (step 4 in real workflow).
-		fmt.Print(constants.MsgAutoCommitScanning)
 	})
 
 	metaIdx := strings.Index(output, "Write metadata")
@@ -156,9 +149,6 @@ func TestDryRunSkipsAutoCommitWhenNoCommit(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "main", opts)
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to main")
-		// With NoCommit, auto-commit scanning should NOT be called.
-		fmt.Print(constants.MsgAutoCommitSkipped)
 	})
 
 	if !strings.Contains(output, constants.MsgAutoCommitSkipped) {

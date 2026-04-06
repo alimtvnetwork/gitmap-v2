@@ -112,12 +112,7 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 	fmt.Printf(constants.MsgReleaseStart, tag)
 
 	if opts.DryRun {
-		err := printDryRun(v, branchName, tag, sourceName, opts)
-		if len(originalBranch) > 0 {
-			fmt.Printf(constants.MsgReleaseDryRun, "Switch back to "+originalBranch)
-		}
-
-		return err
+		return printDryRun(v, branchName, tag, sourceName, opts)
 	}
 
 	// Step 1: Create the release branch, tag, push, and finalize assets.
