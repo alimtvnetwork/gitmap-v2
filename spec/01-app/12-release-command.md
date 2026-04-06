@@ -46,6 +46,7 @@ for the full metadata-based discovery spec.
 | Flag                         | Description                                      | Default     |
 |------------------------------|--------------------------------------------------|-------------|
 | `--assets <path>`            | Directory or file to record as release assets    | (none)      |
+| `--bin` / `-b`               | Cross-compile Go binaries and include in assets  | `false`     |
 | `--commit <sha>`             | Create release from a specific commit            | (none)      |
 | `--branch <name>`            | Create release from latest commit of a branch    | (none)      |
 | `--bump major\|minor\|patch` | Auto-increment from the latest released version  | (none)      |
@@ -252,7 +253,7 @@ failed step so the user knows exactly what to clean up.
  5. Create branch release/vX.Y.Z
  6. Create git tag vX.Y.Z (annotated with --notes if provided)
  7. Push branch + tag to origin
- 8. Collect --assets contents, cross-compile, upload
+ 8. If --bin: cross-compile Go binaries, collect --assets contents, upload
  9. Return to original branch
 10. Write .gitmap/release/vX.Y.Z.json + update latest.json on original branch
 11. Auto-commit .gitmap/release/ metadata files
