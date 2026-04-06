@@ -8,7 +8,16 @@ import (
 	"os"
 )
 
-var githubTransport = http.DefaultTransport.(*http.Transport).Clone()
+func newTransport() *http.Transport {
+	t, ok := http.DefaultTransport.(*http.Transport)
+	if !ok {
+		return &http.Transport{}
+	}
+
+	return t.Clone()
+}
+
+var githubTransport = newTransport()
 
 func buildGitHubReleasesURL(owner, repo string) *url.URL {
 	return &url.URL{
