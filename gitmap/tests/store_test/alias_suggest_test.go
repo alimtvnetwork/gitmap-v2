@@ -144,7 +144,9 @@ func TestSuggestAlias_AfterDeleteReopens(t *testing.T) {
 	id1 := seedRepo(t, db, "github/user/api", "api", "/repos/api")
 	id2 := seedRepo(t, db, "github/org/api", "api", "/repos/org-api")
 
-	db.CreateAlias("api", id1)
+	if _, err := db.CreateAlias("api", id1); err != nil {
+		t.Fatalf("CreateAlias(api, id1) failed: %v", err)
+	}
 
 	// "api" conflicts for second repo
 	if !db.AliasExists("api") {
@@ -152,7 +154,9 @@ func TestSuggestAlias_AfterDeleteReopens(t *testing.T) {
 	}
 
 	// Delete frees the name
-	db.DeleteAlias("api")
+	if err := db.DeleteAlias("api"); err != nil {
+		t.Fatalf("DeleteAlias failed: %v", err)
+	}
 
 	if db.AliasExists("api") {
 		t.Fatal("expected api alias to be gone after delete")
@@ -164,7 +168,10 @@ func TestSuggestAlias_AfterDeleteReopens(t *testing.T) {
 		t.Fatalf("CreateAlias after delete failed: %v", err)
 	}
 
-	resolved, _ := db.ResolveAlias("api")
+	resolved, err := db.ResolveAlias("api")
+	if err != nil {
+		t.Fatalf("ResolveAlias after re-create failed: %v", err)
+	}
 	if resolved.AbsolutePath != "/repos/org-api" {
 		t.Errorf("expected /repos/org-api, got %q", resolved.AbsolutePath)
 	}
