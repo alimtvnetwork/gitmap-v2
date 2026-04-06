@@ -354,3 +354,4 @@ jobs:
           files: gitmap/dist/*
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          make_latest: ${{ !contains(steps.version.outputs.version, '-') }}
