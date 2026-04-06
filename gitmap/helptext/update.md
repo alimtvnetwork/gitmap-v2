@@ -8,11 +8,14 @@ None
 
 ## Usage
 
-    gitmap update
+    gitmap update [--repo-path <path>] [--verbose]
 
 ## Flags
 
-None.
+| Flag | Description |
+|------|-------------|
+| `--repo-path <path>` | Override the source repository path for this run |
+| `--verbose` | Enable verbose logging to file |
 
 ## Prerequisites
 
@@ -48,7 +51,18 @@ None.
     Latest version:  v2.22.0
     ✓ Already up to date (v2.22.0)
 
-### Example 3: Update with network error
+### Example 3: Update with custom repo path
+
+    gitmap update --repo-path C:\Projects\git-repo-navigator
+
+**Output:**
+
+    → Repo path: C:\Projects\git-repo-navigator
+    ■ Pulling latest source...
+    ■ Building gitmap.exe...
+    ✓ Updated to v2.49.1
+
+### Example 4: Update with network error
 
     gitmap update
 
