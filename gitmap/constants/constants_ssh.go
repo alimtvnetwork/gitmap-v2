@@ -117,7 +117,7 @@ const (
     git remote set-url origin git@github.com-%s:%s/%s.git
 `
 	MsgSSHConfirmPrompt = "  Generate SSH key %q at %s? (y/N): "
-	MsgSSHCancelled     = "  Cancelled.\n"
+	MsgSSHCanceled      = "  Canceled.\n"
 	MsgSSHHostUsed      = "    Host:        %s\n"
 )
 

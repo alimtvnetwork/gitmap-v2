@@ -176,13 +176,6 @@ func (db *DB) Conn() *sql.DB {
 	return db.conn
 }
 
-// buildDBPath constructs the full path to the default database file.
-func buildDBPath(outputDir string) string {
-	dbFile := ActiveProfileDBFile(outputDir)
-
-	return filepath.Join(outputDir, constants.DBDir, dbFile)
-}
-
 // ensureDir creates the directory tree if it doesn't exist.
 func ensureDir(dir string) error {
 	return os.MkdirAll(dir, constants.DirPermission)

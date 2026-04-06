@@ -23,7 +23,7 @@ func runDesktopSync() {
 // validateDesktopSyncPaths checks that the output dir and JSON file exist.
 func validateDesktopSyncPaths(outputDir, jsonPath string) {
 	info, err := os.Stat(outputDir)
-	if err != nil || info.IsDir() == false {
+	if err != nil || !info.IsDir() {
 		fmt.Fprintln(os.Stderr, constants.MsgNoOutputDir)
 		os.Exit(1)
 	}

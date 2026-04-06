@@ -102,7 +102,3 @@ func buildRelativePath(dir, repoPath string) string {
 	return rel
 }
 
-// normalizePath creates a cross-platform canonical path for comparisons.
-func normalizePath(path string) string {
-	return filepath.ToSlash(filepath.Clean(path))
-}

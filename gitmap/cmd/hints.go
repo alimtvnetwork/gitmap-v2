@@ -39,15 +39,6 @@ func listHints() []hintEntry {
 	}
 }
 
-// listTypeHints returns hints shown after gitmap ls <type>.
-func listTypeHints() []hintEntry {
-	return []hintEntry{
-		{constants.HintGroupAdd, constants.HintGroupAddDesc},
-		{constants.HintCDRepo, constants.HintCDRepoDesc},
-		{constants.HintPullGroup, constants.HintPullGroupDesc},
-	}
-}
-
 // listGroupsHints returns hints shown after gitmap ls groups.
 func listGroupsHints() []hintEntry {
 	return []hintEntry{
@@ -71,14 +62,6 @@ func groupListHints() []hintEntry {
 		{constants.HintGroupCreate, constants.HintGroupCreateDesc},
 		{constants.HintGroupShow, constants.HintGroupShowDesc},
 		{constants.HintGroupDelete, constants.HintGroupDeleteDesc},
-	}
-}
-
-// cdHints returns hints shown after gitmap cd <name>.
-func cdHints() []hintEntry {
-	return []hintEntry{
-		{constants.HintCDSetDefault, constants.HintCDSetDefaultDesc},
-		{constants.HintCDRepos, constants.HintCDReposDesc},
 	}
 }
 

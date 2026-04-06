@@ -22,7 +22,7 @@ func runChangelog(args []string) {
 	if openFile {
 		handleChangelogOpen(latest, version)
 	}
-	if latest == false && len(version) == 0 && openFile {
+	if !latest && len(version) == 0 && openFile {
 		return
 	}
 
@@ -45,7 +45,7 @@ func handleChangelogOpen(latest bool, version string) {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, err)
 		os.Exit(1)
 	}
-	if latest == false && len(version) == 0 {
+	if !latest && len(version) == 0 {
 		os.Exit(0)
 	}
 }
@@ -113,7 +113,7 @@ func loadChangelogSourceMap() map[string]string {
 // printSingleVersion finds and prints one version's changelog.
 func printSingleVersion(entries []release.ChangelogEntry, version string) {
 	entry, found := release.FindChangelogEntry(entries, version)
-	if found == false {
+	if !found {
 		fmt.Fprintf(os.Stderr, constants.ErrChangelogVersionNotFound, release.NormalizeVersion(version))
 		os.Exit(1)
 	}

@@ -149,8 +149,8 @@ func parseLatestBranchFlags(args []string) latestBranchConfig {
 
 // resolveLatestBranchConfig converts parsed flags into positive-logic config.
 func resolveLatestBranchConfig(fs *flag.FlagSet, cfg latestBranchConfig, allRemotes, noFetch, jsonOut bool) latestBranchConfig {
-	cfg.filterByRemote = allRemotes == false
-	cfg.shouldFetch = noFetch == false
+	cfg.filterByRemote = !allRemotes
+	cfg.shouldFetch = !noFetch
 	if jsonOut {
 		cfg.format = constants.OutputJSON
 	}

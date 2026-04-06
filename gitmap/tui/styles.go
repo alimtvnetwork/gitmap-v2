@@ -9,8 +9,6 @@ var (
 	colorMuted     = lipgloss.Color("#555555")
 	colorDanger    = lipgloss.Color("#ff5555")
 	colorSuccess   = lipgloss.Color("#50fa7b")
-	colorWarning   = lipgloss.Color("#f1fa8c")
-	colorBg        = lipgloss.Color("#1a1a2e")
 	colorSelected  = lipgloss.Color("#2a2a4e")
 )
 

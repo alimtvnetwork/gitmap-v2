@@ -195,12 +195,3 @@ func pullOneRepoTracked(rec model.ScanRecord, prog *cloner.BatchProgress) {
 	}
 }
 
-// listAvailableRepos prints all available repo names for the user.
-func listAvailableRepos(records []model.ScanRecord) {
-	fmt.Fprintln(os.Stderr, constants.MsgPullAvailable)
-	fmt.Fprintf(os.Stderr, constants.MsgListSeparator+"\n")
-	for _, r := range records {
-		fmt.Fprintf(os.Stderr, constants.MsgPullListEntry, r.RepoName)
-	}
-	fmt.Fprintln(os.Stderr)
-}

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -67,7 +68,8 @@ func launchHandoff(copyPath string) {
 
 // handleHandoffError exits with the handoff process exit code if available.
 func handleHandoffError(err error) {
-	if exitErr, ok := err.(*exec.ExitError); ok {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
 		os.Exit(exitErr.ExitCode())
 	}
 

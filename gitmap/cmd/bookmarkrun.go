@@ -4,13 +4,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/user/gitmap/constants"
 )
-
-// timeNow is extracted for testability.
-var timeNow = time.Now
 
 // runBookmarkRun loads a bookmark by name and dispatches the saved command.
 func runBookmarkRun(args []string) {

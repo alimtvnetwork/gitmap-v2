@@ -8,18 +8,6 @@ import (
 	"github.com/user/gitmap/verbose"
 )
 
-// retryable determines if an HTTP status code should trigger a retry.
-func retryable(statusCode int) bool {
-	if statusCode == constants.HTTPTooManyRequests {
-		return true
-	}
-	if statusCode >= constants.HTTPServerErrorMin {
-		return true
-	}
-
-	return false
-}
-
 // withRetry executes fn up to maxAttempts times with exponential backoff.
 func withRetry(label string, maxAttempts int, fn func() error) error {
 	var lastErr error

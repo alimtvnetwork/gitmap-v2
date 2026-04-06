@@ -18,11 +18,6 @@ func gitStage(file string) {
 	}
 }
 
-// gitCommit creates a commit with title and description.
-func gitCommit(title, description string) {
-	gitCommitWithAuthor(title, description, "", "")
-}
-
 // gitCommitWithAuthor creates a commit with optional author override.
 func gitCommitWithAuthor(title, description, authorName, authorEmail string) {
 	msg := title + "\n\n" + description

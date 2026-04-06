@@ -203,12 +203,9 @@ func TestParseCommitLines_NoMessage(t *testing.T) {
 // --- buildAuditRecord tests ---
 
 type testAmendFlags struct {
-	commitHash string
-	name       string
-	email      string
-	branch     string
-	dryRun     bool
-	forcePush  bool
+	name      string
+	email     string
+	forcePush bool
 }
 
 func buildAuditRecord(f testAmendFlags, commits []model.CommitEntry, branch, mode, prevName, prevEmail string, ts time.Time) model.AmendmentRecord {
