@@ -42,7 +42,7 @@ irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitm
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.sh | sh
 ```
 
-Options: pin a version with `-Version v2.48.3`, choose install dir with `-InstallDir C:\tools\gitmap`, or skip PATH with `-NoPath`.
+Options: pin a version with `-Version v2.49.0`, choose install dir with `-InstallDir C:\tools\gitmap`, or skip PATH with `-NoPath`.
 
 ### Clone & Setup (Development)
 
@@ -150,6 +150,7 @@ gitmap lb 5 --format csv
 | Command | Alias | Description |
 |---------|-------|-------------|
 | `release` | `r` | Create release branch, tag, and push |
+| `release-self` | `rs` | Release gitmap itself from any directory |
 | `release-branch` | `rb` | Create a release branch without tagging |
 | `release-pending` | `rp` | Show unreleased commits since last tag |
 | `changelog` | `cl` | Show release notes |
@@ -161,8 +162,17 @@ gitmap lb 5 --format csv
 # Auto-bump patch version and release
 gitmap release --bump patch
 
+# Release with Go binary cross-compilation
+gitmap release --bump minor --bin
+
 # Preview release without executing
 gitmap release --bump minor --dry-run
+
+# Release with notes and compressed assets
+gitmap release v3.0.0 --bin --compress --checksums -N "Major redesign"
+
+# Release gitmap itself from any directory
+gitmap release-self --bump patch
 
 # Show unreleased commits
 gitmap release-pending
@@ -170,6 +180,8 @@ gitmap release-pending
 # List all versions
 gitmap list-versions --json --limit 5
 ```
+
+> **CI Pipeline:** Pushing a `release/*` branch or `v*` tag triggers GitHub Actions to cross-compile all 6 targets, generate checksums, attach a version-pinned install script, and create a GitHub release with changelog, metadata, and install instructions. See [spec/01-app/12-release-command.md](spec/01-app/12-release-command.md#ci-release-pipeline-github-actions) for details.
 
 → Full details: [release](gitmap/helptext/release.md) · [release-branch](gitmap/helptext/release-branch.md) · [release-pending](gitmap/helptext/release-pending.md) · [changelog](gitmap/helptext/changelog.md) · [list-versions](gitmap/helptext/list-versions.md) · [list-releases](gitmap/helptext/list-releases.md) · [revert](gitmap/helptext/revert.md)
 
