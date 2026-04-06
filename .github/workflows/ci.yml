@@ -87,7 +87,7 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          go test ${{ matrix.packages }} -v -count=1 2>&1 | tee test-output.txt
+          go test ${{ matrix.packages }} -v -count=1 -coverprofile=coverage-${{ matrix.name }}.out -covermode=atomic 2>&1 | tee test-output.txt
           exit_code=${PIPESTATUS[0]}
           set -e
 
@@ -107,7 +107,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.name }}
-          path: gitmap/test-output.txt
+          path: |
+            gitmap/test-output.txt
+            gitmap/coverage-${{ matrix.name }}.out
           retention-days: 7
 
   test-summary:
@@ -116,6 +118,13 @@ jobs:
     needs: test
     if: always()
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: gitmap/go.mod
+          cache-dependency-path: gitmap/go.sum
+
       - name: Download all test results
         uses: actions/download-artifact@v4
         with:
@@ -160,6 +169,50 @@ jobs:
           fi
 
           echo "All test suites passed."
+
+      - name: Coverage report
+        if: always()
+        working-directory: gitmap
+        shell: bash
+        run: |
+          echo ""
+          echo "========================================="
+          echo "  COVERAGE BY PACKAGE"
+          echo "========================================="
+
+          # Merge all coverage profiles
+          echo "mode: atomic" > combined-coverage.out
+          for f in ../results/test-results-*/coverage-*.out; do
+            if [ -f "$f" ]; then
+              grep -v '^mode:' "$f" >> combined-coverage.out 2>/dev/null || true
+            fi
+          done
+
+          if [ "$(wc -l < combined-coverage.out)" -le 1 ]; then
+            echo "No coverage data collected."
+            exit 0
+          fi
+
+          # Per-package breakdown
+          go tool cover -func=combined-coverage.out | \
+            awk '
+              /^total:/ { total=$NF; next }
+              {
+                pkg=$1; sub(/\/[^/]+$/, "", pkg)
+                if (!(pkg in seen)) { seen[pkg]=1; order[++n]=pkg }
+                split($NF, a, "%"); pct[pkg] += a[1]; cnt[pkg]++
+              }
+              END {
+                for (i=1; i<=n; i++) {
+                  p = order[i]
+                  avg = pct[p] / cnt[p]
+                  printf "  %-55s %5.1f%%\n", p, avg
+                }
+                printf "\n  %-55s %s\n", "Total", total
+              }
+            '
+
+          echo "========================================="
 
   build:
     name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
