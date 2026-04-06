@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, AlertTriangle, Compass, Terminal, ShieldCheck, ChevronDown, Link as LinkIcon } from "lucide-react";
+import { FileText, AlertTriangle, Compass, Terminal, ShieldCheck, Palette, ChevronDown, Link as LinkIcon } from "lucide-react";
 import type { SpecSection } from "./specData";
 import SpecEntryRow from "./SpecEntryRow";
 
@@ -9,6 +9,7 @@ const iconMap = {
   compass: <Compass className="h-5 w-5" />,
   terminal: <Terminal className="h-5 w-5" />,
   "shield-check": <ShieldCheck className="h-5 w-5" />,
+  palette: <Palette className="h-5 w-5" />,
 };
 
 interface SpecSectionCardProps {

@@ -8,7 +8,7 @@ export interface SpecSection {
   folder: string;
   title: string;
   description: string;
-  iconName: "file-text" | "alert-triangle" | "compass" | "terminal" | "shield-check";
+  iconName: "file-text" | "alert-triangle" | "compass" | "terminal" | "shield-check" | "palette";
   color: string;
   entries: SpecEntry[];
 }
@@ -185,6 +185,20 @@ export const sections: SpecSection[] = [
       { id: "26", title: "Feature Flags" },
       { id: "27", title: "Dependency Management" },
       { id: "28", title: "Git Workflow" },
+    ],
+  },
+  {
+    folder: "06-design-system",
+    title: "Design System",
+    description: "Complete visual design reference — colors, typography, code blocks, component patterns, and syntax themes.",
+    iconName: "palette",
+    color: "text-primary",
+    entries: [
+      { id: "01", title: "Colors & Themes (Root)" },
+      { id: "02", title: "Typography" },
+      { id: "03", title: "Code Blocks" },
+      { id: "04", title: "Component Patterns" },
+      { id: "05", title: "Syntax Token Colors" },
     ],
   },
 ];
