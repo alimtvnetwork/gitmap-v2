@@ -2,7 +2,7 @@ package constants
 
 // Go release asset constants.
 const (
-	AssetsStagingDir = "release-assets"
+	AssetsStagingDir = ".gitmap/release-assets"
 	GitHubTokenEnv   = "GITHUB_TOKEN"
 )
 
