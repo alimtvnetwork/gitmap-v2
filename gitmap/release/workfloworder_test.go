@@ -80,7 +80,6 @@ func TestPerformReleaseMetadataAfterReturn(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "develop", opts)
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to develop")
 	})
 
 	switchIdx := strings.Index(output, "Switch back to develop")
