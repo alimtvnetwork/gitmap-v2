@@ -95,8 +95,8 @@ func TestResolveAlias_Success(t *testing.T) {
 		t.Fatalf("ResolveAlias failed: %v", err)
 	}
 
-	if resolved.Alias != "web" {
-		t.Errorf("expected alias=web, got %q", resolved.Alias)
+	if resolved.Alias.Alias != "web" {
+		t.Errorf("expected alias=web, got %q", resolved.Alias.Alias)
 	}
 
 	if resolved.AbsolutePath != "/home/user/repos/web" {
