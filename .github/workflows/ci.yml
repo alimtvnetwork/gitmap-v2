@@ -22,12 +22,12 @@ jobs:
         working-directory: gitmap
         run: go vet ./...
 
-      - name: Install staticcheck
-        run: go install honnef.co/go/tools/cmd/staticcheck@latest
-
-      - name: Staticcheck
-        working-directory: gitmap
-        run: staticcheck ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: gitmap
+          args: --timeout=5m
 
   vulncheck:
     name: Vulnerability Scan
