@@ -20,7 +20,7 @@ func writeField(b interface{ WriteString(string) (int, error) }, label, value st
 		value = "-"
 	}
 
-	b.WriteString(fmt.Sprintf("  %-16s %s\n", label+":", value))
+	_, _ = b.WriteString(fmt.Sprintf("  %-16s %s\n", label+":", value))
 }
 
 // shortSHA truncates a commit SHA to 8 characters.

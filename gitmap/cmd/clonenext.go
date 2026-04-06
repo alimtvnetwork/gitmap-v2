@@ -168,7 +168,7 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 		// Prompt
 		fmt.Printf(constants.MsgCloneNextRemovePrompt, folderName)
 		var answer string
-		fmt.Scanln(&answer)
+		_, _ = fmt.Scanln(&answer)
 		if strings.ToLower(strings.TrimSpace(answer)) == "y" {
 			removeFolder(folderName, fullPath)
 			removed = true

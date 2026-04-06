@@ -35,7 +35,7 @@ func groupTRByPrefix(records []model.TempRelease) []trPrefixGroup {
 		prefixMap[r.VersionPrefix] = append(prefixMap[r.VersionPrefix], r)
 	}
 
-	var groups []trPrefixGroup
+	groups := make([]trPrefixGroup, 0, len(order))
 	for _, prefix := range order {
 		recs := prefixMap[prefix]
 		sort.Slice(recs, func(i, j int) bool {

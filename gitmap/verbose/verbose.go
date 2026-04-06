@@ -63,7 +63,7 @@ func writeLogEntry(l *Logger, format string, args ...interface{}) {
 	line := fmt.Sprintf(format, args...)
 	ts := time.Now().Format("15:04:05.000")
 	entry := fmt.Sprintf("[%s] %s\n", ts, line)
-	l.file.WriteString(entry)
+	_, _ = l.file.WriteString(entry)
 	fmt.Fprint(os.Stderr, constants.ColorDim+entry+constants.ColorReset)
 }
 

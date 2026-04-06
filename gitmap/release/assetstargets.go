@@ -53,7 +53,7 @@ func ParseTargets(input string) ([]BuildTarget, error) {
 	}
 
 	parts := strings.Split(input, ",")
-	var targets []BuildTarget
+	targets := make([]BuildTarget, 0, len(parts))
 
 	for _, p := range parts {
 		t, err := parseOneTarget(strings.TrimSpace(p))
@@ -79,7 +79,7 @@ func parseOneTarget(s string) (BuildTarget, error) {
 
 // DescribeTargets returns human-readable names for dry-run output.
 func DescribeTargets(binName, version string, targets []BuildTarget) []string {
-	var names []string
+	names := make([]string, 0, len(targets))
 
 	for _, t := range targets {
 		names = append(names, formatOutputName(binName, version, t))

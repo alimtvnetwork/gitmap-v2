@@ -110,7 +110,7 @@ func findHighestVersion(output string) (Version, error) {
 }
 
 // updateHighest returns the higher of current and candidate versions.
-func updateHighest(current, candidate Version, hasCurrent bool) (Version, bool) {
+func updateHighest(current, candidate Version, hasCurrent bool) (Version, bool) { //nolint:unparam // bool clarifies caller intent
 	if hasCurrent {
 		if candidate.GreaterThan(current) {
 			return candidate, true

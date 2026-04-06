@@ -154,7 +154,7 @@ func TestCSVToMessages_WhitespacePreserved(t *testing.T) {
 // --- Helper ---
 
 func csvToMessagesHelper(records [][]string) [][2]string {
-	var messages [][2]string
+	messages := make([][2]string, 0, len(records))
 
 	for _, row := range records {
 		if len(row) < 2 {

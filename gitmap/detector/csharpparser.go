@@ -81,7 +81,7 @@ type csprojXML struct {
 }
 
 // findCsprojFiles walks the tree for .csproj and .fsproj files.
-func findCsprojFiles(dir, repoPath string) []model.CSharpProjectFile {
+func findCsprojFiles(dir, _ string) []model.CSharpProjectFile {
 	var files []model.CSharpProjectFile
 	_ = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -150,7 +150,7 @@ func parseCsprojXML(path string, f *model.CSharpProjectFile) {
 }
 
 // findKeyFiles collects known C# key files in the project tree.
-func findKeyFiles(dir, repoPath string) []model.CSharpKeyFile {
+func findKeyFiles(dir, _ string) []model.CSharpKeyFile {
 	var files []model.CSharpKeyFile
 	_ = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

@@ -17,7 +17,7 @@ func parseClearReleaseJSONFlags(args []string) (string, bool) {
 	var dryRun bool
 
 	fs.BoolVar(&dryRun, "dry-run", false, "Preview which file would be removed without deleting it")
-	fs.Parse(args)
+	_ = fs.Parse(args)
 
 	var version string
 	if fs.NArg() > 0 {

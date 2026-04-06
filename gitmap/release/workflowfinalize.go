@@ -18,7 +18,7 @@ var LastMeta *ReleaseMeta
 var lastZipChecksums map[string]string
 
 // pushAndFinalize pushes to remote and writes metadata.
-func pushAndFinalize(v Version, branchName, tag, sourceName string, opts Options) error {
+func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 	lastZipChecksums = nil
 
 	err := PushBranchAndTag(branchName, tag)

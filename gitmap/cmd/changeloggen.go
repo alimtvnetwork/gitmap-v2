@@ -51,7 +51,7 @@ func parseChangelogGenFlags(args []string) (from, to string, write bool) {
 	fromFlag := fs.String("from", "", constants.FlagDescFrom)
 	toFlag := fs.String("to", "", constants.FlagDescTo)
 	writeFlag := fs.Bool("write", false, constants.FlagDescWrite)
-	fs.Parse(args)
+	_ = fs.Parse(args)
 
 	return *fromFlag, *toFlag, *writeFlag
 }

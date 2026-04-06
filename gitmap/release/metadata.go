@@ -153,7 +153,7 @@ func ListReleaseMetaFiles() ([]ReleaseMeta, error) {
 		return nil, err
 	}
 
-	var results []ReleaseMeta
+	results := make([]ReleaseMeta, 0, len(matches))
 
 	for _, path := range matches {
 		if filepath.Base(path) == constants.DefaultLatestFile {
