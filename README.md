@@ -1,5 +1,7 @@
 # GitMap
 
+[![CI](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml/badge.svg)](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml)
+[![golangci-lint](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/alimtvnetwork/git-repo-navigator?style=flat-square&label=version)](https://github.com/alimtvnetwork/git-repo-navigator/releases)
 [![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com/alimtvnetwork/git-repo-navigator)
