@@ -117,7 +117,7 @@ func TestParseExecFlags_NoArgs(t *testing.T) {
 }
 
 func TestParsePullFlags_NoFlags(t *testing.T) {
-	slug, group, all, verbose := parsePullFlags([]string{"my-repo"})
+	slug, group, all, verbose, _ := parsePullFlags([]string{"my-repo"})
 	if slug != "my-repo" {
 		t.Errorf("expected slug=my-repo, got %q", slug)
 	}

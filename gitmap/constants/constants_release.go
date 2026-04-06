@@ -30,7 +30,7 @@ const (
 	MsgReleaseBumpResult    = "  → Bumped %s → %s\n"
 	MsgReleaseNotes         = "  → Release notes: %s\n"
 	MsgReleaseSwitchedBack  = "  ✓ Switched back to %s\n"
-	MsgReleasePendingNone   = "  No pending release branches found.\n"
+	MsgReleasePendingNone   = "  No pending release branches found."
 	MsgReleasePendingFound  = "\n  Found %d pending release branch(es).\n"
 	MsgReleasePendingFailed = "  ✗ Failed to release %s: %v\n"
 	ReleaseBranchPrefix     = "release/"
