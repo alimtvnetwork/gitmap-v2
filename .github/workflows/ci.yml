@@ -20,7 +20,19 @@ jobs:
 
       - name: Run tests
         working-directory: gitmap
-        run: go test ./... -v -count=1
+        run: |
+          set -euo pipefail
+          go test ./... -v -count=1 2>&1 | tee test-output.txt
+          exit_code=${PIPESTATUS[0]}
+          if [ $exit_code -ne 0 ]; then
+            echo ""
+            echo "========================================="
+            echo "  FAILED TESTS & BUILD ERRORS"
+            echo "========================================="
+            grep -A 20 "^---  *FAIL\|FAIL\t\|build failed\|cannot \|undefined:\|imported and not used\|syntax error" test-output.txt || true
+            echo "========================================="
+            exit $exit_code
+          fi
 
   build:
     name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
