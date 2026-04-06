@@ -251,30 +251,22 @@ public static class GitMapEnvNative {
 function Add-ToPath([string]$dir) {
     $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
     $userHasDir = Test-PathEntry $currentUserPath $dir
-    $sessionUpdated = Ensure-SessionPath $dir
 
-    if ($userHasDir) {
-        if ($sessionUpdated) {
-            Write-OK "Already in PATH. Updated current session PATH."
+    if (-not $userHasDir) {
+        if ([string]::IsNullOrWhiteSpace($currentUserPath)) {
+            $newPath = $dir
         }
         else {
-            Write-Step "Already in PATH."
+            $newPath = $currentUserPath.TrimEnd(";") + ";" + $dir
         }
 
-        return
-    }
-
-    if ([string]::IsNullOrWhiteSpace($currentUserPath)) {
-        $newPath = $dir
+        [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+        Broadcast-EnvironmentChange
+        Write-OK "Added to user PATH."
     }
     else {
-        $newPath = $currentUserPath.TrimEnd(";") + ";" + $dir
+        Write-Step "Already in user PATH."
     }
-
-    [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-    Broadcast-EnvironmentChange
-    Ensure-SessionPath $dir
-    Write-OK "Added to PATH (current session updated; new terminals inherit it)."
 }
 
 # --- Main ---
