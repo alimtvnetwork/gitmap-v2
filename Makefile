@@ -46,5 +46,5 @@ release-dry:
 ## Clean — remove build artifacts
 clean:
 	@rm -f $(BINARY)
-	@rm -rf $(MODULE)/release-assets
+	@rm -rf $(MODULE)/.gitmap/release-assets
 	@echo "Cleaned."
