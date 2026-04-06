@@ -15,7 +15,7 @@ const (
 	MsgUpdateActive      = "  → Active: %s\n  → Handoff: %s\n"
 	MsgUpdateCleanStart  = "\n  Cleaning up update artifacts..."
 	MsgUpdateCleanDone   = "  ✓ Removed %d file(s)\n\n"
-	MsgUpdateCleanNone   = "  ✓ Nothing to clean up\n"
+	MsgUpdateCleanNone   = "  ✓ Nothing to clean up"
 	MsgUpdateTempRemoved = "  → Removed temp copy: %s\n"
 	MsgUpdateOldRemoved  = "  → Removed backup: %s\n"
 	UpdateRunnerLogStart = "update-runner starting, repo=%s"

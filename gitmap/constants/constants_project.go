@@ -112,7 +112,7 @@ const (
 	ErrProjectParseMod     = "failed to parse go.mod in %s: %v\n"
 	ErrProjectParsePkgJSON = "failed to parse package.json in %s: %v\n"
 	ErrProjectParseCsproj  = "failed to parse .csproj in %s: %v\n"
-	ErrProjectCleanup      = "failed to clean stale projects for repo %s: %v\n"
+	ErrProjectCleanup      = "failed to clean stale projects for repo %d: %v\n"
 	ErrGoMetadataUpsert    = "failed to upsert Go metadata: %v"
 	ErrGoRunnableUpsert    = "failed to upsert Go runnable: %v"
 	ErrCSharpMetaUpsert    = "failed to upsert C# metadata: %v"

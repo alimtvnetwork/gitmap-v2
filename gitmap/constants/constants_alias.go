@@ -71,7 +71,7 @@ const (
 	MsgAliasResolved    = "  → Resolved alias %q → %s (slug: %s)\n"
 	MsgAliasSuggest     = "  %-20s → %-10s Accept? (y/N): "
 	MsgAliasSuggestDone = "  ✓ Created %d alias(es).\n"
-	MsgAliasSuggestNone = "  All repos already have aliases.\n"
+	MsgAliasSuggestNone = "  All repos already have aliases."
 	MsgAliasListHeader  = "\n  Aliases (%d):\n\n"
 	MsgAliasListRow     = "  %-15s → %s\n"
 	MsgAliasConflict    = "  ⚠ Alias %q already points to %s.\n"

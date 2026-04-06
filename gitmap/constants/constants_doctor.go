@@ -6,7 +6,7 @@ const (
 	DoctorBannerRule      = "  ──────────────────────────────────────────"
 	DoctorIssuesFmt       = "  Found %d issue(s). See recommendations above.\n"
 	DoctorFixPathTip      = "  Tip: run 'gitmap doctor --fix-path' to auto-sync the PATH binary.\n\n"
-	DoctorAllPassed       = "  All checks passed.\n"
+	DoctorAllPassed       = "  All checks passed."
 	DoctorFixBannerFmt    = "\n  gitmap doctor --fix-path (v%s)\n"
 	DoctorActivePathFmt   = "  Active PATH:  %s (%s)\n"
 	DoctorDeployedFmt     = "  Deployed:     %s (%s)\n"

@@ -117,7 +117,7 @@ func printAliasList(aliases []store.AliasWithRepo) {
 	fmt.Printf(constants.MsgAliasListHeader, len(aliases))
 
 	for _, a := range aliases {
-		fmt.Printf(constants.MsgAliasListRow, a.Alias, a.Slug)
+		fmt.Printf(constants.MsgAliasListRow, a.Alias.Alias, a.Slug)
 	}
 }
 
