@@ -66,7 +66,7 @@ func replaceInGoMod(oldPath, newPath string) {
 		os.Exit(1)
 	}
 
-	updated := strings.Replace(string(data), oldPath, newPath, -1)
+	updated := strings.ReplaceAll(string(data), oldPath, newPath)
 	writeFileContent(constants.GoModFile, updated)
 }
 
@@ -168,7 +168,7 @@ func replaceInFile(path, oldPath, newPath string) {
 		return
 	}
 
-	updated := strings.Replace(string(data), oldPath, newPath, -1)
+	updated := strings.ReplaceAll(string(data), oldPath, newPath)
 	writeFileContent(path, updated)
 }
 

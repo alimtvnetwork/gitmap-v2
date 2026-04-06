@@ -42,7 +42,7 @@ func initTestRepo(t *testing.T) (string, func()) {
 	run("git", "config", "user.name", "Test")
 
 	// Write a dummy file and commit so HEAD exists.
-	if err := os.WriteFile(filepath.Join(dir, "README.md"), []byte("# test\n"), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "README.md"), []byte("# test\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	run("git", "add", "-A")
@@ -132,7 +132,7 @@ func TestIsWorkTreeDirty_Dirty(t *testing.T) {
 	_, cleanup := initTestRepo(t)
 	defer cleanup()
 
-	os.WriteFile("dirty.txt", []byte("uncommitted"), 0644)
+	os.WriteFile("dirty.txt", []byte("uncommitted"), 0o644)
 
 	if !isWorkTreeDirty() {
 		t.Error("expected dirty work tree after creating untracked file")
@@ -144,7 +144,7 @@ func TestCommitGoModChanges_Integration(t *testing.T) {
 	defer cleanup()
 
 	// Create a change to commit.
-	os.WriteFile("go.mod", []byte("module github.com/new/path\n"), 0644)
+	os.WriteFile("go.mod", []byte("module github.com/new/path\n"), 0o644)
 
 	commitGoModChanges("github.com/old/path", "github.com/new/path", 3)
 
@@ -164,8 +164,8 @@ func TestReplaceModulePath_Integration(t *testing.T) {
 	defer cleanup()
 
 	// Set up go.mod and a .go file with old path.
-	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module github.com/old/mod\n\ngo 1.21\n"), 0644)
-	os.MkdirAll(filepath.Join(dir, "pkg"), 0755)
+	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module github.com/old/mod\n\ngo 1.21\n"), 0o644)
+	os.MkdirAll(filepath.Join(dir, "pkg"), 0o755)
 	os.WriteFile(filepath.Join(dir, "pkg", "main.go"), []byte("package main\n\nimport \"github.com/old/mod/pkg\"\n"), 0644)
 
 	replaceInGoMod("github.com/old/mod", "github.com/new/mod")

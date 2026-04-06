@@ -1,6 +1,7 @@
 package release_test
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"testing"
@@ -175,7 +176,7 @@ func TestSkipMeta_ReleaseFromMetadataSetsFlag(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read current file: %v", err)
 	}
-	if string(currentBytes) != string(seedBytes) {
+	if !bytes.Equal(currentBytes, seedBytes) {
 		t.Error("seed v7.0.0.json was modified — expected unchanged")
 	}
 

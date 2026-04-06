@@ -66,7 +66,7 @@ func initVerboseLog() {
 
 		return
 	}
-	defer log.Close()
+	log.Close()
 }
 
 // resolvePullTargets returns records based on alias, group, all, or slug lookup.

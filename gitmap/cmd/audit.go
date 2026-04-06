@@ -80,7 +80,7 @@ func classifyArgs(command string, args []string) (string, string, string) {
 		}
 	}
 
-	return alias, fmt.Sprintf("%s", joinStrings(flags)), fmt.Sprintf("%s", joinStrings(positional))
+	return alias, joinStrings(flags), joinStrings(positional)
 }
 
 // joinStrings joins string slices with spaces.

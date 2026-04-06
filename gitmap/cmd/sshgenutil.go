@@ -69,5 +69,5 @@ func expandHome(path string) string {
 
 // ensureSSHDir creates a directory with 0700 permissions if it doesn't exist.
 func ensureSSHDir(dir string) error {
-	return os.MkdirAll(dir, 0700)
+	return os.MkdirAll(dir, 0o700)
 }

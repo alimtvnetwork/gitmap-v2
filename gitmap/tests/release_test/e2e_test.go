@@ -41,7 +41,7 @@ func initE2ERepo(t *testing.T) (string, string, func()) {
 	}
 
 	// Create bare remote.
-	os.MkdirAll(bareDir, 0755)
+	os.MkdirAll(bareDir, 0o755)
 	git(bareDir, "init", "--bare")
 
 	// Clone into work dir.
