@@ -171,6 +171,37 @@ Answering `n` (or pressing Enter) aborts the release.
     ✓ Metadata written to .gitmap/release/v2.21.1.json
     ✓ Released v2.21.1
 
+### Example 9: Release with local Go binary builds
+
+    gitmap release --bump minor --bin --compress --checksums
+
+**Output:**
+
+    v2.21.0 → v2.22.0
+    Creating branch release/v2.22.0... done
+    Creating tag v2.22.0... done
+    Pushing branch and tag... done
+    Cross-compiling Go binaries (opt-in via --bin)...
+      ✓ gitmap_v2.22.0_windows_amd64.exe
+      ✓ gitmap_v2.22.0_linux_amd64
+      ✓ gitmap_v2.22.0_darwin_arm64
+      ✓ Generated checksums.txt (SHA256)
+    ✓ Released v2.22.0
+
+## CI Release Pipeline
+
+Pushing a `release/*` branch or `v*` tag triggers a GitHub Actions
+workflow that automatically:
+
+1. Cross-compiles 6 Go binaries (windows/linux/darwin × amd64/arm64)
+2. Compresses assets (.zip for Windows, .tar.gz for Unix)
+3. Generates SHA256 checksums
+4. Creates a version-pinned `install.ps1` PowerShell installer
+5. Publishes a GitHub Release with changelog, metadata, and all assets
+
+Local `--bin` builds are opt-in for development; the CI pipeline is
+the recommended path for production releases.
+
 ## See Also
 
 - [release-branch](release-branch.md) — Create a release branch without tagging
