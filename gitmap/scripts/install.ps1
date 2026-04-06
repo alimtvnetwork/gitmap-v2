@@ -197,18 +197,19 @@ function Test-PathEntry([string]$pathValue, [string]$dir) {
 }
 
 function Ensure-SessionPath([string]$dir) {
-    if (Test-PathEntry $env:PATH $dir) {
-        return $false
-    }
+    # Rebuild session PATH from registry (Machine + User) to pick up any changes
+    $machinePath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+    $userPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+    $freshPath = @($machinePath, $userPath) | Where-Object { $_ } | ForEach-Object { $_.TrimEnd(";") }
+    $env:PATH = ($freshPath -join ";")
 
-    if ([string]::IsNullOrWhiteSpace($env:PATH)) {
-        $env:PATH = $dir
-    }
-    else {
+    # Ensure install dir is present even if not yet persisted
+    if (-not (Test-PathEntry $env:PATH $dir)) {
         $env:PATH = $env:PATH.TrimEnd(";") + ";" + $dir
+        return $true
     }
 
-    return $true
+    return $false
 }
 
 function Broadcast-EnvironmentChange {
@@ -271,6 +272,7 @@ function Add-ToPath([string]$dir) {
 
     [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
     Broadcast-EnvironmentChange
+    Ensure-SessionPath $dir
     Write-OK "Added to PATH (current session updated; new terminals inherit it)."
 }
 
@@ -297,6 +299,12 @@ function Main {
 
     if (-not $NoPath) {
         Add-ToPath $resolvedDir
+    }
+
+    # Also try Chocolatey refreshenv if available
+    $refreshCmd = Get-Command refreshenv -ErrorAction SilentlyContinue
+    if ($refreshCmd) {
+        try { refreshenv | Out-Null } catch {}
     }
 
     # Verify
