@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.49.1 — Update UX & Versioned Binaries
+
+- Added `--repo-path` flag to `update` command: override the source repo path for a one-time update.
+- The `--repo-path` flag is automatically forwarded through the handoff binary to `update-runner`.
+- Resolution priority: `--repo-path` flag → embedded constant → friendly error with recovery options.
+- Improved "repo path not embedded" error with actionable recovery steps (one-liner install, clone & build, manual download, `--repo-path` override).
+- CI release binaries now include version in filenames (e.g., `gitmap-v2.49.1-windows-amd64.zip`).
+- Updated `install.ps1` (standalone and release-embedded) to handle versioned asset filenames.
+- CI release workflow now explicitly marks stable releases as "latest" via `make_latest`.
+- Updated `helptext/update.md` with `--repo-path` flag docs, troubleshooting section, and error recovery examples.
+
 ## v2.49.0 — Opt-in Binary Builds & Gitignore Safety
 
 - Go binary cross-compilation is now opt-in: use `--bin` or `-b` to build executables during release.
