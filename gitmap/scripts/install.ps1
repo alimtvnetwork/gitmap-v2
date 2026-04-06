@@ -19,13 +19,13 @@
     Force architecture (amd64, arm64). Default: auto-detect.
 
 .EXAMPLE
-    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap/main/scripts/install.ps1 | iex
+    irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1 | iex
 
 .EXAMPLE
     & ./install.ps1 -Version v2.48.0
 
 .NOTES
-    Repository: https://github.com/alimtvnetwork/gitmap
+    Repository: https://github.com/alimtvnetwork/git-repo-navigator
 #>
 
 param(
