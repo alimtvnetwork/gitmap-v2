@@ -166,7 +166,7 @@ func TestReplaceModulePath_Integration(t *testing.T) {
 	// Set up go.mod and a .go file with old path.
 	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module github.com/old/mod\n\ngo 1.21\n"), 0o644)
 	os.MkdirAll(filepath.Join(dir, "pkg"), 0o755)
-	os.WriteFile(filepath.Join(dir, "pkg", "main.go"), []byte("package main\n\nimport \"github.com/old/mod/pkg\"\n"), 0644)
+	os.WriteFile(filepath.Join(dir, "pkg", "main.go"), []byte("package main\n\nimport \"github.com/old/mod/pkg\"\n"), 0o644)
 
 	replaceInGoMod("github.com/old/mod", "github.com/new/mod")
 	count := replaceModulePath("github.com/old/mod", "github.com/new/mod", false, nil)

@@ -131,7 +131,7 @@ func openDB() (*store.DB, error) {
 		return nil, err
 	}
 
-	if err = db.Migrate(); err != nil {
+	if err := db.Migrate(); err != nil {
 		return nil, err
 	}
 

@@ -51,7 +51,7 @@ func initE2ERepo(t *testing.T) (string, string, func()) {
 
 	// Create initial commit on main.
 	readme := filepath.Join(workDir, "README.md")
-	os.WriteFile(readme, []byte("# e2e test\n"), 0644)
+	os.WriteFile(readme, []byte("# e2e test\n"), 0o644)
 	git(workDir, "add", "-A")
 	git(workDir, "commit", "-m", "initial")
 	git(workDir, "push", "origin", "HEAD")

@@ -42,7 +42,7 @@ func initRollbackRepo(t *testing.T) (string, func()) {
 	git("config", "user.name", "Test")
 	git("checkout", "-b", "main")
 
-	err = os.WriteFile(filepath.Join(dir, "README.md"), []byte("# test\n"), 0644)
+	err = os.WriteFile(filepath.Join(dir, "README.md"), []byte("# test\n"), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
