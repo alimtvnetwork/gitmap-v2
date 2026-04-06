@@ -51,5 +51,5 @@ func EnsureGitignore() {
 	}
 
 	content += strings.Join(toAdd, "\n") + "\n"
-	_ = os.WriteFile(path, []byte(content), 0644)
+	_ = os.WriteFile(path, []byte(content), 0o644)
 }
