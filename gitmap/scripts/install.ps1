@@ -153,6 +153,7 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
     }
 
     $targetPath = Join-Path $installDir $BinaryName
+    $extractDir = Join-Path $installDir ".install-extract"
 
     # Rename-first strategy for running binary
     if (Test-Path $targetPath) {
@@ -161,12 +162,44 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
         Rename-Item $targetPath $oldPath -Force
     }
 
-    Expand-Archive -Path $zipPath -DestinationPath $installDir -Force
+    if (Test-Path $extractDir) {
+        Remove-Item $extractDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
 
-    # Handle nested structure: if extracted into a subfolder
-    $extracted = Get-ChildItem -Path $installDir -Filter $BinaryName -Recurse | Select-Object -First 1
-    if ($extracted -and $extracted.DirectoryName -ne $installDir) {
-        Move-Item $extracted.FullName $targetPath -Force
+    New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+    Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+
+    $candidateNames = @(
+        $BinaryName,
+        [System.IO.Path]::GetFileNameWithoutExtension($BinaryName),
+        "gitmap-windows-amd64.exe",
+        "gitmap-windows-arm64.exe"
+    )
+
+    $extracted = Get-ChildItem -Path $extractDir -File -Recurse |
+        Where-Object { $candidateNames -icontains $_.Name } |
+        Select-Object -First 1
+
+    if (-not $extracted) {
+        $availableFiles = Get-ChildItem -Path $extractDir -File -Recurse | Select-Object -ExpandProperty FullName
+        Remove-Item $extractDir -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Err "Installed archive did not contain $BinaryName"
+        if ($availableFiles) {
+            Write-Err "Archive files:"
+            foreach ($file in $availableFiles) {
+                Write-Err "  $file"
+            }
+        }
+        exit 1
+    }
+
+    Move-Item $extracted.FullName $targetPath -Force
+
+    Remove-Item $extractDir -Recurse -Force -ErrorAction SilentlyContinue
+
+    if (-not (Test-Path $targetPath)) {
+        Write-Err "Install failed: $BinaryName was not written to $installDir"
+        exit 1
     }
 
     # Cleanup .old
