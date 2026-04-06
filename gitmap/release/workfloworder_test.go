@@ -2,7 +2,6 @@ package release
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"strings"
