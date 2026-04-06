@@ -51,8 +51,6 @@ func collectDirFiles(dir string) []string {
 	}
 
 	files := make([]string, 0, len(entries))
-		return nil
-	}
 
 	for _, entry := range entries {
 		if entry.IsDir() {
