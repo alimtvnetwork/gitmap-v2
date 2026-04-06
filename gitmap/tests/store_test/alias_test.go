@@ -84,10 +84,17 @@ func TestResolveAlias_Success(t *testing.T) {
 	defer db.Close()
 
 	repoID := seedRepo(t, db, "github/user/web", "web", "/home/user/repos/web")
+	t.Logf("seeded repo ID: %d", repoID)
 
-	_, err := db.CreateAlias("web", repoID)
+	alias, err := db.CreateAlias("web", repoID)
 	if err != nil {
 		t.Fatalf("CreateAlias failed: %v", err)
+	}
+	t.Logf("created alias ID: %d, RepoID: %d", alias.ID, alias.RepoID)
+
+	// Verify alias exists via direct lookup.
+	if !db.AliasExists("web") {
+		t.Fatal("alias 'web' should exist after creation")
 	}
 
 	resolved, err := db.ResolveAlias("web")
@@ -141,9 +148,14 @@ func TestListAliasesWithRepo_Multiple(t *testing.T) {
 
 	id1 := seedRepo(t, db, "github/user/api", "api", "/repos/api")
 	id2 := seedRepo(t, db, "github/user/web", "web", "/repos/web")
+	t.Logf("seeded repo IDs: %d, %d", id1, id2)
 
-	db.CreateAlias("api", id1)
-	db.CreateAlias("web", id2)
+	if _, err := db.CreateAlias("api", id1); err != nil {
+		t.Fatalf("CreateAlias(api) failed: %v", err)
+	}
+	if _, err := db.CreateAlias("web", id2); err != nil {
+		t.Fatalf("CreateAlias(web) failed: %v", err)
+	}
 
 	aliases, err := db.ListAliasesWithRepo()
 	if err != nil {
@@ -223,12 +235,20 @@ func TestUpdateAlias_ReassignsRepo(t *testing.T) {
 
 	id1 := seedRepo(t, db, "github/user/old-api", "old-api", "/repos/old-api")
 	id2 := seedRepo(t, db, "github/user/new-api", "new-api", "/repos/new-api")
+	t.Logf("seeded repo IDs: old=%d, new=%d", id1, id2)
 
-	db.CreateAlias("api", id1)
+	if _, err := db.CreateAlias("api", id1); err != nil {
+		t.Fatalf("CreateAlias failed: %v", err)
+	}
 
 	err := db.UpdateAlias("api", id2)
 	if err != nil {
 		t.Fatalf("UpdateAlias failed: %v", err)
+	}
+
+	// Verify the alias still exists after update.
+	if !db.AliasExists("api") {
+		t.Fatal("alias 'api' should still exist after update")
 	}
 
 	resolved, err := db.ResolveAlias("api")
