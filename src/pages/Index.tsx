@@ -16,8 +16,21 @@ const HomePage = () => {
           re-clone the exact layout on any machine. Track, group, release, and
           manage repositories from a single CLI.
         </p>
-        <div className="mb-8">
-          <InstallBlock command="go install github.com/user/gitmap@latest" />
+        <div className="mb-8 max-w-3xl mx-auto">
+          <InstallBlock
+            tabs={[
+              {
+                label: "Windows",
+                command:
+                  "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1'))",
+              },
+              {
+                label: "Linux / macOS",
+                command:
+                  "curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.sh | sh",
+              },
+            ]}
+          />
         </div>
         <div className="flex gap-4 justify-center">
           <Link
