@@ -107,16 +107,16 @@ func printCloneHelp(w io.Writer) {
 
 // printCloneStep writes a single step with one command.
 func printCloneStep(w io.Writer, step, cmd string) {
-	fmt.Fprintf(w, constants.ColorWhite+step+constants.ColorReset+"\n")
-	fmt.Fprintf(w, constants.ColorCyan+cmd+constants.ColorReset+"\n")
+	fmt.Fprintf(w, "%s%s%s\n", constants.ColorWhite, step, constants.ColorReset)
+	fmt.Fprintf(w, "%s%s%s\n", constants.ColorCyan, cmd, constants.ColorReset)
 	fmt.Fprintln(w)
 }
 
 // printCloneStepMulti writes a step with multiple command lines.
 func printCloneStepMulti(w io.Writer, step string, cmds ...string) {
-	fmt.Fprintf(w, constants.ColorWhite+step+constants.ColorReset+"\n")
+	fmt.Fprintf(w, "%s%s%s\n", constants.ColorWhite, step, constants.ColorReset)
 	for _, cmd := range cmds {
-		fmt.Fprintf(w, constants.ColorCyan+cmd+constants.ColorReset+"\n")
+		fmt.Fprintf(w, "%s%s%s\n", constants.ColorCyan, cmd, constants.ColorReset)
 	}
 	fmt.Fprintln(w)
 }

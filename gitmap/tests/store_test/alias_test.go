@@ -155,12 +155,12 @@ func TestListAliasesWithRepo_Multiple(t *testing.T) {
 	}
 
 	// Results are ordered by alias name.
-	if aliases[0].Alias != "api" {
-		t.Errorf("expected first alias=api, got %q", aliases[0].Alias)
+	if aliases[0].Alias.Alias != "api" {
+		t.Errorf("expected first alias=api, got %q", aliases[0].Alias.Alias)
 	}
 
-	if aliases[1].Alias != "web" {
-		t.Errorf("expected second alias=web, got %q", aliases[1].Alias)
+	if aliases[1].Alias.Alias != "web" {
+		t.Errorf("expected second alias=web, got %q", aliases[1].Alias.Alias)
 	}
 
 	if aliases[0].AbsolutePath != "/repos/api" {
