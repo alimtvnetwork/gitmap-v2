@@ -8,6 +8,7 @@ import (
 
 	"github.com/user/gitmap/completion"
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/release"
 	"github.com/user/gitmap/setup"
 )
 
@@ -25,6 +26,7 @@ func runSetup(args []string) {
 	result := setup.Apply(cfg, dryRun)
 	installShellCompletion(dryRun)
 	installCDFunction(dryRun)
+	ensureGitignoreStep(dryRun)
 	printSetupSummary(result)
 }
 
@@ -66,6 +68,21 @@ func installCDFunction(dryRun bool) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "  %s%s%s\n", constants.ColorYellow, err, constants.ColorReset)
 	}
+}
+
+// ensureGitignoreStep adds release-related paths to .gitignore during setup.
+func ensureGitignoreStep(dryRun bool) {
+	fmt.Printf("\n  %s■ Gitignore —%s\n", constants.ColorYellow, constants.ColorReset)
+
+	if dryRun {
+		fmt.Printf("  %s[dry-run]%s would ensure release paths are in .gitignore\n",
+			constants.ColorDim, constants.ColorReset)
+
+		return
+	}
+
+	release.EnsureGitignore()
+	fmt.Printf("  %s✓%s Release paths verified in .gitignore\n", constants.ColorGreen, constants.ColorReset)
 }
 
 // parseSetupFlags parses flags for the setup command.
