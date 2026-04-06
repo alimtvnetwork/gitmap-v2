@@ -58,9 +58,21 @@ jobs:
           fi
 
   test:
-    name: Test
+    name: Test (${{ matrix.name }})
     runs-on: ubuntu-latest
     needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: unit
+            packages: ./clonenext/... ./cloner/... ./cmd/... ./config/... ./formatter/... ./mapper/... ./release/...
+          - name: store
+            packages: ./tests/store_test/...
+          - name: integration
+            packages: ./tests/cmd_test/... ./tests/constants_test/... ./tests/release_test/...
+          - name: tui
+            packages: ./tui/...
     steps:
       - uses: actions/checkout@v4
 
@@ -75,27 +87,84 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          go test ./... -v -count=1 2>&1 | tee test-output.txt
+          go test ${{ matrix.packages }} -v -count=1 2>&1 | tee test-output.txt
           exit_code=${PIPESTATUS[0]}
           set -e
 
           if [ "$exit_code" -ne 0 ]; then
             echo ""
             echo "========================================="
-            echo "  FAILED TESTS & BUILD ERRORS"
+            echo "  FAILED TESTS (${{ matrix.name }})"
             echo "========================================="
-            if ! grep -E -A 20 '^(--- FAIL:|FAIL[[:space:]]|# )|build failed|cannot |undefined:|imported and not used|syntax error' test-output.txt; then
-              echo "No focused matches found; showing last 200 lines."
-              tail -n 200 test-output.txt
-            fi
+            grep -E -A 5 '^--- FAIL:' test-output.txt || true
             echo "========================================="
-            exit "$exit_code"
           fi
+
+          exit "$exit_code"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.name }}
+          path: gitmap/test-output.txt
+          retention-days: 7
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          path: results
+
+      - name: Aggregate failures
+        shell: bash
+        run: |
+          echo "========================================="
+          echo "  ALL TEST RESULTS"
+          echo "========================================="
+
+          overall=0
+          for dir in results/test-results-*; do
+            suite=$(basename "$dir" | sed 's/test-results-//')
+            file="$dir/test-output.txt"
+            if [ ! -f "$file" ]; then
+              continue
+            fi
+
+            pass=$(grep -c '^--- PASS:' "$file" || true)
+            fail=$(grep -c '^--- FAIL:' "$file" || true)
+
+            if [ "$fail" -gt 0 ]; then
+              echo ""
+              echo "❌ $suite: $fail failed, $pass passed"
+              echo "-----------------------------------------"
+              grep -E -A 5 '^--- FAIL:' "$file" || true
+              overall=1
+            else
+              echo "✅ $suite: $pass passed"
+            fi
+          done
+
+          echo ""
+          echo "========================================="
+
+          if [ "$overall" -ne 0 ]; then
+            echo "::error::Some test suites failed — see details above."
+            exit 1
+          fi
+
+          echo "All test suites passed."
 
   build:
     name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
     runs-on: ubuntu-latest
-    needs: test
+    needs: test-summary
     strategy:
       matrix:
         include:
