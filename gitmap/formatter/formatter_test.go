@@ -31,7 +31,7 @@ func testRecords() []model.ScanRecord {
 // TestTerminal verifies terminal output contains repo names.
 func TestTerminal(t *testing.T) {
 	var buf bytes.Buffer
-	err := Terminal(&buf, testRecords())
+	err := Terminal(&buf, testRecords(), "", false)
 	if err != nil {
 		t.Fatalf("Terminal error: %v", err)
 	}

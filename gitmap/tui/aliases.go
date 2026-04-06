@@ -40,7 +40,7 @@ func (m aliasesModel) Update(msg tea.Msg) (aliasesModel, tea.Cmd) {
 	case keys.delete(keyMsg):
 		if len(m.aliases) > 0 {
 			name := m.aliases[m.cursor].Alias
-			m.message = fmt.Sprintf(constants.TUIAliasDeleteHint, name)
+			m.message = fmt.Sprintf(constants.TUIAliasDeleteHint, string(name))
 		}
 	case keys.refresh(keyMsg):
 		m.aliases, _ = m.db.ListAliasesWithRepo()
@@ -66,7 +66,7 @@ func (m aliasesModel) View() string {
 
 	for i, a := range m.aliases {
 		path := truncatePath(a.AbsolutePath, 35)
-		line := fmt.Sprintf("%-15s %-25s %s", a.Alias, a.Slug, path)
+		line := fmt.Sprintf("%-15s %-25s %s", a.Alias.Alias, a.Slug, path)
 
 		if i == m.cursor {
 			b.WriteString(styleCursorRow.Render("> " + line))

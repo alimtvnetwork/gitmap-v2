@@ -4,10 +4,10 @@ import (
 	"testing"
 )
 
-func TestParseCommitLines_Basic(t *testing.T) {
+func TestParseTempReleaseCommitLines_Basic(t *testing.T) {
 	input := "abc123def456|Initial commit\n789012345678|Second commit"
 
-	commits := parseCommitLines(input)
+	commits := parseTempReleaseCommitLines(input)
 	if len(commits) != 2 {
 		t.Fatalf("expected 2 commits, got %d", len(commits))
 	}
@@ -21,8 +21,8 @@ func TestParseCommitLines_Basic(t *testing.T) {
 	}
 }
 
-func TestParseCommitLines_Empty(t *testing.T) {
-	commits := parseCommitLines("")
+func TestParseTempReleaseCommitLines_Empty(t *testing.T) {
+	commits := parseTempReleaseCommitLines("")
 	if commits != nil {
 		t.Errorf("expected nil for empty input, got %v", commits)
 	}
