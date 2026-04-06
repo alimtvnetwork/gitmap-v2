@@ -22,7 +22,10 @@ type tempReleasesModel struct {
 }
 
 func newTempReleasesModel(db *store.DB) tempReleasesModel {
-	records, _ := db.ListTempReleases()
+	var records []model.TempRelease
+	if db != nil {
+		records, _ = db.ListTempReleases()
+	}
 
 	return tempReleasesModel{
 		db:       db,

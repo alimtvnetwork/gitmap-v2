@@ -17,7 +17,10 @@ type aliasesModel struct {
 }
 
 func newAliasesModel(db *store.DB) aliasesModel {
-	aliases, _ := db.ListAliasesWithRepo()
+	var aliases []store.AliasWithRepo
+	if db != nil {
+		aliases, _ = db.ListAliasesWithRepo()
+	}
 
 	return aliasesModel{db: db, aliases: aliases}
 }

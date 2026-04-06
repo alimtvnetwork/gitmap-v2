@@ -19,7 +19,10 @@ type releasesModel struct {
 }
 
 func newReleasesModel(db *store.DB) releasesModel {
-	releases, _ := db.ListReleases()
+	var releases []model.ReleaseRecord
+	if db != nil {
+		releases, _ = db.ListReleases()
+	}
 
 	return releasesModel{
 		db:       db,
