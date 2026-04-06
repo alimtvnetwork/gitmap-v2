@@ -21,7 +21,13 @@ All files are written to a `gitmap-output/` folder at the root of the scanned di
 
 ### One-Liner Install (recommended)
 
-**Windows (PowerShell):**
+**Windows (PowerShell — full bootstrap, works on any machine):**
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1'))
+```
+
+**Windows (short form, PowerShell 5+):**
 
 ```powershell
 irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1 | iex
