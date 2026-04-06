@@ -1,4 +1,4 @@
-.PHONY: lint vet test build clean setup vulncheck all
+.PHONY: lint vet test build clean setup vulncheck all release release-dry
 
 GO       := go
 LINT     := golangci-lint
@@ -33,6 +33,15 @@ build:
 ## Vulncheck — scan for known vulnerabilities
 vulncheck:
 	@cd $(MODULE) && $(GO) run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+## Release — run full release workflow (usage: make release BUMP=patch)
+BUMP ?= patch
+release: lint test
+	@cd $(MODULE) && $(GO) run . release --bump $(BUMP)
+
+## Release dry-run — preview release without executing
+release-dry:
+	@cd $(MODULE) && $(GO) run . release --bump $(BUMP) --dry-run
 
 ## Clean — remove build artifacts
 clean:
