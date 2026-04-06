@@ -11,6 +11,12 @@ const (
 const FlagVerbose = "--verbose"
 const FlagRepoPath = "--repo-path"
 
+// Updater fallback.
+const (
+	UpdaterBin         = "gitmap-updater"
+	MsgUpdaterFallback = "  → No source repo found. Delegating to %s...\n\n"
+)
+
 // Update UI messages.
 const (
 	MsgUpdateActive      = "  → Active: %s\n  → Handoff: %s\n"
