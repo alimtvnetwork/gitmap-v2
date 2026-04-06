@@ -7,6 +7,10 @@
 - `gitmap setup` now ensures `release-assets` and `.gitmap/release-assets` are in `.gitignore`.
 - Release workflow auto-appends missing release-related paths to `.gitignore` before each release.
 - Added `release-assets` and `.gitmap/release-assets` to `.gitignore` to prevent tracking build artifacts.
+- CI release workflow now triggers on `release/*` branch push (in addition to tags).
+- Each GitHub release includes: changelog entry, SHA256 checksums, release metadata table, and asset matrix.
+- Version-specific `install.ps1` script is auto-generated and attached to each release for one-liner install.
+- Pre-release versions (containing `-`) are automatically marked as prerelease on GitHub.
 
 ## v2.48.1 — Clone-Next Auto-Navigate
 

@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - "release/**"
     tags:
       - "v*"
 
@@ -22,10 +24,24 @@ jobs:
           go-version-file: gitmap/go.mod
           cache-dependency-path: gitmap/go.sum
 
+      - name: Resolve version
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF_NAME}"
+          elif [[ "$GITHUB_REF" == refs/heads/release/* ]]; then
+            VERSION="${GITHUB_REF_NAME#release/}"
+          else
+            echo "::error::Unexpected ref: $GITHUB_REF"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $VERSION"
+
       - name: Build release binaries
         working-directory: gitmap
         run: |
-          VERSION="${GITHUB_REF_NAME}"
+          VERSION="${{ steps.version.outputs.version }}"
           LDFLAGS="-s -w -X 'github.com/user/gitmap/constants.Version=$VERSION'"
 
           TARGETS=(
@@ -59,8 +75,282 @@ jobs:
           sha256sum * > checksums.txt
           cat checksums.txt
 
+      - name: Generate version-specific install script
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          REPO="alimtvnetwork/git-repo-navigator"
+
+          cat > gitmap/dist/install.ps1 << 'PSEOF'
+          <#
+          .SYNOPSIS
+              Install gitmap VERSION_PLACEHOLDER.
+
+          .DESCRIPTION
+              Downloads gitmap VERSION_PLACEHOLDER from GitHub, verifies SHA256 checksums,
+              and installs it to the local application directory.
+
+          .PARAMETER InstallDir
+              Target directory. Default: $env:LOCALAPPDATA\gitmap
+
+          .PARAMETER Arch
+              Force architecture (amd64, arm64). Default: auto-detect.
+
+          .PARAMETER NoPath
+              Skip adding to PATH.
+
+          .EXAMPLE
+              irm https://github.com/REPO_PLACEHOLDER/releases/download/VERSION_PLACEHOLDER/install.ps1 | iex
+          #>
+
+          param(
+              [string]$InstallDir = "",
+              [string]$Arch = "",
+              [switch]$NoPath
+          )
+
+          $ErrorActionPreference = "Stop"
+          $PinnedVersion = "VERSION_PLACEHOLDER"
+          $Repo = "REPO_PLACEHOLDER"
+          $BinaryName = "gitmap.exe"
+
+          function Write-Step([string]$msg) { Write-Host "  $msg" -ForegroundColor Cyan }
+          function Write-OK([string]$msg) { Write-Host "  $msg" -ForegroundColor Green }
+          function Write-Err([string]$msg) { Write-Host "  $msg" -ForegroundColor Red }
+
+          function Resolve-InstallDir([string]$dir) {
+              if ($dir -ne "") { return $dir }
+              return Join-Path $env:LOCALAPPDATA "gitmap"
+          }
+
+          function Resolve-Arch([string]$arch) {
+              if ($arch -ne "") { return $arch }
+              $cpu = $env:PROCESSOR_ARCHITECTURE
+              switch ($cpu) {
+                  "AMD64"   { return "amd64" }
+                  "ARM64"   { return "arm64" }
+                  default   { return "amd64" }
+              }
+          }
+
+          function Get-Asset([string]$version, [string]$arch) {
+              $assetName = "gitmap-windows-${arch}.zip"
+              $baseUrl = "https://github.com/$Repo/releases/download/$version"
+              $assetUrl = "$baseUrl/$assetName"
+              $checksumUrl = "$baseUrl/checksums.txt"
+
+              $tmpDir = Join-Path $env:TEMP "gitmap-install-$(Get-Random)"
+              New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+
+              $zipPath = Join-Path $tmpDir $assetName
+              $checksumPath = Join-Path $tmpDir "checksums.txt"
+
+              Write-Step "Downloading $assetName ($version)..."
+              try {
+                  Invoke-WebRequest -Uri $assetUrl -OutFile $zipPath -UseBasicParsing
+                  Invoke-WebRequest -Uri $checksumUrl -OutFile $checksumPath -UseBasicParsing
+              }
+              catch {
+                  Write-Err "Download failed: $_"
+                  Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+                  exit 1
+              }
+
+              Write-Step "Verifying checksum..."
+              $expectedLine = (Get-Content $checksumPath | Where-Object { $_ -match $assetName })
+              if (-not $expectedLine) {
+                  Write-Err "Asset not found in checksums.txt"
+                  Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+                  exit 1
+              }
+
+              $expectedHash = ($expectedLine -split '\s+')[0]
+              $actualHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLower()
+
+              if ($actualHash -ne $expectedHash) {
+                  Write-Err "Checksum mismatch! Expected: $expectedHash Got: $actualHash"
+                  Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+                  exit 1
+              }
+
+              Write-OK "Checksum verified."
+              return @{ ZipPath = $zipPath; TmpDir = $tmpDir }
+          }
+
+          function Install-Binary([string]$zipPath, [string]$installDir) {
+              Write-Step "Installing to $installDir..."
+              if (-not (Test-Path $installDir)) {
+                  New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+              }
+
+              $targetPath = Join-Path $installDir $BinaryName
+
+              if (Test-Path $targetPath) {
+                  $oldPath = "$targetPath.old"
+                  if (Test-Path $oldPath) { Remove-Item $oldPath -Force }
+                  Rename-Item $targetPath $oldPath -Force
+              }
+
+              $extractDir = Join-Path $installDir ".install-extract"
+              if (Test-Path $extractDir) { Remove-Item $extractDir -Recurse -Force }
+              New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+              Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+
+              $extracted = Get-ChildItem -Path $extractDir -File -Recurse |
+                  Where-Object { $_.Name -match "^gitmap" -and $_.Extension -eq ".exe" } |
+                  Select-Object -First 1
+
+              if (-not $extracted) {
+                  Remove-Item $extractDir -Recurse -Force
+                  Write-Err "Archive did not contain gitmap executable"
+                  exit 1
+              }
+
+              Move-Item $extracted.FullName $targetPath -Force
+              Remove-Item $extractDir -Recurse -Force -ErrorAction SilentlyContinue
+
+              $oldPath = "$targetPath.old"
+              if (Test-Path $oldPath) { Remove-Item $oldPath -Force -ErrorAction SilentlyContinue }
+
+              Write-OK "Installed $BinaryName to $installDir"
+          }
+
+          function Add-ToPath([string]$dir) {
+              $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+              $parts = if ($currentUserPath) { $currentUserPath -split ";" } else { @() }
+              $hasDir = $parts | Where-Object { $_.Trim() -ieq $dir }
+
+              if (-not $hasDir) {
+                  $newPath = if ([string]::IsNullOrWhiteSpace($currentUserPath)) { $dir } else { $currentUserPath.TrimEnd(";") + ";" + $dir }
+                  [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+                  Write-OK "Added to user PATH."
+              } else {
+                  Write-Step "Already in user PATH."
+              }
+          }
+
+          # --- Main ---
+
+          Write-Host ""
+          Write-Host "  gitmap installer ($PinnedVersion)" -ForegroundColor White
+          Write-Host "  github.com/$Repo" -ForegroundColor DarkGray
+          Write-Host ""
+
+          $resolvedArch = Resolve-Arch $Arch
+          $resolvedDir = Resolve-InstallDir $InstallDir
+
+          $result = Get-Asset $PinnedVersion $resolvedArch
+          try { Install-Binary $result.ZipPath $resolvedDir }
+          finally { Remove-Item $result.TmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+
+          if (-not $NoPath) { Add-ToPath $resolvedDir }
+
+          $binPath = Join-Path $resolvedDir $BinaryName
+          if (Test-Path $binPath) {
+              Write-Host ""
+              try {
+                  $versionOutput = & $binPath version 2>&1
+                  Write-OK "  gitmap $versionOutput"
+              } catch {
+                  Write-Err "  Binary found but failed to run: $_"
+              }
+          }
+
+          Write-Host ""
+          Write-OK "  Done! Run 'gitmap --help' to get started."
+          Write-Host ""
+          PSEOF
+
+          # Replace placeholders
+          sed -i "s|VERSION_PLACEHOLDER|$VERSION|g" gitmap/dist/install.ps1
+          sed -i "s|REPO_PLACEHOLDER|$REPO|g" gitmap/dist/install.ps1
+
+      - name: Extract changelog entry
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Extract the section for this version from CHANGELOG.md
+          ENTRY=$(awk -v ver="$VERSION" '
+            /^## / {
+              if (found) exit
+              if (index($0, ver)) found=1
+            }
+            found { print }
+          ' CHANGELOG.md)
+
+          if [ -z "$ENTRY" ]; then
+            ENTRY="No changelog entry found for $VERSION."
+          fi
+
+          # Write to file for multi-line output
+          echo "$ENTRY" > /tmp/changelog-entry.md
+
+      - name: Build release body
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          REPO="alimtvnetwork/git-repo-navigator"
+          COMMIT_SHA="${GITHUB_SHA}"
+          BRANCH="${GITHUB_REF_NAME}"
+          BUILD_DATE="$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+          cat > /tmp/release-body.md << EOF
+          $(cat /tmp/changelog-entry.md)
+
+          ---
+
+          ## Release Info
+
+          | Field | Value |
+          |-------|-------|
+          | Version | \`$VERSION\` |
+          | Commit | \`${COMMIT_SHA:0:10}\` |
+          | Branch | \`$BRANCH\` |
+          | Build Date | $BUILD_DATE |
+          | Go Version | $(go version | awk '{print $3}') |
+
+          ## Checksums (SHA256)
+
+          \`\`\`
+          $(cat gitmap/dist/checksums.txt)
+          \`\`\`
+
+          ## Install
+
+          ### Quick install (Windows PowerShell)
+
+          \`\`\`powershell
+          irm https://github.com/$REPO/releases/download/$VERSION/install.ps1 | iex
+          \`\`\`
+
+          ### Install specific version (generic installer)
+
+          \`\`\`powershell
+          irm https://raw.githubusercontent.com/$REPO/main/gitmap/scripts/install.ps1 | iex
+          # Or pin this version:
+          & { \$Version = "$VERSION"; irm https://raw.githubusercontent.com/$REPO/main/gitmap/scripts/install.ps1 | iex }
+          \`\`\`
+
+          ### Manual download
+
+          Download the appropriate archive for your platform from the assets below, extract, and place the binary in your PATH.
+
+          ## Assets
+
+          | Platform | Architecture | File |
+          |----------|-------------|------|
+          | Windows | amd64 | \`gitmap-windows-amd64.zip\` |
+          | Windows | arm64 | \`gitmap-windows-arm64.zip\` |
+          | Linux | amd64 | \`gitmap-linux-amd64.tar.gz\` |
+          | Linux | arm64 | \`gitmap-linux-arm64.tar.gz\` |
+          | macOS | amd64 | \`gitmap-darwin-amd64.tar.gz\` |
+          | macOS | arm64 | \`gitmap-darwin-arm64.tar.gz\` |
+          EOF
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          body_path: /tmp/release-body.md
           files: gitmap/dist/*
-          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
