@@ -115,9 +115,6 @@ func TestPerformReleaseAutoCommitAfterMetadata(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "main", opts)
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to main")
-		// Simulate auto-commit scanning (step 4 in real workflow).
-		fmt.Print(constants.MsgAutoCommitScanning)
 	})
 
 	metaIdx := strings.Index(output, "Write metadata")
