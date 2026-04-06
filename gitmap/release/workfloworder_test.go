@@ -33,8 +33,6 @@ func TestPerformReleaseStepOrder(t *testing.T) {
 
 	output := captureStdout(t, func() {
 		printDryRun(v, branchName, tag, "main", opts)
-		// Simulate the return-to-branch message.
-		fmt.Printf(constants.MsgReleaseDryRun, "Switch back to main")
 	})
 
 	steps := []struct {
