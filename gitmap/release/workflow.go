@@ -30,7 +30,7 @@ type Options struct {
 	Verbose       bool
 	Compress      bool
 	Checksums     bool
-	NoAssets      bool
+	Bin           bool
 	NoCommit      bool
 	SkipMeta      bool
 }

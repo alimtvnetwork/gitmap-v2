@@ -139,7 +139,7 @@ func printUsageReleaseFlags() {
 	fmt.Println(constants.HelpDryRun)
 	fmt.Println(constants.HelpCompressFlag)
 	fmt.Println(constants.HelpChecksumsFlag)
-	fmt.Println(constants.HelpNoAssets)
+	fmt.Println(constants.HelpBin)
 	fmt.Println(constants.HelpTargets)
 	fmt.Println(constants.HelpListTargets)
 }

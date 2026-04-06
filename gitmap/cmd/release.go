@@ -25,7 +25,7 @@ func runRelease(args []string) {
 	}
 
 	requireOnline()
-	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit := parseReleaseFlags(args)
+	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit := parseReleaseFlags(args)
 	_ = verbose
 
 	if listTargets {
@@ -35,11 +35,11 @@ func runRelease(args []string) {
 	}
 
 	validateReleaseFlags(version, bump, commit, branch)
-	executeRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, noCommit)
+	executeRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, noCommit)
 }
 
 // executeRelease builds options and runs the release workflow.
-func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, noCommit bool) {
+func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, noCommit bool) {
 	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
 
 	opts := release.Options{
@@ -54,7 +54,7 @@ func executeRelease(version, assets, commit, branch, bump, notes, targets string
 		Verbose:       verbose,
 		Compress:      compress || cfg.Release.Compress,
 		Checksums:     checksums || cfg.Release.Checksums,
-		NoAssets:      noAssets,
+		Bin:           bin,
 		NoCommit:      noCommit,
 	}
 	err := release.Execute(opts)
@@ -99,7 +99,7 @@ func (z *zipItemFlag) Set(val string) error {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
@@ -112,10 +112,13 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 	verboseFlag := fs.Bool("verbose", false, constants.FlagDescVerbose)
 	compressFlag := fs.Bool("compress", false, constants.FlagDescCompress)
 	checksumsFlag := fs.Bool("checksums", false, constants.FlagDescChecksums)
-	noAssetsFlag := fs.Bool("no-assets", false, constants.FlagDescNoAssets)
+	binFlag := fs.Bool("bin", false, constants.FlagDescBin)
 	listTargetsFlag := fs.Bool("list-targets", false, constants.FlagDescListTargets)
 	bundleFlag := fs.String("bundle", "", constants.FlagDescZGBundle)
 	noCommitFlag := fs.Bool("no-commit", false, constants.FlagDescNoCommit)
+
+	// Register -b as shorthand for --bin.
+	fs.BoolVar(binFlag, "b", false, constants.FlagDescBin)
 
 	var zgGroups zipGroupFlag
 	var zgItems zipItemFlag
@@ -133,7 +136,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *noAssetsFlag, *listTargetsFlag, *noCommitFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *binFlag, *listTargetsFlag, *noCommitFlag
 }
 
 // printListTargets resolves and prints the target matrix, then returns.

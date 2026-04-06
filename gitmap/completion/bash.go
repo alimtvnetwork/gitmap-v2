@@ -43,11 +43,11 @@ func generateBash() string {
             if [[ "$prev" == "--zip-group" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-zip-groups)" -- "$cur"))
             else
-                COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose --zip-group -Z --bundle" -- "$cur"))
+                COMPREPLY=($(compgen -W "--assets --commit --branch --bump --draft --dry-run --compress --checksums --bin --targets --list-targets --verbose --zip-group -Z --bundle" -- "$cur"))
             fi
             ;;
         release-branch|rb)
-            COMPREPLY=($(compgen -W "--assets --draft --dry-run --compress --checksums --no-assets --targets" -- "$cur"))
+            COMPREPLY=($(compgen -W "--assets --draft --dry-run --compress --checksums --bin --targets" -- "$cur"))
             ;;
         alias|a)
             COMPREPLY=($(compgen -W "set remove list show suggest $(gitmap completion --list-aliases)" -- "$cur"))

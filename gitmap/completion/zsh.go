@@ -55,12 +55,12 @@ _gitmap() {
                 local -a zgroups=($(gitmap completion --list-zip-groups))
                 _describe 'zip-group' zgroups
             else
-                local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --no-assets --targets --list-targets --verbose --zip-group -Z --bundle)
+                local -a flags=(--assets --commit --branch --bump --draft --dry-run --compress --checksums --bin --targets --list-targets --verbose --zip-group -Z --bundle)
                 _describe 'flag' flags
             fi
             ;;
         release-branch|rb)
-            local -a flags=(--assets --draft --dry-run --compress --checksums --no-assets --targets)
+            local -a flags=(--assets --draft --dry-run --compress --checksums --bin --targets)
             _describe 'flag' flags
             ;;
         alias|a)

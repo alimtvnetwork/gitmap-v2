@@ -27,9 +27,7 @@ func printDryRun(v Version, branchName, tag, sourceName string, opts Options) er
 
 // printDryRunGoAssets shows Go cross-compile plan in dry-run mode.
 func printDryRunGoAssets(v Version, opts Options) {
-	if opts.NoAssets {
-		fmt.Printf(constants.MsgReleaseDryRun, "Skip Go binary compilation (--no-assets)")
-
+	if !opts.Bin {
 		return
 	}
 

@@ -63,14 +63,14 @@ func generatePowerShell() string {
                 ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
             return
         }
-        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets", "--list-targets", "--verbose", "--zip-group", "-Z", "--bundle")
+        $items = @("--assets", "--commit", "--branch", "--bump", "--draft", "--dry-run", "--compress", "--checksums", "--bin", "--targets", "--list-targets", "--verbose", "--zip-group", "-Z", "--bundle")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return
     }
 
     if ($cmd -eq "release-branch" -or $cmd -eq "rb") {
-        $items = @("--assets", "--draft", "--dry-run", "--compress", "--checksums", "--no-assets", "--targets")
+        $items = @("--assets", "--draft", "--dry-run", "--compress", "--checksums", "--bin", "--targets")
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
         return

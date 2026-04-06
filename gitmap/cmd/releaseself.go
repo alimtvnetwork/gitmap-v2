@@ -12,7 +12,7 @@ import (
 func runReleaseSelf(args []string) {
 	checkHelp("release-self", args)
 	requireOnline()
-	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, listTargets, noCommit := parseReleaseFlags(args)
+	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit := parseReleaseFlags(args)
 	_ = verbose
 
 	if listTargets {
@@ -22,11 +22,11 @@ func runReleaseSelf(args []string) {
 	}
 
 	validateReleaseFlags(version, bump, commit, branch)
-	executeSelfRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, noAssets, noCommit)
+	executeSelfRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, noCommit)
 }
 
 // executeSelfRelease builds options and runs the self-release workflow.
-func executeSelfRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, noAssets, noCommit bool) {
+func executeSelfRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, noCommit bool) {
 	opts := release.Options{
 		Version: version, Assets: assets,
 		Commit: commit, Branch: branch,
@@ -38,7 +38,7 @@ func executeSelfRelease(version, assets, commit, branch, bump, notes, targets st
 		Verbose:   verbose,
 		Compress:  compress,
 		Checksums: checksums,
-		NoAssets:  noAssets,
+		Bin:       bin,
 		NoCommit:  noCommit,
 	}
 

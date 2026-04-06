@@ -8,14 +8,14 @@ const (
 
 // Asset flag descriptions.
 const (
-	FlagDescNoAssets    = "Skip automatic Go binary cross-compilation"
+	FlagDescBin         = "Cross-compile Go binaries and include in release assets"
 	FlagDescTargets     = "Comma-separated cross-compile targets (e.g. windows/amd64,linux/arm64)"
 	FlagDescListTargets = "Print resolved target matrix and exit"
 )
 
 // Asset help text.
 const (
-	HelpNoAssets    = "  --no-assets         Skip Go binary cross-compilation"
+	HelpBin         = "  --bin, -b           Cross-compile Go binaries and include in release assets"
 	HelpTargets     = "  --targets <list>    Cross-compile targets: windows/amd64,linux/arm64"
 	HelpListTargets = "  --list-targets      Print resolved target matrix and exit"
 )
@@ -35,7 +35,7 @@ const (
 	MsgAssetBuildSummary = "  → Built %d/%d binaries successfully\n"
 	MsgAssetUploaded     = "  ✓ Uploaded %s\n"
 	MsgAssetUploadStart  = "\n  Uploading %d asset(s) to GitHub...\n"
-	MsgAssetSkipped      = "  → Skipping Go binary compilation (--no-assets)\n"
+	MsgAssetSkipped      = ""
 	MsgAssetNoMain       = "  → No buildable main package found, skipping binaries\n"
 	MsgAssetNoGoProject  = ""
 	MsgAssetStagingClean = "  ✓ Cleaned up staging directory\n"
