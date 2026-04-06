@@ -55,7 +55,7 @@ func TestParseStatusFlags_GroupAndAll(t *testing.T) {
 }
 
 func TestParseExecFlags_NoFlags(t *testing.T) {
-	group, all, gitArgs := parseExecFlags([]string{"fetch", "--prune"})
+	group, all, _, gitArgs := parseExecFlags([]string{"fetch", "--prune"})
 	if len(group) > 0 {
 		t.Errorf("expected empty group, got %q", group)
 	}
@@ -68,7 +68,7 @@ func TestParseExecFlags_NoFlags(t *testing.T) {
 }
 
 func TestParseExecFlags_GroupLong(t *testing.T) {
-	group, all, gitArgs := parseExecFlags([]string{"--group", "backend", "status"})
+	group, all, _, gitArgs := parseExecFlags([]string{"--group", "backend", "status"})
 	if group != "backend" {
 		t.Errorf("expected group=backend, got %q", group)
 	}
@@ -81,7 +81,7 @@ func TestParseExecFlags_GroupLong(t *testing.T) {
 }
 
 func TestParseExecFlags_GroupShort(t *testing.T) {
-	group, _, gitArgs := parseExecFlags([]string{"-g", "infra", "pull"})
+	group, _, _, gitArgs := parseExecFlags([]string{"-g", "infra", "pull"})
 	if group != "infra" {
 		t.Errorf("expected group=infra, got %q", group)
 	}
@@ -91,7 +91,7 @@ func TestParseExecFlags_GroupShort(t *testing.T) {
 }
 
 func TestParseExecFlags_All(t *testing.T) {
-	group, all, gitArgs := parseExecFlags([]string{"--all", "fetch"})
+	group, all, _, gitArgs := parseExecFlags([]string{"--all", "fetch"})
 	if len(group) > 0 {
 		t.Errorf("expected empty group, got %q", group)
 	}
@@ -104,7 +104,7 @@ func TestParseExecFlags_All(t *testing.T) {
 }
 
 func TestParseExecFlags_NoArgs(t *testing.T) {
-	group, all, gitArgs := parseExecFlags([]string{"--all"})
+	group, all, _, gitArgs := parseExecFlags([]string{"--all"})
 	if len(group) > 0 {
 		t.Errorf("expected empty group, got %q", group)
 	}
