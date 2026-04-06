@@ -42,6 +42,7 @@ import CloneNextPage from "./pages/CloneNext";
 import SpecIndexPage from "./pages/SpecIndex";
 import CdPage from "./pages/Cd";
 import SetupPage from "./pages/Setup";
+import DesignSystemPage from "./pages/DesignSystem";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,7 @@ const App = () => (
           <Route path="/spec" element={<SpecIndexPage />} />
           <Route path="/cd" element={<CdPage />} />
           <Route path="/setup" element={<SetupPage />} />
+          <Route path="/design-system" element={<DesignSystemPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
