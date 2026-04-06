@@ -91,11 +91,11 @@ func runPostInstall(tool string) {
 // runPostInstallGitLFS runs git lfs install.
 func runPostInstallGitLFS() {
 	cmd := exec.Command("git", "lfs", "install")
-	cmd.Run()
+	_ = cmd.Run()
 }
 
 // runPostInstallGit configures git longpaths.
 func runPostInstallGit() {
 	cmd := exec.Command("git", "config", "--global", "core.longpaths", "true")
-	cmd.Run()
+	_ = cmd.Run()
 }

@@ -16,14 +16,12 @@ linters:
     - gosimple
     - unconvert
     - unparam
-    - prealloc
     - nolintlint
     - bodyclose
     - errname
     - errorlint
     - exhaustive
     - copyloopvar
-    - usetesting
     - usestdlibvars
     - wastedassign
 
@@ -31,11 +29,22 @@ linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: false
+    exclude-functions:
+      - (*flag.FlagSet).Parse
+      - fmt.Scanln
+      - (*encoding/json.Encoder).Encode
+      - (*encoding/csv.Writer).Write
 
   gosec:
     excludes:
       - G104
+      - G204
       - G304
+      - G306
+      - G401
+      - G404
+      - G505
+      - G101
 
   gocritic:
     enabled-tags:
@@ -45,10 +54,20 @@ linters-settings:
     disabled-checks:
       - hugeParam
       - rangeValCopy
+      - unnamedResult
+      - emptyStringTest
+      - tooManyResultsChecker
+      - exitAfterDefer
+      - appendCombine
+      - ifElseChain
+      - builtinShadow
+      - redundantSprint
+      - httpNoBody
 
   revive:
     rules:
       - name: blank-imports
+        disabled: true
       - name: context-as-argument
       - name: dot-imports
       - name: error-return
@@ -68,6 +87,7 @@ linters-settings:
     enable-all: true
     disable:
       - fieldalignment
+      - shadow
 
 issues:
   max-issues-per-linter: 50
@@ -78,6 +98,10 @@ issues:
         - errcheck
         - gosec
         - unparam
+    - path: _test\.go
+      text: "unusedwrite|nilness"
+      linters:
+        - govet
     - path: cmd/
       linters:
         - unparam

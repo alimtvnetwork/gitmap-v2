@@ -109,7 +109,7 @@ func removeTempReleaseAll() {
 		os.Exit(1)
 	}
 	defer db.Close()
-	db.Migrate()
+	_ = db.Migrate()
 
 	releases, _ := db.ListTempReleases()
 	if len(releases) == 0 {

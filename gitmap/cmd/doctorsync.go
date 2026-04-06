@@ -44,7 +44,7 @@ func tryRenameFallback(src, dst string) bool {
 	fmt.Println(constants.DoctorRenamedMsg)
 	err = copyFileOverwrite(src, dst)
 	if err != nil {
-		os.Rename(backup, dst)
+		_ = os.Rename(backup, dst)
 
 		return false
 	}

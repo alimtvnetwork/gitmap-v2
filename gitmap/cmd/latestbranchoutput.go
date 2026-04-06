@@ -55,7 +55,7 @@ func printLatestJSON(result latestBranchResult, items []gitutil.RemoteBranchInfo
 	}
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", constants.JSONIndent)
-	enc.Encode(out)
+	_ = enc.Encode(out)
 }
 
 // buildLatestJSON constructs the base JSON output struct.
@@ -94,7 +94,7 @@ func buildTopItems(items []gitutil.RemoteBranchInfo, top int) []latestBranchTopI
 func printLatestCSV(items []gitutil.RemoteBranchInfo, remote string, top int) {
 	count := resolveTopCount(top, len(items))
 	w := csv.NewWriter(os.Stdout)
-	w.Write(constants.LatestBranchCSVHeaders)
+	_ = w.Write(constants.LatestBranchCSVHeaders)
 	for _, item := range items[:count] {
 		writeCSVRow(w, item, remote)
 	}
@@ -116,7 +116,7 @@ func resolveTopCount(top, total int) int {
 
 // writeCSVRow writes a single CSV row for a branch item.
 func writeCSVRow(w *csv.Writer, item gitutil.RemoteBranchInfo, remote string) {
-	w.Write([]string{
+	_ = w.Write([]string{
 		gitutil.StripRemotePrefix(item.RemoteRef),
 		remote,
 		gitutil.TruncSha(item.Sha),

@@ -39,7 +39,7 @@ func writeCSVOutput(records []model.ScanRecord, outputDir, outFile string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteCSV(file, records)
+	_ = formatter.WriteCSV(file, records)
 	fmt.Printf(constants.MsgCSVWritten, path)
 }
 
@@ -51,7 +51,7 @@ func writeJSONOutput(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteJSON(file, records)
+	_ = formatter.WriteJSON(file, records)
 	fmt.Printf(constants.MsgJSONWritten, path)
 }
 
@@ -75,7 +75,7 @@ func writeFolderStructure(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteStructure(file, records)
+	_ = formatter.WriteStructure(file, records)
 	fmt.Printf(constants.MsgStructureWritten, path)
 }
 
@@ -87,7 +87,7 @@ func writeCloneScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteCloneScript(file, records)
+	_ = formatter.WriteCloneScript(file, records)
 	fmt.Printf(constants.MsgCloneScript, path)
 }
 
@@ -99,7 +99,7 @@ func writeDirectCloneScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteDirectCloneScript(file, records)
+	_ = formatter.WriteDirectCloneScript(file, records)
 	fmt.Printf(constants.MsgDirectClone, path)
 }
 
@@ -111,7 +111,7 @@ func writeDirectCloneSSHScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteDirectCloneSSHScript(file, records)
+	_ = formatter.WriteDirectCloneSSHScript(file, records)
 	fmt.Printf(constants.MsgDirectCloneSSH, path)
 }
 
@@ -123,7 +123,7 @@ func writeDesktopScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	formatter.WriteDesktopScript(file, records)
+	_ = formatter.WriteDesktopScript(file, records)
 	fmt.Printf(constants.MsgDesktopScript, path)
 }
 

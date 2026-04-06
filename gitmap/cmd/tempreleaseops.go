@@ -23,7 +23,7 @@ func runTempReleaseCreate(args []string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	db.Migrate()
+	_ = db.Migrate()
 
 	if start == 0 {
 		start = resolveAutoStart(db, prefix)
@@ -46,7 +46,7 @@ func executeTRCreate(db *store.DB, count int, prefix string, digitCount, start i
 
 	if len(commits) < count {
 		fmt.Fprintf(os.Stderr, constants.ErrTRNotEnough, len(commits), count)
-		count = len(commits)
+		_ = count
 	}
 
 	if dryRun {

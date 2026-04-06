@@ -20,7 +20,7 @@ func runTempReleaseList(args []string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	db.Migrate()
+	_ = db.Migrate()
 
 	releases, err := db.ListTempReleases()
 	if err != nil {

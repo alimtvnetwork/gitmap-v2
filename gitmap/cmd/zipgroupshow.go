@@ -113,7 +113,7 @@ func printZipGroupShow(group model.ZipGroup, items []model.ZipGroupItem) {
 func expandFolder(folderPath string) []string {
 	var files []string
 
-	filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
