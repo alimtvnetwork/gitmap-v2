@@ -111,7 +111,7 @@ func parseCommitLines(output string) []model.CommitEntry {
 	}
 
 	lines := splitLines(output)
-	var entries []model.CommitEntry
+	entries := make([]model.CommitEntry, 0, len(lines))
 
 	for _, line := range lines {
 		if line == "" {

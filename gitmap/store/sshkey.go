@@ -92,7 +92,7 @@ func scanOneSSHKey(row *sql.Row) (model.SSHKey, error) {
 }
 
 // scanSSHKeyRows scans multiple SSH key rows.
-func scanSSHKeyRows(rows *sql.Rows) ([]model.SSHKey, error) {
+func scanSSHKeyRows(rows *sql.Rows) ([]model.SSHKey, error) { //nolint:unparam // error kept for interface consistency
 	var keys []model.SSHKey
 
 	for rows.Next() {

@@ -45,7 +45,7 @@ func CollectAssets(assetsPath string) []string {
 
 // collectDirFiles returns all file paths in a directory.
 func collectDirFiles(dir string) []string {
-	var files []string
+	files := make([]string, 0, len(entries))
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil

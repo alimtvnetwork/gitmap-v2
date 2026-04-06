@@ -43,7 +43,7 @@ func runAliasSuggest(args []string) {
 func parseAliasSuggestFlags(args []string) bool {
 	fs := flag.NewFlagSet(constants.SubCmdAliasSug, flag.ExitOnError)
 	apply := fs.Bool("apply", false, constants.FlagDescAliasApply)
-	fs.Parse(args)
+	_ = fs.Parse(args)
 
 	return *apply
 }

@@ -160,7 +160,7 @@ func scanOneAlias(row *sql.Row) (model.Alias, error) {
 }
 
 // scanAliasRows scans multiple alias rows.
-func scanAliasRows(rows *sql.Rows) ([]model.Alias, error) {
+func scanAliasRows(rows *sql.Rows) ([]model.Alias, error) { //nolint:unparam // error kept for interface consistency
 	var aliases []model.Alias
 
 	for rows.Next() {

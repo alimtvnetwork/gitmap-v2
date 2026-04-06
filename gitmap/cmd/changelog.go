@@ -127,7 +127,7 @@ func parseChangelogFlags(args []string) (version string, latest bool, limit int,
 	limitFlag := fs.Int("limit", 5, constants.FlagDescLimit)
 	openFlag := fs.Bool("open", false, constants.FlagDescOpenChangelog)
 	sourceFlag := fs.String("source", "", constants.FlagDescSource)
-	fs.Parse(args)
+	_ = fs.Parse(args)
 
 	version = ""
 	if fs.NArg() > 0 {

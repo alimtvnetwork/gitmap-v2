@@ -24,7 +24,7 @@ type ZipGroupArchive struct {
 // BuildZipGroupArchives resolves persistent zip groups from the DB and
 // creates max-compression ZIP archives for each. Returns archive paths.
 func BuildZipGroupArchives(db *store.DB, groupNames []string, stagingDir string) []string {
-	var archives []string
+	archives := make([]string, 0, len(groupNames))
 
 	for _, name := range groupNames {
 		archive, err := buildOneZipGroup(db, name, stagingDir)
@@ -125,7 +125,7 @@ func buildAdHocBundle(paths []string, bundleName, stagingDir string) []string {
 
 // buildAdHocIndividual creates one archive per ad-hoc path.
 func buildAdHocIndividual(paths []string, stagingDir string) []string {
-	var archives []string
+	archives := make([]string, 0, len(paths))
 
 	for _, p := range paths {
 		base := filepath.Base(p)

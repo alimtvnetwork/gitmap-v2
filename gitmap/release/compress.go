@@ -18,7 +18,7 @@ import (
 // Windows binaries (.exe) → .zip, others → .tar.gz.
 // Returns the list of archive paths (originals are removed).
 func CompressAssets(assets []string) ([]string, error) {
-	var archives []string
+	archives := make([]string, 0, len(assets))
 
 	for _, path := range assets {
 		archive, err := compressSingle(path)
