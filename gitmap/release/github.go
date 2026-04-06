@@ -45,18 +45,20 @@ func CollectAssets(assetsPath string) []string {
 
 // collectDirFiles returns all file paths in a directory.
 func collectDirFiles(dir string) []string {
-	entries, err := os.ReadDir(dir)
+	names, err := readDirNames(dir)
 	if err != nil {
 		return nil
 	}
 
-	files := make([]string, 0, len(entries))
+	files := make([]string, 0, len(names))
 
-	for _, entry := range entries {
-		if entry.IsDir() {
+	for _, name := range names {
+		path := filepath.Join(dir, name)
+		info, statErr := os.Stat(path)
+		if statErr != nil || info.IsDir() {
 			continue
 		}
-		files = append(files, filepath.Join(dir, entry.Name()))
+		files = append(files, path)
 	}
 
 	return files

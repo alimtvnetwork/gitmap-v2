@@ -15,8 +15,7 @@ import (
 // UploadAsset uploads a single file to a GitHub release.
 func UploadAsset(owner, repo string, releaseID int, filePath, token string) error {
 	filename := filepath.Base(filePath)
-	url := fmt.Sprintf("https://uploads.github.com/repos/%s/%s/releases/%d/assets?name=%s",
-		owner, repo, releaseID, filename)
+	u := buildGitHubUploadURL(owner, repo, releaseID, filename)
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -24,15 +23,16 @@ func UploadAsset(owner, repo string, releaseID int, filePath, token string) erro
 	}
 	defer file.Close()
 
-	req, err := http.NewRequest(http.MethodPost, url, file)
+	info, err := file.Stat()
 	if err != nil {
-		return fmt.Errorf("create upload request: %w", err)
+		return fmt.Errorf("stat asset: %w", err)
 	}
 
+	req := newGitHubRequest(http.MethodPost, u, file, info.Size())
 	req.Header.Set("Authorization", "token "+token)
 	req.Header.Set("Content-Type", "application/octet-stream")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := doGitHubRequest(req)
 	if err != nil {
 		return fmt.Errorf("upload asset: %w", err)
 	}

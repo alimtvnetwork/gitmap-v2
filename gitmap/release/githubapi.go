@@ -17,7 +17,7 @@ type GitHubRelease struct {
 
 // CreateGitHubRelease creates a release via the GitHub API and returns the release ID.
 func CreateGitHubRelease(owner, repo, tag, name, body, token string, draft bool) (*GitHubRelease, error) {
-	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases", owner, repo)
+	u := buildGitHubReleasesURL(owner, repo)
 
 	payload := map[string]interface{}{
 		"tag_name": tag,
@@ -31,14 +31,10 @@ func CreateGitHubRelease(owner, repo, tag, name, body, token string, draft bool)
 		return nil, fmt.Errorf("marshal release payload: %w", err)
 	}
 
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(jsonData))
-	if err != nil {
-		return nil, fmt.Errorf("create request: %w", err)
-	}
-
+	req := newGitHubRequest(http.MethodPost, u, io.NopCloser(bytes.NewReader(jsonData)), int64(len(jsonData)))
 	setGitHubHeaders(req, token)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := doGitHubRequest(req)
 	if err != nil {
 		return nil, fmt.Errorf("create release: %w", err)
 	}
@@ -51,9 +47,9 @@ func CreateGitHubRelease(owner, repo, tag, name, body, token string, draft bool)
 	}
 
 	var release GitHubRelease
-	err = json.NewDecoder(resp.Body).Decode(&release)
+	terr := json.NewDecoder(resp.Body).Decode(&release)
 
-	return &release, err
+	return &release, terr
 }
 
 // setGitHubHeaders sets common headers for GitHub API requests.
