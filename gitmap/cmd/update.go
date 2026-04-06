@@ -103,9 +103,10 @@ func runUpdateRunner() {
 
 // getFlagValue returns the value following a flag like --repo-path <value>.
 func getFlagValue(name string) string {
-	for i, arg := range os.Args[2:] {
-		if arg == name && i+1 < len(os.Args[2:])-1+1 {
-			return os.Args[2+i+1]
+	args := os.Args[2:]
+	for i, arg := range args {
+		if arg == name && i+1 < len(args) {
+			return args[i+1]
 		}
 	}
 
