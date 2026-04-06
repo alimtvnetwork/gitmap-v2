@@ -41,14 +41,39 @@ curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/ma
 
 Options: pin a version with `-Version v2.48.3`, choose install dir with `-InstallDir C:\tools\gitmap`, or skip PATH with `-NoPath`.
 
-### Clone the Repository
+### Clone & Setup (Development)
 
 ```bash
 git clone https://github.com/alimtvnetwork/git-repo-navigator.git
 cd git-repo-navigator
+./setup.sh
 ```
 
-### Build from Source
+The setup script installs the pre-commit hook (golangci-lint), verifies your Go toolchain, and downloads dependencies.
+
+### Makefile Targets
+
+| Target | Description |
+|--------|-------------|
+| `make all` | Lint → Test → Build (default) |
+| `make setup` | Install hooks and dev tools |
+| `make lint` | Run golangci-lint |
+| `make vet` | Run go vet |
+| `make test` | Run all tests |
+| `make build` | Compile for current platform |
+| `make vulncheck` | Scan dependencies for CVEs |
+| `make release BUMP=patch` | Lint, test, then release (patch/minor/major) |
+| `make release-dry` | Preview release without executing |
+| `make clean` | Remove build artifacts |
+
+### Build from Source (manual)
+
+```bash
+cd gitmap
+go build -o ../gitmap .
+```
+
+### Build via run.ps1 (Windows)
 
 ```powershell
 # Full pipeline: pull, build, deploy
@@ -59,13 +84,6 @@ cd git-repo-navigator
 
 # Build + scan with SSH mode
 .\run.ps1 -R scan D:\repos --mode ssh
-```
-
-Or manually:
-
-```bash
-cd gitmap
-go build -o ../bin/gitmap.exe .
 ```
 
 ---
