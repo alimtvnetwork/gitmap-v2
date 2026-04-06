@@ -21,11 +21,35 @@ verification, and automatic PATH registration.
 
 ## Windows — `install.ps1`
 
-### One-Liner
+### One-Liner (Full Bootstrap)
+
+The recommended one-liner follows the Chocolatey install pattern: it bypasses
+the execution policy for the current process, enforces TLS 1.2+, and
+downloads-then-executes the installer script. This ensures the command works
+on locked-down machines, older Windows versions, and fresh installs where
+`irm` may not be available.
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1'))
+```
+
+### Short-Form (PowerShell 5+ / Modern Systems)
+
+If the machine already has TLS 1.2 defaults and unrestricted execution
+policy (e.g., developer workstations), the short form also works:
 
 ```powershell
 irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/scripts/install.ps1 | iex
 ```
+
+### Why the Full Bootstrap?
+
+| Concern                  | `irm \| iex`      | Full bootstrap           |
+|--------------------------|--------------------|--------------------------|
+| Execution policy blocked | Fails              | Bypasses (process scope) |
+| TLS 1.2 not default      | May fail on old OS | Forces TLS 1.2+         |
+| PowerShell 3.x compat   | No (`irm` = PS3+) | Yes (`WebClient` = PS2+) |
+| Corporate firewalls      | May fail silently  | Explicit protocol set    |
 
 ### Parameters
 
@@ -135,6 +159,8 @@ print an instruction the user can copy, avoiding surprise dotfile edits.
 ## Related
 
 - [CLI Interface](02-cli-interface.md)
+- [Install Bootstrap](83-install-bootstrap.md)
 - [Build & Deploy](09-build-deploy.md)
 - [Future Features](82-future-features.md)
+- [Release Workflow](../../.github/workflows/release.yml)
 - [Release Workflow](../../.github/workflows/release.yml)
