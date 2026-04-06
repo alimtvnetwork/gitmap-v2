@@ -47,6 +47,8 @@ type Result struct {
 
 // Execute runs the full release workflow.
 func Execute(opts Options) error {
+	EnsureGitignore()
+
 	version, err := resolveVersion(opts)
 	if err != nil {
 		return err
