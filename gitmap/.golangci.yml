@@ -1,0 +1,83 @@
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck
+    - gosec
+    - gocritic
+    - govet
+    - staticcheck
+    - ineffassign
+    - unused
+    - misspell
+    - revive
+    - gosimple
+    - unconvert
+    - unparam
+    - prealloc
+    - nolintlint
+    - bodyclose
+    - errname
+    - errorlint
+    - exhaustive
+    - copyloopvar
+    - tenv
+    - usestdlibvars
+    - wastedassign
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
+
+  gosec:
+    excludes:
+      - G104
+      - G304
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - hugeParam
+      - rangeValCopy
+
+  revive:
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: increment-decrement
+      - name: var-declaration
+      - name: package-comments
+        disabled: true
+
+  misspell:
+    locale: US
+
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+
+issues:
+  max-issues-per-linter: 50
+  max-same-issues: 5
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosec
+        - unparam
+    - path: cmd/
+      linters:
+        - unparam
