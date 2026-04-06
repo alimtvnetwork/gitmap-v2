@@ -71,19 +71,23 @@ func FindMainPackages() []string {
 	}
 
 	cmdDir := constants.GoCmdDir
-	entries, err := os.ReadDir(cmdDir)
+	names, err := readDirNames(cmdDir)
 	if err != nil {
 		return nil
 	}
 
 	var packages []string
 
-	for _, entry := range entries {
-		if entry.IsDir() {
-			mainPath := filepath.Join(cmdDir, entry.Name(), constants.GoMainFile)
-			if fileExists(mainPath) {
-				packages = append(packages, filepath.Join(cmdDir, entry.Name()))
-			}
+	for _, name := range names {
+		entryPath := filepath.Join(cmdDir, name)
+		info, statErr := os.Stat(entryPath)
+		if statErr != nil || !info.IsDir() {
+			continue
+		}
+
+		mainPath := filepath.Join(entryPath, constants.GoMainFile)
+		if fileExists(mainPath) {
+			packages = append(packages, entryPath)
 		}
 	}
 
