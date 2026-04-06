@@ -16,11 +16,7 @@ import (
 // It creates a handoff copy and runs a hidden worker command from that copy.
 func runUpdate() {
 	requireOnline()
-	repoPath := constants.RepoPath
-	if len(repoPath) == 0 {
-		fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
-		os.Exit(1)
-	}
+	repoPath := resolveRepoPath()
 
 	selfPath, err := os.Executable()
 	if err != nil {
@@ -30,7 +26,23 @@ func runUpdate() {
 
 	copyPath := createHandoffCopy(selfPath)
 	fmt.Printf(constants.MsgUpdateActive, selfPath, copyPath)
-	launchHandoff(copyPath)
+	launchHandoff(copyPath, repoPath)
+}
+
+// resolveRepoPath returns the repo path from --repo-path flag or embedded constant.
+func resolveRepoPath() string {
+	if flagVal := getFlagValue(constants.FlagRepoPath); len(flagVal) > 0 {
+		return flagVal
+	}
+
+	if len(constants.RepoPath) > 0 {
+		return constants.RepoPath
+	}
+
+	fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
+	os.Exit(1)
+
+	return ""
 }
 
 // createHandoffCopy creates a temporary copy of the binary for handoff.
@@ -51,11 +63,13 @@ func createHandoffCopy(selfPath string) string {
 }
 
 // launchHandoff runs the handoff binary with update-runner command.
-func launchHandoff(copyPath string) {
+func launchHandoff(copyPath, repoPath string) {
 	copyArgs := []string{constants.CmdUpdateRunner}
 	if hasFlag(constants.FlagVerbose) {
 		copyArgs = append(copyArgs, constants.FlagVerbose)
 	}
+
+	copyArgs = append(copyArgs, constants.FlagRepoPath, repoPath)
 
 	cmd := exec.Command(copyPath, copyArgs...)
 	cmd.Stdout = os.Stdout
@@ -79,16 +93,23 @@ func handleHandoffError(err error) {
 
 // runUpdateRunner is a hidden command that performs the real update work.
 func runUpdateRunner() {
-	repoPath := constants.RepoPath
-	if len(repoPath) == 0 {
-		fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
-		os.Exit(1)
-	}
+	repoPath := resolveRepoPath()
 
 	initRunnerVerbose()
 	fmt.Printf(constants.MsgUpdateStarting)
 	fmt.Printf(constants.MsgUpdateRepoPath, repoPath)
 	executeUpdate(repoPath)
+}
+
+// getFlagValue returns the value following a flag like --repo-path <value>.
+func getFlagValue(name string) string {
+	for i, arg := range os.Args[2:] {
+		if arg == name && i+1 < len(os.Args[2:])-1+1 {
+			return os.Args[2+i+1]
+		}
+	}
+
+	return ""
 }
 
 // initRunnerVerbose initializes verbose logging if --verbose flag is present.

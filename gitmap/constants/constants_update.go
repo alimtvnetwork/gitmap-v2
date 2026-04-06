@@ -9,6 +9,7 @@ const (
 
 // Update flags.
 const FlagVerbose = "--verbose"
+const FlagRepoPath = "--repo-path"
 
 // Update UI messages.
 const (
