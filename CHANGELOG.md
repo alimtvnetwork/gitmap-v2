@@ -10,6 +10,10 @@
 - Updated `install.ps1` (standalone and release-embedded) to handle versioned asset filenames.
 - CI release workflow now explicitly marks stable releases as "latest" via `make_latest`.
 - Updated `helptext/update.md` with `--repo-path` flag docs, troubleshooting section, and error recovery examples.
+- Added `gitmap-updater` — standalone tool to update gitmap via GitHub releases (no source repo required).
+- `gitmap update` auto-delegates to `gitmap-updater` when no repo path is available and the updater is on PATH.
+- Updater uses handoff-copy pattern to avoid Windows file locks during self-replacement.
+- CI release pipeline now builds and ships `gitmap-updater` binaries for all 6 platform targets.
 
 ## v2.49.0 — Opt-in Binary Builds & Gitignore Safety
 

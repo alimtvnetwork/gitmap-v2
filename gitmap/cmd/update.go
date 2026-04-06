@@ -30,6 +30,7 @@ func runUpdate() {
 }
 
 // resolveRepoPath returns the repo path from --repo-path flag or embedded constant.
+// If neither is available, it attempts to delegate to gitmap-updater.
 func resolveRepoPath() string {
 	if flagVal := getFlagValue(constants.FlagRepoPath); len(flagVal) > 0 {
 		return flagVal
@@ -39,10 +40,40 @@ func resolveRepoPath() string {
 		return constants.RepoPath
 	}
 
+	// Try to fall back to gitmap-updater for release-based update
+	if tryUpdaterFallback() {
+		os.Exit(0)
+	}
+
 	fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
 	os.Exit(1)
 
 	return ""
+}
+
+// tryUpdaterFallback looks for gitmap-updater on PATH and launches it.
+func tryUpdaterFallback() bool {
+	updaterPath, err := exec.LookPath(constants.UpdaterBin)
+	if err != nil {
+		return false
+	}
+
+	fmt.Printf(constants.MsgUpdaterFallback, updaterPath)
+	cmd := exec.Command(updaterPath, "run")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
+	if err := cmd.Run(); err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			os.Exit(exitErr.ExitCode())
+		}
+
+		return false
+	}
+
+	return true
 }
 
 // createHandoffCopy creates a temporary copy of the binary for handoff.

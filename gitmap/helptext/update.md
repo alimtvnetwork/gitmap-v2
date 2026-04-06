@@ -101,13 +101,34 @@ None
 
       After building from source, 'gitmap update' will work automatically.
 
+## Updater Fallback
+
+If no source repo is available and `gitmap-updater` is installed, `gitmap update`
+automatically delegates to it. The updater checks GitHub releases and downloads
+the latest version without needing a local source checkout.
+
+    gitmap update
+
+**Output (with updater installed):**
+
+    → No source repo found. Delegating to gitmap-updater...
+
+    ■ Checking for updates...
+    Current version: v2.49.0
+    Latest version:  v2.49.1
+    v2.49.0 → v2.49.1
+    ■ Downloading installer for v2.49.1...
+    ■ Running installer...
+    ✓ Update complete.
+
 ## Troubleshooting
 
 If you installed gitmap from a GitHub release (e.g. via the one-liner installer),
-the binary does not have a source repo path embedded. You have two choices:
+the binary does not have a source repo path embedded. You have three choices:
 
-1. **Use `--repo-path`** to point at a local clone for a one-time update.
-2. **Clone and rebuild** from source so future updates work automatically.
+1. **Install `gitmap-updater`** — it handles updates via GitHub releases automatically.
+2. **Use `--repo-path`** to point at a local clone for a one-time update.
+3. **Clone and rebuild** from source so future updates work automatically.
 
 ## See Also
 
