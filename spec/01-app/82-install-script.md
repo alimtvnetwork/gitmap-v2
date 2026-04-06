@@ -159,6 +159,8 @@ print an instruction the user can copy, avoiding surprise dotfile edits.
 ## Related
 
 - [CLI Interface](02-cli-interface.md)
+- [Install Bootstrap](83-install-bootstrap.md)
 - [Build & Deploy](09-build-deploy.md)
 - [Future Features](82-future-features.md)
+- [Release Workflow](../../.github/workflows/release.yml)
 - [Release Workflow](../../.github/workflows/release.yml)

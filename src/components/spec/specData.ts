@@ -83,6 +83,7 @@ export const sections: SpecSection[] = [
       { id: "59", title: "Clone Next", link: "/clone-next" },
       { id: "81", title: "Developer Tool Installer" },
       { id: "82", title: "One-Liner Install Scripts" },
+      { id: "83", title: "Install Bootstrap One-Liner" },
     ],
   },
   {
