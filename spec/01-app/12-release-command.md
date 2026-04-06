@@ -389,3 +389,41 @@ gitmap release-pending --assets ./dist
   JSON is deleted and the release proceeds normally.
 - **Given** orphaned metadata prompt answered `n`, **then** the release
   is aborted with "release aborted by user".
+
+---
+
+## CI Release Pipeline (GitHub Actions)
+
+The `release.yml` workflow triggers automatically when:
+1. A tag matching `v*` is pushed.
+2. A branch matching `release/**` is pushed.
+
+### Steps
+
+1. **Resolve version** — extracted from the tag name or the branch name
+   (e.g., `release/v2.49.0` → `v2.49.0`).
+2. **Build binaries** — cross-compiles all 6 default targets with version
+   baked into the binary via `-ldflags`.
+3. **Compress** — Windows binaries are zipped; Linux/macOS are tar.gz'd.
+4. **Generate checksums** — SHA256 checksums for all dist files.
+5. **Generate install script** — a version-pinned `install.ps1` is created
+   and attached as a release asset.
+6. **Extract changelog** — the matching section from `CHANGELOG.md` is
+   extracted for the release body.
+7. **Build release body** — combines: changelog entry, release metadata
+   table (version, commit, branch, build date, Go version), SHA256
+   checksums block, install instructions (PowerShell one-liner), and
+   platform/architecture asset matrix.
+8. **Create GitHub Release** — publishes the release with all assets.
+   Pre-release versions (containing `-`) are automatically marked as
+   prerelease.
+
+### Release Body Format
+
+Each GitHub release body includes:
+
+- **Changelog entry** for the version
+- **Release info table**: version, short commit SHA, branch, build date, Go version
+- **SHA256 checksums** in a code block
+- **Install instructions**: PowerShell one-liner using the pinned `install.ps1`
+- **Asset matrix table**: platform, architecture, and filename for each binary
