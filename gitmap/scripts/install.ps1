@@ -180,21 +180,98 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
 
 # --- Add to PATH ---
 
-function Add-ToPath([string]$dir) {
-    $currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
-    $parts = $currentPath -split ";"
+function Test-PathEntry([string]$pathValue, [string]$dir) {
+    if ([string]::IsNullOrWhiteSpace($pathValue)) {
+        return $false
+    }
+
+    $parts = $pathValue -split ";"
 
     foreach ($part in $parts) {
         if ($part.Trim() -ieq $dir) {
-            Write-Step "Already in PATH."
-            return
+            return $true
         }
     }
 
-    $newPath = $currentPath.TrimEnd(";") + ";" + $dir
+    return $false
+}
+
+function Ensure-SessionPath([string]$dir) {
+    if (Test-PathEntry $env:PATH $dir) {
+        return $false
+    }
+
+    if ([string]::IsNullOrWhiteSpace($env:PATH)) {
+        $env:PATH = $dir
+    }
+    else {
+        $env:PATH = $env:PATH.TrimEnd(";") + ";" + $dir
+    }
+
+    return $true
+}
+
+function Broadcast-EnvironmentChange {
+    Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class GitMapEnvNative {
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    public static extern IntPtr SendMessageTimeout(
+        IntPtr hWnd,
+        uint Msg,
+        UIntPtr wParam,
+        string lParam,
+        uint fuFlags,
+        uint uTimeout,
+        out UIntPtr lpdwResult
+    );
+}
+"@ -ErrorAction SilentlyContinue | Out-Null
+
+    $HWND_BROADCAST = [IntPtr]0xffff
+    $WM_SETTINGCHANGE = 0x001A
+    $SMTO_ABORTIFHUNG = 0x0002
+    [UIntPtr]$result = [UIntPtr]::Zero
+
+    [void][GitMapEnvNative]::SendMessageTimeout(
+        $HWND_BROADCAST,
+        $WM_SETTINGCHANGE,
+        [UIntPtr]::Zero,
+        "Environment",
+        $SMTO_ABORTIFHUNG,
+        5000,
+        [ref]$result
+    )
+}
+
+function Add-ToPath([string]$dir) {
+    $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+    $userHasDir = Test-PathEntry $currentUserPath $dir
+    $sessionUpdated = Ensure-SessionPath $dir
+
+    if ($userHasDir) {
+        if ($sessionUpdated) {
+            Write-OK "Already in PATH. Updated current session PATH."
+        }
+        else {
+            Write-Step "Already in PATH."
+        }
+
+        return
+    }
+
+    if ([string]::IsNullOrWhiteSpace($currentUserPath)) {
+        $newPath = $dir
+    }
+    else {
+        $newPath = $currentUserPath.TrimEnd(";") + ";" + $dir
+    }
+
     [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-    $env:PATH = $env:PATH + ";" + $dir
-    Write-OK "Added to PATH (restart terminal for full effect)."
+    Broadcast-EnvironmentChange
+    Write-OK "Added to PATH (current session updated; new terminals inherit it)."
 }
 
 # --- Main ---
