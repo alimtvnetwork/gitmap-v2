@@ -17,7 +17,7 @@ type aliasesModel struct {
 }
 
 func newAliasesModel(db *store.DB) aliasesModel {
-	var aliases []aliasRow
+	var aliases []store.AliasWithRepo
 	if db != nil {
 		aliases, _ = db.ListAliasesWithRepo()
 	}

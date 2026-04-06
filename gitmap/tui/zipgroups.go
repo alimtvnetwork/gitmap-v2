@@ -18,7 +18,7 @@ type zipGroupsModel struct {
 }
 
 func newZipGroupsModel(db *store.DB) zipGroupsModel {
-	var groups []zipGroupRow
+	var groups []store.ZipGroupWithCount
 	if db != nil {
 		groups, _ = db.ListZipGroupsWithCount()
 	}
