@@ -300,17 +300,33 @@ function Main {
         try { refreshenv | Out-Null } catch {}
     }
 
-    # Verify
-    $binPath = Join-Path $resolvedDir $BinaryName
-    if (Test-Path $binPath) {
-        Write-Host ""
-        $versionOutput = & $binPath version 2>&1
-        Write-OK "gitmap $versionOutput"
-    }
-
-    Write-Host ""
-    Write-OK "Done! Run 'gitmap --help' to get started."
-    Write-Host ""
+    # Force-rebuild $env:PATH in this scope so gitmap is usable immediately
+    $script:NewPath = Rebuild-SessionPath $resolvedDir
+    return @{ InstallDir = $resolvedDir; NewPath = $script:NewPath }
 }
 
-Main
+$installResult = Main
+
+# Set $env:PATH at the TOP-LEVEL script scope (not inside a function)
+# This ensures the change persists in the caller's session when run via iex
+$env:PATH = $installResult.NewPath
+
+# Verify the binary works
+$binPath = Join-Path $installResult.InstallDir $BinaryName
+if (Test-Path $binPath) {
+    Write-Host ""
+    try {
+        $versionOutput = & $binPath version 2>&1
+        Write-OK "  gitmap $versionOutput"
+    }
+    catch {
+        Write-Err "  Binary found but failed to run: $_"
+    }
+}
+else {
+    Write-Err "  Binary not found at $binPath"
+}
+
+Write-Host ""
+Write-OK "  Done! Run 'gitmap --help' to get started."
+Write-Host ""
