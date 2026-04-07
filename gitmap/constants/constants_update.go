@@ -2,9 +2,10 @@ package constants
 
 // Update handoff file patterns.
 const (
-	UpdateCopyFmt    = "gitmap-update-%d.exe"
-	UpdateCopyGlob   = "gitmap-update-*.exe"
-	UpdateScriptGlob = "gitmap-update-*.ps1"
+	UpdateCopyFmtExe  = "gitmap-update-%d.exe"
+	UpdateCopyFmtUnix = "gitmap-update-%d"
+	UpdateCopyGlob    = "gitmap-update-*"
+	UpdateScriptGlob  = "gitmap-update-*.ps1"
 )
 
 // Update flags.

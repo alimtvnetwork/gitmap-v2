@@ -50,12 +50,36 @@ func normalizeRepoPath(path string) string {
 		return ""
 	}
 
+	cleaned = expandTilde(cleaned)
+
 	absPath, err := filepath.Abs(cleaned)
 	if err != nil {
 		return ""
 	}
 
 	return findRepoRoot(absPath)
+}
+
+// expandTilde replaces a leading ~ with the user's home directory.
+func expandTilde(path string) string {
+	if !strings.HasPrefix(path, "~") {
+		return path
+	}
+
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return path
+	}
+
+	if path == "~" {
+		return home
+	}
+
+	if strings.HasPrefix(path, "~/") || strings.HasPrefix(path, "~\\") {
+		return filepath.Join(home, path[2:])
+	}
+
+	return path
 }
 
 // findRepoRoot walks upward until it finds a valid gitmap source root.
