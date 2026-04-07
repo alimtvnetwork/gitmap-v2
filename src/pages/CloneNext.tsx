@@ -225,6 +225,30 @@ const CloneNextPage = () => {
               "→ Now in macro-ahk-v15",
             ]}
           />
+
+          <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Lock detection when folder is in use</h3>
+          <TerminalPreview
+            title="gitmap cn v++ --delete"
+            lines={[
+              "Cloning macro-ahk-v12 into D:\\wp-work\\riseup-asia...",
+              "✓ Cloned macro-ahk-v12",
+              "✓ Registered macro-ahk-v12 with GitHub Desktop",
+              "",
+              "Error: remove macro-ahk-v11: access denied",
+              "Scanning for processes locking macro-ahk-v11...",
+              "",
+              "  PID     Process",
+              "  ────    ───────",
+              "  14320   Code.exe",
+              "  8412    explorer.exe",
+              "",
+              "Terminate these processes and retry? [y/N] y",
+              "✓ Terminated Code.exe (PID 14320)",
+              "✓ Terminated explorer.exe (PID 8412)",
+              "✓ Removed macro-ahk-v11",
+              "→ Now in macro-ahk-v12",
+            ]}
+          />
         </section>
 
         {/* URL Preservation */}
@@ -272,11 +296,44 @@ const CloneNextPage = () => {
                   ["Target directory already exists", "Print error with suggestion, exit 1"],
                   ["Repo creation fails (--create-remote)", "Print error, stop before clone, exit 1"],
                   ["Clone fails (network/auth)", "Print error, skip deletion, exit 1"],
-                  ["Deletion fails", "Print warning, exit 0 (clone succeeded)"],
+                  ["Deletion fails", "Scan for locking processes via lockcheck"],
+                  ["Locking processes found", "Prompt to terminate, retry deletion"],
+                  ["Lock scan fails", "Print warning, exit 0 (clone succeeded)"],
+                  ["Process termination fails", "Print warning, exit 0 (clone succeeded)"],
                 ].map(([cond, behavior], i) => (
                   <tr key={i} className="hover:bg-muted/30 transition-colors">
                     <td className="px-4 py-2 text-xs text-foreground">{cond}</td>
                     <td className="px-4 py-2 text-xs text-muted-foreground">{behavior}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* File Layout */}
+        <section className="mb-10">
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">File Layout</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">File</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["cmd/clonenext.go", "Flag parsing, orchestration, deletion + cd"],
+                  ["constants/constants_clonenext.go", "Command names, messages, error strings"],
+                  ["lockcheck/lockcheck.go", "LockingProcess struct, FindLockingProcesses interface"],
+                  ["lockcheck/lockcheck_windows.go", "handle.exe + WMI fallback, KillProcess via taskkill"],
+                  ["lockcheck/lockcheck_unix.go", "lsof-based lock detection, KillProcess via kill(2)"],
+                  ["helptext/clone-next.md", "Embedded help text for --help flag"],
+                ].map(([file, purpose], i) => (
+                  <tr key={i} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-2 font-mono text-xs text-primary">{file}</td>
+                    <td className="px-4 py-2 text-xs text-muted-foreground">{purpose}</td>
                   </tr>
                 ))}
               </tbody>
