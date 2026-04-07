@@ -355,6 +355,11 @@ function Main {
 
 $installResult = Main
 
+if (-not $installResult) {
+    # Main failed gracefully — error already printed
+    return
+}
+
 # Set $env:PATH at the TOP-LEVEL script scope (not inside a function)
 # This ensures the change persists in the caller's session when run via iex
 $env:PATH = $installResult.NewPath
