@@ -166,7 +166,7 @@ func loadTaskFile() model.TaskFile {
 
 	err = json.Unmarshal(data, &tasks)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrTaskLoadFile, err)
+		fmt.Fprintf(os.Stderr, constants.ErrTaskLoadFile, path, err)
 		os.Exit(1)
 	}
 
@@ -179,19 +179,19 @@ func saveTaskFile(tasks model.TaskFile) {
 
 	err := os.MkdirAll(filepath.Dir(path), constants.DirPermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, err)
+		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, path, err)
 		os.Exit(1)
 	}
 
 	data, err := json.MarshalIndent(tasks, "", constants.JSONIndent)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, err)
+		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, path, err)
 		os.Exit(1)
 	}
 
 	err = os.WriteFile(path, data, constants.FilePermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, err)
+		fmt.Fprintf(os.Stderr, constants.ErrTaskSaveFile, path, err)
 		os.Exit(1)
 	}
 }

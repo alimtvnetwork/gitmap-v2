@@ -107,6 +107,7 @@ export const sections: SpecSection[] = [
       { id: "10", title: "Legacy UUID Detection" },
       { id: "11", title: "Auto Legacy Dir Migration" },
       { id: "12", title: "Legacy ID Migration" },
+      { id: "13", title: "Error Management — File Path & Missing File (Code Red)" },
     ],
   },
   {

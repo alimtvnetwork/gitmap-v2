@@ -35,9 +35,9 @@ func runNppSettings() {
 		return
 	}
 
-	err := os.MkdirAll(target, 0755)
+	err := os.MkdirAll(target, 0o755)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create settings directory: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrNppDirCreate, target, err)
 
 		return
 	}
@@ -48,14 +48,14 @@ func runNppSettings() {
 // nppSettingsTarget returns the Notepad++ AppData settings path.
 func nppSettingsTarget() string {
 	if runtime.GOOS != "windows" {
-		fmt.Fprintln(os.Stderr, "Notepad++ settings sync is only supported on Windows.")
+		fmt.Fprintf(os.Stderr, constants.ErrNppWindowsOnly, runtime.GOOS)
 
 		return ""
 	}
 
 	appData := os.Getenv("APPDATA")
 	if appData == "" {
-		fmt.Fprintln(os.Stderr, "APPDATA environment variable not set.")
+		fmt.Fprint(os.Stderr, constants.ErrNppNoAppData)
 
 		return ""
 	}
@@ -71,7 +71,7 @@ func extractNppSettingsZip(target string) {
 
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Settings zip not found: %s\n", zipPath)
+		fmt.Fprintf(os.Stderr, constants.ErrNppZipNotFound, zipPath, err)
 		syncNppSettingsFallback(target)
 
 		return
@@ -82,7 +82,7 @@ func extractNppSettingsZip(target string) {
 		extractZipEntry(target, file)
 	}
 
-	fmt.Printf("Settings synced to %s\n", target)
+	fmt.Printf(constants.MsgNppSettingsSynced, target)
 }
 
 // extractZipEntry writes a single zip entry to the target directory.
@@ -90,26 +90,41 @@ func extractZipEntry(target string, file *zip.File) {
 	destPath := filepath.Join(target, file.Name)
 
 	if file.FileInfo().IsDir() {
-		_ = os.MkdirAll(destPath, 0755)
+		err := os.MkdirAll(destPath, 0o755)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrNppDirCreate, destPath, err)
+		}
 
 		return
 	}
 
-	_ = os.MkdirAll(filepath.Dir(destPath), 0755)
+	err := os.MkdirAll(filepath.Dir(destPath), 0o755)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppDirCreate, filepath.Dir(destPath), err)
+
+		return
+	}
 
 	src, err := file.Open()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppExtractEntry, file.Name, destPath, err)
+
 		return
 	}
 	defer src.Close()
 
 	dst, err := os.Create(destPath)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppFileCreate, destPath, err)
+
 		return
 	}
 	defer dst.Close()
 
-	_, _ = io.Copy(dst, src)
+	_, err = io.Copy(dst, src)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppFileCopy, file.Name, destPath, err)
+	}
 }
 
 // syncNppSettingsFallback copies loose settings files as a fallback.
@@ -118,7 +133,7 @@ func syncNppSettingsFallback(target string) {
 
 	entries, err := os.ReadDir(source)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Settings source not found: %s\n", source)
+		fmt.Fprintf(os.Stderr, constants.ErrNppSourceDir, source, err)
 
 		return
 	}
@@ -130,7 +145,7 @@ func syncNppSettingsFallback(target string) {
 		copySettingsFile(source, target, entry.Name())
 	}
 
-	fmt.Printf("Settings synced to %s (fallback)\n", target)
+	fmt.Printf(constants.MsgNppSettingsFallback, target)
 }
 
 // copySettingsFile copies a single settings file to the target.
@@ -140,8 +155,13 @@ func copySettingsFile(source, target, name string) {
 
 	data, err := os.ReadFile(src)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppFileRead, src, err)
+
 		return
 	}
 
-	_ = os.WriteFile(dst, data, 0644)
+	err = os.WriteFile(dst, data, 0o644)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrNppFileWrite, dst, err)
+	}
 }
