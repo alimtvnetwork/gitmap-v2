@@ -136,6 +136,42 @@ All expected failures use `error` returns.
 
 ---
 
+## 7. Mandatory Path Context in File Errors (Code Red Rule)
+
+Every error message involving a file or directory path **must** include:
+
+1. The exact resolved path
+2. The operation attempted
+3. The specific failure reason
+
+### Format
+
+```
+Error: [message] at [path]: [error] (operation: [op], reason: [reason])
+```
+
+### Examples
+
+```go
+// ✅ Correct
+return fmt.Errorf("Error: failed to read config at %s: %v (operation: read, reason: permission denied)", path, err)
+
+// ❌ Wrong — no path, no operation
+return fmt.Errorf("config not found")
+```
+
+Generic "file not found" messages without paths are **prohibited by convention**.
+
+See: `spec/02-app-issues/error-management-file-path-and-missing-file-code-red-rule.md`
+
+---
+
+## 8. Format Verb Compliance
+
+All `fmt.Fprintf`, `fmt.Printf`, and `fmt.Errorf` calls **must** match their format verb count to the argument count. Enforce via `go vet` in CI. Mismatches cause runtime panics.
+
+---
+
 ## References
 
 - Code Quality Improvement: `spec/05-coding-guidelines/01-code-quality-improvement.md`

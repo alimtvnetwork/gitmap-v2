@@ -165,6 +165,48 @@ Examples: `gitmap-linux-amd64.tar.gz`, `gitmap-windows-arm64.zip`
 - Pipeline duration target: < 10 minutes for the full cycle
 - Flaky tests must be quarantined immediately, not retried silently
 
+## Lessons Learned (Post-Mortems)
+
+### Never Use `cd` in CI Steps
+
+Use `working-directory` in the workflow step definition instead of `cd` in the script body. Relative `cd` commands break silently in monorepos when the working directory is not what you expect.
+
+```yaml
+# ✅ Correct
+- name: Compress artifacts
+  working-directory: gitmap/dist
+  run: |
+    for f in gitmap-*; do ...
+
+# ❌ Wrong — fails if CWD is not gitmap/
+- name: Compress artifacts
+  run: |
+    cd dist
+    for f in gitmap-*; do ...
+```
+
+### Validate Build Output Directories
+
+Always verify the expected directory exists before operating on it:
+
+```yaml
+- run: test -d "gitmap/dist" || { echo "dist/ not found"; exit 1; }
+```
+
+### Pin Tool Versions for Reproducibility
+
+All Go tools installed via `go install` must use exact version tags, not `@latest`:
+
+```bash
+# ✅ Correct
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
+
+# ❌ Wrong
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+```
+
+See: `spec/02-app-issues/13-release-pipeline-dist-directory.md`
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
