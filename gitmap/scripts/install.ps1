@@ -36,6 +36,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 $Repo = "alimtvnetwork/gitmap-v2"
 $BinaryName = "gitmap.exe"
