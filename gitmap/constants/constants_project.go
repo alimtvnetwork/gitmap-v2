@@ -108,7 +108,7 @@ const (
 	ErrProjectDetect       = "failed to detect projects in %s: %v\n"
 	ErrProjectUpsert       = "failed to upsert detected project: %v"
 	ErrProjectQuery        = "failed to query projects: %v"
-	ErrProjectJSONWrite    = "failed to write %s: %v\n"
+	ErrProjectJSONWrite    = "failed to write %s: %v (operation: write)\n"
 	ErrProjectParseMod     = "failed to parse go.mod in %s: %v\n"
 	ErrProjectParsePkgJSON = "failed to parse package.json in %s: %v\n"
 	ErrProjectParseCsproj  = "failed to parse .csproj in %s: %v\n"

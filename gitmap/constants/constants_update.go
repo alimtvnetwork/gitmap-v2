@@ -40,7 +40,7 @@ const (
 const (
 	MsgUpdatePathMissing = "\n  ⚠ The saved source repository path no longer exists on disk.\n"
 	MsgUpdatePathPrompt  = "  Enter the new path to the gitmap source repo: "
-	ErrUpdatePathInvalid = "  ✗ Directory not found: %s\n"
+	ErrUpdatePathInvalid = "  ✗ Directory not found at %s (operation: resolve, reason: file does not exist)\n"
 )
 
 // Update PowerShell script template sections.

@@ -49,7 +49,7 @@ const (
 // Dashboard error messages.
 const (
 	ErrDashNotRepo    = "Current directory is not a Git repository."
-	ErrDashWriteJSON  = "Failed to write dashboard JSON: %v\n"
-	ErrDashWriteHTML  = "Failed to write dashboard HTML: %v\n"
+	ErrDashWriteJSON  = "Failed to write dashboard JSON at %s: %v (operation: write)\n"
+	ErrDashWriteHTML  = "Failed to write dashboard HTML at %s: %v (operation: write)\n"
 	ErrDashCollect    = "Failed to collect repository data: %v\n"
 )

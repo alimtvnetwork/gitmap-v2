@@ -40,6 +40,6 @@ const (
 	ErrChangelogGenTags        = "failed to list tags: %v"
 	ErrChangelogGenTagNotFound = "tag %s not found locally"
 	ErrChangelogGenNoTags      = "no version tags found — create a release first"
-	ErrChangelogGenWrite       = "failed to write changelog: %v"
-	ErrChangelogGenRead        = "failed to read existing changelog: %v"
+	ErrChangelogGenWrite       = "failed to write changelog at %s: %v (operation: write)"
+	ErrChangelogGenRead        = "failed to read existing changelog at %s: %v (operation: read)"
 )

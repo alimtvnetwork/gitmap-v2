@@ -45,7 +45,7 @@ const (
 	MsgReleaseOrphanedMeta    = "  ⚠ Release metadata exists for %s but no tag or branch was found.\n"
 	MsgReleaseOrphanedPrompt  = "  → Do you want to remove the release JSON and proceed? (y/N): "
 	MsgReleaseOrphanedRemoved = "  ✓ Removed orphaned release metadata for %s\n"
-	ErrReleaseOrphanedRemove  = "failed to remove release metadata: %w"
+	ErrReleaseOrphanedRemove  = "failed to remove release metadata at %s: %w (operation: delete)"
 	ErrReleaseAborted         = "release aborted by user"
 )
 
@@ -57,7 +57,7 @@ const (
 	MsgSelfReleasePromptPath  = "  → Enter gitmap source repo path: "
 	MsgSelfReleaseSavedPath   = "  ✓ Saved gitmap source repo path: %s\n"
 	MsgSelfReleaseInvalidPath = "  ✗ Invalid gitmap source repo path: %s\n"
-	ErrSelfReleaseExec        = "could not resolve executable path: %w"
+	ErrSelfReleaseExec        = "could not resolve executable path at %s: %w (operation: resolve)"
 	ErrSelfReleaseNoRepo      = "could not locate gitmap source repository"
 )
 
