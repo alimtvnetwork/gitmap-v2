@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/verbose"
@@ -90,9 +91,17 @@ func tryUpdaterFallback() bool {
 
 // createHandoffCopy creates a temporary copy of the binary for handoff.
 func createHandoffCopy(selfPath string) string {
-	name := fmt.Sprintf(constants.UpdateCopyFmt, os.Getpid())
+	nameFmt := constants.UpdateCopyFmtExe
+	if runtime.GOOS != "windows" {
+		nameFmt = constants.UpdateCopyFmtUnix
+	}
+
+	name := fmt.Sprintf(nameFmt, os.Getpid())
 	copyPath := filepath.Join(filepath.Dir(selfPath), name)
+
 	if copyFile(selfPath, copyPath) == nil {
+		makeExecutable(copyPath)
+
 		return copyPath
 	}
 
@@ -102,7 +111,18 @@ func createHandoffCopy(selfPath string) string {
 		os.Exit(1)
 	}
 
+	makeExecutable(fallbackPath)
+
 	return fallbackPath
+}
+
+// makeExecutable sets executable permission on Unix systems.
+func makeExecutable(path string) {
+	if runtime.GOOS == "windows" {
+		return
+	}
+
+	_ = os.Chmod(path, 0o755)
 }
 
 // launchHandoff runs the handoff binary with update-runner command.
