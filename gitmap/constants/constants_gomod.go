@@ -79,8 +79,8 @@ const (
 	ErrGoModDirtyTree     = "error: working tree has uncommitted changes, commit or stash first\n"
 	ErrGoModBranchExists  = "error: branch %s already exists, aborting\n"
 	ErrGoModMergeConflict = "error: merge conflict — resolve manually on %s\n"
-	ErrGoModReadFailed    = "error: failed to read %s: %v\n"
-	ErrGoModWriteFailed   = "error: failed to write %s: %v\n"
+	ErrGoModReadFailed    = "error: failed to read %s: %v (operation: read)\n"
+	ErrGoModWriteFailed   = "error: failed to write %s: %v (operation: write)\n"
 	ErrGoModCommitFailed  = "error: git commit failed: %v\n"
 )
 
