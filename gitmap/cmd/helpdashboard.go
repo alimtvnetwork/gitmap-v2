@@ -32,7 +32,7 @@ func runHelpDashboard(args []string) {
 	if info, err := os.Stat(distDir); err == nil && info.IsDir() {
 		serveStatic(distDir, port)
 	} else {
-		fmt.Println(constants.MsgHDNoDistFallback)
+		fmt.Print(constants.MsgHDNoDistFallback)
 		serveDev(docsDir, port)
 	}
 }
