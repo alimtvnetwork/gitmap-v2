@@ -14,10 +14,19 @@
 - Added Section 10 (Zip Extraction Security) to `spec/05-coding-guidelines/08-security-secrets.md` — mandatory G305/G110 checks.
 - Added Sections 7–8 to `spec/05-coding-guidelines/04-error-handling.md` — Code Red Rule and Format Verb Compliance.
 
-### Installer Fix
+### Installer Fixes
 
 - Fixed PowerShell installer crash caused by `Invoke-WebRequest` progress bar rendering during `irm | iex`.
 - Added `$ProgressPreference = "SilentlyContinue"` to `install.ps1`.
+- Fixed versioned binary detection — installer now matches `gitmap-v*-windows-(amd64|arm64).exe` patterns from CI archives.
+- Wrapped installer `Main` function in `try/catch` with friendly error message and manual download fallback.
+
+### CI Pipeline: Passthrough Gate Pattern
+
+- Replaced job-level `if` skipping with step-level conditionals in `ci.yml` so all jobs always report ✅ Success.
+- Previously, SHA-deduplicated runs showed grey "skipped" status which looked like failures; now cached SHAs print "Already validated" and exit green.
+- Updated `spec/05-coding-guidelines/29-ci-sha-deduplication.md` with the passthrough pattern documentation.
+- Pinned `golangci-lint` to `v1.64.8` in `ci.yml` to match `setup.sh`.
 
 ### Changelog Improvements
 
