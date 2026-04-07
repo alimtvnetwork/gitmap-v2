@@ -6,6 +6,21 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.55.0",
+    date: "2026-04-07",
+    items: [
+      "Created post-mortem specs for release pipeline `dist` directory error and security hardening (G305, G110, format verbs, Code Red).",
+      "Added Post-Mortems page (`/post-mortems`) to docs site with category filters and 15 documented issues.",
+      "Added 'Lessons Learned' to CI/CD patterns spec — never `cd` in CI, validate dirs, pin tool versions.",
+      "Added Zip Extraction Security section to Security spec — mandatory G305/G110 checks with code examples.",
+      "Added Code Red Rule and Format Verb Compliance sections to Error Handling spec.",
+      "Fixed PowerShell installer crash — suppressed `Invoke-WebRequest` progress bar via `$ProgressPreference`.",
+      "Added release dates to all changelog entries sourced from `.gitmap/release/*.json` metadata.",
+      "Backfilled v2.54.1–v2.54.3 and v2.53.0 entries in docs site changelog data.",
+      "Pinned `golangci-lint` to `v1.64.8` in `setup.sh` for reproducible builds.",
+    ],
+  },
+  {
     version: "v2.54.3",
     date: "2026-04-07",
     items: [
