@@ -13,6 +13,26 @@
 
 ---
 
+## v2.54.2 — Format Verb Audit
+
+### fmt.Fprintf Argument Mismatch Fix
+
+- Fixed `cmd/tasksync.go:138` where `fmt.Fprintf` format string expected 2 arguments but only 1 was passed, causing a `go vet` failure.
+- Audited all `fmt.Fprintf`, `fmt.Printf`, and `fmt.Errorf` calls across `cmd/`, `release/`, and `store/` packages (~140 call sites, 38+ files) — confirmed 100% compliance.
+
+---
+
+## v2.54.1 — Code Red Error Audit
+
+### Mandatory Error Path Logging
+
+- Completed full Code Red audit: every file/path-related error log now includes the exact file path, the operation attempted, and the specific failure reason.
+- Standardized format: `Error: [message] at [path]: [error] (operation: [op], reason: [reason])`.
+- Updated 35+ constants and 36+ call sites across the entire codebase.
+- Generic "file not found" messages without paths are now prohibited by convention.
+
+---
+
 ## v2.54.0 — Update Path Recovery & CI Optimization
 
 ### Update Path Recovery
