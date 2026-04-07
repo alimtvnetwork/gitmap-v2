@@ -121,20 +121,20 @@ const (
 	MsgSSHHostUsed      = "    Host:        %s\n"
 )
 
-// SSH error messages.
+// SSH error messages — Code Red: all file errors include exact path and reason.
 const (
-	ErrSSHKeygen      = "Error generating SSH key: %v\n"
-	ErrSSHReadPub     = "Error reading public key: %v\n"
-	ErrSSHNotFound    = "SSH key not found: %s\n"
-	ErrSSHAvailable   = "  Available keys: %s\n"
-	ErrSSHNameEmpty   = "SSH key name cannot be empty"
-	ErrSSHCreate      = "failed to create SSH key record: %v"
-	ErrSSHQuery       = "failed to query SSH keys: %v"
-	ErrSSHDelete      = "failed to delete SSH key: %v"
-	ErrSSHConfig      = "failed to update SSH config: %v\n"
-	ErrSSHKeygenMissing = "ssh-keygen not found on PATH; install OpenSSH first\n"
-	ErrSSHEmailResolve = "could not resolve email; use --email flag\n"
-	ErrSSHFingerprint = "failed to read key fingerprint: %v\n"
+	ErrSSHKeygen        = "Error: SSH key generation failed at %s: %v (operation: write)\n"
+	ErrSSHReadPub       = "Error: failed to read public key at %s: %v (operation: read, reason: file does not exist)\n"
+	ErrSSHNotFound      = "Error: SSH key not found: %s\n"
+	ErrSSHAvailable     = "  Available keys: %s\n"
+	ErrSSHNameEmpty     = "SSH key name cannot be empty"
+	ErrSSHCreate        = "failed to create SSH key record: %v"
+	ErrSSHQuery         = "failed to query SSH keys: %v"
+	ErrSSHDelete        = "failed to delete SSH key: %v"
+	ErrSSHConfig        = "Error: failed to update SSH config at %s: %v (operation: write)\n"
+	ErrSSHKeygenMissing = "Error: ssh-keygen not found on PATH (operation: resolve, reason: file does not exist)\n"
+	ErrSSHEmailResolve  = "could not resolve email; use --email flag\n"
+	ErrSSHFingerprint   = "Error: failed to read key fingerprint at %s: %v (operation: read)\n"
 )
 
 // SSH completion flag.

@@ -150,12 +150,12 @@ const (
 	ErrSourceRequired         = "Error: source file is required"
 	ErrCloneUsage             = "Usage: gitmap clone <source|json|csv|text> [--target-dir <dir>] [--safe-pull]"
 	ErrShorthandNotFound      = "Error: %s not found.\nRun 'gitmap scan' first to generate output files.\n"
-	ErrConfigLoad             = "Error loading config: %v\n"
-	ErrScanFailed             = "Scan error: %v\n"
-	ErrCloneFailed            = "Clone error: %v\n"
-	ErrOutputFailed           = "Output error: %v\n"
-	ErrCreateDir              = "Cannot create directory: %v\n"
-	ErrCreateFile             = "Cannot create file: %v\n"
+	ErrConfigLoad             = "Error: failed to load config from %s: %v (operation: read)\n"
+	ErrScanFailed             = "Error: scan failed on directory %s: %v (operation: resolve)\n"
+	ErrCloneFailed            = "Error: clone failed for source file %s: %v (operation: read)\n"
+	ErrOutputFailed           = "Error: output generation failed: %v\n"
+	ErrCreateDir              = "Error: cannot create directory at %s: %v (operation: mkdir)\n"
+	ErrCreateFile             = "Error: cannot create file at %s: %v (operation: write)\n"
 	ErrNoRepoPath = `
   ✗ Source repository path not found.
 
@@ -275,7 +275,7 @@ const (
 const (
 	MsgMigrated          = "Migrated %s/ -> %s/\n"
 	MsgMergedAndRemoved  = "Merged %s/ into %s/ (%d files copied, %d skipped) and removed legacy folder\n"
-	ErrMigrationFailed   = "failed to migrate %s/: %v\n"
+	ErrMigrationFailed   = "Error: failed to migrate directory %s: %v (operation: move, reason: path is inaccessible)\n"
 )
 
 // Legacy ID migration messages.

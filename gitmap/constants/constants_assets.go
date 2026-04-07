@@ -48,12 +48,12 @@ const (
 	MsgAssetDryRunUpload = "  [dry-run] Would upload %d assets\n"
 )
 
-// Asset error messages.
+// Asset error messages — Code Red: all file errors include exact path and reason.
 const (
-	ErrAssetBuildFailed  = "  ✗ Build failed for %s/%s: %s\n"
-	ErrAssetUploadFinal  = "  ✗ Upload failed for %s: %v\n"
-	ErrAssetNoToken      = "  ✗ GITHUB_TOKEN not set — skipping asset upload\n"
-	ErrAssetRemoteParse  = "  ✗ Could not parse remote origin: %v\n"
+	ErrAssetBuildFailed  = "Error: build failed for %s/%s: %s (operation: compile)\n"
+	ErrAssetUploadFinal  = "Error: upload failed for asset %s: %v (operation: upload)\n"
+	ErrAssetNoToken      = "Error: GITHUB_TOKEN not set — skipping asset upload (reason: environment variable not set)\n"
+	ErrAssetRemoteParse  = "Error: could not parse remote origin: %v (operation: resolve)\n"
 )
 
 // Retry constants.

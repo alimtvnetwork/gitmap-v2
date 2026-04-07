@@ -97,7 +97,7 @@ func validateShorthandPath(resolved string) string {
 func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 	summary, err := cloner.CloneFromFile(source, targetDir, safePull)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, source, err)
 		os.Exit(1)
 	}
 

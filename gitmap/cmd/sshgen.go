@@ -115,7 +115,7 @@ func handleExistingKey(db *store.DB, name string, keyPath *string) bool {
 // generateAndStore runs ssh-keygen and stores the result in the database.
 func generateAndStore(db *store.DB, name, keyPath, email, host string) {
 	if err := ensureSSHDir(filepath.Dir(keyPath)); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHKeygen, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHKeygen, keyPath, err)
 		os.Exit(1)
 	}
 
@@ -129,13 +129,13 @@ func generateAndStore(db *store.DB, name, keyPath, email, host string) {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHKeygen, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHKeygen, keyPath, err)
 		os.Exit(1)
 	}
 
 	pubKey, err := os.ReadFile(keyPath + ".pub")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHReadPub, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHReadPub, keyPath+".pub", err)
 		os.Exit(1)
 	}
 
