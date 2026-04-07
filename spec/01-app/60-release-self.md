@@ -64,7 +64,8 @@ skip the directory switch entirely. Print:
 All flags supported by `release` are accepted:
 `--assets`, `--commit`, `--branch`, `--bump`, `--notes`, `--draft`,
 `--dry-run`, `--compress`, `--checksums`, `--no-assets`, `--targets`,
-`--list-targets`, `--zip-group`, `-Z`, `--bundle`, `--no-commit`, `--verbose`.
+`--list-targets`, `--zip-group`, `-Z`, `--bundle`, `--no-commit`,
+`--yes` / `-y`, `--verbose`.
 
 ### 5. Output
 
