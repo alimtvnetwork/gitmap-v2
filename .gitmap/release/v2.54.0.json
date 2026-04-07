@@ -14,7 +14,8 @@
     "Removed cross-platform binary builds from the main CI pipeline (`ci.yml`).",
     "Binaries are now produced exclusively by the release pipeline (`release.yml`) on `release/**` branches and `v*` tags.",
     "All workflows (`ci.yml`, `release.yml`, `vulncheck.yml`) now cancel in-progress runs when a new commit is pushed to the same branch.",
-    "Concurrency groups use `github.ref` so different branches run independently."
+    "Concurrency groups use `github.ref` so different branches run independently.",
+    "Code Red audit complete: standardized 35+ error constants and updated 36 call sites across constants/, cmd/, release/, and store/ — every file/path error now includes exact path, failure reason, and (operation: ...) suffix."
   ],
   "draft": false,
   "preRelease": false,
