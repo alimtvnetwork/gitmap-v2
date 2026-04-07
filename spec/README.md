@@ -96,6 +96,10 @@ Root-cause analyses and resolution records for production bugs.
 | 10 | [legacy-uuid-detection.md](02-app-issues/10-legacy-uuid-detection.md) | Legacy UUID detection |
 | 11 | [auto-legacy-dir-migration.md](02-app-issues/11-auto-legacy-dir-migration.md) | Auto legacy directory migration |
 | 12 | [legacy-id-migration.md](02-app-issues/12-legacy-id-migration.md) | Legacy ID migration |
+| 13 | [release-pipeline-dist-directory.md](02-app-issues/13-release-pipeline-dist-directory.md) | Release pipeline dist directory error |
+| 14 | [security-hardening-gosec-fixes.md](02-app-issues/14-security-hardening-gosec-fixes.md) | Security hardening (GoSec fixes) |
+| 15 | [installer-progress-bar-and-binary-detection.md](02-app-issues/15-installer-progress-bar-and-binary-detection.md) | Installer crashes — progress bar & binary detection |
+| 16 | [ci-passthrough-gate-pattern.md](02-app-issues/16-ci-passthrough-gate-pattern.md) | CI passthrough gate pattern |
 
 ---
 
