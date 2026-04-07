@@ -30,7 +30,7 @@ if command -v golangci-lint &>/dev/null; then
   echo "  ✓ golangci-lint available"
 else
   echo "  → Installing golangci-lint..."
-  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && echo "  ✓ golangci-lint installed" || echo "  ⚠ Failed to install golangci-lint"
+  go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8 && echo "  ✓ golangci-lint installed" || echo "  ⚠ Failed to install golangci-lint"
 fi
 
 # Download Go dependencies
