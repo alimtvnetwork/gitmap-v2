@@ -20,8 +20,11 @@ runs check for the marker before executing any work.
 1. A **gate job** runs first and probes the cache for a key derived
    from the commit SHA (e.g., `ci-passed-<SHA>`).
 2. If the cache **hits**, the gate job sets an output flag
-   (`already-built = true`) and all downstream jobs are skipped via
-   a condition (`if: needs.gate.outputs.already-built != 'true'`).
+   (`already-built = true`) and all downstream jobs **still run** but
+   each step is guarded by a conditional — steps that would do real
+   work are skipped, while an "Already validated" step prints a
+   confirmation message. This ensures every job reports ✅ Success
+   instead of showing as "skipped" (grey) in the CI UI.
 3. If the cache **misses**, the pipeline proceeds normally.
 4. A **finalize job** at the end of the pipeline writes a trivial
    marker file into the cache under the same key, recording success.
@@ -62,19 +65,35 @@ jobs:
 `lookup-only: true` avoids downloading the cache content — only the
 existence check matters.
 
-### Conditional Downstream Jobs
+### Passthrough Gate Pattern (Downstream Jobs)
 
-Every subsequent job adds:
+Instead of skipping entire jobs (which shows grey "skipped" status),
+use **step-level conditionals** so every job always runs but exits
+immediately when the SHA is already validated:
 
 ```yaml
   lint:
     needs: sha-check
-    if: needs.sha-check.outputs.already-built != 'true'
+    steps:
+      - name: Already validated
+        if: needs.sha-check.outputs.already-built == 'true'
+        run: echo "✅ SHA already passed lint"
+
+      - uses: actions/checkout@v4
+        if: needs.sha-check.outputs.already-built != 'true'
+
+      - name: Run lint
+        if: needs.sha-check.outputs.already-built != 'true'
+        run: golangci-lint run
 ```
 
+**Why not job-level `if`?** GitHub treats skipped jobs as neither
+success nor failure. If the job is a required status check, "skipped"
+blocks merging. The passthrough pattern ensures every job reports
+✅ Success — either "already validated" or actually ran.
+
 Jobs that depend on other jobs (e.g., `test` depends on `lint`) must
-also include the gate in their `needs` array or inherit the skip
-transitively.
+also include the gate in their `needs` array.
 
 ### Finalize Job (Mark Success)
 
@@ -147,12 +166,12 @@ applies within the same repository's cache namespace.
 ## Acceptance Criteria
 
 1. Pushing the same commit SHA twice results in the second run
-   skipping all lint, test, and summary jobs.
+   completing all jobs with ✅ Success (each printing "Already validated").
 2. A failed pipeline does not cache — re-running the same SHA
    executes the full pipeline.
 3. A new commit (different SHA) always runs the full pipeline.
 4. The gate job completes in under 10 seconds.
-5. Skipped jobs show as "skipped" in the CI UI, not "failed".
+5. All jobs show ✅ green in the CI UI — never grey "skipped".
 
 ---
 
