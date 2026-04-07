@@ -112,6 +112,33 @@ func tryDelegateFromBranch(v Version, opts Options) (bool, error) {
 	return true, ExecuteFromBranch(branchName, opts.Assets, opts.Notes, opts.Draft, opts.DryRun, opts.NoCommit, opts.Yes)
 }
 
+// tryDelegateFromCurrentBranch checks if we're on a release/* branch
+// with no tag when no version was explicitly provided.
+func tryDelegateFromCurrentBranch(opts Options) (bool, error) {
+	currentBranch, err := CurrentBranchName()
+	if err != nil {
+		return false, nil
+	}
+
+	if !strings.HasPrefix(currentBranch, constants.ReleaseBranchPrefix) {
+		return false, nil
+	}
+
+	v, err := extractVersionFromBranch(currentBranch)
+	if err != nil {
+		return false, nil
+	}
+
+	tagExists := TagExistsLocally(v.String()) || TagExistsRemote(v.String())
+	if tagExists {
+		return false, nil
+	}
+
+	fmt.Printf(constants.MsgReleaseBranchPending, currentBranch)
+
+	return true, ExecuteFromBranch(currentBranch, opts.Assets, opts.Notes, opts.Draft, opts.DryRun, opts.NoCommit, opts.Yes)
+}
+
 // resolveVersion determines the version from CLI args, bump, or file.
 func resolveVersion(opts Options) (Version, error) {
 	if len(opts.Version) > 0 {
