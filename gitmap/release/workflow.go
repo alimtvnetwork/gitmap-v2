@@ -50,13 +50,20 @@ type Result struct {
 func Execute(opts Options) error {
 	EnsureGitignore()
 
+	// Early check: if no version/bump provided and we're on a release/* branch,
+	// extract the version from the branch name and delegate.
+	if len(opts.Version) == 0 && len(opts.Bump) == 0 {
+		if delegated, delegateErr := tryDelegateFromCurrentBranch(opts); delegated {
+			return delegateErr
+		}
+	}
+
 	version, err := resolveVersion(opts)
 	if err != nil {
 		return err
 	}
 
-	// If already on the release branch for this version (or no version specified
-	// and current branch is release/*), delegate to the pending release flow.
+	// If version was specified and matches the current release branch, delegate.
 	if delegated, delegateErr := tryDelegateFromBranch(version, opts); delegated {
 		return delegateErr
 	}
