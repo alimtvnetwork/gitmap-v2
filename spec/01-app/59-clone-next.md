@@ -134,7 +134,13 @@ instead of guessing.
     - remove the current folder automatically with `--delete`
     - keep it automatically with `--keep`
     - otherwise prompt the user interactively
-12. If the current folder was removed, change into the newly cloned directory
+12. If removal fails, scan for processes locking the folder:
+    - On Windows: use Sysinternals `handle.exe` or PowerShell WMI query.
+    - On Unix/macOS: use `lsof +D <path>`.
+    - Display the list of locking processes with name and PID.
+    - Prompt the user to terminate them.
+    - If confirmed, kill each process and retry `RemoveAll` after a brief delay.
+13. If the current folder was removed, change into the newly cloned directory
     and print a confirmation (`→ Now in <target>`).
 
 ## Flags
@@ -214,6 +220,29 @@ Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
 → Now in macro-ahk-v15
 ```
 
+### Example 6: Lock detection during folder removal
+
+```text
+D:\wp-work\riseup-asia\macro-ahk-v11> gitmap cn v++ --delete
+
+Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
+✓ Cloned macro-ahk-v12
+✓ Registered macro-ahk-v12 with GitHub Desktop
+Warning: could not remove macro-ahk-v11: unlinkat: access denied
+Checking for processes locking macro-ahk-v11...
+The following processes are using this folder:
+  • Code.exe (PID 14320)
+  • explorer.exe (PID 5928)
+Terminate these processes to allow deletion? [y/N] y
+Terminating Code.exe (PID 14320)...
+✓ Terminated Code.exe
+Terminating explorer.exe (PID 5928)...
+✓ Terminated explorer.exe
+Retrying folder removal...
+✓ Removed macro-ahk-v11
+→ Now in macro-ahk-v12
+```
+
 ## Error Handling
 
 | Condition | Required behavior |
@@ -226,7 +255,10 @@ Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
 | Target GitHub repo creation fails (`--create-remote`) | Print a clear error and stop before clone |
 | Clone fails | Print a clear error and do not delete current folder |
 | GitHub Desktop registration fails | Warn, but keep clone success |
-| Folder deletion fails | Warn, but keep clone success |
+| Folder deletion fails (no locks found) | Warn, but keep clone success |
+| Folder deletion fails (locks found) | List locking processes, prompt to kill, retry removal |
+| Process termination fails | Warn per-process, continue with remaining, retry removal |
+| Lock scan fails (`lsof`/`handle.exe` unavailable) | Warn, skip lock detection, keep clone success |
 
 ## Implementation Scope
 
@@ -234,6 +266,9 @@ Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
 |-----------|------|
 | Command handler | `cmd/clonenext.go` |
 | Version parser | `clonenext/version.go` |
+| Lock detection (shared) | `lockcheck/lockcheck.go` |
+| Lock detection (Windows) | `lockcheck/lockcheck_windows.go` |
+| Lock detection (Unix) | `lockcheck/lockcheck_unix.go` |
 | Completion hints | `completion/*` and command completion sources |
 | Help text | `helptext/clone-next.md` |
 | Command usage output | `cmd/rootusage.go` and constants |
@@ -252,11 +287,15 @@ Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
 8. Current-folder removal happens only after a successful clone.
 9. `--delete` and `--keep` override the interactive removal prompt.
 10. Help text, completion hints, and tests cover `v++`, `v+1`, and `vN`.
+11. When folder removal fails, locking processes are detected and listed.
+12. User is prompted to terminate locking processes before retry.
+13. Lock detection works cross-platform (Windows via handle.exe/WMI, Unix via lsof).
 
 ## Deferred Implementation Phases
 
 1. ~~Version parsing and resolution fixes~~ — done
 2. ~~Target GitHub repo existence check and creation~~ — done (opt-in via `--create-remote`)
 3. ~~Clone workflow hardening~~ — done (auto-cd before removal)
-4. Help, completion, and automated test updates
+4. ~~Lock detection and process termination~~ — done (v2.52.0)
+5. Help, completion, and automated test updates
 
