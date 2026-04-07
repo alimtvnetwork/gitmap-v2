@@ -1,7 +1,7 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
 import TerminalDemo from "@/components/docs/TerminalDemo";
-import { Download, Trash2, Database, Wrench } from "lucide-react";
+import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal } from "lucide-react";
 
 const terminalLines = [
   { text: "gitmap install --list", type: "input" as const, delay: 800 },
@@ -201,6 +201,97 @@ gitmap uninstall <tool> [flags]`} />
           </p>
           <ToolTable tools={coreTools} category="Core Tools" />
           <ToolTable tools={dbTools} category="Databases" />
+        </section>
+
+        {/* Scripts */}
+        <section className="mb-10">
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">
+            <span className="flex items-center gap-2"><FolderDown className="h-5 w-5" /> Install Scripts</span>
+          </h2>
+          <p className="text-muted-foreground text-sm mb-4">
+            Clone all gitmap utility scripts to a local folder with <code className="text-primary">gitmap install scripts</code>.
+            The scripts are shallow-cloned from the repository and copied to a platform-specific directory.
+          </p>
+
+          {/* Platform paths */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="border border-border rounded-lg p-4 bg-card">
+              <div className="flex items-center gap-2 mb-2">
+                <Monitor className="w-4 h-4 text-primary" />
+                <h3 className="font-mono font-semibold text-sm">Windows</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">
+                Reads the deploy drive from <code className="text-primary">powershell.json</code> → <code className="text-primary">deployPath</code>.
+                Falls back to <code className="text-primary">D:\gitmap-scripts</code>.
+              </p>
+              <CodeBlock code={`D:\\gitmap-scripts\\
+├── install.ps1
+├── uninstall.ps1
+├── Get-LastRelease.ps1
+└── run.ps1`} />
+            </div>
+            <div className="border border-border rounded-lg p-4 bg-card">
+              <div className="flex items-center gap-2 mb-2">
+                <Terminal className="w-4 h-4 text-primary" />
+                <h3 className="font-mono font-semibold text-sm">Linux / macOS</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">
+                Installs to <code className="text-primary">~/Desktop/gitmap-scripts</code>.
+              </p>
+              <CodeBlock code={`~/Desktop/gitmap-scripts/
+├── install.sh
+├── install.ps1
+├── run.sh
+├── run.ps1
+├── uninstall.ps1
+└── Get-LastRelease.ps1`} />
+            </div>
+          </div>
+
+          {/* Copied files table */}
+          <h3 className="font-mono font-semibold text-sm mb-2">Copied Files</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">File</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Source</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["install.ps1", "gitmap/scripts/", "PowerShell one-liner installer for Windows"],
+                  ["install.sh", "gitmap/scripts/", "Bash one-liner installer for Linux/macOS"],
+                  ["uninstall.ps1", "gitmap/scripts/", "PowerShell uninstaller"],
+                  ["Get-LastRelease.ps1", "gitmap/scripts/", "Resolve latest release version (3-tier fallback)"],
+                  ["run.ps1", "repo root", "PowerShell build, deploy, and self-update script"],
+                  ["run.sh", "repo root", "Bash build, deploy, and self-update script"],
+                ].map(([file, source, desc], i) => (
+                  <tr key={i} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-2 font-mono text-xs text-primary font-semibold">{file}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{source}</td>
+                    <td className="px-4 py-2 text-xs text-muted-foreground">{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Example */}
+          <div className="mt-4">
+            <CodeBlock code={`$ gitmap install scripts
+  → Scripts target: /home/alim/Desktop/gitmap-scripts
+  Cloning gitmap repo for scripts...
+  ✓ Copied: install.ps1
+  ✓ Copied: install.sh
+  ✓ Copied: run.ps1
+  ✓ Copied: run.sh
+  ✓ Copied: uninstall.ps1
+  ✓ Copied: Get-LastRelease.ps1
+
+  ✅ 6 scripts installed to /home/alim/Desktop/gitmap-scripts`} />
+          </div>
         </section>
 
         {/* Package Managers */}
