@@ -88,8 +88,9 @@ jobs:
             CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "$OUTPUT" .
           done
 
-          # Compress assets
-          cd dist
+      - name: Compress and checksum
+        working-directory: gitmap/dist
+        run: |
           for f in gitmap-*-windows-*; do
             [[ -f "$f" ]] && zip "${f%.exe}.zip" "$f" && rm "$f"
           done
@@ -97,7 +98,6 @@ jobs:
             [[ -f "$f" ]] && tar czf "${f}.tar.gz" "$f" && rm "$f"
           done
 
-          # Generate checksums
           sha256sum * > checksums.txt
           cat checksums.txt
 
