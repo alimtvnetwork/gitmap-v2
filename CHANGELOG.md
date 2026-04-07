@@ -32,6 +32,13 @@
 - On full pipeline success, a `mark-success` job caches a marker so future runs for the same SHA short-circuit.
 - Failed pipelines never cache — re-running the same SHA executes the full pipeline.
 
+### Code Red Audit Completion
+
+- Standardized 35+ error constants across 12 constants files to include exact file path, failure reason, and `(operation: ...)` suffix.
+- Updated 36 call sites across `cmd/`, `release/`, and `store/` packages to pass mandatory path arguments.
+- Affected packages: `constants_messages`, `constants_seo`, `constants_env`, `constants_store`, `constants_zipgroup`, `constants_changelog`, `constants_gomod`, `constants_release`, `constants_completion`, `constants_dashboard`, `constants_update`, `constants_helpdashboard`.
+- Zero remaining file/path errors use generic "not found" without an exact path.
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command
