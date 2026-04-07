@@ -73,6 +73,8 @@ Feature specs, command designs, and refactor documentation for the gitmap CLI.
 | 81 | [install.md](01-app/81-install.md) | Developer tool installer |
 | 82 | [install-script.md](01-app/82-install-script.md) | One-liner install scripts |
 | 83 | [future-features.md](01-app/82-future-features.md) | Future features (pending) |
+| 84 | [chocolatey-package.md](01-app/84-chocolatey-package.md) | Chocolatey package distribution (research) |
+| 85 | [winget-package.md](01-app/85-winget-package.md) | Winget package distribution (research) |
 
 ---
 
