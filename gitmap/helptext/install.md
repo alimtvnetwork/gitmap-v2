@@ -50,6 +50,17 @@ in
 
 Settings are extracted from a bundled zip to `%APPDATA%\Notepad++`.
 
+## Scripts
+
+| Command         | Description                                          |
+|-----------------|------------------------------------------------------|
+| scripts         | Clone gitmap scripts to a local folder               |
+
+- **Windows**: Reads deploy drive from `powershell.json`, defaults to `D:\gitmap-scripts`
+- **Linux/macOS**: Installs to `~/Desktop/gitmap-scripts`
+
+Copies: `install.ps1`, `install.sh`, `run.ps1`, `run.sh`, `uninstall.ps1`, `Get-LastRelease.ps1`.
+
 ## Prerequisites
 
 - Windows: Chocolatey or Winget in PATH
@@ -107,6 +118,17 @@ Settings are extracted from a bundled zip to `%APPDATA%\Notepad++`.
     $ gitmap install python --dry-run
       Checking if python is installed...
       [dry-run] Would run: choco install python -y
+
+### Clone gitmap scripts
+
+    $ gitmap install scripts
+      → Scripts target: /home/alim/Desktop/gitmap-scripts
+      Cloning gitmap repo for scripts...
+      ✓ Copied: install.ps1
+      ✓ Copied: install.sh
+      ✓ Copied: run.ps1
+      ✓ Copied: run.sh
+      ✅ 6 scripts installed to /home/alim/Desktop/gitmap-scripts
 
 ## See Also
 

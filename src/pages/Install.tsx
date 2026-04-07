@@ -65,6 +65,7 @@ const coreTools: [string, string][] = [
   ["powershell", "PowerShell shell"],
   ["chocolatey", "Chocolatey package manager"],
   ["winget", "Winget package manager"],
+  ["scripts", "Clone gitmap scripts to local folder"],
 ];
 
 const dbTools: [string, string][] = [
