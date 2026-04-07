@@ -15,6 +15,14 @@ export const changelog: ChangelogEntry[] = [
     ],
   },
   {
+    version: "v2.57.0",
+    date: "2026-04-07",
+    items: [
+      "Split README Quick Start into focused code blocks — separate Install, Scan, and Navigate sections.",
+      "Created `one-liner-installer` memory documenting both `install.ps1` and `install.sh` as CI-generated versioned assets.",
+    ],
+  },
+  {
     version: "v2.56.1",
     date: "2026-04-07",
     items: [
