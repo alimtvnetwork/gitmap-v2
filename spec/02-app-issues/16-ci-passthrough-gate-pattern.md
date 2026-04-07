@@ -94,6 +94,41 @@ When a cached SHA is detected:
 | Second push (same SHA) | Hit | "Already validated" echo | ✅ Green |
 | Failed pipeline | Never cached | Re-run executes fully | ❌ Red |
 | Job-level skip (old pattern) | Hit | Entire job skipped | ⚪ Grey |
+| Concurrency cancellation | Hit/Miss | `mark-success` cancelled | ⚪ Grey (safe) |
+
+---
+
+## Known Behavior: Concurrency Cancellation
+
+When `concurrency: cancel-in-progress: true` is active, a newer push to
+the same branch cancels the in-progress run. If cancellation occurs after
+all validation jobs pass but before `mark-success` completes, the SHA is
+**not cached** — the `mark-success` job appears as cancelled (grey).
+
+### Why This Is Safe
+
+- All validation jobs (lint, vulncheck, test, test-summary) already
+  completed successfully — the code **was** validated.
+- The only consequence is that the SHA marker is not written to the cache.
+- If the same SHA is encountered again, the pipeline runs a full
+  validation — an unnecessary but correct re-run (identical to the
+  "cache eviction" edge case).
+- The newer commit that triggered the cancellation gets its own full
+  pipeline run and will cache its own SHA on success.
+
+### When It Happens
+
+- Force-pushing rapid successive commits to the same branch.
+- Merging multiple PRs in quick succession to `main`.
+- Any scenario where two pushes target the same `concurrency` group
+  before the first run's `mark-success` job finishes.
+
+### Mitigation
+
+No action required. The pattern is self-healing: the worst case is a
+redundant but correct re-validation. Attempting to protect `mark-success`
+from cancellation (e.g., via a separate concurrency group) would defeat
+the purpose of cancelling superseded runs.
 
 ---
 
