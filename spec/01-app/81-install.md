@@ -48,6 +48,15 @@ gitmap install git
 | PowerShell | `winget install Microsoft.PowerShell` | Official repo | `brew install --cask powershell` |
 | Notepad++ (npp) | `choco install notepadplusplus` | N/A | N/A |
 | Notepad++ Settings (npp-settings) | Settings sync only | Settings sync only | N/A |
+| Notepad++ Install Only (install-npp) | `choco install notepadplusplus` | N/A | N/A |
+
+### Notepad++ Variants
+
+| Command | Shortcut | Installs Binary | Syncs Settings |
+|---------|----------|-----------------|----------------|
+| `npp` | NPP + Settings | ✅ | ✅ |
+| `npp-settings` | NPP Settings | ❌ | ✅ |
+| `install-npp` | Install NPP | ✅ | ❌ |
 
 ---
 
@@ -118,6 +127,7 @@ Some tools require post-install configuration:
 | Node.js | Verify npm accessible |
 | Notepad++ (npp) | Verify exe at expected path, sync settings to AppData |
 | npp-settings | Sync settings to AppData only (no binary install) |
+| install-npp | Verify exe at expected path, skip settings |
 
 ---
 

@@ -172,6 +172,7 @@ func resolveChocoPackage(tool string) string {
 		constants.ToolElasticsearch: constants.ChocoPkgElasticsearch,
 		constants.ToolDuckDB:        constants.ChocoPkgDuckDB,
 		constants.ToolNpp:           constants.ChocoPkgNpp,
+		constants.ToolNppInstall:    constants.ChocoPkgNpp,
 	}
 
 	pkg, exists := chocoMap[tool]
