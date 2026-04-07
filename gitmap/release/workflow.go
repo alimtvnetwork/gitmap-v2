@@ -4,6 +4,7 @@ package release
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/localdirs"
