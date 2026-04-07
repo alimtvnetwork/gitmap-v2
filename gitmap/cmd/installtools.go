@@ -16,6 +16,19 @@ func installTool(opts installOptions) {
 	manager := resolvePackageManager(opts.Manager)
 	installCmd := buildInstallCommand(manager, opts.Tool, opts.Version)
 
+	versionLabel := opts.Version
+	if versionLabel == "" {
+		versionLabel = "latest"
+	}
+
+	// Step 1: Show install plan.
+	fmt.Printf("\n  ┌─ Install Plan ─────────────────────\n")
+	fmt.Printf("  │ Tool:    %s\n", opts.Tool)
+	fmt.Printf("  │ Version: %s\n", versionLabel)
+	fmt.Printf("  │ Manager: %s\n", manager)
+	fmt.Printf("  │ Command: %s\n", strings.Join(installCmd, " "))
+	fmt.Printf("  └────────────────────────────────────\n\n")
+
 	if opts.DryRun {
 		if manager == constants.PkgMgrApt {
 			fmt.Printf(constants.MsgInstallDryCmd, "sudo apt-get update")
@@ -26,14 +39,27 @@ func installTool(opts installOptions) {
 		return
 	}
 
-	// Run apt-get update before installing on apt-based systems.
+	// Step 2: Package index update (apt only).
 	if manager == constants.PkgMgrApt {
+		fmt.Print("  [1/4] Updating package index...\n")
 		runAptUpdate(opts.Verbose)
 	}
 
-	fmt.Printf(constants.MsgInstallInstalling, opts.Tool)
+	// Step 3: Install.
+	step := "2"
+	if manager != constants.PkgMgrApt {
+		step = "1"
+	}
+
+	fmt.Printf("  [%s/4] Installing %s via %s...\n", step, opts.Tool, manager)
 	runInstallCommand(installCmd, opts)
+
+	// Step 4: Verify.
+	fmt.Printf("  [3/4] Verifying installation...\n")
 	verifyInstallation(opts.Tool)
+
+	// Step 5: Record in database.
+	fmt.Printf("  [4/4] Recording installation...\n")
 	recordInstallation(opts.Tool, manager)
 }
 
@@ -62,7 +88,7 @@ func buildInstallCommand(manager, tool, version string) []string {
 
 // buildChocoCommand builds a Chocolatey install command.
 func buildChocoCommand(pkg, version string) []string {
-	args := []string{"choco", "install", pkg, "-y"}
+	args := []string{"choco", "install", pkg, "-y", "--no-progress"}
 
 	if version != "" {
 		args = append(args, "--version", version)
@@ -73,7 +99,7 @@ func buildChocoCommand(pkg, version string) []string {
 
 // buildWingetCommand builds a Winget install command.
 func buildWingetCommand(pkg, version string) []string {
-	args := []string{"winget", "install", pkg, "--accept-package-agreements", "--accept-source-agreements"}
+	args := []string{"winget", "install", pkg, "--accept-package-agreements", "--accept-source-agreements", "--silent"}
 
 	if version != "" {
 		args = append(args, "--version", version)
@@ -181,6 +207,8 @@ func runInstallCommand(args []string, opts installOptions) {
 
 		os.Exit(1)
 	}
+
+	fmt.Printf("  ✓ %s install command completed successfully.\n", opts.Tool)
 }
 
 // writeInstallErrorLog writes detailed error information to a log file.

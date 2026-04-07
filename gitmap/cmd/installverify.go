@@ -13,9 +13,22 @@ import (
 // verifyInstallation confirms a tool is accessible after install.
 func verifyInstallation(tool string) {
 	fmt.Printf(constants.MsgInstallVerifying, tool)
-	binary := toolBinaryName(tool)
 
+	// For tools with known exe paths, check the path directly first.
+	exePath := expectedExePath(tool)
+	if exePath != "" {
+		if _, err := os.Stat(exePath); err == nil {
+			fmt.Printf(constants.MsgInstallSuccess, tool)
+			fmt.Printf(constants.MsgInstallExeFound, exePath)
+			runPostInstall(tool)
+
+			return
+		}
+	}
+
+	binary := toolBinaryName(tool)
 	version := getInstalledVersion(binary)
+
 	if version == "" {
 		fmt.Fprintf(os.Stderr, constants.ErrInstallVerifyFailed, tool)
 
@@ -23,6 +36,7 @@ func verifyInstallation(tool string) {
 	}
 
 	fmt.Printf(constants.MsgInstallSuccess, tool)
+	fmt.Printf("  → Detected version: %s\n", version)
 	verifyExePath(tool)
 	runPostInstall(tool)
 }
@@ -67,6 +81,14 @@ func expectedExePath(tool string) string {
 
 // detectInstalledVersion checks if a tool is already installed.
 func detectInstalledVersion(tool string) string {
+	// For tools with known exe paths, check the path directly.
+	exePath := expectedExePath(tool)
+	if exePath != "" {
+		if _, err := os.Stat(exePath); err == nil {
+			return "installed (at " + exePath + ")"
+		}
+	}
+
 	binary := toolBinaryName(tool)
 
 	return getInstalledVersion(binary)
