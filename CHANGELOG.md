@@ -1,12 +1,22 @@
 # Changelog
 
-## v2.56.0 — Installer Docs & CI Known Behaviors (2026-04-07)
+## v2.56.0 — Release Pipeline install.sh & CI Fix (2026-04-07)
+
+### Release Pipeline
+
+- Added `install.sh` generation to `release.yml` — version-pinned Bash installer is now created and attached as a release asset alongside `install.ps1`.
+- Release body now includes both PowerShell and Bash one-liner install instructions.
+
+### CI Pipeline Fix
+
+- Eliminated separate `mark-success` job — inlined cache write as the final step of `test-summary` to prevent `cancel-in-progress` from cancelling the SHA marker after all validation passed.
+- `test-summary` now depends on `[sha-check, lint, vulncheck, test]` to ensure full validation before caching.
 
 ### Documentation
 
 - Updated `spec/01-app/82-install-script.md` — documented `install.sh` with CLI flags (`--version`, `--dir`, `--arch`, `--no-path`), version-pinned examples, `.tar.gz`/`.zip` fallback, 4-priority binary detection, and shell-aware auto-PATH append (bash/zsh/fish).
 - Updated `spec/01-app/12-release-command.md` — CI release pipeline section now mentions `install.sh` alongside `install.ps1` in both steps list and release body format.
-- Added "Known Behavior: Concurrency Cancellation" section to `spec/02-app-issues/16-ci-passthrough-gate-pattern.md` — documents that `cancel-in-progress` can prevent `mark-success` from caching, which is safe and self-healing.
+- Added "Known Behavior: Concurrency Cancellation" section to `spec/02-app-issues/16-ci-passthrough-gate-pattern.md` — documented and resolved by inlining cache write.
 - Updated post-release auto-commit memory to reflect the new `-y` flag behavior.
 
 ### Testing
