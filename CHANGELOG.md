@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.56.1 — Clone-on-Missing-Path for Update (2026-04-07)
+
+### Update Command
+
+- When the user provides a non-existent path during the `gitmap update` interactive prompt, the system now clones the gitmap source repository into that directory instead of rejecting it.
+- After a successful clone, the path is validated, saved to the SQLite Settings DB, and used for the update — no re-prompting on future runs.
+- Added `SourceRepoCloneURL`, `MsgUpdateCloning`, `MsgUpdateCloneOK`, and `ErrUpdateCloneFailed` constants.
+
 ## v2.56.0 — Release Pipeline install.sh & CI Fix (2026-04-07)
 
 ### Release Pipeline

@@ -41,7 +41,10 @@ When tiers 1–3 produce no valid path:
 4. Trim whitespace.
 5. Validate the path exists on disk with `pathExists()`.
 6. On success: save to DB via `saveRepoPathToDB()` and return.
-7. On failure: print `ErrUpdatePathInvalid` and fall through.
+7. On failure (path does not exist): clone the gitmap source repo
+   into that directory via `cloneRepoInto()`, then re-validate.
+8. On successful clone: save to DB and return.
+9. On clone failure: print `ErrUpdateCloneFailed` and re-prompt.
 
 ---
 
