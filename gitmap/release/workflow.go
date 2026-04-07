@@ -33,6 +33,7 @@ type Options struct {
 	Bin           bool
 	NoCommit      bool
 	SkipMeta      bool
+	Yes           bool
 }
 
 // Result holds the outcome of a release operation.
@@ -145,7 +146,7 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 
 	// Step 5: Auto-commit the release metadata files.
 	if !opts.NoCommit {
-		AutoCommit(v.String(), false)
+		AutoCommit(v.String(), false, opts.Yes)
 	} else {
 		fmt.Print(constants.MsgAutoCommitSkipped)
 	}

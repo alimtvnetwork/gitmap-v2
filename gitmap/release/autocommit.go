@@ -20,8 +20,9 @@ type AutoCommitResult struct {
 
 // AutoCommit inspects working tree changes after returning to the original branch.
 // If only .gitmap/release/ files changed, it commits and pushes silently.
-// If other files also changed, it prompts the user. On decline, it commits only .gitmap/release/.
-func AutoCommit(version string, dryRun bool) AutoCommitResult {
+// If other files also changed, it prompts the user (or auto-confirms with yes=true).
+// On decline, it commits only .gitmap/release/.
+func AutoCommit(version string, dryRun bool, yes bool) AutoCommitResult {
 	fmt.Print(constants.MsgAutoCommitScanning)
 
 	if verbose.IsEnabled() {
@@ -57,7 +58,7 @@ func AutoCommit(version string, dryRun bool) AutoCommitResult {
 		return commitReleaseOnly(releaseFiles, commitMsg)
 	}
 
-	return promptAndCommit(releaseFiles, otherFiles, commitMsg)
+	return promptAndCommit(releaseFiles, otherFiles, commitMsg, yes)
 }
 
 // listChangedFiles returns all modified/untracked files in the working tree.
@@ -149,11 +150,18 @@ func commitReleaseOnly(files []string, msg string) AutoCommitResult {
 }
 
 // promptAndCommit shows changed files and asks the user whether to commit all.
-func promptAndCommit(releaseFiles, otherFiles []string, msg string) AutoCommitResult {
+// If yes is true, it skips the interactive prompt and commits all changes.
+func promptAndCommit(releaseFiles, otherFiles []string, msg string, yes bool) AutoCommitResult {
 	fmt.Print(constants.MsgAutoCommitPrompt)
 
 	for _, f := range otherFiles {
 		fmt.Printf(constants.MsgAutoCommitFile, f)
+	}
+
+	if yes {
+		fmt.Print(constants.MsgAutoCommitAutoYes)
+
+		return commitAll(msg)
 	}
 
 	fmt.Print(constants.MsgAutoCommitAsk)

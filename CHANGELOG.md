@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.55.0 — Docs, Post-Mortems & Installer Fix (2026-04-07)
+## v2.55.0 — Release Auto-Confirm, Docs & Installer Fix (2026-04-07)
 
 ### Post-Mortems Documentation
 
@@ -27,6 +27,13 @@
 - Previously, SHA-deduplicated runs showed grey "skipped" status which looked like failures; now cached SHAs print "Already validated" and exit green.
 - Updated `spec/05-coding-guidelines/29-ci-sha-deduplication.md` with the passthrough pattern documentation.
 - Pinned `golangci-lint` to `v1.64.8` in `ci.yml` to match `setup.sh`.
+
+### Release Command: Auto-Confirm (`-y` / `--yes`)
+
+- Added `-y` / `--yes` flag to `release`, `release-self`, `release-branch`, and `release-pending` commands.
+- When set, all interactive prompts (e.g. "Auto-commit all changes?") are automatically confirmed without user input.
+- Enables fully non-interactive release workflows: `gitmap release v2.55.0 -y`.
+- Bumped version to `v2.55.0`.
 
 ### Changelog Improvements
 
