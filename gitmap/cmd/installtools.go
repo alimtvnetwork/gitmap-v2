@@ -17,9 +17,18 @@ func installTool(opts installOptions) {
 	installCmd := buildInstallCommand(manager, opts.Tool, opts.Version)
 
 	if opts.DryRun {
+		if manager == constants.PkgMgrApt {
+			fmt.Printf(constants.MsgInstallDryCmd, "sudo apt-get update")
+		}
+
 		fmt.Printf(constants.MsgInstallDryCmd, strings.Join(installCmd, " "))
 
 		return
+	}
+
+	// Run apt-get update before installing on apt-based systems.
+	if manager == constants.PkgMgrApt {
+		runAptUpdate(opts.Verbose)
 	}
 
 	fmt.Printf(constants.MsgInstallInstalling, opts.Tool)
@@ -111,6 +120,27 @@ func isBrewCaskTool(tool string) bool {
 	}
 
 	return false
+}
+
+// runAptUpdate runs sudo apt-get update to refresh the package index.
+func runAptUpdate(verbose bool) {
+	fmt.Print(constants.MsgInstallAptUpdate)
+
+	cmd := exec.Command("sudo", "apt-get", "update")
+
+	if verbose {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrInstallAptUpdateFailed, err)
+
+		return
+	}
+
+	fmt.Print(constants.MsgInstallAptUpdateDone)
 }
 
 // runInstallCommand executes the install command and logs errors.
