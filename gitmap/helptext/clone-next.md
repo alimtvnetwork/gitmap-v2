@@ -50,18 +50,28 @@ cn
     ✓ Removed macro-ahk-v12
     → Now in macro-ahk-v15
 
-### Example 3: Repo without a version suffix
+### Example 3: Lock detection when folder is in use
 
-    gitmap clone-next v++
+    gitmap cn v++ --delete
 
 **Output:**
 
-    Cloning macro-ahk-v2 into D:\wp-work\riseup-asia...
-    ✓ Cloned macro-ahk-v2
-    ✓ Registered macro-ahk-v2 with GitHub Desktop
-    Remove current folder macro-ahk? [y/N] y
-    ✓ Removed macro-ahk
-    → Now in macro-ahk-v2
+    Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
+    ✓ Cloned macro-ahk-v12
+    ✓ Registered macro-ahk-v12 with GitHub Desktop
+    Warning: could not remove macro-ahk-v11: unlinkat: access denied
+    Checking for processes locking macro-ahk-v11...
+    The following processes are using this folder:
+      • Code.exe (PID 14320)
+      • explorer.exe (PID 5928)
+    Terminate these processes to allow deletion? [y/N] y
+    Terminating Code.exe (PID 14320)...
+    ✓ Terminated Code.exe
+    Terminating explorer.exe (PID 5928)...
+    ✓ Terminated explorer.exe
+    Retrying folder removal...
+    ✓ Removed macro-ahk-v11
+    → Now in macro-ahk-v12
 
 ## See Also
 
