@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.60.0 — Auto-Detect Pending Release Branch (2026-04-07)
+
+### Release Command
+
+- Running `gitmap release` or `gitmap r` while on a `release/*` branch with no tag now auto-detects and completes the pending release instead of erroring about a duplicate branch.
+- Running `gitmap release v1.1.0` while on `release/v1.1.0` with no tag delegates to `ExecuteFromBranch` automatically.
+- Added `tryDelegateFromCurrentBranch()` for no-version detection and `tryDelegateFromBranch()` for explicit-version detection.
+- Added `MsgReleaseBranchPending` constant for the delegation message.
+
 ## v2.59.0 — Post-Release Install Hints (2026-04-07)
 
 ### Release Command
