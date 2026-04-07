@@ -20,6 +20,11 @@
 - All workflows (`ci.yml`, `release.yml`, `vulncheck.yml`) now cancel in-progress runs when a new commit is pushed to the same branch.
 - Concurrency groups use `github.ref` so different branches run independently.
 
+### Release Pipeline Fix
+
+- Fixed `cd dist` failure in `release.yml` — the compress/checksum step was running inside `gitmap-updater/` (no `dist/` folder) instead of `gitmap/dist/` where binaries are output.
+- Extracted compress and checksum into a separate step with explicit `working-directory: gitmap/dist`.
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command
