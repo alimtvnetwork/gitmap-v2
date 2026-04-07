@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.59.0 — Post-Release Install Hints (2026-04-07)
+
+### Release Command
+
+- After a successful release, if the repo's remote origin matches the gitmap source repository prefix (`github.com/alimtvnetwork/gitmap-v2`), the CLI now prints install one-liner commands for both Windows (PowerShell) and Linux/macOS (Bash).
+- Added `GitmapRepoPrefix` constant for repo detection and `MsgInstallHintHeader`, `MsgInstallHintWindows`, `MsgInstallHintUnix` message constants.
+- Install hints appear after `Release complete` in all release paths: standard, branch-based, and metadata-only.
+- Non-gitmap repos are unaffected — no install hints are printed.
+
 ## v2.58.0 — Release Flag Ordering Fix (2026-04-07)
 
 ### Bug Fix
