@@ -24,6 +24,7 @@ export const changelog: ChangelogEntry[] = [
       "Pinned `golangci-lint` to `v1.64.8` in `setup.sh` and `ci.yml` for reproducible builds.",
       "Added `-y` / `--yes` flag to all release commands for fully non-interactive workflows.",
       "Auto-confirm skips the commit prompt — enables `gitmap release v2.55.0 -y` without user input.",
+      "Created `install.sh` — Unix/macOS one-liner installer with checksum verification, versioned binary detection, and shell-aware PATH setup.",
     ],
   },
   {

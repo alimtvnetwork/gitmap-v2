@@ -66,12 +66,23 @@ curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap
 
 ### Installer Options
 
+**Windows (PowerShell):**
+
 | Flag | Description | Example |
 |------|-------------|---------|
 | `-Version` | Pin a specific release | `-Version v2.51.0` |
 | `-InstallDir` | Custom install directory | `-InstallDir C:\tools\gitmap` |
 | `-Arch` | Force architecture (`amd64`, `arm64`) | `-Arch arm64` |
 | `-NoPath` | Skip adding to user PATH | `-NoPath` |
+
+**Linux / macOS (Bash):**
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--version` | Pin a specific release | `--version v2.55.0` |
+| `--dir` | Custom install directory | `--dir /opt/gitmap` |
+| `--arch` | Force architecture (`amd64`, `arm64`) | `--arch arm64` |
+| `--no-path` | Skip adding to PATH | `--no-path` |
 
 **Specific version install (one-liner):**
 
