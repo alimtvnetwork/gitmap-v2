@@ -25,6 +25,12 @@ func dispatchUtility(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdInstalledDir || command == constants.CmdInstalledDirAlias {
+		checkHelp("installed-dir", os.Args[2:])
+		runInstalledDir()
+
+		return true
+	}
 	if command == constants.CmdRevert {
 		runRevert(os.Args[2:])
 
