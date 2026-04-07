@@ -98,37 +98,27 @@ When a cached SHA is detected:
 
 ---
 
-## Known Behavior: Concurrency Cancellation
+## Known Behavior: Concurrency Cancellation (Resolved)
 
-When `concurrency: cancel-in-progress: true` is active, a newer push to
-the same branch cancels the in-progress run. If cancellation occurs after
-all validation jobs pass but before `mark-success` completes, the SHA is
-**not cached** — the `mark-success` job appears as cancelled (grey).
+### Original Problem
 
-### Why This Is Safe
+When `mark-success` was a **separate job**, `cancel-in-progress: true`
+could cancel it after all validation jobs passed, leaving the SHA
+uncached. The job appeared as cancelled (grey) in the GitHub UI.
 
-- All validation jobs (lint, vulncheck, test, test-summary) already
-  completed successfully — the code **was** validated.
-- The only consequence is that the SHA marker is not written to the cache.
-- If the same SHA is encountered again, the pipeline runs a full
-  validation — an unnecessary but correct re-run (identical to the
-  "cache eviction" edge case).
-- The newer commit that triggered the cancellation gets its own full
-  pipeline run and will cache its own SHA on success.
+### Resolution
 
-### When It Happens
+The cache write was **inlined as the final step of `test-summary`**.
+Since `test-summary` is the last validation job and must complete for
+the cache write to trigger (`if: success()`), cancellation can only
+occur if `test-summary` itself is cancelled — which means validation
+did not complete, so not caching is correct behavior.
 
-- Force-pushing rapid successive commits to the same branch.
-- Merging multiple PRs in quick succession to `main`.
-- Any scenario where two pushes target the same `concurrency` group
-  before the first run's `mark-success` job finishes.
+### Remaining Edge Case
 
-### Mitigation
-
-No action required. The pattern is self-healing: the worst case is a
-redundant but correct re-validation. Attempting to protect `mark-success`
-from cancellation (e.g., via a separate concurrency group) would defeat
-the purpose of cancelling superseded runs.
+If `cancel-in-progress` cancels `test-summary` mid-execution, the SHA
+is not cached. This is safe because the validation was incomplete and
+the newer commit gets its own full pipeline run.
 
 ---
 
