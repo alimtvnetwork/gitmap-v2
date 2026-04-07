@@ -132,7 +132,10 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 	// Register -N as shorthand for --notes.
 	fs.StringVar(notesFlag, "N", "", constants.FlagDescNotes)
 
-	fs.Parse(args)
+	// Reorder args so flags come before positional args.
+	// Go's flag package stops parsing at the first non-flag argument.
+	reordered := reorderFlagsBeforeArgs(args)
+	fs.Parse(reordered)
 
 	version = ""
 	if fs.NArg() > 0 {
