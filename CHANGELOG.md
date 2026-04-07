@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.54.3 — Security Hardening & Lint Compliance
+
+### Zip Extraction Security (installnpp.go)
+
+- Fixed **G305** (path traversal): `extractZipEntry` now validates that resolved destination paths stay within the target directory using absolute path prefix checks.
+- Fixed **G110** (decompression bomb): `io.Copy` replaced with `io.LimitReader` capped at 10 MB per extracted file.
+
+### Lint Configuration Documentation
+
+- Added inline comments to all 8 gosec exclusions in `.golangci.yml` documenting why each is necessary (G104, G204, G304, G306, G401, G404, G505, G101).
+
+---
+
 ## v2.54.0 — Update Path Recovery & CI Optimization
 
 ### Update Path Recovery
