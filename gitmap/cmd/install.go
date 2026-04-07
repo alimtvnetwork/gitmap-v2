@@ -83,6 +83,12 @@ func validateToolName(tool string) {
 
 // executeInstall runs the install flow for a tool.
 func executeInstall(opts installOptions) {
+	if opts.Tool == constants.ToolNppSettings {
+		runNppSettingsOnly()
+
+		return
+	}
+
 	fmt.Printf(constants.MsgInstallChecking, opts.Tool)
 
 	existingVersion := detectInstalledVersion(opts.Tool)
@@ -99,4 +105,8 @@ func executeInstall(opts installOptions) {
 	}
 
 	installTool(opts)
+
+	if opts.Tool == constants.ToolNpp {
+		runNppSettings()
+	}
 }

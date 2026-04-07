@@ -39,6 +39,8 @@ in
 | cpp             | g++            | C++ compiler (MinGW/g++)         |
 | php             | php            | PHP programming language         |
 | powershell      | pwsh           | PowerShell shell                 |
+| npp             | notepad++      | Notepad++ text editor            |
+| npp-settings    | —              | Notepad++ settings sync only     |
 
 ## Prerequisites
 
@@ -55,6 +57,25 @@ in
       Installing vscode...
       Verifying vscode installation...
       vscode installed successfully.
+
+### Install Notepad++ with settings
+
+    $ gitmap install npp
+      Checking if npp is installed...
+      Installing npp...
+      Verifying npp installation...
+      npp installed successfully.
+      Verifying npp binary at: C:\Program Files\Notepad++\notepad++.exe
+      Binary confirmed: C:\Program Files\Notepad++\notepad++.exe
+      Syncing Notepad++ settings...
+      Settings synced to C:\Users\User\AppData\Roaming\Notepad++
+
+### Sync Notepad++ settings only
+
+    $ gitmap install npp-settings
+      Skipping Notepad++ installation (settings-only mode)
+      Syncing Notepad++ settings...
+      Settings synced to C:\Users\User\AppData\Roaming\Notepad++
 
 ### Check if a tool is already installed
 

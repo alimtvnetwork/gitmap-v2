@@ -46,6 +46,8 @@ gitmap install git
 | C++ (MinGW) | `choco install mingw` | `apt install g++` | Xcode CLI tools |
 | PHP | `choco install php` | `apt install php` | `brew install php` |
 | PowerShell | `winget install Microsoft.PowerShell` | Official repo | `brew install --cask powershell` |
+| Notepad++ (npp) | `choco install notepadplusplus` | N/A | N/A |
+| Notepad++ Settings (npp-settings) | Settings sync only | Settings sync only | N/A |
 
 ---
 
@@ -114,6 +116,8 @@ Some tools require post-install configuration:
 | Git LFS | `git lfs install` |
 | Go | Set GOPATH via `gitmap env set` |
 | Node.js | Verify npm accessible |
+| Notepad++ (npp) | Verify exe at expected path, sync settings to AppData |
+| npp-settings | Sync settings to AppData only (no binary install) |
 
 ---
 

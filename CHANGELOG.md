@@ -20,6 +20,18 @@
 - All workflows (`ci.yml`, `release.yml`, `vulncheck.yml`) now cancel in-progress runs when a new commit is pushed to the same branch.
 - Concurrency groups use `github.ref` so different branches run independently.
 
+### Release Pipeline Fix
+
+- Fixed `cd dist` failure in `release.yml` — the compress/checksum step was running inside `gitmap-updater/` (no `dist/` folder) instead of `gitmap/dist/` where binaries are output.
+- Extracted compress and checksum into a separate step with explicit `working-directory: gitmap/dist`.
+
+### SHA-Based Build Deduplication
+
+- CI pipeline now skips redundant runs when the same commit SHA has already passed all checks.
+- A `sha-check` gate job probes the GitHub Actions cache for `ci-passed-<SHA>` before any work begins.
+- On full pipeline success, a `mark-success` job caches a marker so future runs for the same SHA short-circuit.
+- Failed pipelines never cache — re-running the same SHA executes the full pipeline.
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command
