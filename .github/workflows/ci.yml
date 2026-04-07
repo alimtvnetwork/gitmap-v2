@@ -11,9 +11,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  sha-check:
+    name: Check if already built
+    runs-on: ubuntu-latest
+    outputs:
+      already-built: ${{ steps.cache-check.outputs.cache-hit }}
+    steps:
+      - name: Check SHA cache
+        id: cache-check
+        uses: actions/cache@v4
+        with:
+          path: /tmp/ci-passed
+          key: ci-passed-${{ github.sha }}
+          lookup-only: true
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    needs: sha-check
+    if: needs.sha-check.outputs.already-built != 'true'
     steps:
       - uses: actions/checkout@v4
 
