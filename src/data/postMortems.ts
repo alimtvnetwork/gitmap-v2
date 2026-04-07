@@ -121,4 +121,11 @@ export const postMortems: PostMortemEntry[] = [
     version: "v2.55.0",
     category: "general",
   },
+  {
+    id: "17",
+    title: "Go Flag Ordering — Silent Flag Drop",
+    summary: "Go's `flag` package stops parsing at the first positional argument, silently dropping flags like `-y` after `v2.55.0`. Fixed with `reorderFlagsBeforeArgs()` to move all flags before positional args before parsing.",
+    version: "v2.58.0",
+    category: "release",
+  },
 ];
