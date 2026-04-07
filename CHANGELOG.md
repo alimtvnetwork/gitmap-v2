@@ -15,6 +15,11 @@
 - Removed cross-platform binary builds from the main CI pipeline (`ci.yml`).
 - Binaries are now produced exclusively by the release pipeline (`release.yml`) on `release/**` branches and `v*` tags.
 
+### CI Concurrency Cancellation
+
+- All workflows (`ci.yml`, `release.yml`, `vulncheck.yml`) now cancel in-progress runs when a new commit is pushed to the same branch.
+- Concurrency groups use `github.ref` so different branches run independently.
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command
