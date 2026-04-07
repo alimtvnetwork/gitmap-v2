@@ -21,6 +21,14 @@ set -euo pipefail
 
 REPO="alimtvnetwork/gitmap-v2"
 BINARY_NAME="gitmap"
+TMP_DIR=""
+
+cleanup() {
+    if [ -n "${TMP_DIR}" ] && [ -d "${TMP_DIR}" ]; then
+        rm -rf "${TMP_DIR}"
+    fi
+}
+trap cleanup EXIT
 
 # ── Logging helpers ─────────────────────────────────────────────────
 
