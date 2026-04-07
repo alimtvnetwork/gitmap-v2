@@ -5,6 +5,23 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.52.0",
+    items: [
+      "Added lock detection to `clone-next`: scans for processes holding the target folder before deletion.",
+      "Windows lock detection via `handle.exe` (SysInternals) with WMI PowerShell fallback.",
+      "Unix/macOS lock detection via `lsof +D` for open file handle discovery.",
+      "Interactive prompt to terminate locking processes by PID with automatic retry after cleanup.",
+      "New `lockcheck` package with platform-specific implementations (`lockcheck_windows.go`, `lockcheck_unix.go`).",
+      "Added `gitmap install` system with SQLite-backed `InstalledTools` table tracking name, version, manager, and timestamps.",
+      "Added `gitmap uninstall` command with `--dry-run`, `--force`, and `--purge` flags.",
+      "Expanded supported tools: MySQL, MariaDB, PostgreSQL, MongoDB, Redis, SQLite, CouchDB, Cassandra, Neo4j, InfluxDB, DynamoDB.",
+      "Multi-package-manager support: Chocolatey, Winget, Apt, Snap, Brew, Dnf, Pacman.",
+      "Version string compiled from parsed major/minor/patch/build parts during save for comparison support.",
+      "Reorganized `gitmap help` with `--compact` flag and 17 categorized command groups.",
+      "Repository renamed from `git-repo-navigator` to `gitmap-v2`.",
+    ],
+  },
+  {
     version: "v2.51.0",
     items: [
       "Reorganized `gitmap help` output into 17 categorized command groups (Scanning, Cloning, Git Operations, Navigation, Release, etc.).",
