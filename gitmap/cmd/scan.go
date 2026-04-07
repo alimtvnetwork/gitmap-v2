@@ -23,7 +23,7 @@ func runScan(args []string) {
 	dir, cfgPath, mode, output, outFile, outputPath, ghDesktop, openFolder, quiet := parseScanFlags(args)
 	cfg, err := config.LoadFromFile(cfgPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrConfigLoad, err)
+		fmt.Fprintf(os.Stderr, constants.ErrConfigLoad, cfgPath, err)
 		os.Exit(1)
 	}
 	cfg = config.MergeWithFlags(cfg, mode, output, outputPath)
@@ -39,12 +39,12 @@ func runScan(args []string) {
 func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFolder, quiet bool, cache model.ScanCache) {
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, dir, err)
 		os.Exit(1)
 	}
 	repos, err := scanner.ScanDir(absDir, cfg.ExcludeDirs)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, absDir, err)
 		os.Exit(1)
 	}
 	records := mapper.BuildRecords(repos, cfg.DefaultMode, cfg.Notes)

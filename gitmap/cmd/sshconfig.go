@@ -14,7 +14,7 @@ import (
 func runSSHConfig() {
 	db, err := openDB()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, sshConfigPath(), err)
 
 		return
 	}
@@ -42,13 +42,13 @@ func updateSSHConfig(db *store.DB) {
 	updated := replaceManagedBlock(existing, block)
 
 	if err := ensureSSHDir(sshDir()); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, configPath, err)
 
 		return
 	}
 
 	if err := os.WriteFile(configPath, []byte(updated), 0o600); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHConfig, configPath, err)
 
 		return
 	}

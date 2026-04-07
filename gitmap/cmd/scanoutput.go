@@ -140,13 +140,13 @@ func resolveOutFile(outFile, outputDir, defaultName string) string {
 func createOutputFile(path string) (*os.File, error) {
 	err := os.MkdirAll(filepath.Dir(path), constants.DirPermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrCreateDir, err)
+		fmt.Fprintf(os.Stderr, constants.ErrCreateDir, filepath.Dir(path), err)
 
 		return nil, err
 	}
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrCreateFile, err)
+		fmt.Fprintf(os.Stderr, constants.ErrCreateFile, path, err)
 
 		return nil, err
 	}
