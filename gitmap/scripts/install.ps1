@@ -170,6 +170,7 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
     New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
     Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
 
+    # Match exact names OR versioned patterns like gitmap-v2.54.6-windows-amd64.exe
     $candidateNames = @(
         $BinaryName,
         [System.IO.Path]::GetFileNameWithoutExtension($BinaryName),
@@ -178,7 +179,10 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
     )
 
     $extracted = Get-ChildItem -Path $extractDir -File -Recurse |
-        Where-Object { $candidateNames -icontains $_.Name } |
+        Where-Object {
+            ($candidateNames -icontains $_.Name) -or
+            ($_.Name -match "^gitmap-v[\d.]+-windows-(amd64|arm64)\.exe$")
+        } |
         Select-Object -First 1
 
     if (-not $extracted) {
@@ -311,35 +315,50 @@ function Main {
     Write-Host "  github.com/$Repo" -ForegroundColor DarkGray
     Write-Host ""
 
-    $resolvedArch = Resolve-Arch $Arch
-    $resolvedVersion = Resolve-Version $Version
-    $resolvedDir = Resolve-InstallDir $InstallDir
-
-    $result = Get-Asset $resolvedVersion $resolvedArch
-
     try {
-        Install-Binary $result.ZipPath $resolvedDir
-    }
-    finally {
-        Remove-Item $result.TmpDir -Recurse -Force -ErrorAction SilentlyContinue
-    }
+        $resolvedArch = Resolve-Arch $Arch
+        $resolvedVersion = Resolve-Version $Version
+        $resolvedDir = Resolve-InstallDir $InstallDir
 
-    if (-not $NoPath) {
-        Add-ToPath $resolvedDir
-    }
+        $result = Get-Asset $resolvedVersion $resolvedArch
 
-    # Also try Chocolatey refreshenv if available
-    $refreshCmd = Get-Command refreshenv -ErrorAction SilentlyContinue
-    if ($refreshCmd) {
-        try { refreshenv | Out-Null } catch {}
-    }
+        try {
+            Install-Binary $result.ZipPath $resolvedDir
+        }
+        finally {
+            Remove-Item $result.TmpDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
 
-    # Force-rebuild $env:PATH in this scope so gitmap is usable immediately
-    $script:NewPath = Rebuild-SessionPath $resolvedDir
-    return @{ InstallDir = $resolvedDir; NewPath = $script:NewPath }
+        if (-not $NoPath) {
+            Add-ToPath $resolvedDir
+        }
+
+        # Also try Chocolatey refreshenv if available
+        $refreshCmd = Get-Command refreshenv -ErrorAction SilentlyContinue
+        if ($refreshCmd) {
+            try { refreshenv | Out-Null } catch {}
+        }
+
+        # Force-rebuild $env:PATH in this scope so gitmap is usable immediately
+        $script:NewPath = Rebuild-SessionPath $resolvedDir
+        return @{ InstallDir = $resolvedDir; NewPath = $script:NewPath }
+    }
+    catch {
+        Write-Err "Installation failed: $_"
+        Write-Host ""
+        Write-Err "If this persists, download manually from:"
+        Write-Err "  https://github.com/$Repo/releases/latest"
+        Write-Host ""
+        return $null
+    }
 }
 
 $installResult = Main
+
+if (-not $installResult) {
+    # Main failed gracefully — error already printed
+    return
+}
 
 # Set $env:PATH at the TOP-LEVEL script scope (not inside a function)
 # This ensures the change persists in the caller's session when run via iex
