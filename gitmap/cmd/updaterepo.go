@@ -4,11 +4,29 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"
 )
+
+const updateRunScript = "run.ps1"
+
+// resolveRepoPathFromFlag validates the --repo-path flag if present.
+func resolveRepoPathFromFlag() string {
+	return normalizeRepoPath(getFlagValue(constants.FlagRepoPath))
+}
+
+// resolveRepoPathFromEmbedded validates the embedded repo path.
+func resolveRepoPathFromEmbedded() string {
+	return normalizeRepoPath(constants.RepoPath)
+}
+
+// resolveRepoPathFromDB validates the saved repo path from SQLite.
+func resolveRepoPathFromDB() string {
+	return normalizeRepoPath(loadRepoPathFromDB())
+}
 
 // pathExists checks if a directory exists on disk.
 func pathExists(path string) bool {
@@ -20,29 +38,104 @@ func pathExists(path string) bool {
 	return info.IsDir()
 }
 
-// promptRepoPath asks the user to enter the source repo path interactively.
-func promptRepoPath() string {
-	fmt.Fprint(os.Stderr, constants.MsgUpdatePathMissing)
-	fmt.Fprint(os.Stderr, constants.MsgUpdatePathPrompt)
-
-	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		return ""
-	}
-
-	path := strings.TrimSpace(input)
+// normalizeRepoPath resolves a candidate path to a valid gitmap source root.
+func normalizeRepoPath(path string) string {
 	if len(path) == 0 {
 		return ""
 	}
 
-	if !pathExists(path) {
-		fmt.Fprintf(os.Stderr, constants.ErrUpdatePathInvalid, path)
-
+	cleaned := strings.TrimSpace(strings.Trim(path, "\"'"))
+	if len(cleaned) == 0 {
 		return ""
 	}
 
-	return path
+	absPath, err := filepath.Abs(cleaned)
+	if err != nil {
+		return ""
+	}
+
+	return findRepoRoot(absPath)
+}
+
+// findRepoRoot walks upward until it finds a valid gitmap source root.
+func findRepoRoot(path string) string {
+	current := path
+	for {
+		if isGitmapSourceRepo(current) {
+			return current
+		}
+
+		parent := filepath.Dir(current)
+		if parent == current {
+			return ""
+		}
+
+		current = parent
+	}
+}
+
+// isGitmapSourceRepo checks for the update script and source markers.
+func isGitmapSourceRepo(path string) bool {
+	if !pathExists(path) || !fileExists(filepath.Join(path, updateRunScript)) {
+		return false
+	}
+
+	if fileExists(filepath.Join(path, "gitmap", "constants", "constants.go")) {
+		return true
+	}
+
+	return fileExists(filepath.Join(path, "constants", "constants.go"))
+}
+
+// fileExists checks if a file exists on disk.
+func fileExists(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+
+	return !info.IsDir()
+}
+
+// canPromptForRepoPath checks whether stdin is interactive.
+func canPromptForRepoPath() bool {
+	info, err := os.Stdin.Stat()
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeCharDevice != 0
+}
+
+// promptRepoPath asks the user to enter the source repo path interactively.
+func promptRepoPath() string {
+	if !canPromptForRepoPath() {
+		return ""
+	}
+
+	fmt.Fprint(os.Stderr, constants.MsgUpdatePathMissing)
+
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Fprint(os.Stderr, constants.MsgUpdatePathPrompt)
+
+		input, err := reader.ReadString('\n')
+		if err != nil && len(input) == 0 {
+			return ""
+		}
+
+		path := strings.TrimSpace(strings.Trim(input, "\"'"))
+		if len(path) == 0 {
+			return ""
+		}
+
+		root := normalizeRepoPath(path)
+		if len(root) > 0 {
+			return root
+		}
+
+		fmt.Fprintf(os.Stderr, constants.ErrUpdatePathInvalid, path)
+	}
 }
 
 // saveRepoPathToDB persists the source repo path in the Settings table.
