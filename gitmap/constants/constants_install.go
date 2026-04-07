@@ -35,6 +35,7 @@ const (
 	ToolNpp           = "npp"
 	ToolNppSettings   = "npp-settings"
 	ToolNppInstall    = "install-npp"
+	ToolScripts       = "scripts"
 )
 
 // Supported tool names — Databases.
@@ -308,6 +309,7 @@ var InstallToolDescriptions = map[string]string{
 	ToolNpp:           "NPP + Settings — Notepad++ with settings",
 	ToolNppSettings:   "NPP Settings — Notepad++ settings sync only",
 	ToolNppInstall:    "Install NPP — Notepad++ install only (no settings)",
+	ToolScripts:       "Clone gitmap scripts to local folder",
 }
 
 // InstallToolCategories groups tools by category for display.
@@ -317,6 +319,7 @@ var InstallToolCategories = map[string][]string{
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
 		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
+		ToolScripts,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
