@@ -67,6 +67,10 @@ func handleCompletionList(args []string) {
 			printCompletionSSHKeys()
 
 			return
+		case constants.CompListHelpGroups:
+			printCompletionHelpGroups()
+
+			return
 		}
 	}
 }
