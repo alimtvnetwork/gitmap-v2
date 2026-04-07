@@ -65,6 +65,8 @@ const (
 	CmdReleaseSelf           = "release-self"
 	CmdReleaseSelfAlias      = "rself"
 	CmdReleaseSelfAlias2     = "rs"
+	CmdHelpDashboard         = "help-dashboard"
+	CmdHelpDashboardAlias    = "hd"
 )
 
 // Clone shorthands.
@@ -112,6 +114,7 @@ const (
 	HelpCompletion        = "  completion (cmp)    Generate shell tab-completion scripts"
 	HelpClearReleaseJSON  = "  clear-release-json (crj)  Remove a .gitmap/release/vX.Y.Z.json file"
 	HelpDocs              = "  docs (d)            Open documentation website in browser"
+	HelpHelpDash          = "  help-dashboard (hd) Serve the docs site locally in your browser"
 	HelpCloneNext         = "  clone-next (cn)     Clone next versioned iteration of current repo"
 	HelpReleaseSelf       = "  release-self (rs)   Release gitmap itself from any directory"
 	HelpHelp              = "  help                Show this help message"
