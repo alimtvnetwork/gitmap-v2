@@ -37,14 +37,14 @@ linters-settings:
 
   gosec:
     excludes:
-      - G104
-      - G204
-      - G304
-      - G306
-      - G401
-      - G404
-      - G505
-      - G101
+      - G104 # Unchecked errors — covered by errcheck linter instead
+      - G204 # Subprocess with variable args — CLI uses os/exec extensively by design
+      - G304 # File path from variable — CLI reads user-specified files as core functionality
+      - G306 # Perms on WriteFile/MkdirAll — intentional 0o644/0o755 for CLI file operations
+      - G401 # Weak crypto (MD5/SHA1) — used for release checksums, not security-critical
+      - G404 # Weak random (math/rand) — used for SEO template shuffling, not security-sensitive
+      - G505 # crypto/sha1 import — same as G401, release checksums only
+      - G101 # Hardcoded credentials — false positives on variable names (token, apikey) in GitHub API code
 
   gocritic:
     enabled-tags:
