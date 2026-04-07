@@ -45,9 +45,14 @@ dependency monitoring.
 
 Before any work begins, a `sha-check` gate job probes the GitHub
 Actions cache for a key `ci-passed-<SHA>`. If the commit has already
-passed CI, all downstream jobs are skipped. On success, a `mark-success`
-job writes a marker to the cache so future runs for the same SHA
-short-circuit immediately.
+passed CI, all downstream jobs print "Already validated" and exit
+with ✅ Success (passthrough gate pattern). On full success, the
+`test-summary` job writes a marker to the cache as its final step,
+so future runs for the same SHA short-circuit immediately.
+
+The cache write is **inlined into `test-summary`** (not a separate
+job) to prevent `cancel-in-progress` from cancelling the marker
+write while validation jobs have already passed.
 
 This eliminates redundant builds when the same commit is pushed
 multiple times (e.g., re-tagging, merge commits, or manual re-runs
