@@ -68,6 +68,7 @@ func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 	uploadToGitHub(v, assets, opts)
 
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
+	printInstallHint(v)
 
 	return nil
 }
@@ -165,6 +166,7 @@ func updateLatestIfStable(v Version) error {
 			verbose.Get().Log("metadata: skipping latest.json (pre-release %s)", v.String())
 		}
 		fmt.Printf(constants.MsgReleaseComplete, v.String())
+		printInstallHint(v)
 
 		return nil
 	}
@@ -184,6 +186,7 @@ func updateLatestIfStable(v Version) error {
 
 	fmt.Printf(constants.MsgReleaseLatest, v.String())
 	fmt.Printf(constants.MsgReleaseComplete, v.String())
+	printInstallHint(v)
 
 	return nil
 }
