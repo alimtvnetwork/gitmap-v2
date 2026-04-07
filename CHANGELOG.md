@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.62.0 — CI Release Branch Protection (2026-04-07)
+
+### CI/CD
+
+- Release branches (`release/**`) are no longer cancelled by `cancel-in-progress` — every release commit now runs the full CI and release pipeline to completion.
+- CI workflow uses a conditional expression: `cancel-in-progress: ${{ !startsWith(github.ref, 'refs/heads/release/') }}` to protect release branches while still cancelling superseded runs on `main` and feature branches.
+- Release workflow changed to `cancel-in-progress: false` unconditionally.
+- Updated CI pipeline spec (`spec/03-general/08-ci-pipeline.md`) with release branch protection documentation.
+
 ## v2.61.0 — Install Hint Polish & Post-Mortem #17 (2026-04-07)
 
 ### Release Command
