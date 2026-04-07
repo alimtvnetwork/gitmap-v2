@@ -114,4 +114,11 @@ export const postMortems: PostMortemEntry[] = [
     version: "v2.55.0",
     category: "general",
   },
+  {
+    id: "16",
+    title: "CI Passthrough Gate Pattern",
+    summary: "Job-level `if` skipping caused cached SHA runs to show grey 'Skipped' in GitHub UI instead of green Success. Replaced with step-level conditionals so every job always runs an 'Already validated' echo step and reports ✅.",
+    version: "v2.55.0",
+    category: "general",
+  },
 ];
