@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.61.0",
+    date: "2026-04-07",
+    items: [
+      "Improved post-release install hint formatting with emoji labels (📦 🪟 🐧) and better spacing.",
+      "Extracted `ShouldPrintInstallHint()` for testability with 11 unit test cases.",
+      "Added Post-Mortem #17: Go Flag Ordering — Silent Flag Drop.",
+    ],
+  },
+  {
     version: "v2.60.0",
     date: "2026-04-07",
     items: [
