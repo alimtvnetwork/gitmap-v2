@@ -79,6 +79,7 @@ const FlagOpenValue = "--open"
 const FlagJSON = "--json"
 const FlagLimit = "--limit"
 const FlagSource = "--source"
+const FlagCompact = "--compact"
 
 // Usage header.
 const UsageHeaderFmt = "gitmap v%s\n\n"
