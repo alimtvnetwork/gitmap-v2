@@ -9,9 +9,12 @@ export const changelog: ChangelogEntry[] = [
     version: "v2.56.0",
     date: "2026-04-07",
     items: [
+      "Added `install.sh` generation to `release.yml` — Bash installer now attached as release asset alongside `install.ps1`.",
+      "Release body now includes both PowerShell and Bash one-liner install instructions.",
+      "Eliminated separate `mark-success` CI job — inlined cache write into `test-summary` to prevent concurrency cancellation.",
       "Documented `install.sh` in installer spec — CLI flags, version-pinned examples, binary detection, and shell-aware auto-PATH.",
       "Updated release command spec — CI pipeline section now references both `install.ps1` and `install.sh`.",
-      "Added 'Known Behavior: Concurrency Cancellation' to CI passthrough gate post-mortem — `cancel-in-progress` safely prevents caching.",
+      "Added 'Known Behavior: Concurrency Cancellation' to CI passthrough gate post-mortem — resolved by inlining cache write.",
       "Updated post-release auto-commit memory for `-y` flag behavior.",
       "Added unit test for `-y` autocommit flag — verifies prompt bypass when `yes=true`.",
     ],
