@@ -55,6 +55,12 @@ func Execute(opts Options) error {
 		return err
 	}
 
+	// If already on the release branch for this version (or no version specified
+	// and current branch is release/*), delegate to the pending release flow.
+	if delegated, delegateErr := tryDelegateFromBranch(version, opts); delegated {
+		return delegateErr
+	}
+
 	err = checkDuplicate(version)
 	if err != nil {
 		return err
@@ -70,6 +76,33 @@ func Execute(opts Options) error {
 	}
 
 	return performRelease(version, sourceRef, sourceName, opts)
+}
+
+// tryDelegateFromBranch checks if we should delegate to ExecuteFromBranch.
+// This handles the case where the user is already on a release/* branch
+// and the tag hasn't been created yet (pending release).
+func tryDelegateFromBranch(v Version, opts Options) (bool, error) {
+	currentBranch, err := CurrentBranchName()
+	if err != nil {
+		return false, nil
+	}
+
+	branchName := constants.ReleaseBranchPrefix + v.String()
+
+	// Check if we're on this release branch (or any release/* branch matching the version).
+	if currentBranch != branchName {
+		return false, nil
+	}
+
+	// Branch exists but tag doesn't — this is a pending release.
+	tagExists := TagExistsLocally(v.String()) || TagExistsRemote(v.String())
+	if tagExists {
+		return false, nil
+	}
+
+	fmt.Printf(constants.MsgReleaseBranchPending, branchName)
+
+	return true, ExecuteFromBranch(branchName, opts.Assets, opts.Notes, opts.Draft, opts.DryRun, opts.NoCommit, opts.Yes)
 }
 
 // resolveVersion determines the version from CLI args, bump, or file.
