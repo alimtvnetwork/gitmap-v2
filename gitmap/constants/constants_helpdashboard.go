@@ -1,11 +1,5 @@
 package constants
 
-// Help-dashboard CLI commands.
-const (
-	CmdHelpDashboard      = "help-dashboard"
-	CmdHelpDashboardAlias = "hd"
-)
-
 // Help-dashboard help text.
 const HelpHelpDashboard = "  help-dashboard (hd) Serve the docs site locally in your browser"
 
