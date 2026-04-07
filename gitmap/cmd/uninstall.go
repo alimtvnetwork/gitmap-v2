@@ -63,7 +63,7 @@ func runUninstall(args []string) {
 	}
 
 	fmt.Printf(constants.MsgUninstallRemoving, tool)
-	runInstallCommand(uninstallCmd, true)
+	runInstallCommand(uninstallCmd, installOptions{Tool: tool, Verbose: true})
 
 	if db != nil {
 		if err := db.RemoveInstalledTool(tool); err != nil {
