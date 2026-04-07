@@ -72,6 +72,8 @@
 - Affected packages: `constants_messages`, `constants_seo`, `constants_env`, `constants_store`, `constants_zipgroup`, `constants_changelog`, `constants_gomod`, `constants_release`, `constants_completion`, `constants_dashboard`, `constants_update`, `constants_helpdashboard`.
 - Zero remaining file/path errors use generic "not found" without an exact path.
 
+---
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command

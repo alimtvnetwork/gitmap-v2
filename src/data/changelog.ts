@@ -5,6 +5,30 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.54.3",
+    items: [
+      "Fixed **G305** (path traversal): `extractZipEntry` now validates that resolved destination paths stay within the target directory using absolute path prefix checks.",
+      "Fixed **G110** (decompression bomb): `io.Copy` replaced with `io.LimitReader` capped at 10 MB per extracted file.",
+      "Added inline comments to all 8 gosec exclusions in `.golangci.yml` documenting why each is necessary.",
+    ],
+  },
+  {
+    version: "v2.54.2",
+    items: [
+      "Fixed `cmd/tasksync.go:138` where `fmt.Fprintf` format string expected 2 arguments but only 1 was passed.",
+      "Audited all `fmt.Fprintf`, `fmt.Printf`, and `fmt.Errorf` calls across `cmd/`, `release/`, and `store/` packages (~140 call sites) — confirmed 100% compliance.",
+    ],
+  },
+  {
+    version: "v2.54.1",
+    items: [
+      "Completed full Code Red audit: every file/path-related error log now includes the exact file path, the operation attempted, and the specific failure reason.",
+      "Standardized format: `Error: [message] at [path]: [error] (operation: [op], reason: [reason])`.",
+      "Updated 35+ constants and 36+ call sites across the entire codebase.",
+      "Generic 'file not found' messages without paths are now prohibited by convention.",
+    ],
+  },
+  {
     version: "v2.54.0",
     items: [
       "**Code Red**: Mandatory file path error logging rule — every file/path error must include the exact resolved path and failure reason.",
@@ -26,6 +50,16 @@ export const changelog: ChangelogEntry[] = [
       "SHA-based build deduplication for CI pipelines — skips lint/vet layers when SHA matches a previous successful build on main.",
       "Release pipeline `dist` directory fix — explicit `working-directory: gitmap/dist` prevents `cd: dist: No such file or directory` in CI.",
       "**Code Red audit complete**: standardized 35+ error constants and updated 36 call sites across `constants/`, `cmd/`, `release/`, and `store/` — every file/path error now includes exact path, failure reason, and `(operation: ...)` suffix.",
+    ],
+  },
+  {
+    version: "v2.53.0",
+    items: [
+      "New `gitmap help-dashboard` (alias `hd`) command to serve the documentation site locally.",
+      "Dual-mode resolution: serves pre-built `dist/` via Go's built-in HTTP server; falls back to `npm install && npm run dev`.",
+      "`--port` flag to configure the serving port (default: 5173).",
+      "Automatically opens the docs site in the default browser on launch.",
+      "Added `/help-dashboard` and `/install` docs pages with terminal demos, feature cards, and flags tables.",
     ],
   },
   {
