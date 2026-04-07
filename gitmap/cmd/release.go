@@ -25,7 +25,7 @@ func runRelease(args []string) {
 	}
 
 	requireOnline()
-	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit := parseReleaseFlags(args)
+	version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit, yes := parseReleaseFlags(args)
 	_ = verbose
 
 	if listTargets {
@@ -35,11 +35,11 @@ func runRelease(args []string) {
 	}
 
 	validateReleaseFlags(version, bump, commit, branch)
-	executeRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, noCommit)
+	executeRelease(version, assets, commit, branch, bump, notes, targets, zipGroups, zipItems, bundleName, draft, dryRun, verbose, compress, checksums, bin, noCommit, yes)
 }
 
 // executeRelease builds options and runs the release workflow.
-func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, noCommit bool) {
+func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, noCommit, yes bool) {
 	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
 
 	opts := release.Options{
@@ -56,6 +56,7 @@ func executeRelease(version, assets, commit, branch, bump, notes, targets string
 		Checksums:     checksums || cfg.Release.Checksums,
 		Bin:           bin,
 		NoCommit:      noCommit,
+		Yes:           yes,
 	}
 	err := release.Execute(opts)
 	if err != nil {
@@ -99,7 +100,7 @@ func (z *zipItemFlag) Set(val string) error {
 }
 
 // parseReleaseFlags parses flags for the release command.
-func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit bool) {
+func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, listTargets, noCommit, yes bool) {
 	fs := flag.NewFlagSet(constants.CmdRelease, flag.ExitOnError)
 	assetsFlag := fs.String("assets", "", constants.FlagDescAssets)
 	commitFlag := fs.String("commit", "", constants.FlagDescCommit)
@@ -116,9 +117,11 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 	listTargetsFlag := fs.Bool("list-targets", false, constants.FlagDescListTargets)
 	bundleFlag := fs.String("bundle", "", constants.FlagDescZGBundle)
 	noCommitFlag := fs.Bool("no-commit", false, constants.FlagDescNoCommit)
+	yesFlag := fs.Bool("yes", false, constants.FlagDescYes)
 
-	// Register -b as shorthand for --bin.
+	// Register -b as shorthand for --bin, -y as shorthand for --yes.
 	fs.BoolVar(binFlag, "b", false, constants.FlagDescBin)
+	fs.BoolVar(yesFlag, "y", false, constants.FlagDescYes)
 
 	var zgGroups zipGroupFlag
 	var zgItems zipItemFlag
@@ -136,7 +139,7 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 		version = fs.Arg(0)
 	}
 
-	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *binFlag, *listTargetsFlag, *noCommitFlag
+	return version, *assetsFlag, *commitFlag, *branchFlag, *bumpFlag, *notesFlag, *targetsFlag, []string(zgGroups), []string(zgItems), *bundleFlag, *draftFlag, *dryRunFlag, *verboseFlag, *compressFlag, *checksumsFlag, *binFlag, *listTargetsFlag, *noCommitFlag, *yesFlag
 }
 
 // printListTargets resolves and prints the target matrix, then returns.
