@@ -72,7 +72,25 @@ None
     ✗ Failed to pull latest: network timeout
     → Check your internet connection and try again
 
-### Example 5: No source repo linked (installed from release)
+### Example 5: No source repo linked — clone into new path
+
+    gitmap update
+
+**Output:**
+
+    ⚠ The saved source repository path no longer exists on disk.
+
+    Enter the new path to the gitmap source repo: D:\gitmap
+
+    ■ Path does not exist. Cloning gitmap source into D:\gitmap...
+    Cloning into 'D:\gitmap'...
+    ✓ Cloned successfully.
+    → Repo path: D:\gitmap
+    ■ Pulling latest source...
+    ■ Building gitmap.exe...
+    ✓ Updated to v2.56.1
+
+### Example 6: No source repo linked and no path provided
 
     gitmap update
 

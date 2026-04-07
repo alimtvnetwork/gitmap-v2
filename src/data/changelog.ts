@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.56.1",
+    date: "2026-04-07",
+    items: [
+      "Clone-on-missing-path for `gitmap update` — when the user provides a non-existent path at the interactive prompt, the system clones the source repo there instead of rejecting it.",
+      "Cloned path is validated, saved to SQLite Settings DB, and used immediately for the update.",
+      "Added `SourceRepoCloneURL`, `MsgUpdateCloning`, `MsgUpdateCloneOK`, `ErrUpdateCloneFailed` constants.",
+    ],
+  },
+  {
     version: "v2.56.0",
     date: "2026-04-07",
     items: [

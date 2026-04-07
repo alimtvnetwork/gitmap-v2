@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -108,6 +109,7 @@ func canPromptForRepoPath() bool {
 }
 
 // promptRepoPath asks the user to enter the source repo path interactively.
+// If the path does not exist, it clones the gitmap repo into that location.
 func promptRepoPath() string {
 	if !canPromptForRepoPath() {
 		return ""
@@ -129,13 +131,45 @@ func promptRepoPath() string {
 			return ""
 		}
 
+		// Try existing path first.
 		root := normalizeRepoPath(path)
 		if len(root) > 0 {
 			return root
 		}
 
+		// Path doesn't exist — clone into it.
+		absPath, absErr := filepath.Abs(path)
+		if absErr != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrUpdatePathInvalid, path)
+			continue
+		}
+
+		if cloneRepoInto(absPath) {
+			root = normalizeRepoPath(absPath)
+			if len(root) > 0 {
+				return root
+			}
+		}
+
 		fmt.Fprintf(os.Stderr, constants.ErrUpdatePathInvalid, path)
 	}
+}
+
+// cloneRepoInto clones the gitmap source repository into the given directory.
+func cloneRepoInto(targetPath string) bool {
+	fmt.Fprintf(os.Stderr, constants.MsgUpdateCloning, targetPath)
+
+	cmd := exec.Command(constants.GitBin, constants.GitClone, constants.SourceRepoCloneURL, targetPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrUpdateCloneFailed, err)
+		return false
+	}
+
+	fmt.Fprint(os.Stderr, constants.MsgUpdateCloneOK)
+	return true
 }
 
 // saveRepoPathToDB persists the source repo path in the Settings table.

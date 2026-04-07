@@ -43,6 +43,14 @@ const (
 	ErrUpdatePathInvalid = "  ✗ Directory not found at %s (operation: resolve, reason: file does not exist)\n"
 )
 
+// Clone-on-missing-path constants.
+const (
+	SourceRepoCloneURL   = "https://github.com/alimtvnetwork/gitmap-v2.git"
+	MsgUpdateCloning     = "\n  ■ Path does not exist. Cloning gitmap source into %s...\n"
+	MsgUpdateCloneOK     = "  ✓ Cloned successfully.\n"
+	ErrUpdateCloneFailed = "  ✗ Clone failed: %v\n"
+)
+
 // Update PowerShell script template sections.
 const (
 	UpdatePSHeader = `# gitmap self-update script (auto-generated)
