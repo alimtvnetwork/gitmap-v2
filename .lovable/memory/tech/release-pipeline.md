@@ -8,7 +8,7 @@ The release system (v2.24.0) automates a 10-step lifecycle where metadata is wri
 4. Resolve source ref (`--commit`, `--branch`, or HEAD)
 5. Create release branch (`release/vX.Y.Z`)
 6. Create annotated tag (`vX.Y.Z`)
-7. Push branch and tag; build/upload assets (Go binaries, zip groups, GitHub release)
+7. Push branch and tag; build/upload assets (Go binaries, zip groups, `install.ps1`, `install.sh`, GitHub release)
 8. Return to the original branch
 9. Write `.gitmap/release/vX.Y.Z.json` and update `latest.json` on the original branch
 10. Auto-commit and push the metadata files
