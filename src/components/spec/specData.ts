@@ -107,7 +107,10 @@ export const sections: SpecSection[] = [
       { id: "10", title: "Legacy UUID Detection" },
       { id: "11", title: "Auto Legacy Dir Migration" },
       { id: "12", title: "Legacy ID Migration" },
-      { id: "13", title: "Error Management — File Path & Missing File (Code Red)" },
+      { id: "13", title: "Release Pipeline Directory Error" },
+      { id: "14", title: "Security Hardening (GoSec Fixes)" },
+      { id: "15", title: "Installer Crashes — Progress Bar & Binary Detection" },
+      { id: "16", title: "CI Passthrough Gate Pattern" },
     ],
   },
   {
