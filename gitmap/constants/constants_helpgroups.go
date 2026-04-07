@@ -48,4 +48,6 @@ const (
 	CompactTasks      = "  task"
 	CompactVisualize  = "  dashboard (db)"
 	CompactUtilities  = "  setup, doctor, update, update-cleanup, version (v), completion (cmp), interactive (i), docs (d), gomod (gm), seo-write (sw), help"
+
+	CompactNoMatchFmt = "  No group matching '%s'. Showing all groups:\n"
 )

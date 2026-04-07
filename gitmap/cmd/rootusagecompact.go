@@ -2,47 +2,98 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 )
 
-// printUsageCompact prints a minimal command list without descriptions.
+// compactGroup maps a group key to its header and compact line.
+type compactGroup struct {
+	Header  string
+	Compact string
+}
+
+// compactGroups returns the ordered list of all groups.
+func compactGroups() []compactGroup {
+	return []compactGroup{
+		{constants.HelpGroupScanning, constants.CompactScanning},
+		{constants.HelpGroupCloning, constants.CompactCloning},
+		{constants.HelpGroupGitOps, constants.CompactGitOps},
+		{constants.HelpGroupNavigation, constants.CompactNavigation},
+		{constants.HelpGroupRelease, constants.CompactRelease},
+		{constants.HelpGroupReleaseInfo, constants.CompactRelInfo},
+		{constants.HelpGroupData, constants.CompactData},
+		{constants.HelpGroupHistory, constants.CompactHistory},
+		{constants.HelpGroupAmendGroup, constants.CompactAmend},
+		{constants.HelpGroupProject, constants.CompactProject},
+		{constants.HelpGroupSSH, constants.CompactSSH},
+		{constants.HelpGroupZip, constants.CompactZip},
+		{constants.HelpGroupEnvTools, constants.CompactEnvTools},
+		{constants.HelpGroupTasks, constants.CompactTasks},
+		{constants.HelpGroupVisualize, constants.CompactVisualize},
+		{constants.HelpGroupUtilities, constants.CompactUtilities},
+	}
+}
+
+// printUsageCompact prints a minimal command list, optionally filtered by group.
 func printUsageCompact() {
+	filter := resolveCompactFilter()
+
 	fmt.Printf(constants.UsageHeaderFmt, constants.Version)
+
+	if len(filter) > 0 {
+		printCompactFiltered(filter)
+
+		return
+	}
+
+	printCompactAll()
+}
+
+// resolveCompactFilter extracts the group filter from os.Args (skips flags).
+func resolveCompactFilter() string {
+	for _, arg := range os.Args[2:] {
+		if !strings.HasPrefix(arg, "-") {
+			return strings.ToLower(arg)
+		}
+	}
+
+	return ""
+}
+
+// printCompactAll prints all groups in compact mode.
+func printCompactAll() {
 	fmt.Println(constants.HelpUsage)
 	fmt.Println()
-	fmt.Println(constants.HelpGroupScanning)
-	fmt.Println(constants.CompactScanning)
-	fmt.Println(constants.HelpGroupCloning)
-	fmt.Println(constants.CompactCloning)
-	fmt.Println(constants.HelpGroupGitOps)
-	fmt.Println(constants.CompactGitOps)
-	fmt.Println(constants.HelpGroupNavigation)
-	fmt.Println(constants.CompactNavigation)
-	fmt.Println(constants.HelpGroupRelease)
-	fmt.Println(constants.CompactRelease)
-	fmt.Println(constants.HelpGroupReleaseInfo)
-	fmt.Println(constants.CompactRelInfo)
-	fmt.Println(constants.HelpGroupData)
-	fmt.Println(constants.CompactData)
-	fmt.Println(constants.HelpGroupHistory)
-	fmt.Println(constants.CompactHistory)
-	fmt.Println(constants.HelpGroupAmendGroup)
-	fmt.Println(constants.CompactAmend)
-	fmt.Println(constants.HelpGroupProject)
-	fmt.Println(constants.CompactProject)
-	fmt.Println(constants.HelpGroupSSH)
-	fmt.Println(constants.CompactSSH)
-	fmt.Println(constants.HelpGroupZip)
-	fmt.Println(constants.CompactZip)
-	fmt.Println(constants.HelpGroupEnvTools)
-	fmt.Println(constants.CompactEnvTools)
-	fmt.Println(constants.HelpGroupTasks)
-	fmt.Println(constants.CompactTasks)
-	fmt.Println(constants.HelpGroupVisualize)
-	fmt.Println(constants.CompactVisualize)
-	fmt.Println(constants.HelpGroupUtilities)
-	fmt.Println(constants.CompactUtilities)
+
+	for _, g := range compactGroups() {
+		fmt.Println(g.Header)
+		fmt.Println(g.Compact)
+	}
+
 	fmt.Println()
 	fmt.Println(constants.HelpGroupHint)
+}
+
+// printCompactFiltered prints only groups matching the filter keyword.
+func printCompactFiltered(filter string) {
+	matched := false
+
+	for _, g := range compactGroups() {
+		headerLower := strings.ToLower(g.Header)
+		if !strings.Contains(headerLower, filter) {
+			continue
+		}
+
+		fmt.Println(g.Header)
+		fmt.Println(g.Compact)
+		matched = true
+	}
+
+	if !matched {
+		fmt.Printf(constants.CompactNoMatchFmt, filter)
+		fmt.Println()
+		printCompactAll()
+	}
 }
