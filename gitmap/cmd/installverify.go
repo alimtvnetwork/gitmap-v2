@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/user/gitmap/constants"
@@ -22,7 +23,46 @@ func verifyInstallation(tool string) {
 	}
 
 	fmt.Printf(constants.MsgInstallSuccess, tool)
+	verifyExePath(tool)
 	runPostInstall(tool)
+}
+
+// verifyExePath checks the expected exe path exists after install.
+func verifyExePath(tool string) {
+	exePath := expectedExePath(tool)
+	if exePath == "" {
+		return
+	}
+
+	fmt.Printf(constants.MsgInstallExeVerify, tool, exePath)
+
+	_, err := os.Stat(exePath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrInstallExeNotFound, exePath)
+
+		return
+	}
+
+	fmt.Printf(constants.MsgInstallExeFound, exePath)
+}
+
+// expectedExePath returns the expected binary path for a tool.
+func expectedExePath(tool string) string {
+	if runtime.GOOS != "windows" {
+		return ""
+	}
+
+	exeMap := map[string]string{
+		constants.ToolNpp:    `C:\Program Files\Notepad++\notepad++.exe`,
+		constants.ToolVSCode: `C:\Program Files\Microsoft VS Code\Code.exe`,
+	}
+
+	path, exists := exeMap[tool]
+	if exists {
+		return path
+	}
+
+	return ""
 }
 
 // detectInstalledVersion checks if a tool is already installed.
@@ -64,6 +104,7 @@ func toolBinaryName(tool string) string {
 		constants.ToolCPP:           "g++",
 		constants.ToolPHP:           "php",
 		constants.ToolPowerShell:    "pwsh",
+		constants.ToolNpp:           "notepad++",
 	}
 
 	binary, exists := binaryMap[tool]
