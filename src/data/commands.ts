@@ -1228,8 +1228,9 @@ export const commands: CommandDef[] = [
       { command: "gitmap in go --check", description: "Check if Go is installed" },
       { command: "gitmap install python --dry-run", description: "Preview install command" },
       { command: "gitmap install node --verbose", description: "Install with verbose output" },
-      { command: "gitmap install npp", description: "Install Notepad++ with settings" },
-      { command: "gitmap install npp-settings", description: "Sync Notepad++ settings only" },
+      { command: "gitmap install npp", description: "NPP + Settings — Install Notepad++ with settings" },
+      { command: "gitmap install npp-settings", description: "NPP Settings — Sync settings only" },
+      { command: "gitmap install install-npp", description: "Install NPP — Install Notepad++ only (no settings)" },
       { command: "gitmap install --list", description: "List all supported tools" },
     ],
     seeAlso: [

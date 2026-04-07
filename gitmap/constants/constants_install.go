@@ -34,6 +34,7 @@ const (
 	ToolWinget        = "winget"
 	ToolNpp           = "npp"
 	ToolNppSettings   = "npp-settings"
+	ToolNppInstall    = "install-npp"
 )
 
 // Supported tool names — Databases.
@@ -198,8 +199,10 @@ const (
 	MsgInstallStatusRow  = "  %-20s %-12s %-8s %s\n"
 	MsgInstallExeVerify   = "Verifying %s binary at: %s\n"
 	MsgInstallExeFound    = "Binary confirmed: %s\n"
-	MsgInstallNppSettings = "Syncing Notepad++ settings...\n"
-	MsgInstallNppSkipBin  = "Skipping Notepad++ installation (settings-only mode)\n"
+	MsgInstallNppSettings  = "Syncing Notepad++ settings...\n"
+	MsgInstallNppSkipBin   = "Skipping Notepad++ installation (settings-only mode)\n"
+	MsgInstallNppSkipSet   = "Skipping Notepad++ settings (install-only mode)\n"
+	MsgInstallNppExtract   = "Extracting Notepad++ settings to %s...\n"
 )
 
 // Install error messages.
@@ -260,8 +263,9 @@ var InstallToolDescriptions = map[string]string{
 	ToolNeo4j:         "Neo4j graph database",
 	ToolElasticsearch: "Elasticsearch search and analytics",
 	ToolDuckDB:        "DuckDB analytical columnar database",
-	ToolNpp:           "Notepad++ text editor",
-	ToolNppSettings:   "Notepad++ settings sync (settings only)",
+	ToolNpp:           "NPP + Settings — Notepad++ with settings",
+	ToolNppSettings:   "NPP Settings — Notepad++ settings sync only",
+	ToolNppInstall:    "Install NPP — Notepad++ install only (no settings)",
 }
 
 // InstallToolCategories groups tools by category for display.
@@ -270,7 +274,7 @@ var InstallToolCategories = map[string][]string{
 		ToolVSCode, ToolNodeJS, ToolYarn, ToolBun, ToolPnpm,
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
-		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings,
+		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
