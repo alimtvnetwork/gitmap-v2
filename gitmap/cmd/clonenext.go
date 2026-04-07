@@ -6,11 +6,13 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/user/gitmap/clonenext"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/gitutil"
+	"github.com/user/gitmap/lockcheck"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/verbose"
 )
