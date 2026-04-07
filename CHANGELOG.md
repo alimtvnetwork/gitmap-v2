@@ -1,5 +1,36 @@
 # Changelog
 
+## v2.55.0 — Docs, Post-Mortems & Installer Fix (2026-04-07)
+
+### Post-Mortems Documentation
+
+- Created `spec/02-app-issues/13-release-pipeline-dist-directory.md` — documents `cd: dist` CI failure root cause and 4 prevention rules.
+- Created `spec/02-app-issues/14-security-hardening-gosec-fixes.md` — documents G305, G110, format verb, and Code Red fixes with prevention rules.
+- Added Post-Mortems page (`/post-mortems`) to docs site with category filters, version tags, and color-coded icons for all 15 documented issues.
+
+### Coding Guidelines Updates
+
+- Added "Lessons Learned" section to `spec/05-coding-guidelines/17-cicd-patterns.md` — never `cd` in CI, validate directories, pin tool versions.
+- Added Section 10 (Zip Extraction Security) to `spec/05-coding-guidelines/08-security-secrets.md` — mandatory G305/G110 checks.
+- Added Sections 7–8 to `spec/05-coding-guidelines/04-error-handling.md` — Code Red Rule and Format Verb Compliance.
+
+### Installer Fix
+
+- Fixed PowerShell installer crash caused by `Invoke-WebRequest` progress bar rendering during `irm | iex`.
+- Added `$ProgressPreference = "SilentlyContinue"` to `install.ps1`.
+
+### Changelog Improvements
+
+- Added release dates to all changelog entries with available metadata (sourced from `.gitmap/release/*.json`).
+- Backfilled v2.54.1, v2.54.2, v2.54.3, and v2.53.0 entries in the docs site changelog data.
+- Removed duplicate Code Red content from v2.54.0 (now properly in v2.54.1).
+
+### Build Reproducibility
+
+- Pinned `golangci-lint` to `v1.64.8` in `setup.sh` instead of `@latest`.
+
+---
+
 ## v2.54.3 — Security Hardening & Lint Compliance (2026-04-07)
 
 ### Zip Extraction Security (installnpp.go)
