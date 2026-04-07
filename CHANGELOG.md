@@ -1,10 +1,19 @@
 # Changelog
 
-## v2.54.0
+## v2.54.0 — Update Path Recovery & CI Optimization
 
-### Changes
+### Update Path Recovery
 
-- Bumped version to v2.54.0.
+- `gitmap update` now validates the saved source repo path exists on disk before using it.
+- Falls back to the SQLite DB (`source_repo_path` setting) in the binary's `data/` folder.
+- Prompts the user interactively when both embedded and saved paths are missing or stale.
+- Successfully resolved paths are persisted to the DB for future runs.
+- New file `cmd/updaterepo.go` extracts path resolution helpers for the 200-line file limit.
+
+### CI Build Removal
+
+- Removed cross-platform binary builds from the main CI pipeline (`ci.yml`).
+- Binaries are now produced exclusively by the release pipeline (`release.yml`) on `release/**` branches and `v*` tags.
 
 ## v2.53.0 — Help Dashboard & Install Docs
 
