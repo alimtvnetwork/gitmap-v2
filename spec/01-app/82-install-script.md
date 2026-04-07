@@ -81,32 +81,50 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/script
 ### One-Liner
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | bash
 ```
 
-### Parameters (Environment Variables)
+### Version-Pinned
 
-| Variable        | Default              | Description                        |
-|-----------------|----------------------|------------------------------------|
-| `VERSION`       | latest (GitHub API)  | Pin a specific release tag         |
-| `INSTALL_DIR`   | `$HOME/.local/bin`   | Target directory for the binary    |
-| `ARCH`          | auto-detect          | Force `amd64` or `arm64`           |
-| `NO_PATH`       | unset                | Set to `1` to skip PATH hint       |
+```bash
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | bash -s -- --version v2.55.0
+```
+
+### Custom Directory
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | bash -s -- --dir /opt/gitmap --version v2.55.0
+```
+
+### Parameters (CLI Flags)
+
+| Flag        | Default              | Description                        |
+|-------------|----------------------|------------------------------------|
+| `--version` | latest (GitHub API)  | Pin a specific release tag         |
+| `--dir`     | `~/.local/bin`       | Target directory for the binary    |
+| `--arch`    | auto-detect          | Force `amd64` or `arm64`           |
+| `--no-path` | false                | Skip adding install dir to PATH    |
 
 ### Flow
 
-1. Detect OS (`linux` or `darwin`) and architecture.
-2. Resolve version — query GitHub API or use `$VERSION`.
-3. Download `gitmap-{os}-{arch}.tar.gz` and `checksums.txt`.
-4. Verify SHA-256 checksum (`sha256sum` or `shasum -a 256`).
-5. Extract tarball to install directory.
-6. Set executable permission (`chmod +x`).
-7. Print PATH hint if install directory is not already in PATH.
-8. Print installed version via `gitmap version`.
+1. Detect OS (`linux` or `darwin`); reject Windows with redirect to `install.ps1`.
+2. Detect architecture (`uname -m` → `amd64` or `arm64`).
+3. Resolve version — query GitHub API via `curl` or `wget`, or use `--version`.
+4. Download `gitmap-{version}-{os}-{arch}.tar.gz` and `checksums.txt`.
+5. Verify SHA-256 checksum (`sha256sum` or `shasum -a 256`).
+6. If `.tar.gz` not found in checksums, fall back to `.zip` variant.
+7. Extract archive to temp directory; search for binary using 4-priority
+   matching: exact name → platform-specific → versioned pattern
+   (e.g., `gitmap-v2.55.0-linux-amd64`) → any executable.
+8. Rename-first strategy for safe upgrades of running binaries.
+9. Set executable permission (`chmod +x`).
+10. Auto-detect shell (bash/zsh/fish) and append PATH entry to the
+    correct profile file (`~/.bashrc`, `~/.zshrc`, or `~/.config/fish/config.fish`).
+11. Print installed version via `gitmap version`.
 
 ### File
 
-`gitmap/scripts/install.sh` *(planned)*
+`gitmap/scripts/install.sh`
 
 ---
 
