@@ -36,6 +36,13 @@ const (
 	ErrUpdateCopyFail = "Error creating update copy: %v\n"
 )
 
+// Update path resolution messages.
+const (
+	MsgUpdatePathMissing = "\n  ⚠ The saved source repository path no longer exists on disk.\n"
+	MsgUpdatePathPrompt  = "  Enter the new path to the gitmap source repo: "
+	ErrUpdatePathInvalid = "  ✗ Directory not found: %s\n"
+)
+
 // Update PowerShell script template sections.
 const (
 	UpdatePSHeader = `# gitmap self-update script (auto-generated)

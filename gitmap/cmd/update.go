@@ -33,11 +33,23 @@ func runUpdate() {
 // If neither is available, it attempts to delegate to gitmap-updater.
 func resolveRepoPath() string {
 	if flagVal := getFlagValue(constants.FlagRepoPath); len(flagVal) > 0 {
+		saveRepoPathToDB(flagVal)
+
 		return flagVal
 	}
 
-	if len(constants.RepoPath) > 0 {
+	if len(constants.RepoPath) > 0 && pathExists(constants.RepoPath) {
 		return constants.RepoPath
+	}
+
+	if saved := loadRepoPathFromDB(); len(saved) > 0 && pathExists(saved) {
+		return saved
+	}
+
+	if prompted := promptRepoPath(); len(prompted) > 0 {
+		saveRepoPathToDB(prompted)
+
+		return prompted
 	}
 
 	// Try to fall back to gitmap-updater for release-based update
