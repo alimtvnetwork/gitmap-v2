@@ -60,3 +60,4 @@ install path.
 - [update](update.md) — Self-update from source repo
 - [version](version.md) — Show version number
 - [doctor](doctor.md) — Diagnose PATH and version issues
+- [install](install.md) — Install developer tools (use `gitmap install scripts` to clone utility scripts)
