@@ -25,6 +25,7 @@ export const changelog: ChangelogEntry[] = [
       "Added spec: `spec/03-tasks/notepad-plus-plus-installation-and-settings-shortcut-standardization.md`.",
       "SHA-based build deduplication for CI pipelines — skips lint/vet layers when SHA matches a previous successful build on main.",
       "Release pipeline `dist` directory fix — explicit `working-directory: gitmap/dist` prevents `cd: dist: No such file or directory` in CI.",
+      "**Code Red audit complete**: standardized 35+ error constants and updated 36 call sites across `constants/`, `cmd/`, `release/`, and `store/` — every file/path error now includes exact path, failure reason, and `(operation: ...)` suffix.",
     ],
   },
   {
