@@ -45,6 +45,7 @@ import SetupPage from "./pages/Setup";
 import DesignSystemPage from "./pages/DesignSystem";
 import InstallPage from "./pages/Install";
 import HelpDashboardPage from "./pages/HelpDashboard";
+import PostMortemsPage from "./pages/PostMortems";
 
 const queryClient = new QueryClient();
 
@@ -96,6 +97,7 @@ const App = () => (
           <Route path="/design-system" element={<DesignSystemPage />} />
           <Route path="/install" element={<InstallPage />} />
           <Route path="/help-dashboard" element={<HelpDashboardPage />} />
+          <Route path="/post-mortems" element={<PostMortemsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
