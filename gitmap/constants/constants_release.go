@@ -66,14 +66,15 @@ const (
 const (
 	GitmapRepoPrefix     = "github.com/alimtvnetwork/gitmap-v2"
 	MsgInstallHintHeader = `
-  ■ Install gitmap %s:
+
+  📦 Install gitmap %s
 `
-	MsgInstallHintWindows = `  # Windows (PowerShell)
-  irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
+	MsgInstallHintWindows = `  🪟 Windows (PowerShell)
+     irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
 `
 	MsgInstallHintUnix = `
-  # Linux / macOS
-  curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+  🐧 Linux / macOS
+     curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
 `
 )
 
