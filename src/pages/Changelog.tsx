@@ -19,13 +19,13 @@ const terminalLines = [
   { text: "", type: "output" as const },
   { text: "  6 versions shown · 50 total changes", type: "accent" as const },
   { text: "", type: "output" as const },
-  { text: "gitmap changelog v2.17.0", type: "input" as const, delay: 1000 },
+  { text: "gitmap changelog v2.52.0", type: "input" as const, delay: 1000 },
   { text: "", type: "output" as const },
-  { text: "  ## v2.17.0", type: "header" as const },
-  { text: "  • Added 30-second auto-refresh timer via tea.Tick", type: "output" as const },
-  { text: "  • Dashboard refresh configurable via config.json", type: "output" as const },
-  { text: "  • Added --refresh flag for CLI-level override", type: "output" as const },
-  { text: "  • Refresh interval validates with 30s fallback", type: "output" as const },
+  { text: "  ## v2.52.0", type: "header" as const },
+  { text: "  • Lock detection for clone-next via handle.exe/lsof", type: "output" as const },
+  { text: "  • Install system with SQLite-backed InstalledTools", type: "output" as const },
+  { text: "  • Uninstall command with --dry-run/--force/--purge", type: "output" as const },
+  { text: "  • Multi-package-manager support (7 managers)", type: "output" as const },
 ];
 
 const ChangelogPage = () => {
