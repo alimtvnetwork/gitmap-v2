@@ -1,13 +1,13 @@
 [
   {
     "id": "ba5894ad-75b6-454c-8d66-6c43aed37157",
-    "repoName": "git-repo-navigator",
-    "httpsUrl": "https://github.com/alimtvnetwork/git-repo-navigator.git",
-    "sshUrl": "git@github.com:alimtvnetwork/git-repo-navigator.git",
+    "repoName": "gitmap-v2",
+    "httpsUrl": "https://github.com/alimtvnetwork/gitmap-v2.git",
+    "sshUrl": "git@github.com:alimtvnetwork/gitmap-v2.git",
     "branch": "main",
     "relativePath": ".",
-    "absolutePath": "D:\\wp-work\\riseup-asia\\git-repo-navigator",
-    "cloneInstruction": "git clone -b main https://github.com/alimtvnetwork/git-repo-navigator.git .",
+    "absolutePath": "D:\\wp-work\\riseup-asia\\gitmap-v2",
+    "cloneInstruction": "git clone -b main https://github.com/alimtvnetwork/gitmap-v2.git .",
     "notes": ""
   }
 ]
