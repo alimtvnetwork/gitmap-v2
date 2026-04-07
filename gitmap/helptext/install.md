@@ -119,6 +119,17 @@ Copies: `install.ps1`, `install.sh`, `run.ps1`, `run.sh`, `uninstall.ps1`, `Get-
       Checking if python is installed...
       [dry-run] Would run: choco install python -y
 
+### Clone gitmap scripts
+
+    $ gitmap install scripts
+      → Scripts target: /home/alim/Desktop/gitmap-scripts
+      Cloning gitmap repo for scripts...
+      ✓ Copied: install.ps1
+      ✓ Copied: install.sh
+      ✓ Copied: run.ps1
+      ✓ Copied: run.sh
+      ✅ 6 scripts installed to /home/alim/Desktop/gitmap-scripts
+
 ## See Also
 
 - [env](env.md) — Manage environment variables and PATH
