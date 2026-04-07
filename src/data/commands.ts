@@ -1246,6 +1246,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap install npp-settings", description: "NPP Settings — Sync settings only" },
       { command: "gitmap install install-npp", description: "Install NPP — Install Notepad++ only (no settings)" },
       { command: "gitmap install --list", description: "List all supported tools" },
+      { command: "gitmap install scripts", description: "Clone gitmap scripts to local folder (Win: D:\\, Linux: ~/Desktop/)" },
     ],
     seeAlso: [
       { name: "env", description: "Manage environment variables and PATH" },

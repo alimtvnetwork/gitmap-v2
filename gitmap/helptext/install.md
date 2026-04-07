@@ -50,6 +50,17 @@ in
 
 Settings are extracted from a bundled zip to `%APPDATA%\Notepad++`.
 
+## Scripts
+
+| Command         | Description                                          |
+|-----------------|------------------------------------------------------|
+| scripts         | Clone gitmap scripts to a local folder               |
+
+- **Windows**: Reads deploy drive from `powershell.json`, defaults to `D:\gitmap-scripts`
+- **Linux/macOS**: Installs to `~/Desktop/gitmap-scripts`
+
+Copies: `install.ps1`, `install.sh`, `run.ps1`, `run.sh`, `uninstall.ps1`, `Get-LastRelease.ps1`.
+
 ## Prerequisites
 
 - Windows: Chocolatey or Winget in PATH
