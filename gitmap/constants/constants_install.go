@@ -73,6 +73,7 @@ const (
 	FlagInstallList    = "list"
 	FlagInstallStatus  = "status"
 	FlagInstallUpgrade = "upgrade"
+	FlagInstallYes     = "yes"
 )
 
 // Install flag descriptions.
@@ -85,6 +86,7 @@ const (
 	FlagDescInstallList    = "List all supported tools"
 	FlagDescInstallStatus  = "Show installed tools from database"
 	FlagDescInstallUpgrade = "Upgrade an already-installed tool"
+	FlagDescInstallYes     = "Auto-confirm install without prompting"
 )
 
 // Uninstall flag names.
@@ -185,24 +187,30 @@ const (
 
 // Install terminal messages.
 const (
-	MsgInstallChecking   = "Checking if %s is installed...\n"
-	MsgInstallFound      = "%s is already installed (version: %s)\n"
-	MsgInstallNotFound   = "%s is not installed.\n"
-	MsgInstallInstalling = "Installing %s...\n"
-	MsgInstallSuccess    = "%s installed successfully.\n"
-	MsgInstallDryCmd     = "[dry-run] Would run: %s\n"
-	MsgInstallVerifying  = "Verifying %s installation...\n"
-	MsgInstallListHeader = "Supported tools:\n\n"
-	MsgInstallListRow    = "  %-20s %s\n"
-	MsgInstallRecorded   = "Recorded %s v%s in database.\n"
-	MsgInstallStatusHdr  = "Installed tools:\n\n"
-	MsgInstallStatusRow  = "  %-20s %-12s %-8s %s\n"
-	MsgInstallExeVerify   = "Verifying %s binary at: %s\n"
-	MsgInstallExeFound    = "Binary confirmed: %s\n"
+	MsgInstallChecking     = "\n  Checking if %s is installed...\n"
+	MsgInstallFound        = "  ✓ %s is already installed (version: %s)\n"
+	MsgInstallNotFound     = "  ✗ %s is not installed.\n"
+	MsgInstallInstalling   = "\n  Installing %s...\n"
+	MsgInstallSuccess      = "  ✓ %s installed successfully.\n"
+	MsgInstallDryCmd       = "  [dry-run] Would run: %s\n"
+	MsgInstallVerifying    = "\n  Verifying %s installation...\n"
+	MsgInstallListHeader   = "Supported tools:\n\n"
+	MsgInstallListRow      = "  %-20s %s\n"
+	MsgInstallRecorded     = "  ✓ Recorded %s v%s in database.\n"
+	MsgInstallStatusHdr    = "Installed tools:\n\n"
+	MsgInstallStatusRow    = "  %-20s %-12s %-8s %s\n"
+	MsgInstallExeVerify    = "  Verifying %s binary at: %s\n"
+	MsgInstallExeFound     = "  ✓ Binary confirmed: %s\n"
 	MsgInstallNppSettings  = "Syncing Notepad++ settings...\n"
 	MsgInstallNppSkipBin   = "Skipping Notepad++ installation (settings-only mode)\n"
 	MsgInstallNppSkipSet   = "Skipping Notepad++ settings (install-only mode)\n"
 	MsgInstallNppExtract   = "Extracting Notepad++ settings to %s...\n"
+	MsgInstallPrompt       = "\n  → Install %s %s using %s? (y/N): "
+	MsgInstallPromptNoVer  = "\n  → Install %s (latest) using %s? (y/N): "
+	MsgInstallAborted      = "\n  Installation cancelled by user.\n"
+	MsgInstallVersion      = "  → Version: %s\n"
+	MsgInstallVersionLabel = "  → Version: latest\n"
+	MsgInstallManager      = "  → Package manager: %s\n"
 )
 
 // Install error messages.
@@ -210,11 +218,22 @@ const (
 	ErrInstallToolRequired    = "Tool name is required. Use --list to see available tools."
 	ErrInstallUnknownTool     = "Unknown tool: %s. Use --list to see available tools.\n"
 	ErrInstallNoPkgMgr        = "No package manager found. Install Chocolatey or Winget first."
-	ErrInstallFailed          = "Installation failed for %s: %v\n"
-	ErrInstallVerifyFailed    = "Post-install verification failed for %s.\n"
+	ErrInstallFailed          = "\n  ✗ Installation failed for %s.\n"
+	ErrInstallFailedReason    = "  → Reason: %v\n"
+	ErrInstallFailedVersion   = "  → Attempted version: %s\n"
+	ErrInstallFailedManager   = "  → Package manager: %s\n"
+	ErrInstallFailedCmd       = "  → Command: %s\n"
+	ErrInstallFailedLog       = "  → Error log: %s\n"
+	ErrInstallFailedHint      = "  → Share the log file with an AI or support to diagnose the issue.\n"
+	ErrInstallVerifyFailed    = "\n  ✗ Post-install verification failed for %s.\n"
 	ErrInstallAdminRequired   = "%s requires administrator privileges to install.\n"
 	ErrInstallNetworkRequired = "Network connection required for installation."
-	ErrInstallExeNotFound     = "Error: post-install binary not found at %s (operation: verify, reason: file does not exist)\n"
+	ErrInstallExeNotFound     = "  Error: post-install binary not found at %s (operation: verify, reason: file does not exist)\n"
+)
+
+// Install log directory.
+const (
+	InstallLogDir = ".gitmap/logs"
 )
 
 // NPP error messages — Code Red: all file errors include exact path and reason.

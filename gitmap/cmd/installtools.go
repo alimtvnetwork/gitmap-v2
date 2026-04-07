@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/user/gitmap/constants"
 )
@@ -21,7 +23,7 @@ func installTool(opts installOptions) {
 	}
 
 	fmt.Printf(constants.MsgInstallInstalling, opts.Tool)
-	runInstallCommand(installCmd, opts.Verbose)
+	runInstallCommand(installCmd, opts)
 	verifyInstallation(opts.Tool)
 	recordInstallation(opts.Tool, manager)
 }
@@ -111,20 +113,88 @@ func isBrewCaskTool(tool string) bool {
 	return false
 }
 
-// runInstallCommand executes the install command.
-func runInstallCommand(args []string, verbose bool) {
+// runInstallCommand executes the install command and logs errors.
+func runInstallCommand(args []string, opts installOptions) {
 	cmd := exec.Command(args[0], args[1:]...)
 
-	if verbose {
+	var output []byte
+	var err error
+
+	if opts.Verbose {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+	} else {
+		output, err = cmd.CombinedOutput()
 	}
 
-	err := cmd.Run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrInstallFailed, args[1], err)
+		manager := resolvePackageManager(opts.Manager)
+		logPath := writeInstallErrorLog(opts.Tool, manager, opts.Version, args, output, err)
+
+		fmt.Fprintf(os.Stderr, constants.ErrInstallFailed, opts.Tool)
+
+		versionLabel := opts.Version
+		if versionLabel == "" {
+			versionLabel = "latest"
+		}
+
+		fmt.Fprintf(os.Stderr, constants.ErrInstallFailedVersion, versionLabel)
+		fmt.Fprintf(os.Stderr, constants.ErrInstallFailedManager, manager)
+		fmt.Fprintf(os.Stderr, constants.ErrInstallFailedCmd, strings.Join(args, " "))
+		fmt.Fprintf(os.Stderr, constants.ErrInstallFailedReason, err)
+
+		if logPath != "" {
+			fmt.Fprintf(os.Stderr, constants.ErrInstallFailedLog, logPath)
+			fmt.Fprint(os.Stderr, constants.ErrInstallFailedHint)
+		}
+
 		os.Exit(1)
 	}
+}
+
+// writeInstallErrorLog writes detailed error information to a log file.
+func writeInstallErrorLog(tool, manager, version string, args []string, output []byte, installErr error) string {
+	logDir := constants.InstallLogDir
+
+	err := os.MkdirAll(logDir, 0o755)
+	if err != nil {
+		return ""
+	}
+
+	timestamp := time.Now().Format("2006-01-02_15-04-05")
+	filename := fmt.Sprintf("%s-error-%s.log", tool, timestamp)
+	logPath := filepath.Join(logDir, filename)
+
+	versionLabel := version
+	if versionLabel == "" {
+		versionLabel = "latest"
+	}
+
+	var sb strings.Builder
+
+	sb.WriteString(fmt.Sprintf("gitmap install error log\n"))
+	sb.WriteString(fmt.Sprintf("========================\n\n"))
+	sb.WriteString(fmt.Sprintf("Tool:            %s\n", tool))
+	sb.WriteString(fmt.Sprintf("Version:         %s\n", versionLabel))
+	sb.WriteString(fmt.Sprintf("Package Manager: %s\n", manager))
+	sb.WriteString(fmt.Sprintf("Command:         %s\n", strings.Join(args, " ")))
+	sb.WriteString(fmt.Sprintf("Timestamp:       %s\n", time.Now().Format(time.RFC3339)))
+	sb.WriteString(fmt.Sprintf("Error:           %v\n", installErr))
+	sb.WriteString(fmt.Sprintf("\n--- Installer Output ---\n\n"))
+
+	if len(output) > 0 {
+		sb.Write(output)
+	} else {
+		sb.WriteString("(no output captured — verbose mode pipes directly to stdout/stderr)\n")
+	}
+
+	err = os.WriteFile(logPath, []byte(sb.String()), 0o644)
+	if err != nil {
+		return ""
+	}
+
+	return logPath
 }
 
 // resolvePackageName maps tool name to package ID for a manager.
