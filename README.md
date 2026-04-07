@@ -20,22 +20,30 @@ _Scan, catalog, clone, and manage all your Git repositories from a single CLI._
 
 ## Quick Start
 
+### Install
+
 ```powershell
-# Install (Windows — one-liner)
+# Windows (PowerShell)
 irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
-
-# Scan repos and see results
-gitmap scan ~/projects
-gitmap ls
-
-# Navigate and pull
-gitmap cd my-api
-gitmap pull --all
 ```
 
 ```bash
-# Install (Linux / macOS)
+# Linux / macOS
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+```
+
+### Scan repos and see results
+
+```bash
+gitmap scan ~/projects
+gitmap ls
+```
+
+### Navigate and pull
+
+```bash
+gitmap cd my-api
+gitmap pull --all
 ```
 
 Every command supports `--help` or `-h` for detailed usage with examples.
