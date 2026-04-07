@@ -95,19 +95,25 @@ blocks merging. The passthrough pattern ensures every job reports
 Jobs that depend on other jobs (e.g., `test` depends on `lint`) must
 also include the gate in their `needs` array.
 
-### Finalize Job (Mark Success)
+### Cache Write (Inlined in Test Summary)
+
+The cache write is the **final step of `test-summary`**, not a separate
+job. This prevents `cancel-in-progress` from cancelling the cache save
+after all validation jobs have already passed.
 
 ```yaml
-  mark-success:
-    name: Mark SHA as built
-    runs-on: ubuntu-latest
-    needs: [test-summary]
-    if: success()
+  test-summary:
+    needs: [sha-check, lint, vulncheck, test]
+    if: always()
     steps:
-      - name: Write marker
+      # ... aggregation and coverage steps ...
+
+      - name: Mark SHA as built
+        if: success() && needs.sha-check.outputs.already-built != 'true'
         run: mkdir -p /tmp/ci-passed && echo "${{ github.sha }}" > /tmp/ci-passed/sha.txt
 
-      - name: Save to cache
+      - name: Save SHA to cache
+        if: success() && needs.sha-check.outputs.already-built != 'true'
         uses: actions/cache/save@v4
         with:
           path: /tmp/ci-passed
@@ -116,6 +122,12 @@ also include the gate in their `needs` array.
 
 `if: success()` ensures the marker is only written when **all**
 upstream jobs pass. A failed pipeline never caches.
+
+**Why not a separate job?** A standalone `mark-success` job can be
+cancelled by `cancel-in-progress` concurrency controls while all
+validation has already completed. Inlining into `test-summary`
+guarantees the cache write happens atomically with the last
+validation step.
 
 ---
 

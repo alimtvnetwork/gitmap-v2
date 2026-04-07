@@ -69,8 +69,8 @@ When a cached SHA is detected:
 
 | File | Change |
 |------|--------|
-| `.github/workflows/ci.yml` | Removed job-level `if`; added step-level conditionals to lint, vulncheck, test, test-summary |
-| `spec/05-coding-guidelines/29-ci-sha-deduplication.md` | Documented the passthrough gate pattern and updated acceptance criteria |
+| `.github/workflows/ci.yml` | Removed job-level `if`; added step-level conditionals to lint, vulncheck, test, test-summary. Inlined `mark-success` cache write into `test-summary` to prevent concurrency cancellation. |
+| `spec/05-coding-guidelines/29-ci-sha-deduplication.md` | Documented the passthrough gate pattern, inlined cache write, and updated acceptance criteria |
 | `.lovable/memory/tech/ci-pipeline-architecture.md` | Updated SHA deduplication section |
 
 ---
