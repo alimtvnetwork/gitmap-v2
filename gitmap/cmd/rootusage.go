@@ -6,185 +6,180 @@ import (
 	"github.com/user/gitmap/constants"
 )
 
-// printUsage displays help text for all commands and flags.
+// printUsage displays grouped help text for all commands and flags.
 func printUsage() {
 	fmt.Printf(constants.UsageHeaderFmt, constants.Version)
 	fmt.Println(constants.HelpUsage)
 	fmt.Println()
-	printUsageCommands()
-	printUsageScanFlags()
-	printUsageCloneFlags()
-	printUsageReleaseFlags()
-	printUsageSEOFlags()
-	printUsageAmendFlags()
-	printUsageGoModFlags()
-	printUsageInteractiveFlags()
-	printUsageCloneNextFlags()
-}
-
-// printUsageCloneNextFlags prints the clone-next flags section.
-func printUsageCloneNextFlags() {
+	printUsageQuickStart()
 	fmt.Println()
-	fmt.Println(constants.HelpCloneNextFlags)
-	fmt.Println(constants.HelpCNDelete)
-	fmt.Println(constants.HelpCNKeep)
-	fmt.Println(constants.HelpCNNoDesktop)
-	fmt.Println(constants.HelpCNSSHKey)
-	fmt.Println(constants.HelpCNVerbose)
-	fmt.Println(constants.HelpCNCreateRemote)
-}
-
-// printUsageInteractiveFlags prints the interactive flags section.
-func printUsageInteractiveFlags() {
+	printGroupScanning()
+	printGroupCloning()
+	printGroupGitOps()
+	printGroupNavigation()
+	printGroupRelease()
+	printGroupReleaseInfo()
+	printGroupData()
+	printGroupHistory()
+	printGroupAmend()
+	printGroupProject()
+	printGroupSSH()
+	printGroupZip()
+	printGroupEnvTools()
+	printGroupTasks()
+	printGroupVisualize()
+	printGroupUtilities()
 	fmt.Println()
-	fmt.Println(constants.HelpInteractiveFlags)
-	fmt.Println(constants.HelpRefresh)
+	printUsageFlagSections()
 }
 
-// printUsageCommands prints the available commands section.
-func printUsageCommands() {
-	fmt.Println(constants.HelpCommands)
+// printUsageQuickStart prints examples and the help hint.
+func printUsageQuickStart() {
+	fmt.Println(constants.HelpGroupExample)
+	fmt.Println(constants.HelpExampleScan)
+	fmt.Println(constants.HelpExampleList)
+	fmt.Println(constants.HelpExamplePull)
+	fmt.Println(constants.HelpExampleCD)
+	fmt.Println()
+	fmt.Println(constants.HelpGroupHint)
+}
+
+// printGroupScanning prints the scanning commands.
+func printGroupScanning() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupScanning)
 	fmt.Println(constants.HelpScan)
-	fmt.Println(constants.HelpClone)
-	fmt.Println(constants.HelpUpdate)
-	fmt.Println(constants.HelpVersion)
-	fmt.Println(constants.HelpDesktopSync)
-	fmt.Println(constants.HelpPull)
 	fmt.Println(constants.HelpRescan)
-	fmt.Println(constants.HelpSetup)
-	fmt.Println(constants.HelpStatus)
-	fmt.Println(constants.HelpExec)
-	fmt.Println(constants.HelpRelease)
-	fmt.Println(constants.HelpReleaseBr)
-	fmt.Println(constants.HelpReleasePend)
-	fmt.Println(constants.HelpChangelog)
-	fmt.Println(constants.HelpChangelogGen)
-	fmt.Println(constants.HelpDoctor)
-	fmt.Println(constants.HelpLatestBr)
 	fmt.Println(constants.HelpList)
+}
+
+// printGroupCloning prints the cloning commands.
+func printGroupCloning() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupCloning)
+	fmt.Println(constants.HelpClone)
+	fmt.Println(constants.HelpCloneNext)
+	fmt.Println(constants.HelpDesktopSync)
+}
+
+// printGroupGitOps prints the git operations commands.
+func printGroupGitOps() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupGitOps)
+	fmt.Println(constants.HelpPull)
+	fmt.Println(constants.HelpExec)
+	fmt.Println(constants.HelpStatus)
+	fmt.Println(constants.HelpWatch)
+	fmt.Println(constants.HelpHasAnyUpdates)
+	fmt.Println(constants.HelpLatestBr)
+}
+
+// printGroupNavigation prints the navigation commands.
+func printGroupNavigation() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupNavigation)
+	fmt.Println(constants.HelpCD)
 	fmt.Println(constants.HelpGroup)
 	fmt.Println(constants.HelpMultiGroup)
-	fmt.Println(constants.HelpDBReset)
-	fmt.Println(constants.HelpUpdateCleanup)
+	fmt.Println(constants.HelpAlias)
+	fmt.Println(constants.HelpDiffProfiles)
+}
+
+// printGroupRelease prints the release workflow commands.
+func printGroupRelease() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupRelease)
+	fmt.Println(constants.HelpRelease)
+	fmt.Println(constants.HelpReleaseSelf)
+	fmt.Println(constants.HelpReleaseBr)
+	fmt.Println(constants.HelpTempRelease)
+}
+
+// printGroupReleaseInfo prints the release info commands.
+func printGroupReleaseInfo() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupReleaseInfo)
+	fmt.Println(constants.HelpChangelog)
+	fmt.Println(constants.HelpChangelogGen)
 	fmt.Println(constants.HelpListVersions)
 	fmt.Println(constants.HelpListReleases)
+	fmt.Println(constants.HelpReleasePend)
 	fmt.Println(constants.HelpRevert)
-	fmt.Println(constants.HelpSEOWrite)
-	fmt.Println(constants.HelpAmend)
-	fmt.Println(constants.HelpAmendList)
-	fmt.Println(constants.HelpHistory)
-	fmt.Println(constants.HelpHistoryReset)
-	fmt.Println(constants.HelpStats)
-	fmt.Println(constants.HelpBookmark)
+	fmt.Println(constants.HelpClearReleaseJSON)
+	fmt.Println(constants.HelpPrune)
+}
+
+// printGroupData prints the data/profile/bookmark commands.
+func printGroupData() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupData)
 	fmt.Println(constants.HelpExport)
 	fmt.Println(constants.HelpImport)
 	fmt.Println(constants.HelpProfile)
-	fmt.Println(constants.HelpCD)
-	fmt.Println(constants.HelpDiffProfiles)
-	fmt.Println(constants.HelpWatch)
-	fmt.Println(constants.HelpGoMod)
+	fmt.Println(constants.HelpBookmark)
+	fmt.Println(constants.HelpDBReset)
+}
+
+// printGroupHistory prints the history and stats commands.
+func printGroupHistory() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupHistory)
+	fmt.Println(constants.HelpHistory)
+	fmt.Println(constants.HelpHistoryReset)
+	fmt.Println(constants.HelpStats)
+}
+
+// printGroupAmend prints the amend commands.
+func printGroupAmend() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupAmendGroup)
+	fmt.Println(constants.HelpAmend)
+	fmt.Println(constants.HelpAmendList)
+}
+
+// printGroupProject prints the project detection commands.
+func printGroupProject() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupProject)
 	fmt.Println(constants.HelpGoRepos)
 	fmt.Println(constants.HelpNodeRepos)
 	fmt.Println(constants.HelpReactRepos)
 	fmt.Println(constants.HelpCppRepos)
 	fmt.Println(constants.HelpCSharpRepos)
-	fmt.Println(constants.HelpCompletion)
-	fmt.Println(constants.HelpInteractive)
-	fmt.Println(constants.HelpClearReleaseJSON)
-	fmt.Println(constants.HelpHasAnyUpdates)
-	fmt.Println(constants.HelpDocs)
-	fmt.Println(constants.HelpPrune)
-	fmt.Println(constants.HelpTempRelease)
-	fmt.Println(constants.HelpDashboard)
-	fmt.Println(constants.HelpCloneNext)
-	fmt.Println(constants.HelpReleaseSelf)
-	fmt.Println(constants.HelpTask)
+}
+
+// printGroupSSH prints the SSH key management commands.
+func printGroupSSH() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupSSH)
+	fmt.Println(constants.HelpSSH)
+}
+
+// printGroupZip prints the zip group commands.
+func printGroupZip() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupZip)
+	fmt.Println(constants.HelpZipGroup)
+}
+
+// printGroupEnvTools prints the env and install commands.
+func printGroupEnvTools() {
+	fmt.Println()
+	fmt.Println(constants.HelpGroupEnvTools)
 	fmt.Println(constants.HelpEnv)
 	fmt.Println(constants.HelpInstall)
-	fmt.Println(constants.HelpHelp)
 }
 
-// printUsageScanFlags prints the scan flags section.
-func printUsageScanFlags() {
+// printGroupTasks prints the task commands.
+func printGroupTasks() {
 	fmt.Println()
-	fmt.Println(constants.HelpScanFlags)
-	fmt.Println(constants.HelpConfig)
-	fmt.Println(constants.HelpMode)
-	fmt.Println(constants.HelpOutput)
-	fmt.Println(constants.HelpOutputPath)
-	fmt.Println(constants.HelpOutFile)
-	fmt.Println(constants.HelpGitHubDesktop)
-	fmt.Println(constants.HelpOpen)
-	fmt.Println(constants.HelpQuiet)
+	fmt.Println(constants.HelpGroupTasks)
+	fmt.Println(constants.HelpTask)
 }
 
-// printUsageCloneFlags prints the clone flags section.
-func printUsageCloneFlags() {
+// printGroupVisualize prints the visualization commands.
+func printGroupVisualize() {
 	fmt.Println()
-	fmt.Println(constants.HelpCloneFlags)
-	fmt.Println(constants.HelpTargetDir)
-	fmt.Println(constants.HelpSafePull)
-	fmt.Println(constants.HelpVerbose)
-}
-
-// printUsageReleaseFlags prints the release flags section.
-func printUsageReleaseFlags() {
-	fmt.Println()
-	fmt.Println(constants.HelpReleaseFlags)
-	fmt.Println(constants.HelpAssets)
-	fmt.Println(constants.HelpCommit)
-	fmt.Println(constants.HelpRelBranch)
-	fmt.Println(constants.HelpBump)
-	fmt.Println(constants.HelpDraft)
-	fmt.Println(constants.HelpDryRun)
-	fmt.Println(constants.HelpCompressFlag)
-	fmt.Println(constants.HelpChecksumsFlag)
-	fmt.Println(constants.HelpBin)
-	fmt.Println(constants.HelpTargets)
-	fmt.Println(constants.HelpListTargets)
-}
-
-// printUsageSEOFlags prints the seo-write flags section.
-func printUsageSEOFlags() {
-	fmt.Println()
-	fmt.Println(constants.HelpSEOWriteFlags)
-	fmt.Println(constants.HelpSEOCSV)
-	fmt.Println(constants.HelpSEOURL)
-	fmt.Println(constants.HelpSEOService)
-	fmt.Println(constants.HelpSEOArea)
-	fmt.Println(constants.HelpSEOCompany)
-	fmt.Println(constants.HelpSEOPhone)
-	fmt.Println(constants.HelpSEOEmail)
-	fmt.Println(constants.HelpSEOAddress)
-	fmt.Println(constants.HelpSEOMaxCommits)
-	fmt.Println(constants.HelpSEOInterval)
-	fmt.Println(constants.HelpSEOFilesFlag)
-	fmt.Println(constants.HelpSEORotate)
-	fmt.Println(constants.HelpSEODryRunFlag)
-	fmt.Println(constants.HelpSEOTemplateF)
-	fmt.Println(constants.HelpSEOCreateTpl)
-	fmt.Println(constants.HelpSEOAuthorName)
-	fmt.Println(constants.HelpSEOAuthorEmail)
-}
-
-// printUsageAmendFlags prints the amend flags section.
-func printUsageAmendFlags() {
-	fmt.Println()
-	fmt.Println(constants.HelpAmendFlags)
-	fmt.Println(constants.HelpAmendName)
-	fmt.Println(constants.HelpAmendEmail)
-	fmt.Println(constants.HelpAmendBr)
-	fmt.Println(constants.HelpAmendDry)
-	fmt.Println(constants.HelpAmendForce)
-}
-
-// printUsageGoModFlags prints the gomod flags section.
-func printUsageGoModFlags() {
-	fmt.Println()
-	fmt.Println(constants.HelpGoModFlags)
-	fmt.Println(constants.HelpGoModDry)
-	fmt.Println(constants.HelpGoModNoMrg)
-	fmt.Println(constants.HelpGoModNoTdy)
-	fmt.Println(constants.HelpGoModVerb)
-	fmt.Println(constants.HelpGoModExt)
+	fmt.Println(constants.HelpGroupVisualize)
+	fmt.Println(constants.HelpDashboard)
 }
