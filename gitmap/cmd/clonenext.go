@@ -163,7 +163,7 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 	}
 
 	removed := false
-	shouldRemove := false
+	var shouldRemove bool
 
 	if deleteFlag {
 		shouldRemove = true
@@ -250,13 +250,3 @@ func removeFolderWithLockCheck(name, path string) bool {
 	return true
 }
 
-// removeFolder deletes a directory and prints the result.
-func removeFolder(name, path string) {
-	err := os.RemoveAll(path)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, name, err)
-
-		return
-	}
-	fmt.Printf(constants.MsgCloneNextRemoved, name)
-}

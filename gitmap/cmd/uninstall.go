@@ -66,7 +66,9 @@ func runUninstall(args []string) {
 	runInstallCommand(uninstallCmd, true)
 
 	if db != nil {
-		db.RemoveInstalledTool(tool)
+		if err := db.RemoveInstalledTool(tool); err != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrUninstallDBRemove, tool, err)
+		}
 	}
 
 	fmt.Printf(constants.MsgUninstallSuccess, tool)
