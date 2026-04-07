@@ -15,7 +15,7 @@ func runInstall(args []string) {
 	fs := flag.NewFlagSet("install", flag.ExitOnError)
 
 	var manager, version string
-	var verbose, dryRun, check, list bool
+	var verbose, dryRun, check, list, yes bool
 
 	fs.StringVar(&manager, constants.FlagInstallManager, "", constants.FlagDescInstallManager)
 	fs.StringVar(&version, constants.FlagInstallVersion, "", constants.FlagDescInstallVersion)
@@ -23,7 +23,11 @@ func runInstall(args []string) {
 	fs.BoolVar(&dryRun, constants.FlagInstallDryRun, false, constants.FlagDescInstallDryRun)
 	fs.BoolVar(&check, constants.FlagInstallCheck, false, constants.FlagDescInstallCheck)
 	fs.BoolVar(&list, constants.FlagInstallList, false, constants.FlagDescInstallList)
-	fs.Parse(args)
+	fs.BoolVar(&yes, constants.FlagInstallYes, false, constants.FlagDescInstallYes)
+	fs.BoolVar(&yes, "y", false, constants.FlagDescInstallYes)
+
+	reordered := reorderFlagsBeforeArgs(fs, args)
+	fs.Parse(reordered)
 
 	if list {
 		printInstallList()
@@ -46,6 +50,7 @@ func runInstall(args []string) {
 		Verbose: verbose,
 		DryRun:  dryRun,
 		Check:   check,
+		Yes:     yes,
 	}
 
 	executeInstall(opts)
@@ -59,6 +64,7 @@ type installOptions struct {
 	Verbose bool
 	DryRun  bool
 	Check   bool
+	Yes     bool
 }
 
 // printInstallList prints all supported tools.
@@ -107,6 +113,26 @@ func executeInstall(opts installOptions) {
 	}
 
 	opts.Tool = installName
+	manager := resolvePackageManager(opts.Manager)
+
+	// Show version and manager info.
+	if opts.Version != "" {
+		fmt.Printf(constants.MsgInstallVersion, opts.Version)
+	} else {
+		fmt.Print(constants.MsgInstallVersionLabel)
+	}
+
+	fmt.Printf(constants.MsgInstallManager, manager)
+
+	// Prompt for confirmation unless -y is set.
+	if !opts.Yes && !opts.DryRun {
+		if !confirmInstall(installName, opts.Version, manager) {
+			fmt.Print(constants.MsgInstallAborted)
+
+			return
+		}
+	}
+
 	installTool(opts)
 
 	if installName == constants.ToolNpp {
@@ -115,4 +141,19 @@ func executeInstall(opts installOptions) {
 	if opts.Tool == constants.ToolNppInstall {
 		fmt.Print(constants.MsgInstallNppSkipSet)
 	}
+}
+
+// confirmInstall prompts the user for install confirmation.
+func confirmInstall(tool, version, manager string) bool {
+	if version != "" {
+		fmt.Printf(constants.MsgInstallPrompt, tool, version, manager)
+	} else {
+		fmt.Printf(constants.MsgInstallPromptNoVer, tool, manager)
+	}
+
+	var answer string
+
+	fmt.Scanln(&answer)
+
+	return answer == "y" || answer == "Y"
 }
