@@ -32,6 +32,8 @@ const (
 	ToolPowerShell    = "powershell"
 	ToolChocolatey    = "chocolatey"
 	ToolWinget        = "winget"
+	ToolNpp           = "npp"
+	ToolNppSettings   = "npp-settings"
 )
 
 // Supported tool names — Databases.
@@ -123,6 +125,7 @@ const (
 	ChocoPkgNeo4j         = "neo4j-community"
 	ChocoPkgElasticsearch = "elasticsearch"
 	ChocoPkgDuckDB        = "duckdb"
+	ChocoPkgNpp           = "notepadplusplus"
 )
 
 // Winget package IDs.
@@ -193,6 +196,10 @@ const (
 	MsgInstallRecorded   = "Recorded %s v%s in database.\n"
 	MsgInstallStatusHdr  = "Installed tools:\n\n"
 	MsgInstallStatusRow  = "  %-20s %-12s %-8s %s\n"
+	MsgInstallExeVerify   = "Verifying %s binary at: %s\n"
+	MsgInstallExeFound    = "Binary confirmed: %s\n"
+	MsgInstallNppSettings = "Syncing Notepad++ settings...\n"
+	MsgInstallNppSkipBin  = "Skipping Notepad++ installation (settings-only mode)\n"
 )
 
 // Install error messages.
@@ -204,6 +211,7 @@ const (
 	ErrInstallVerifyFailed    = "Post-install verification failed for %s.\n"
 	ErrInstallAdminRequired   = "%s requires administrator privileges to install.\n"
 	ErrInstallNetworkRequired = "Network connection required for installation."
+	ErrInstallExeNotFound = "Post-install verification failed: binary not found at %s\n"
 )
 
 // Uninstall messages.
@@ -252,6 +260,8 @@ var InstallToolDescriptions = map[string]string{
 	ToolNeo4j:         "Neo4j graph database",
 	ToolElasticsearch: "Elasticsearch search and analytics",
 	ToolDuckDB:        "DuckDB analytical columnar database",
+	ToolNpp:           "Notepad++ text editor",
+	ToolNppSettings:   "Notepad++ settings sync (settings only)",
 }
 
 // InstallToolCategories groups tools by category for display.
@@ -260,7 +270,7 @@ var InstallToolCategories = map[string][]string{
 		ToolVSCode, ToolNodeJS, ToolYarn, ToolBun, ToolPnpm,
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
-		ToolChocolatey, ToolWinget,
+		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
