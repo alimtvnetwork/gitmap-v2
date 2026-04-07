@@ -41,6 +41,20 @@ dependency monitoring.
 
 ---
 
+## SHA-Based Build Deduplication
+
+Before any work begins, a `sha-check` gate job probes the GitHub
+Actions cache for a key `ci-passed-<SHA>`. If the commit has already
+passed CI, all downstream jobs are skipped. On success, a `mark-success`
+job writes a marker to the cache so future runs for the same SHA
+short-circuit immediately.
+
+This eliminates redundant builds when the same commit is pushed
+multiple times (e.g., re-tagging, merge commits, or manual re-runs
+after transient infrastructure failures).
+
+---
+
 ## Concurrency Control
 
 All three workflows use GitHub Actions `concurrency` groups with
