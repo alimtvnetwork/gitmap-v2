@@ -130,7 +130,7 @@ download_asset() {
     local asset_url="${base_url}/${asset_name}"
     local checksum_url="${base_url}/checksums.txt"
 
-    TMP_DIR="$(mktemp -d)"
+    # TMP_DIR is set by the caller (main).
 
     local archive_path="${TMP_DIR}/${asset_name}"
     local checksum_path="${TMP_DIR}/checksums.txt"
