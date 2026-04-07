@@ -17,9 +17,18 @@ func installTool(opts installOptions) {
 	installCmd := buildInstallCommand(manager, opts.Tool, opts.Version)
 
 	if opts.DryRun {
+		if manager == constants.PkgMgrApt {
+			fmt.Printf(constants.MsgInstallDryCmd, "sudo apt-get update")
+		}
+
 		fmt.Printf(constants.MsgInstallDryCmd, strings.Join(installCmd, " "))
 
 		return
+	}
+
+	// Run apt-get update before installing on apt-based systems.
+	if manager == constants.PkgMgrApt {
+		runAptUpdate(opts.Verbose)
 	}
 
 	fmt.Printf(constants.MsgInstallInstalling, opts.Tool)
