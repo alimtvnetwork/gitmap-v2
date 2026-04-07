@@ -236,6 +236,13 @@ const (
 	InstallLogDir = ".gitmap/logs"
 )
 
+// Apt-specific messages.
+const (
+	MsgInstallAptUpdate       = "\n  Updating package index (apt-get update)...\n"
+	MsgInstallAptUpdateDone   = "  ✓ Package index updated.\n"
+	ErrInstallAptUpdateFailed = "  ⚠ apt-get update failed (continuing anyway): %v\n"
+)
+
 // NPP error messages — Code Red: all file errors include exact path and reason.
 const (
 	ErrNppZipNotFound   = "Error: settings zip not found at %s: %v (operation: extract, reason: file does not exist)\n"
