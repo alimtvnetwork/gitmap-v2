@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"time"
 	"syscall"
 
 	"github.com/user/gitmap/constants"
@@ -67,8 +68,9 @@ func serveStatic(distDir string, port int) {
 	openBrowser(port)
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", port),
-		Handler: http.FileServer(http.Dir(distDir)),
+		Addr:              fmt.Sprintf(":%d", port),
+		Handler:           http.FileServer(http.Dir(distDir)),
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	go handleShutdown(server)
@@ -120,7 +122,7 @@ func serveDev(docsDir string, port int) {
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 	<-sigChan
 
-	dev.Process.Kill()
+	_ = dev.Process.Kill()
 	fmt.Print(constants.MsgHDStopped)
 }
 
@@ -140,7 +142,7 @@ func openBrowser(port int) {
 		cmd = exec.Command(constants.CmdXdgOpen, url)
 	}
 
-	cmd.Start()
+	_ = cmd.Start()
 }
 
 // handleShutdown gracefully stops the static server on Ctrl+C.
