@@ -127,6 +127,15 @@ export const sections: SpecSection[] = [
     ],
   },
   {
+    folder: "03-tasks",
+    title: "Task Specifications",
+    description: "Detailed task specs for feature implementation, standardization, and process improvements.",
+    iconName: "file-text",
+    color: "text-cyan-500",
+    entries: [
+      { id: "01", title: "NPP Installation & Settings Shortcut Standardization" },
+    ],
+  {
     folder: "04-generic-cli",
     title: "Generic CLI Blueprint",
     description: "A production-quality CLI implementation blueprint usable as a starting point for any Go CLI project.",
