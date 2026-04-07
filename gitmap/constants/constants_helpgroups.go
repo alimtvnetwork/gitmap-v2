@@ -47,7 +47,7 @@ const (
 	CompactEnvTools   = "  env, install (in), uninstall (un)"
 	CompactTasks      = "  task"
 	CompactVisualize  = "  dashboard (db)"
-	CompactUtilities  = "  setup, doctor, update, update-cleanup, version (v), completion (cmp), interactive (i), docs (d), gomod (gm), seo-write (sw), help"
+	CompactUtilities  = "  setup, doctor, update, update-cleanup, version (v), completion (cmp), interactive (i), docs (d), help-dashboard (hd), gomod (gm), seo-write (sw), help"
 
 	CompactNoMatchFmt = "  No group matching '%s'. Showing all groups:\n"
 )

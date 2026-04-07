@@ -61,6 +61,11 @@ func dispatchUtility(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdHelpDashboard || command == constants.CmdHelpDashboardAlias {
+		runHelpDashboard(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
