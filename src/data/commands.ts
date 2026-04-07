@@ -1017,6 +1017,20 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
+    name: "installed-dir", alias: "id", description: "Show the full path and directory of the active gitmap binary, resolving symlinks",
+    usage: "gitmap installed-dir",
+    examples: [
+      { command: "gitmap installed-dir", description: "Show installed binary path and directory" },
+      { command: "gitmap id", description: "Alias shorthand" },
+    ],
+    seeAlso: [
+      { name: "update", description: "Self-update to latest version" },
+      { name: "version", description: "Show current version" },
+      { name: "doctor", description: "Diagnose PATH and version issues" },
+    ],
+  },
+  {
+    category: "tools",
     name: "version", alias: "v", description: "Print the installed gitmap version",
     usage: "gitmap version",
     examples: [
