@@ -94,6 +94,7 @@ const App = () => (
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/design-system" element={<DesignSystemPage />} />
           <Route path="/install" element={<InstallPage />} />
+          <Route path="/help-dashboard" element={<HelpDashboardPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
