@@ -225,7 +225,30 @@ const CloneNextPage = () => {
               "→ Now in macro-ahk-v15",
             ]}
           />
-        </section>
+
+          <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Lock detection when folder is in use</h3>
+          <TerminalPreview
+            title="gitmap cn v++ --delete"
+            lines={[
+              "Cloning macro-ahk-v12 into D:\\wp-work\\riseup-asia...",
+              "✓ Cloned macro-ahk-v12",
+              "✓ Registered macro-ahk-v12 with GitHub Desktop",
+              "",
+              "Error: remove macro-ahk-v11: access denied",
+              "Scanning for processes locking macro-ahk-v11...",
+              "",
+              "  PID     Process",
+              "  ────    ───────",
+              "  14320   Code.exe",
+              "  8412    explorer.exe",
+              "",
+              "Terminate these processes and retry? [y/N] y",
+              "✓ Terminated Code.exe (PID 14320)",
+              "✓ Terminated explorer.exe (PID 8412)",
+              "✓ Removed macro-ahk-v11",
+              "→ Now in macro-ahk-v12",
+            ]}
+          />
 
         {/* URL Preservation */}
         <section className="mb-10">
