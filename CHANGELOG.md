@@ -35,6 +35,14 @@
 - Enables fully non-interactive release workflows: `gitmap release v2.55.0 -y`.
 - Bumped version to `v2.55.0`.
 
+### Unix Installer (`install.sh`)
+
+- Created `gitmap/scripts/install.sh` — cross-platform Bash installer for Linux and macOS.
+- Supports `--version`, `--dir`, `--arch`, `--no-path` flags matching the PowerShell installer feature set.
+- Includes SHA256 checksum verification, versioned binary detection, `.tar.gz`/`.zip` fallback.
+- Auto-detects shell (bash/zsh/fish) and appends PATH entry to the correct profile file.
+- Rename-first strategy for safe upgrades of running binaries.
+
 ### Changelog Improvements
 
 - Added release dates to all changelog entries with available metadata (sourced from `.gitmap/release/*.json`).
