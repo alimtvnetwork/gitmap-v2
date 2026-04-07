@@ -296,7 +296,10 @@ const CloneNextPage = () => {
                   ["Target directory already exists", "Print error with suggestion, exit 1"],
                   ["Repo creation fails (--create-remote)", "Print error, stop before clone, exit 1"],
                   ["Clone fails (network/auth)", "Print error, skip deletion, exit 1"],
-                  ["Deletion fails", "Print warning, exit 0 (clone succeeded)"],
+                  ["Deletion fails", "Scan for locking processes via lockcheck"],
+                  ["Locking processes found", "Prompt to terminate, retry deletion"],
+                  ["Lock scan fails", "Print warning, exit 0 (clone succeeded)"],
+                  ["Process termination fails", "Print warning, exit 0 (clone succeeded)"],
                 ].map(([cond, behavior], i) => (
                   <tr key={i} className="hover:bg-muted/30 transition-colors">
                     <td className="px-4 py-2 text-xs text-foreground">{cond}</td>
