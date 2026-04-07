@@ -62,36 +62,65 @@ after transient infrastructure failures).
 
 ## Concurrency Control
 
-All three workflows use GitHub Actions `concurrency` groups with
-`cancel-in-progress: true`. When a new commit is pushed while a
-previous run is still executing, the older run is automatically
-cancelled and only the latest commit is built.
+All three workflows use GitHub Actions `concurrency` groups to
+manage parallel runs. When a new commit is pushed while a previous
+run is still executing, the behavior depends on the branch type.
 
 ### Group Keys
 
-| Workflow   | Concurrency Group             |
-|------------|-------------------------------|
-| CI         | `ci-${{ github.ref }}`        |
-| Release    | `release-${{ github.ref }}`   |
-| Vulncheck  | `vulncheck-${{ github.ref }}` |
+| Workflow   | Concurrency Group             | Cancel In-Progress |
+|------------|-------------------------------|--------------------|
+| CI         | `ci-${{ github.ref }}`        | Yes (non-release)  |
+| Release    | `release-${{ github.ref }}`   | No (never)         |
+| Vulncheck  | `vulncheck-${{ github.ref }}` | Yes                |
+
+### Release Branch Protection
+
+Release branches (`release/**`) are **never cancelled**, even when
+multiple commits are pushed in quick succession. This ensures that
+every release commit runs the full CI and release pipeline to
+completion — partial builds or missed artifacts are unacceptable
+for release branches.
+
+For the CI workflow, `cancel-in-progress` uses a conditional
+expression:
+
+```yaml
+cancel-in-progress: ${{ !startsWith(github.ref, 'refs/heads/release/') }}
+```
+
+This evaluates to `true` (cancel) for `main` and feature branches,
+but `false` (never cancel) for release branches. The release
+workflow uses `cancel-in-progress: false` unconditionally since it
+only triggers on release branches and tags.
+
+### Branch Behavior
 
 The `github.ref` suffix ensures that:
 
 - Different branches run independently (a push to `feature/a` does
   not cancel a run on `main`).
-- Multiple pushes to the **same** branch cancel each other, keeping
-  only the latest.
+- Multiple pushes to the **same** non-release branch cancel each
+  other, keeping only the latest.
 - Pull request runs are scoped to the PR ref, so updating a PR
   cancels its previous CI run without affecting `main`.
+- **Release branches always run to completion** — no cancellation.
 
-### Why cancel-in-progress?
+### Why cancel-in-progress (for non-release branches)?
 
 | Problem                                  | Solution                          |
 |------------------------------------------|-----------------------------------|
 | Wasted CI minutes on outdated commits    | Auto-cancel superseded runs       |
 | Queue buildup during rapid iteration     | Only latest commit matters        |
 | Stale results reported on merged PRs     | Cancelled runs produce no output  |
-| Release branch rapid-fire pushes         | Only final push produces artifacts|
+
+### Why NOT cancel release branches?
+
+| Problem                                       | Solution                               |
+|------------------------------------------------|----------------------------------------|
+| Partial release artifacts from cancelled builds| Never cancel — run to completion       |
+| Missed binaries or checksums                   | Every push produces complete artifacts |
+| Incomplete metadata writes                     | Full pipeline guarantees consistency   |
 
 ---
 

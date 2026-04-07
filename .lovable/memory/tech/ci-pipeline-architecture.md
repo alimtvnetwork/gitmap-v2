@@ -8,7 +8,7 @@ A 'sha-check' gate job runs before all other jobs. It probes the GitHub Actions 
 
 ## Concurrency Control
 
-All workflows use 'concurrency: group: ci-${{ github.ref }}, cancel-in-progress: true' to cancel superseded runs on the same branch while allowing independent runs on different branches.
+All workflows use 'concurrency: group: ci-${{ github.ref }}' to scope runs by branch. For non-release branches, 'cancel-in-progress: true' cancels superseded runs. Release branches ('release/**') are **never cancelled** — they always run to completion to ensure every release commit produces complete artifacts and metadata. The CI workflow uses a conditional expression: 'cancel-in-progress: ${{ !startsWith(github.ref, 'refs/heads/release/') }}'. The release workflow uses 'cancel-in-progress: false' unconditionally.
 
 ## Lessons Learned
 
