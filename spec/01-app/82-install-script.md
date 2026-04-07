@@ -156,12 +156,15 @@ aborts with a clear error on mismatch.
 
 | Platform | Method                                          |
 |----------|-------------------------------------------------|
-| Windows  | `[Environment]::SetEnvironmentVariable` (User)  |
-| Linux    | Print shell-rc append instruction               |
-| macOS    | Print shell-rc append instruction               |
+| Windows  | `[Environment]::SetEnvironmentVariable` (User) + `SendMessageTimeout` broadcast |
+| Linux    | Auto-appends `export PATH` to `~/.bashrc` or `~/.profile`                        |
+| macOS    | Auto-appends `export PATH` to `~/.zshrc` or `~/.bash_profile`                    |
+| Fish     | Auto-appends `fish_add_path` to `~/.config/fish/config.fish`                     |
 
-Windows modifies the registry-backed user PATH immediately. Unix scripts
-print an instruction the user can copy, avoiding surprise dotfile edits.
+Windows modifies the registry-backed user PATH immediately and broadcasts
+the change via `WM_SETTINGCHANGE`. Unix scripts auto-detect the active
+shell and append a PATH entry to the appropriate profile file. The
+`--no-path` / `-NoPath` flag skips this step on both platforms.
 
 ---
 
