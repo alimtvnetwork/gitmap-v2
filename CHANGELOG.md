@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.65.0 — Install UX Overhaul (2026-04-07)
+
+### Improvements
+
+- Install flow now shows a structured **Install Plan** box before execution with tool, version, manager, and command.
+- Added numbered step progress: `[1/4] Updating...`, `[2/4] Installing...`, `[3/4] Verifying...`, `[4/4] Recording...`.
+- Chocolatey installs now use `--no-progress` flag to suppress GUI popups and prevent blocking on interactive apps like Notepad++.
+- Winget installs now use `--silent` flag for unattended installs.
+- NPP verification now checks the expected exe path (`C:\Program Files\Notepad++\notepad++.exe`) directly instead of relying on PATH lookup.
+- NPP settings zip path now resolves relative to the binary directory (not CWD), fixing "file not found" errors when gitmap is installed globally.
+- Detected version is printed during verification for better diagnostics.
+- Install command completion is confirmed with a success message before proceeding to verification.
+
+### Bug Fixes
+
+- Fixed NPP install blocking the terminal when Notepad++ GUI launched during Chocolatey install (missing `--no-progress`).
+- Fixed post-install verification always failing for NPP because `notepad++` binary is not on PATH.
+- Fixed settings zip not found when running `gitmap install npp` from a directory other than the source repo root.
+
 ## v2.64.0 — Install Scripts Command (2026-04-07)
 
 ### New Commands
