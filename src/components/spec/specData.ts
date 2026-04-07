@@ -84,6 +84,8 @@ export const sections: SpecSection[] = [
       { id: "81", title: "Developer Tool Installer" },
       { id: "82", title: "One-Liner Install Scripts" },
       { id: "83", title: "Install Bootstrap One-Liner" },
+      { id: "60", title: "Help Dashboard", link: "/help-dashboard" },
+      { id: "65", title: "Update Path Recovery" },
     ],
   },
   {
@@ -121,6 +123,7 @@ export const sections: SpecSection[] = [
       { id: "05", title: "Configuration Pattern" },
       { id: "06", title: "Code Style Rules" },
       { id: "07", title: "Date Display Format" },
+      { id: "08", title: "CI Pipeline Architecture" },
     ],
   },
   {
