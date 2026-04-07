@@ -37,7 +37,7 @@ func validateRevertVersion(version string) {
 func checkoutRevertTag(version string) {
 	repoPath := constants.RepoPath
 	if len(repoPath) == 0 {
-		fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
+		fmt.Fprint(os.Stderr, constants.ErrNoRepoPath)
 		os.Exit(1)
 	}
 

@@ -45,7 +45,7 @@ func resolveRepoPath() string {
 		os.Exit(0)
 	}
 
-	fmt.Fprintln(os.Stderr, constants.ErrNoRepoPath)
+	fmt.Fprint(os.Stderr, constants.ErrNoRepoPath)
 	os.Exit(1)
 
 	return ""
