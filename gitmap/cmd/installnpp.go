@@ -7,9 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 )
+
+const maxNppFileSize = 10 * 1024 * 1024 // 10 MB limit per extracted file
 
 // resolveNppInstallName maps install-npp to the npp binary for install.
 func resolveNppInstallName(tool string) string {
@@ -87,7 +90,17 @@ func extractNppSettingsZip(target string) {
 
 // extractZipEntry writes a single zip entry to the target directory.
 func extractZipEntry(target string, file *zip.File) {
-	destPath := filepath.Join(target, file.Name)
+	cleanName := filepath.FromSlash(file.Name)
+	destPath := filepath.Join(target, cleanName)
+
+	absTarget, _ := filepath.Abs(target)
+	absDest, _ := filepath.Abs(destPath)
+
+	if !strings.HasPrefix(absDest, absTarget+string(os.PathSeparator)) {
+		fmt.Fprintf(os.Stderr, constants.ErrNppExtractEntry, file.Name, destPath, fmt.Errorf("path traversal detected"))
+
+		return
+	}
 
 	if file.FileInfo().IsDir() {
 		err := os.MkdirAll(destPath, 0o755)
@@ -121,7 +134,7 @@ func extractZipEntry(target string, file *zip.File) {
 	}
 	defer dst.Close()
 
-	_, err = io.Copy(dst, src)
+	_, err = io.Copy(dst, io.LimitReader(src, maxNppFileSize))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrNppFileCopy, file.Name, destPath, err)
 	}
