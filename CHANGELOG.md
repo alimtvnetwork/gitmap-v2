@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.54.0
+
+### Changes
+
+- Bumped version to v2.54.0.
+
 ## v2.53.0 — Help Dashboard & Install Docs
 
 ### Help Dashboard Command
