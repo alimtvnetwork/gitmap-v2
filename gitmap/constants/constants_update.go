@@ -35,6 +35,12 @@ const (
 const (
 	ErrUpdateExecFind = "Error finding executable: %v\n"
 	ErrUpdateCopyFail = "Error creating update copy: %v\n"
+	ErrUpdateNoRunSH  = "  ✗ run.sh not found at %s — cannot update on this platform without it.\n"
+)
+
+// Unix update messages.
+const (
+	MsgUpdateInstallDir = "  → Installed directory: %s\n"
 )
 
 // Update path resolution messages.
