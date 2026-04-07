@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.54.3 — Security Hardening & Lint Compliance
+## v2.54.3 — Security Hardening & Lint Compliance (2026-04-07)
 
 ### Zip Extraction Security (installnpp.go)
 
@@ -13,7 +13,7 @@
 
 ---
 
-## v2.54.2 — Format Verb Audit
+## v2.54.2 — Format Verb Audit (2026-04-07)
 
 ### fmt.Fprintf Argument Mismatch Fix
 
@@ -22,7 +22,7 @@
 
 ---
 
-## v2.54.1 — Code Red Error Audit
+## v2.54.1 — Code Red Error Audit (2026-04-07)
 
 ### Mandatory Error Path Logging
 
@@ -33,7 +33,7 @@
 
 ---
 
-## v2.54.0 — Update Path Recovery & CI Optimization
+## v2.54.0 — Update Path Recovery & CI Optimization (2026-04-07)
 
 ### Update Path Recovery
 
@@ -113,7 +113,7 @@
 - Modularized help implementation across `rootusage.go`, `rootusagecompact.go`, `rootusageflags.go`, and `constants_helpgroups.go`.
 - Repository renamed from `git-repo-navigator` to `gitmap-v2`; all URLs, scripts, and references updated.
 
-## v2.49.1 — Update UX & Versioned Binaries
+## v2.49.1 — Update UX & Versioned Binaries (2026-04-06)
 
 - Added `--repo-path` flag to `update` command: override the source repo path for a one-time update.
 - The `--repo-path` flag is automatically forwarded through the handoff binary to `update-runner`.
@@ -128,7 +128,7 @@
 - Updater uses handoff-copy pattern to avoid Windows file locks during self-replacement.
 - CI release pipeline now builds and ships `gitmap-updater` binaries for all 6 platform targets.
 
-## v2.49.0 — Opt-in Binary Builds & Gitignore Safety
+## v2.49.0 — Opt-in Binary Builds & Gitignore Safety (2026-04-06)
 
 - Go binary cross-compilation is now opt-in: use `--bin` or `-b` to build executables during release.
 - Removed `--no-assets` flag (replaced by the inverse `--bin` flag).
@@ -140,7 +140,7 @@
 - Version-specific `install.ps1` script is auto-generated and attached to each release for one-liner install.
 - Pre-release versions (containing `-`) are automatically marked as prerelease on GitHub.
 
-## v2.48.1 — Clone-Next Auto-Navigate
+## v2.48.1 — Clone-Next Auto-Navigate (2026-04-03)
 
 - `clone-next` now automatically changes into the newly cloned directory after removing the old folder.
 - Prints `→ Now in <target>` confirmation after navigating to the new clone.
@@ -152,7 +152,7 @@
 - Added `--source tag` filter to `list-releases` for viewing tag-discovered releases.
 - Updated helptext and spec to document three-source resolution order and caching behavior.
 
-## v2.47.0 — Release Self Hardening
+## v2.47.0 — Release Self Hardening (2026-04-03)
 
 - Changed `release-self` primary alias from `rself` to `rs` (rescan moved to `rsc`).
 - Added SQLite DB fallback for source repo discovery (`source_repo_path` in Settings table).
@@ -168,7 +168,7 @@
 - Full flag parity with `release` (--bump, --assets, --draft, --dry-run, etc.).
 - Added React docs page for release-self with terminal demos and error scenarios.
 
-## v2.45.0 — Docs Site Update
+## v2.45.0 — Docs Site Update (2026-04-03)
 
 - Updated CloneNext docs page with `--create-remote` flag, usage, and terminal example.
 - Added repo creation failure to error handling table on docs site.
@@ -192,7 +192,7 @@
 - `gitmap cn v+1` now clones directly without requiring `GITHUB_TOKEN`.
 - Repo creation is no longer a blocking prerequisite before clone.
 
-## v2.41.0 — Clone-Next Phase 3
+## v2.41.0 — Clone-Next Phase 3 (2026-04-03)
 
 - GitHub repo existence check and automatic creation before clone via GitHub API.
 - Requires `GITHUB_TOKEN` for repo creation; creates under org with user fallback.
@@ -295,7 +295,7 @@
 - All files comply with the 200-line limit; no functional changes.
 - Added refactoring specs: `spec/01-app/58-refactor-workflowfinalize.md`, `spec/01-app/59-refactor-root-dispatch.md`.
 
-## v2.36.3
+## v2.36.3 (2026-03-26)
 - Bumped compiled version constant to v2.36.3.
 - Refactored legacy directory migration into shared `localdirs` package for reuse across CLI startup and release workflow.
 - Release workflow now re-runs migration after returning to the original branch, preventing `.release/` from persisting when older branches restore tracked legacy files.
@@ -303,14 +303,14 @@
 - Simplified doctor legacy directory check to always pass (migration handles cleanup automatically).
 - Removed unused legacy directory warning/fix constants from `constants_doctor.go`.
 
-## v2.36.2
+## v2.36.2 (2026-03-26)
 - Bumped compiled version constant to v2.36.2.
 - Fixed legacy directory migration to merge files when target already exists instead of skipping.
 - Legacy directories (`.release/`, `gitmap-output/`, `.deployed/`) are now fully removed after merging into `.gitmap/`.
 - Added `mergeAndRemoveLegacy()` with file-walk merge and `os.RemoveAll` cleanup.
 - Replaced Unicode characters in migration messages with ASCII for Windows console compatibility.
 
-## v2.36.1
+## v2.36.1 (2026-03-26)
 - Bumped compiled version constant to v2.36.1.
 - Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT IDs.
 - Migration detects TEXT-typed `Id` column in `Repos` via `PRAGMA table_info`, rebuilds the table preserving data, and drops dependent FK tables (project detection, group-repo associations) for clean repopulation.
@@ -336,12 +336,12 @@
 - Added `doctor` check (12th) that warns if legacy `.release/` or `gitmap-output/` directories exist.
 - Updated all helptext, spec documents, and docs site to reference `.gitmap/` paths.
 
-## v2.34.0
+## v2.34.0 (2026-03-26)
 - Bumped compiled version constant to v2.34.0.
 - Fixed `list-releases` to read `.release/v*.json` from the current repo first, falling back to the database only when no local files exist.
 - Added `SourceRepo` constant to release model for repo-sourced release records.
 
-## v2.33.0
+## v2.33.0 (2026-03-26)
 - Bumped compiled version constant to v2.33.0.
 - Fixed auto-commit push rejection when remote branch advances during release: added `pull --rebase` recovery with single retry.
 - Added 16-stage summary table with anchor links to verbose logging spec.
@@ -350,11 +350,11 @@
 - Bumped compiled version constant to v2.32.0.
 - Documented autocommit verbose logging as pipeline stage 16 in the verbose logging spec.
 
-## v2.31.0
+## v2.31.0 (2026-03-26)
 - Bumped compiled version constant to v2.31.0.
 - Added verbose logging to auto-commit step: logs version, file counts, staging, commit message, and push target.
 
-## v2.30.0
+## v2.30.0 (2026-03-26)
 - Bumped compiled version constant to v2.30.0.
 - Renamed TempReleases `Commit` column to `CommitSha` to avoid SQLite reserved keyword conflict.
 - Added automatic database migration (`ALTER TABLE RENAME COLUMN`) for existing TempReleases tables.
@@ -375,7 +375,7 @@
 - Fixed parseCommitLines redeclaration conflict between temprelease.go and changeloggen.go.
 - Fixed hasListFlag redeclaration conflict between tempreleaseops.go and completion.go.
 
-## v2.27.0
+## v2.27.0 (2026-03-22)
 - Bumped compiled version constant to v2.27.0.
 - Added doctor validation checks for config.json, database migration, lock file, and network connectivity.
 - Added TUI release trigger overlay with patch/minor/major/custom version bump selection.
@@ -384,18 +384,18 @@
 - Added TUI interaction tests covering tab switching, browser navigation, fuzzy search, and release triggers.
 - Added alias suggestion tests covering auto-suggestion, conflict detection, and idempotent re-runs.
 
-## v2.24.0
+## v2.24.0 (2026-03-20)
 - Bumped compiled version constant to v2.24.0.
 - Moved release metadata writing from the release branch to the original branch, letting auto-commit handle `.release/` files after returning.
 - Removed `commitReleaseMeta` step from the release branch workflow; the release branch now only contains the branch, tag, and push.
 - Simplified `pushAndFinalize` to always complete without metadata writes (metadata is now the caller's responsibility).
 
-## v2.23.0
+## v2.23.0 (2026-03-20)
 - Bumped compiled version constant to v2.23.0.
 - Added `--notes` / `-N` flag to `release-branch` and `release-pending` commands, matching the `release` command.
 - Updated docs site Release page with metadata-first workflow diagram, release notes feature card, and `--notes` flag documentation.
 
-## v2.22.0
+## v2.22.0 (2026-03-19)
 - Bumped compiled version constant to v2.22.0.
 - Persisted zip group metadata in `.release/vX.Y.Z.json` via new `zipGroups` field on `ReleaseMeta`.
 - Documented `-A`/`--alias` flag in help text for `pull`, `exec`, `status`, and `cd` commands.
@@ -476,7 +476,7 @@
 - Added contextual helper hints shown after command output to aid discoverability.
 - Added Settings table for persistent key-value configuration in SQLite.
 
-## v2.12.0
+## v2.12.0 (2026-03-14)
 - Added global ⌘K command palette searching across commands, flags, and pages.
 
 ## v2.11.0
@@ -484,10 +484,10 @@
 - Added Flag Reference page with sortable, searchable table of all flags.
 - Added Interactive Examples page with animated terminal demos.
 
-## v2.10.0
+## v2.10.0 (2026-03-13)
 - Version bump for next development cycle.
 
-## v2.9.0
+## v2.9.0 (2026-03-13)
 - Completed flags and examples for all 22 command entries on the documentation site.
 - Added detailed flag tables and usage examples for `seo-write`, `doctor`, `update`, `pull`, `version`, `history-reset`, and `db-reset`.
 - Filled in flags and examples for 15 commands missing both: `rescan`, `desktop-sync`, `status`, `latest-branch`, `release-branch`, `release-pending`, `changelog`, `group`, `list`, `diff-profiles`, `export`, `import`, `profile`, `bookmark`, and `stats`.
@@ -496,7 +496,7 @@
 - Removed unused `detector` import from `cmd/scan.go` that caused build failure.
 - Updated documentation site fonts: Ubuntu for headings, Poppins for body text, Ubuntu Mono for code blocks.
 
-## v2.27.0
+## v2.27.0 (2026-03-22)
 - Added `gitmap cd` (`go`) command: jump to any tracked repo by slug or partial name.
 - Subcommands: `cd repos`, `cd set-default`, `cd clear-default`; supports `--group` and `--pick` flags.
 - Added `gitmap watch` (`w`) command: live terminal dashboard monitoring repo status.
@@ -519,11 +519,11 @@
   - Commits changes on the feature branch and merges back to the original branch.
   - Supports `--dry-run`, `--no-merge`, `--no-tidy`, `--verbose`, and `--ext` flags.
 
-## v2.26.0
+## v2.26.0 (2026-03-22)
 - Version bump to v2.26.0 following `gitmap profile` command addition.
 - All profile subcommands (`create`, `list`, `switch`, `delete`, `show`) fully integrated and documented.
 
-## v2.25.0
+## v2.25.0 (2026-03-22)
 - Added `gitmap profile` (`pf`) command: manage multiple database profiles (work, personal, etc.).
 - Subcommands: `create`, `list`, `switch`, `delete`, `show`.
 - Each profile has its own SQLite database file (`gitmap-{name}.db`).
@@ -531,19 +531,19 @@
 - Profile config stored in `gitmap-output/data/profiles.json`.
 - All commands automatically use the active profile's database.
 
-## v2.24.0
+## v2.24.0 (2026-03-20)
 - Added `gitmap import` (`im`) command: restore database from a `gitmap-export.json` backup file.
 - Merge semantics: upserts repos/releases, INSERT OR IGNORE for history/bookmarks/groups.
 - Group members re-linked by resolving `repoSlugs` against the Repos table.
 - Requires `--confirm` flag to prevent accidental data changes.
 
-## v2.23.0
+## v2.23.0 (2026-03-20)
 - Added `gitmap export` (`ex`) command: export the full database as a portable JSON file.
 - Exports all tables: repos, groups (with member repo slugs), releases, command history, and bookmarks.
 - Default output: `gitmap-export.json`; accepts optional custom file path.
 - Summary line shows counts for each exported section.
 
-## v2.22.0
+## v2.22.0 (2026-03-19)
 - Added `gitmap bookmark` (`bk`) command: save and replay frequently-used command+flag combinations.
 - Subcommands: `save`, `list`, `run`, `delete` — full CRUD for saved bookmarks.
 - `bookmark run <name>` replays the saved command through standard dispatch (appears in audit history).
@@ -616,20 +616,20 @@
 - `gitmap list-versions` (`lv`) now shows changelog notes as sub-points under each version in terminal output.
 - `gitmap list-versions --json` includes changelog array per version in JSON output.
 
-## v2.12.0
+## v2.12.0 (2026-03-14)
 - Added `gitmap list-versions` (`lv`) command: lists all release tags sorted highest-first, with `--json` output support.
 - Added `gitmap revert <version>` command: checks out a release tag and rebuilds/deploys via handoff (same mechanism as `update`).
 
 ## v2.11.0
 - Added constants inventory audit section to compliance spec, documenting ~280 constants across 9 files and 17 categories.
 
-## v2.10.0
+## v2.10.0 (2026-03-13)
 - Full compliance audit (Wave 1 + Wave 2): all 75 source files pass code style rules.
   - Trimmed 4 oversized files: `workflow.go`, `terminal.go`, `safe_pull.go`, `setup.go` (all under 200 lines).
   - Fixed all negation and switch violations across `changelog.go`, `github.go`, `metadata.go`, `config.go`, `verbose.go`, `semver.go`.
   - Extracted missing constants to dedicated constants files.
 
-## v2.9.0
+## v2.9.0 (2026-03-13)
 - Full code style refactor of `latest-branch` command:
   - Split `cmd/latestbranch.go` into 3 files: handler, resolve, output (all under 200 lines).
   - Split `gitutil/latestbranch.go` into 2 files: core operations, resolve helpers.
@@ -637,7 +637,7 @@
   - Blank line before every return. No magic strings. Chained if+return replaces switch.
   - Extracted git constants and display message constants.
 
-## v2.8.0
+## v2.8.0 (2026-03-06)
 - Added `--filter` flag to `latest-branch`: filter branches by glob pattern (e.g. `feature/*`) or substring match.
 
 ## v2.7.0
@@ -651,7 +651,7 @@
 ## v2.5.1
 - Added `--no-fetch` flag to `latest-branch`: skips `git fetch --all --prune` when remote refs are already up to date.
 
-## v2.5.0
+## v2.5.0 (2026-03-06)
 - Added `--format` flag to `latest-branch`: supports `terminal` (default), `json`, and `csv` output formats.
   - CSV outputs a header row + data rows to stdout, suitable for piping and spreadsheets.
   - `--json` remains as shorthand for `--format json`.
@@ -660,19 +660,19 @@
 ## v2.4.1
 - Added positional integer shorthand for `latest-branch`: `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
 
-## v2.4.0
+## v2.4.0 (2026-03-06)
 - Added `gitmap latest-branch` (`lb`) command: finds the most recently updated remote branch by commit date and displays name, SHA, date, and subject.
   - Flags: `--remote`, `--all-remotes`, `--contains-fallback`, `--top N`, `--json`.
   - Positional integer shorthand: `gitmap lb 3` is equivalent to `gitmap lb --top 3`.
 
-## v2.3.12
+## v2.3.12 (2026-03-06)
 - Spec, issue post-mortems, and memory aligned to codify synchronous update handoff and rename-first PATH sync as permanent rules.
 - Rename-first PATH sync in `-Update` mode: renames active binary to `.old` before copying, eliminating lock-retry loops.
 - Parent `update` handoff uses `cmd.Start()` + `os.Exit(0)` to release file lock before worker runs.
 - Handoff diagnostic log prints active exe and copy paths at update start.
 - Spec consistency pass: all four update-flow specs now enforce identical rules.
 
-## v2.3.10
+## v2.3.10 (2026-03-06)
 - Fixed `Read-Host` error in non-interactive PowerShell sessions during update by removing trailing prompt.
 - Parent `update` process now exits immediately (handoff copy runs synchronously via `update-runner`).
 - Added diagnostic log at update start showing active exe path and handoff copy path.

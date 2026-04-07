@@ -97,6 +97,11 @@ const ChangelogPage = () => {
                       latest
                     </span>
                   )}
+                  {entry.date && (
+                    <span className="text-xs text-muted-foreground font-mono">
+                      {entry.date}
+                    </span>
+                  )}
                   <span className="text-xs text-muted-foreground ml-auto">
                     {entry.items.length} change{entry.items.length !== 1 ? "s" : ""}
                   </span>
