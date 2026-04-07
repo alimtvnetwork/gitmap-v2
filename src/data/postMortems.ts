@@ -107,4 +107,11 @@ export const postMortems: PostMortemEntry[] = [
     version: "v2.54.0–v2.54.1",
     category: "general",
   },
+  {
+    id: "15",
+    title: "Installer Crashes — Progress Bar & Binary Detection",
+    summary: "PowerShell progress bar crashed terminal during irm | iex. Versioned binary names (e.g., gitmap-v2.54.6-windows-amd64.exe) were not detected. Fixed with $ProgressPreference, regex matching, and top-level try/catch.",
+    version: "v2.55.0",
+    category: "general",
+  },
 ];
