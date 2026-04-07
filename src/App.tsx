@@ -43,6 +43,7 @@ import SpecIndexPage from "./pages/SpecIndex";
 import CdPage from "./pages/Cd";
 import SetupPage from "./pages/Setup";
 import DesignSystemPage from "./pages/DesignSystem";
+import InstallPage from "./pages/Install";
 
 const queryClient = new QueryClient();
 
@@ -92,6 +93,7 @@ const App = () => (
           <Route path="/cd" element={<CdPage />} />
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/design-system" element={<DesignSystemPage />} />
+          <Route path="/install" element={<InstallPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
