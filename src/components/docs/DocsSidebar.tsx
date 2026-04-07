@@ -27,6 +27,7 @@ import {
   Stethoscope,
   Layers,
   Palette,
+  MonitorPlay,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -84,6 +85,7 @@ const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: BarChart3 },
   { title: "Setup", url: "/setup", icon: Settings },
   { title: "Install", url: "/install", icon: Hammer },
+  { title: "Help Dashboard", url: "/help-dashboard", icon: MonitorPlay },
   { title: "Spec Index", url: "/spec", icon: BookOpen },
   { title: "Design System", url: "/design-system", icon: Palette },
 ];

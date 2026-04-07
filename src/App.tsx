@@ -44,6 +44,7 @@ import CdPage from "./pages/Cd";
 import SetupPage from "./pages/Setup";
 import DesignSystemPage from "./pages/DesignSystem";
 import InstallPage from "./pages/Install";
+import HelpDashboardPage from "./pages/HelpDashboard";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,7 @@ const App = () => (
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/design-system" element={<DesignSystemPage />} />
           <Route path="/install" element={<InstallPage />} />
+          <Route path="/help-dashboard" element={<HelpDashboardPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
