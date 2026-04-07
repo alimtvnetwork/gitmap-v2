@@ -158,7 +158,7 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [sha-check, test]
+    needs: [sha-check, lint, vulncheck, test]
     if: always()
     steps:
       - name: Already validated
@@ -265,16 +265,12 @@ jobs:
 
           echo "========================================="
 
-  mark-success:
-    name: Mark SHA as built
-    runs-on: ubuntu-latest
-    needs: [sha-check, test-summary, vulncheck]
-    if: success() && needs.sha-check.outputs.already-built != 'true'
-    steps:
-      - name: Write marker
+      - name: Mark SHA as built
+        if: success() && needs.sha-check.outputs.already-built != 'true'
         run: mkdir -p /tmp/ci-passed && echo "${{ github.sha }}" > /tmp/ci-passed/sha.txt
 
-      - name: Save to cache
+      - name: Save SHA to cache
+        if: success() && needs.sha-check.outputs.already-built != 'true'
         uses: actions/cache/save@v4
         with:
           path: /tmp/ci-passed
