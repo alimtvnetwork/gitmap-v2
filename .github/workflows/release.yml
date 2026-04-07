@@ -100,7 +100,7 @@ jobs:
       - name: Generate version-specific install script
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          REPO="alimtvnetwork/git-repo-navigator"
+          REPO="alimtvnetwork/gitmap-v2"
 
           cat > gitmap/dist/install.ps1 << 'PSEOF'
           <#
@@ -309,7 +309,7 @@ jobs:
       - name: Build release body
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          REPO="alimtvnetwork/git-repo-navigator"
+          REPO="alimtvnetwork/gitmap-v2"
           COMMIT_SHA="${GITHUB_SHA}"
           BRANCH="${GITHUB_REF_NAME}"
           BUILD_DATE="$(date -u '+%Y-%m-%d %H:%M:%S UTC')"

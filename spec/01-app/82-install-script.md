@@ -12,7 +12,7 @@ verification, and automatic PATH registration.
 
 | Field       | Value                                              |
 |-------------|----------------------------------------------------|
-| GitHub Repo | `alimtvnetwork/git-repo-navigator`                 |
+| GitHub Repo | `alimtvnetwork/gitmap-v2`                 |
 | Binary Name | `gitmap` (`gitmap.exe` on Windows)                 |
 | Asset Format| `gitmap-{os}-{arch}.zip` (Windows), `gitmap-{os}-{arch}.tar.gz` (Unix) |
 | Checksums   | `checksums.txt` (SHA-256, one line per asset)      |
@@ -30,7 +30,7 @@ on locked-down machines, older Windows versions, and fresh installs where
 `irm` may not be available.
 
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1'))
 ```
 
 ### Short-Form (PowerShell 5+ / Modern Systems)
@@ -39,7 +39,7 @@ If the machine already has TLS 1.2 defaults and unrestricted execution
 policy (e.g., developer workstations), the short form also works:
 
 ```powershell
-irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
 ```
 
 ### Why the Full Bootstrap?
@@ -81,7 +81,7 @@ irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitm
 ### One-Liner
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
 ```
 
 ### Parameters (Environment Variables)
