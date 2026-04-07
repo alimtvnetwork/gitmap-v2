@@ -6,11 +6,13 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/user/gitmap/clonenext"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/gitutil"
+	"github.com/user/gitmap/lockcheck"
 	"github.com/user/gitmap/model"
 	"github.com/user/gitmap/verbose"
 )
@@ -161,18 +163,20 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 	}
 
 	removed := false
+	shouldRemove := false
+
 	if deleteFlag {
-		removeFolder(folderName, fullPath)
-		removed = true
+		shouldRemove = true
 	} else {
 		// Prompt
 		fmt.Printf(constants.MsgCloneNextRemovePrompt, folderName)
 		var answer string
 		_, _ = fmt.Scanln(&answer)
-		if strings.ToLower(strings.TrimSpace(answer)) == "y" {
-			removeFolder(folderName, fullPath)
-			removed = true
-		}
+		shouldRemove = strings.ToLower(strings.TrimSpace(answer)) == "y"
+	}
+
+	if shouldRemove {
+		removed = removeFolderWithLockCheck(folderName, fullPath)
 	}
 
 	// After removing the old folder, move into the newly cloned directory.
@@ -183,6 +187,67 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 			fmt.Printf(constants.MsgCloneNextMovedTo, filepath.Base(targetPath))
 		}
 	}
+}
+
+// removeFolderWithLockCheck attempts to remove a directory, and if it fails,
+// scans for locking processes and offers to terminate them before retrying.
+func removeFolderWithLockCheck(name, path string) bool {
+	// First attempt.
+	err := os.RemoveAll(path)
+	if err == nil {
+		fmt.Printf(constants.MsgCloneNextRemoved, name)
+		return true
+	}
+
+	// Removal failed — scan for locking processes.
+	fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, name, err)
+	fmt.Printf(constants.MsgLockCheckScanning, name)
+
+	procs, scanErr := lockcheck.FindLockingProcesses(path)
+	if scanErr != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnLockCheckScanFailed, scanErr)
+		return false
+	}
+
+	if len(procs) == 0 {
+		fmt.Print(constants.MsgLockCheckNoneFound)
+		return false
+	}
+
+	// Show locking processes and prompt to kill.
+	fmt.Printf(constants.MsgLockCheckFound, lockcheck.FormatProcessList(procs))
+	fmt.Print(constants.MsgLockCheckKillPrompt)
+
+	var answer string
+	_, _ = fmt.Scanln(&answer)
+	if strings.ToLower(strings.TrimSpace(answer)) != "y" {
+		return false
+	}
+
+	// Terminate each process.
+	for _, p := range procs {
+		fmt.Printf(constants.MsgLockCheckKilling, p.Name, p.PID)
+		killErr := lockcheck.KillProcess(p.PID)
+		if killErr != nil {
+			fmt.Fprintf(os.Stderr, constants.WarnLockCheckKillFailed, p.Name, p.PID, killErr)
+		} else {
+			fmt.Printf(constants.MsgLockCheckKilled, p.Name)
+		}
+	}
+
+	// Brief pause to let OS release handles.
+	time.Sleep(500 * time.Millisecond)
+
+	// Retry removal.
+	fmt.Print(constants.MsgLockCheckRetrying)
+	retryErr := os.RemoveAll(path)
+	if retryErr != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, name, retryErr)
+		return false
+	}
+
+	fmt.Printf(constants.MsgCloneNextRemoved, name)
+	return true
 }
 
 // removeFolder deletes a directory and prints the result.
