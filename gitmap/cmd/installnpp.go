@@ -66,11 +66,29 @@ func nppSettingsTarget() string {
 	return filepath.Join(appData, "Notepad++")
 }
 
+// resolveNppDataPath resolves the npp-settings data path relative to the binary.
+func resolveNppDataPath(subpath string) string {
+	// Try relative to the binary first.
+	exe, err := os.Executable()
+	if err == nil {
+		binDir := filepath.Dir(exe)
+		candidate := filepath.Join(binDir, "data", subpath)
+
+		if _, statErr := os.Stat(candidate); statErr == nil {
+			return candidate
+		}
+	}
+
+	// Fallback to CWD-relative path.
+	return filepath.Join("data", subpath)
+}
+
 // extractNppSettingsZip extracts the bundled settings zip to the target.
 func extractNppSettingsZip(target string) {
-	zipPath := filepath.Join("data", "npp-settings", "npp-settings.zip")
+	zipPath := resolveNppDataPath(filepath.Join("npp-settings", "npp-settings.zip"))
 
 	fmt.Printf(constants.MsgInstallNppExtract, target)
+	fmt.Printf("  → Settings zip: %s\n", zipPath)
 
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
@@ -81,10 +99,14 @@ func extractNppSettingsZip(target string) {
 	}
 	defer reader.Close()
 
+	extracted := 0
+
 	for _, file := range reader.File {
 		extractZipEntry(target, file)
+		extracted++
 	}
 
+	fmt.Printf("  ✓ Extracted %d files\n", extracted)
 	fmt.Printf(constants.MsgNppSettingsSynced, target)
 }
 
@@ -142,7 +164,7 @@ func extractZipEntry(target string, file *zip.File) {
 
 // syncNppSettingsFallback copies loose settings files as a fallback.
 func syncNppSettingsFallback(target string) {
-	source := filepath.Join("data", "npp-settings")
+	source := resolveNppDataPath("npp-settings")
 
 	entries, err := os.ReadDir(source)
 	if err != nil {
