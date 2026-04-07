@@ -1,11 +1,13 @@
 export interface ChangelogEntry {
   version: string;
+  date?: string;
   items: string[];
 }
 
 export const changelog: ChangelogEntry[] = [
   {
     version: "v2.54.3",
+    date: "2026-04-07",
     items: [
       "Fixed **G305** (path traversal): `extractZipEntry` now validates that resolved destination paths stay within the target directory using absolute path prefix checks.",
       "Fixed **G110** (decompression bomb): `io.Copy` replaced with `io.LimitReader` capped at 10 MB per extracted file.",
@@ -14,6 +16,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.54.2",
+    date: "2026-04-07",
     items: [
       "Fixed `cmd/tasksync.go:138` where `fmt.Fprintf` format string expected 2 arguments but only 1 was passed.",
       "Audited all `fmt.Fprintf`, `fmt.Printf`, and `fmt.Errorf` calls across `cmd/`, `release/`, and `store/` packages (~140 call sites) — confirmed 100% compliance.",
@@ -21,6 +24,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.54.1",
+    date: "2026-04-07",
     items: [
       "Completed full Code Red audit: every file/path-related error log now includes the exact file path, the operation attempted, and the specific failure reason.",
       "Standardized format: `Error: [message] at [path]: [error] (operation: [op], reason: [reason])`.",
@@ -30,6 +34,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.54.0",
+    date: "2026-04-07",
     items: [
       "`gitmap update` now validates the saved source repo path exists on disk before using it; falls back to SQLite DB.",
       "Prompts the user interactively when both embedded and saved paths are missing or stale.",
@@ -83,6 +88,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.48.1",
+    date: "2026-04-03",
     items: [
       "`clone-next` now automatically changes into the newly cloned directory after removing the old folder.",
       "Prints `→ Now in <target>` confirmation after navigating to the new clone.",
@@ -155,6 +161,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.36.3",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.36.3.",
       "Post-release migration: re-runs legacy directory migration after returning to original branch.",
@@ -167,6 +174,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.36.1",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.36.1.",
       "Added automatic database migration from legacy UUID TEXT IDs to INTEGER AUTOINCREMENT IDs.",
@@ -203,6 +211,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.34.0",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.34.0.",
       "Fixed list-releases to read .gitmap/release/v*.json from the current repo first, falling back to the database only when no local files exist.",
@@ -211,6 +220,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.33.0",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.33.0.",
       "Fixed auto-commit push rejection when remote branch advances during release: added pull --rebase recovery with single retry.",
@@ -226,6 +236,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.31.0",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.31.0.",
       "Added verbose logging to auto-commit step: logs version, file counts, staging, commit message, and push target.",
@@ -233,6 +244,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.30.0",
+    date: "2026-03-26",
     items: [
       "Bumped compiled version constant to v2.30.0.",
       "Renamed TempReleases Commit column to CommitSha to avoid SQLite reserved keyword conflict.",
@@ -262,6 +274,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.27.0",
+    date: "2026-03-22",
     items: [
       "Bumped compiled version constant to v2.27.0.",
       "Added doctor validation checks for config.json, database migration, lock file, and network connectivity.",
@@ -274,6 +287,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.24.0",
+    date: "2026-03-20",
     items: [
       "Bumped compiled version constant to v2.24.0.",
       "Moved release metadata writing from the release branch to the original branch.",
@@ -284,6 +298,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.23.0",
+    date: "2026-03-20",
     items: [
       "Bumped compiled version constant to v2.23.0.",
       "Added `--notes` / `-N` flag to `release-branch` and `release-pending` commands.",
@@ -292,6 +307,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.22.0",
+    date: "2026-03-19",
     items: [
       "Bumped compiled version constant to v2.22.0.",
       "Persisted zip group metadata in `.gitmap/release/vX.Y.Z.json` via new `zipGroups` field.",
@@ -411,6 +427,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.12.0",
+    date: "2026-03-14",
     items: [
       "Added `gitmap list-versions` (`lv`) command: show all release tags sorted highest-first with changelog.",
       "Added `gitmap revert <version>` command: checkout tag and handoff rebuild.",
@@ -428,6 +445,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.10.0",
+    date: "2026-03-13",
     items: [
       "Full compliance audit (Wave 1 + Wave 2): all 75+ source files pass code style rules.",
       "Trimmed oversized files, fixed negation/switch violations, extracted constants.",
@@ -435,6 +453,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.9.0",
+    date: "2026-03-13",
     items: [
       "Full code style refactor of `latest-branch` command.",
       "Split handler into 3 files, all under 200 lines.",
@@ -444,6 +463,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.8.0",
+    date: "2026-03-06",
     items: [
       "Added `gitmap cd` (`go`) command: jump to any tracked repo by slug or partial name.",
       "Added `gitmap watch` (`w`) command: live terminal dashboard monitoring repo status.",
@@ -456,6 +476,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.5.0",
+    date: "2026-03-06",
     items: [
       "Added `gitmap profile` (`pf`) command: manage multiple database profiles.",
       "Added `gitmap export` (`ex`) command: export the full database as portable JSON.",
@@ -469,6 +490,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.4.0",
+    date: "2026-03-06",
     items: [
       "Added `gitmap latest-branch` (`lb`) command.",
       "Positional integer shorthand: `gitmap lb 3` equals `gitmap lb --top 3`.",
@@ -478,6 +500,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.3.12",
+    date: "2026-03-06",
     items: [
       "Added `gitmap list-releases` (`lr`) command.",
       "Enhanced `gitmap scan` to import `.gitmap/release/v*.json` metadata files.",
@@ -488,6 +511,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.3.10",
+    date: "2026-03-06",
     items: [
       "Self-update hardening: rename-first strategy, stale-process fallback.",
       "Update enhancements: skip-if-current, version comparison, rollback safety.",
@@ -496,6 +520,7 @@ export const changelog: ChangelogEntry[] = [
   },
   {
     version: "v2.3.7",
+    date: "2026-03-06",
     items: [
       "Release-pending, changelog, doctor commands.",
       "Database with repos and group management.",
