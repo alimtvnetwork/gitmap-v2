@@ -35,6 +35,7 @@ const (
 	ToolNpp           = "npp"
 	ToolNppSettings   = "npp-settings"
 	ToolNppInstall    = "install-npp"
+	ToolScripts       = "scripts"
 )
 
 // Supported tool names — Databases.
@@ -270,6 +271,19 @@ const (
 	ErrUninstallDBRemove = "Warning: could not remove %s from database: %v\n"
 )
 
+// Scripts install messages.
+const (
+	MsgScriptsTarget  = "  → Scripts target: %s\n"
+	MsgScriptsCloning = "  Cloning gitmap repo for scripts...\n    %s\n"
+	MsgScriptsSkip    = "  ⚠ Skipped (not found): %s\n"
+	MsgScriptsCopied  = "  ✓ Copied: %s\n"
+	MsgScriptsDone    = "\n  ✅ %d scripts installed to %s\n"
+	ErrScriptsMkdir   = "  ✗ Could not create target directory %s: %v\n"
+	ErrScriptsTemp    = "  ✗ Could not create temp directory: %v\n"
+	ErrScriptsClone   = "  ✗ Clone failed: %v\n"
+	ErrScriptsCopy    = "  ✗ Failed to copy %s: %v\n"
+)
+
 // Tool categories.
 const (
 	ToolCategoryCore     = "Core Tools"
@@ -308,6 +322,7 @@ var InstallToolDescriptions = map[string]string{
 	ToolNpp:           "NPP + Settings — Notepad++ with settings",
 	ToolNppSettings:   "NPP Settings — Notepad++ settings sync only",
 	ToolNppInstall:    "Install NPP — Notepad++ install only (no settings)",
+	ToolScripts:       "Clone gitmap scripts to local folder",
 }
 
 // InstallToolCategories groups tools by category for display.
@@ -317,6 +332,7 @@ var InstallToolCategories = map[string][]string{
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
 		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
+		ToolScripts,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,

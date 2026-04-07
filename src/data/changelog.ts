@@ -6,6 +6,13 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.64.0",
+    date: "2026-04-07",
+    items: [
+      "Added `gitmap install scripts` — clones gitmap scripts to a local folder (Windows: D:\\ drive, Linux: ~/Desktop/gitmap-scripts).",
+    ],
+  },
+  {
     version: "v2.63.0",
     date: "2026-04-07",
     items: [

@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.64.0 — Install Scripts Command (2026-04-07)
+
+### New Commands
+
+- Added `gitmap install scripts` — clones gitmap scripts (install.ps1, install.sh, run.ps1, run.sh, etc.) to a local folder for easy access.
+  - **Windows**: resolves the deploy drive from `powershell.json`, defaults to `D:\gitmap-scripts`.
+  - **Linux/macOS**: installs to `~/Desktop/gitmap-scripts`.
+
 ## v2.63.0 — Installed Directory & Linux Update Flow (2026-04-07)
 
 ### New Commands

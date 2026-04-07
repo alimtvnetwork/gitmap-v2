@@ -89,6 +89,12 @@ func validateToolName(tool string) {
 
 // executeInstall runs the install flow for a tool.
 func executeInstall(opts installOptions) {
+	if opts.Tool == constants.ToolScripts {
+		runInstallScripts()
+
+		return
+	}
+
 	if opts.Tool == constants.ToolNppSettings {
 		runNppSettingsOnly()
 
