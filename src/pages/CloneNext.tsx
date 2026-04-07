@@ -311,6 +311,36 @@ const CloneNextPage = () => {
           </div>
         </section>
 
+        {/* File Layout */}
+        <section className="mb-10">
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">File Layout</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">File</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["cmd/clonenext.go", "Flag parsing, orchestration, deletion + cd"],
+                  ["constants/constants_clonenext.go", "Command names, messages, error strings"],
+                  ["lockcheck/lockcheck.go", "LockingProcess struct, FindLockingProcesses interface"],
+                  ["lockcheck/lockcheck_windows.go", "handle.exe + WMI fallback, KillProcess via taskkill"],
+                  ["lockcheck/lockcheck_unix.go", "lsof-based lock detection, KillProcess via kill(2)"],
+                  ["helptext/clone-next.md", "Embedded help text for --help flag"],
+                ].map(([file, purpose], i) => (
+                  <tr key={i} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-2 font-mono text-xs text-primary">{file}</td>
+                    <td className="px-4 py-2 text-xs text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         {/* See also */}
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">See Also</h2>
