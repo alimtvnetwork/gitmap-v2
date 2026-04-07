@@ -135,7 +135,7 @@ func handleSyncCopy(srcPath, destPath, relPath string, dryRun, verbose bool) boo
 
 	err := ensureDestDir(destPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrTaskDestCreate, err)
+		fmt.Fprintf(os.Stderr, constants.ErrTaskDestCreate, destPath, err)
 
 		return false
 	}
