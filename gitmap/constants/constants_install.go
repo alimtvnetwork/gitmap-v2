@@ -214,6 +214,7 @@ const (
 	MsgUninstallConfirm  = "Uninstall %s? (y/N): "
 	ErrUninstallFailed   = "Uninstall failed for %s: %v\n"
 	ErrUninstallNotFound = "%s is not tracked in the database. Use --force to try anyway.\n"
+	ErrUninstallDBRemove = "Warning: could not remove %s from database: %v\n"
 )
 
 // Tool categories.
