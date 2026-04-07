@@ -61,6 +61,21 @@ const (
 	ErrSelfReleaseNoRepo      = "could not locate gitmap source repository"
 )
 
+// Install hint constants (printed after release for gitmap repos).
+const (
+	GitmapRepoPrefix     = "github.com/alimtvnetwork/gitmap-v2"
+	MsgInstallHintHeader = `
+  ■ Install gitmap %s:
+`
+	MsgInstallHintWindows = `  # Windows (PowerShell)
+  irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
+`
+	MsgInstallHintUnix = `
+  # Linux / macOS
+  curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+`
+)
+
 // Release rollback messages.
 const (
 	MsgRollbackStart  = "\n  ⚠ Push failed — rolling back local branch and tag...\n"
