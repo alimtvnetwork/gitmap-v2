@@ -42,7 +42,7 @@ func runSetx(args []string) {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvProfileWrite, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvProfileWrite, "system registry", err)
 		os.Exit(1)
 	}
 }

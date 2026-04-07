@@ -128,7 +128,7 @@ func readProfileContent(path string) string {
 func writeProfileContent(path, content string) {
 	err := os.WriteFile(path, []byte(content), constants.FilePermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvProfileWrite, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvProfileWrite, path, err)
 		os.Exit(1)
 	}
 }

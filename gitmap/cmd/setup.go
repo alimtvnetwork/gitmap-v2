@@ -18,7 +18,7 @@ func runSetup(args []string) {
 	configPath, dryRun := parseSetupFlags(args)
 	cfg, err := setup.LoadConfig(configPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSetupLoadFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSetupLoadFailed, configPath, err)
 		os.Exit(1)
 	}
 

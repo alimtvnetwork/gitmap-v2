@@ -26,7 +26,7 @@ func loadEnvRegistry() model.EnvRegistry {
 
 	err = json.Unmarshal(data, &registry)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistryLoad, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistryLoad, path, err)
 		os.Exit(1)
 	}
 
@@ -39,19 +39,19 @@ func saveEnvRegistry(registry model.EnvRegistry) {
 
 	err := os.MkdirAll(filepath.Dir(path), constants.DirPermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, path, err)
 		os.Exit(1)
 	}
 
 	data, err := json.MarshalIndent(registry, "", constants.JSONIndent)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, path, err)
 		os.Exit(1)
 	}
 
 	err = os.WriteFile(path, data, constants.FilePermission)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, err)
+		fmt.Fprintf(os.Stderr, constants.ErrEnvRegistrySave, path, err)
 		os.Exit(1)
 	}
 }

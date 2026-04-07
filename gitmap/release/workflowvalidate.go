@@ -106,7 +106,7 @@ func handleOrphanedMeta(v Version) error {
 
 	err := os.Remove(path)
 	if err != nil {
-		return fmt.Errorf(constants.ErrReleaseOrphanedRemove, err)
+		return fmt.Errorf(constants.ErrReleaseOrphanedRemove, path, err)
 	}
 
 	fmt.Printf(constants.MsgReleaseOrphanedRemoved, v.String())

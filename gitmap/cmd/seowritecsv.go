@@ -24,14 +24,14 @@ func loadCSVMessages(path string) []commitMessage {
 func readCSVFile(path string) [][]string {
 	f, err := os.Open(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOCSVRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOCSVRead, path, err)
 		os.Exit(1)
 	}
 	defer f.Close()
 
 	records, err := csv.NewReader(f).ReadAll()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOCSVRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOCSVRead, path, err)
 		os.Exit(1)
 	}
 

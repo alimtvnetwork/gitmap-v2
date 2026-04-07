@@ -59,7 +59,7 @@ func runClearReleaseJSON(args []string) {
 
 	err = os.Remove(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrClearReleaseFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrClearReleaseFailed, path, err)
 		os.Exit(1)
 	}
 

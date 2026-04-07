@@ -26,7 +26,7 @@ func runDashboard(args []string) {
 
 	jsonPath, err := dashboard.WriteJSON(outDir, data)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrDashWriteJSON, err)
+		fmt.Fprintf(os.Stderr, constants.ErrDashWriteJSON, jsonPath, err)
 		os.Exit(1)
 	}
 
@@ -35,7 +35,7 @@ func runDashboard(args []string) {
 
 	htmlPath, err := dashboard.WriteHTML(outDir, data)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrDashWriteHTML, err)
+		fmt.Fprintf(os.Stderr, constants.ErrDashWriteHTML, htmlPath, err)
 		os.Exit(1)
 	}
 

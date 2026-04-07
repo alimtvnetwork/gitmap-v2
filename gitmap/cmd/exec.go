@@ -140,7 +140,7 @@ func loadExecRecordsJSON() []model.ScanRecord {
 	jsonPath := filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile)
 	records, err := loadExecRecords(jsonPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrExecLoadFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrExecLoadFailed, jsonPath, err)
 		os.Exit(1)
 	}
 

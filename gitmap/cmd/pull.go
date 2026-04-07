@@ -112,7 +112,7 @@ func lookupBySlugJSON(slug string) []model.ScanRecord {
 	jsonPath := filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile)
 	records, err := loadJSONRecords(jsonPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrPullLoadFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrPullLoadFailed, jsonPath, err)
 		os.Exit(1)
 	}
 
