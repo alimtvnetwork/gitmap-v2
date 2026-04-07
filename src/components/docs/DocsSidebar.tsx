@@ -28,6 +28,7 @@ import {
   Layers,
   Palette,
   MonitorPlay,
+  AlertTriangle,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -87,6 +88,7 @@ const navItems = [
   { title: "Install", url: "/install", icon: Hammer },
   { title: "Help Dashboard", url: "/help-dashboard", icon: MonitorPlay },
   { title: "Spec Index", url: "/spec", icon: BookOpen },
+  { title: "Post-Mortems", url: "/post-mortems", icon: AlertTriangle },
   { title: "Design System", url: "/design-system", icon: Palette },
 ];
 
