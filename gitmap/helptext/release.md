@@ -31,6 +31,7 @@ r
 | -Z \<path\> | — | Add ad-hoc file or folder to zip as a release asset |
 | --bundle \<name.zip\> | — | Bundle all -Z items into a single named archive |
 | --no-commit | false | Skip post-release auto-commit and push |
+| -y / --yes | false | Auto-confirm all prompts (e.g. commit) |
 | --verbose | false | Write detailed debug log to a timestamped file |
 
 ## Prerequisites
@@ -157,36 +158,29 @@ Answering `n` (or pressing Enter) aborts the release.
       darwin/amd64
       darwin/arm64
 
-### Example 8: Release without Go binary compilation
+### Example 8: Release with auto-confirm and install hints (gitmap repo)
 
-    gitmap release --bump patch --no-assets
-
-**Output:**
-
-    v2.21.0 → v2.21.1
-    Creating branch release/v2.21.1... done
-    Creating tag v2.21.1... done
-    Pushing branch and tag... done
-    Skipping Go binary cross-compilation.
-    ✓ Metadata written to .gitmap/release/v2.21.1.json
-    ✓ Released v2.21.1
-
-### Example 9: Release with local Go binary builds
-
-    gitmap release --bump minor --bin --compress --checksums
+    gitmap release v2.59.0 -y
 
 **Output:**
 
-    v2.21.0 → v2.22.0
-    Creating branch release/v2.22.0... done
-    Creating tag v2.22.0... done
+    Creating branch release/v2.59.0... done
+    Creating tag v2.59.0... done
     Pushing branch and tag... done
-    Cross-compiling Go binaries (opt-in via --bin)...
-      ✓ gitmap_v2.22.0_windows_amd64.exe
-      ✓ gitmap_v2.22.0_linux_amd64
-      ✓ gitmap_v2.22.0_darwin_arm64
-      ✓ Generated checksums.txt (SHA256)
-    ✓ Released v2.22.0
+    ✓ Metadata written to .gitmap/release/v2.59.0.json
+
+    Release v2.59.0 complete.
+
+    ■ Install gitmap v2.59.0:
+
+    # Windows (PowerShell)
+    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
+
+    # Linux / macOS
+    curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+
+Install hints only appear when the repo's remote origin matches the
+gitmap source repository. Non-gitmap repos are unaffected.
 
 ## CI Release Pipeline
 
@@ -196,7 +190,7 @@ workflow that automatically:
 1. Cross-compiles 6 Go binaries (windows/linux/darwin × amd64/arm64)
 2. Compresses assets (.zip for Windows, .tar.gz for Unix)
 3. Generates SHA256 checksums
-4. Creates a version-pinned `install.ps1` PowerShell installer
+4. Creates version-pinned `install.ps1` and `install.sh` installers
 5. Publishes a GitHub Release with changelog, metadata, and all assets
 
 Local `--bin` builds are opt-in for development; the CI pipeline is
