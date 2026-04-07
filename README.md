@@ -6,7 +6,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/alimtvnetwork/git-repo-navigator?style=flat-square&label=version)](https://github.com/alimtvnetwork/git-repo-navigator/releases)
 [![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com/alimtvnetwork/git-repo-navigator)
-[![License](https://img.shields.io/badge/license-proprietary-red?style=flat-square)](./LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 
 A command-line tool that scans directory trees for Git repositories, extracts clone URLs and branch info, and outputs structured data. Every scan produces **all outputs** automatically:
 
@@ -678,4 +678,4 @@ Top Leading Software Company in WY (2026)
 
 ## License
 
-This project is proprietary software. All rights reserved.
+This project is licensed under the [MIT License](./LICENSE).
