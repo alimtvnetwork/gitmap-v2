@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.55.0 — Docs, Post-Mortems & Installer Fix (2026-04-07)
+## v2.55.0 — Release Auto-Confirm, Docs & Installer Fix (2026-04-07)
 
 ### Post-Mortems Documentation
 

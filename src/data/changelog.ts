@@ -22,6 +22,8 @@ export const changelog: ChangelogEntry[] = [
       "Added release dates to all changelog entries sourced from `.gitmap/release/*.json` metadata.",
       "Backfilled v2.54.1–v2.54.3 and v2.53.0 entries in docs site changelog data.",
       "Pinned `golangci-lint` to `v1.64.8` in `setup.sh` and `ci.yml` for reproducible builds.",
+      "Added `-y` / `--yes` flag to all release commands for fully non-interactive workflows.",
+      "Auto-confirm skips the commit prompt — enables `gitmap release v2.55.0 -y` without user input.",
     ],
   },
   {

@@ -53,6 +53,8 @@ for the full metadata-based discovery spec.
 | `--notes <text>` / `-N`     | Release notes or title for the release           | (none)      |
 | `--draft`                    | Mark release metadata as draft                   | `false`     |
 | `--dry-run`                  | Preview release steps without executing          | `false`     |
+| `--no-commit`                | Skip post-release auto-commit and push           | `false`     |
+| `--yes` / `-y`               | Auto-confirm all prompts (e.g. commit)           | `false`     |
 | `--verbose`                  | Write detailed debug log                         | `false`     |
 
 ### Release-Branch Flags
@@ -64,6 +66,7 @@ for the full metadata-based discovery spec.
 | `--draft`          | Mark release metadata as draft      | `false` |
 | `--dry-run`        | Preview steps without executing     | `false` |
 | `--no-commit`      | Skip post-release auto-commit       | `false` |
+| `--yes` / `-y`     | Auto-confirm all prompts            | `false` |
 | `--verbose`        | Write detailed debug log            | `false` |
 
 ### Release-Pending Flags
@@ -75,6 +78,7 @@ for the full metadata-based discovery spec.
 | `--draft`          | Mark release metadata as draft           | `false` |
 | `--dry-run`        | Preview steps without executing          | `false` |
 | `--no-commit`      | Skip post-release auto-commit            | `false` |
+| `--yes` / `-y`     | Auto-confirm all prompts                 | `false` |
 | `--verbose`        | Write detailed debug log                 | `false` |
 
 ---
