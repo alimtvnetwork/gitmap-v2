@@ -1,6 +1,24 @@
 # Changelog
 
-## v2.51.0 — Help System Overhaul
+## v2.52.0 — Lock Detection & Install System Overhaul
+
+### Lock Detection (clone-next)
+
+- `clone-next` now detects processes locking the current folder when deletion fails.
+- On Windows, uses Sysinternals `handle.exe` or PowerShell WMI to identify locking processes.
+- On Unix/macOS, uses `lsof` for process detection.
+- Prompts the user to terminate blocking processes, then retries folder removal automatically.
+- New `lockcheck` package with platform-specific implementations (`lockcheck_windows.go`, `lockcheck_unix.go`).
+
+### Install System Overhaul
+
+- Added SQLite-based installation tracking (`InstalledTools` table) with granular version columns (Major, Minor, Patch, Build) and timestamps.
+- Expanded tool support: 11 databases (MySQL, PostgreSQL, Redis, MongoDB, SQLite, MariaDB, CockroachDB, Cassandra, Neo4j, InfluxDB, DynamoDB Local).
+- Package manager mappings for Chocolatey, Winget, Apt, Homebrew, and Snap.
+- New `gitmap uninstall <tool>` command with `--dry-run`, `--force`, and `--purge` flags.
+- README redesigned with centered headers, badges, and grouped command/tool tables.
+
+
 
 - Reorganized `gitmap help` output into 17 categorized command groups (Scanning, Cloning, Git Operations, Navigation, Release, etc.).
 - Added `--compact` flag to `gitmap help` for a minimal command-and-alias-only listing.
