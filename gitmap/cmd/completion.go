@@ -172,6 +172,13 @@ func printCompletionSSHKeys() {
 	}
 }
 
+// printCompletionHelpGroups prints all help group keywords, one per line.
+func printCompletionHelpGroups() {
+	for _, g := range constants.HelpGroupKeys {
+		fmt.Println(g)
+	}
+}
+
 // printCompletionScript outputs the shell completion script.
 func printCompletionScript(shell string) {
 	script, err := completion.Generate(shell)
