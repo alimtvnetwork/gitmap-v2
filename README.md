@@ -57,16 +57,34 @@ curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap
 irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex; Install-Gitmap -InstallDir "D:\DevTools\gitmap"
 ```
 
+**Specific version install (one-liner):**
+
+```powershell
+irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex; Install-Gitmap -Version "v2.51.0"
+```
+
+**Specific version + custom directory (one-liner):**
+
+```powershell
+irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex; Install-Gitmap -Version "v2.51.0" -InstallDir "D:\DevTools\gitmap"
+```
+
 **Custom directory install (downloaded script):**
 
 ```powershell
 .\install.ps1 -InstallDir "D:\DevTools\gitmap"
 ```
 
-**Pinned version + custom directory:**
+**Pinned version + custom directory (downloaded script):**
 
 ```powershell
-.\install.ps1 -Version v2.49.1 -InstallDir "C:\tools\gitmap"
+.\install.ps1 -Version v2.51.0 -InstallDir "C:\tools\gitmap"
+```
+
+**Linux / macOS — specific version:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh -s -- --version v2.51.0
 ```
 
 > **Tip for other installers:** Use `-InstallDir` and `-NoPath` together to integrate gitmap into your own package layout without modifying the user's PATH.
