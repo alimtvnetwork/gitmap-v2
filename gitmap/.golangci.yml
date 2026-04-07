@@ -93,15 +93,15 @@ issues:
   max-issues-per-linter: 50
   max-same-issues: 5
   exclude-rules:
-    - path: _test\.go
+    - path: _test\.go # Tests use unchecked errors and unsafe patterns intentionally
       linters:
-        - errcheck
-        - gosec
-        - unparam
-    - path: _test\.go
+        - errcheck  # Test helpers often ignore cleanup errors
+        - gosec     # Tests may use insecure patterns for simplicity
+        - unparam   # Test helpers often have fixed parameters for consistency
+    - path: _test\.go # Test-specific govet false positives
       text: "unusedwrite|nilness"
       linters:
-        - govet
-    - path: cmd/
+        - govet     # Unused writes and nil checks are common in table-driven tests
+    - path: cmd/ # CLI dispatch functions have fixed signatures by convention
       linters:
-        - unparam
+        - unparam   # Command handlers receive args even when unused
