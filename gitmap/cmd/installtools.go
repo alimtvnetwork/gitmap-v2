@@ -122,6 +122,27 @@ func isBrewCaskTool(tool string) bool {
 	return false
 }
 
+// runAptUpdate runs sudo apt-get update to refresh the package index.
+func runAptUpdate(verbose bool) {
+	fmt.Print(constants.MsgInstallAptUpdate)
+
+	cmd := exec.Command("sudo", "apt-get", "update")
+
+	if verbose {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrInstallAptUpdateFailed, err)
+
+		return
+	}
+
+	fmt.Print(constants.MsgInstallAptUpdateDone)
+}
+
 // runInstallCommand executes the install command and logs errors.
 func runInstallCommand(args []string, opts installOptions) {
 	cmd := exec.Command(args[0], args[1:]...)
