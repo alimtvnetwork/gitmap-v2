@@ -422,10 +422,11 @@ main() {
     version="$(resolve_version "${VERSION}")"
     install_dir="$(resolve_install_dir "${INSTALL_DIR}")"
 
-    # download_asset prints archive_path but also sets TMP_DIR in subshell;
-    # re-create TMP_DIR in parent scope for the trap cleanup.
+    # Create TMP_DIR in parent scope so install_binary and cleanup can access it.
     TMP_DIR="$(mktemp -d)"
     archive_path="$(download_asset "${version}" "${os}" "${arch}")"
+
+    install_binary "${archive_path}" "${install_dir}" "${os}" "${arch}" "${version}"
 
     if [ "${NO_PATH}" = false ]; then
         add_to_path "${install_dir}"
