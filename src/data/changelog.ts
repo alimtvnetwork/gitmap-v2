@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.58.0",
+    date: "2026-04-07",
+    items: [
+      "Fixed `-y` / `--yes` flag silently ignored when placed after the version argument (e.g., `gitmap release v2.55 -y`).",
+      "Root cause: Go's `flag` package stops parsing at the first non-flag arg — flags after the version were never processed.",
+      "Added `reorderFlagsBeforeArgs()` in `releaseargs.go` — reorders CLI args so flags precede positional arguments before parsing.",
+    ],
+  },
+  {
     version: "v2.56.1",
     date: "2026-04-07",
     items: [
