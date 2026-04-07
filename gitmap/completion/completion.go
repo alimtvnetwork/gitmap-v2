@@ -76,6 +76,7 @@ func AllCommands() []string {
 		"prune", "pr",
 		"temp-release", "tr",
 		"clone-next", "cn",
+		"uninstall", "un",
 		"help",
 	}
 }
