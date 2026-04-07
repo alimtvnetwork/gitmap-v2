@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.58.0 — Release Flag Ordering Fix (2026-04-07)
+
+### Bug Fix
+
+- Fixed `-y` / `--yes` flag being silently ignored when placed after the version argument (e.g., `gitmap release v2.55 -y`).
+- Root cause: Go's `flag` package stops parsing at the first non-flag argument, so flags after the version were never processed.
+- Added `reorderFlagsBeforeArgs()` helper in `releaseargs.go` — reorders CLI args so all flags precede positional arguments before `flag.Parse()`.
+- Affects `release`, `release-self` (`r`, `rs`), and all commands sharing `parseReleaseFlags`.
+
+## v2.57.0 — README & Memory Updates (2026-04-07)
+
+### Documentation
+
+- Split README Quick Start into focused code blocks: separate Install (Windows + Linux/macOS), Scan, and Navigate sections.
+- Created `one-liner-installer` memory documenting both `install.ps1` and `install.sh` as CI-generated versioned release assets.
+
 ## v2.56.1 — Clone-on-Missing-Path for Update (2026-04-07)
 
 ### Update Command
