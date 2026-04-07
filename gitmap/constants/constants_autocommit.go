@@ -18,6 +18,8 @@ const (
 	ErrAutoCommitPush      = "  ✗ Push failed: %v\n"
 	AutoCommitMsgFmt       = "Release %s"
 	FlagDescNoCommit       = "Skip post-release auto-commit and push"
+	FlagDescYes            = "Auto-confirm all prompts (e.g. commit)"
+	MsgAutoCommitAutoYes   = "  → Auto-confirmed via -y flag\n"
 
 	// Git diff arguments for detecting changes.
 	GitDiff         = "diff"
