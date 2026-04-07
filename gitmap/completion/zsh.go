@@ -97,6 +97,15 @@ _gitmap() {
             local -a hints=("v++" "--delete" "--keep" "--no-desktop" "--ssh-key" "--verbose")
             _describe 'arg' hints
             ;;
+        help)
+            if [[ "${words[CURRENT-1]}" == "--compact" ]]; then
+                local -a hgroups=($(gitmap completion --list-help-groups))
+                _describe 'group' hgroups
+            else
+                local -a flags=("--compact")
+                _describe 'flag' flags
+            fi
+            ;;
         *)
             if [[ "${words[CURRENT-1]}" == "-A" || "${words[CURRENT-1]}" == "--alias" ]]; then
                 local -a aliases=($(gitmap completion --list-aliases))

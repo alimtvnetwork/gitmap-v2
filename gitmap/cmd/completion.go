@@ -67,6 +67,10 @@ func handleCompletionList(args []string) {
 			printCompletionSSHKeys()
 
 			return
+		case constants.CompListHelpGroups:
+			printCompletionHelpGroups()
+
+			return
 		}
 	}
 }
@@ -165,6 +169,13 @@ func printCompletionSSHKeys() {
 
 	for _, n := range names {
 		fmt.Println(n)
+	}
+}
+
+// printCompletionHelpGroups prints all help group keywords, one per line.
+func printCompletionHelpGroups() {
+	for _, g := range constants.HelpGroupKeys {
+		fmt.Println(g)
 	}
 }
 
