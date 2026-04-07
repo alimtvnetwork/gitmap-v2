@@ -97,3 +97,17 @@ func printCompactFiltered(filter string) {
 		printCompactAll()
 	}
 }
+
+// printHelpGroups lists all available group names for quick reference.
+func printHelpGroups() {
+	fmt.Printf(constants.UsageHeaderFmt, constants.Version)
+	fmt.Println("  Available help groups:")
+	fmt.Println()
+
+	for _, key := range constants.HelpGroupKeys {
+		fmt.Printf("    %s\n", key)
+	}
+
+	fmt.Println()
+	fmt.Println("  Usage: gitmap help --compact <group>")
+}

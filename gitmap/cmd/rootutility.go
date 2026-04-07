@@ -42,6 +42,11 @@ func dispatchUtility(command string) bool {
 		return true
 	}
 	if command == constants.CmdHelp {
+		if hasFlag(constants.FlagGroups) {
+			printHelpGroups()
+
+			return true
+		}
 		if hasFlag(constants.FlagCompact) {
 			printUsageCompact()
 
