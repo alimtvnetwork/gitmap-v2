@@ -249,6 +249,7 @@ const CloneNextPage = () => {
               "→ Now in macro-ahk-v12",
             ]}
           />
+        </section>
 
         {/* URL Preservation */}
         <section className="mb-10">
