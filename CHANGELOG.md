@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.51.0 — Help System Overhaul
+
+- Reorganized `gitmap help` output into 17 categorized command groups (Scanning, Cloning, Git Operations, Navigation, Release, etc.).
+- Added `--compact` flag to `gitmap help` for a minimal command-and-alias-only listing.
+- `gitmap help --compact <group>` filters compact output by group name (case-insensitive, falls back to all groups on no match).
+- Added color-coded group headers using ANSI escape codes (bold cyan) for improved terminal readability.
+- Added Quick Start section with common command examples at the top of help output.
+- Each group header includes a hint to run commands with `--help` or `-h` for detailed usage and examples.
+- Modularized help implementation across `rootusage.go`, `rootusagecompact.go`, `rootusageflags.go`, and `constants_helpgroups.go`.
+- Repository renamed from `git-repo-navigator` to `gitmap-v2`; all URLs, scripts, and references updated.
+
 ## v2.49.1 — Update UX & Versioned Binaries
 
 - Added `--repo-path` flag to `update` command: override the source repo path for a one-time update.
