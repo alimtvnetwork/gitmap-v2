@@ -42,13 +42,13 @@ func loadTemplatePairs(flags seoWriteFlags) ([]string, []string) {
 func loadFromJSONFile(path string) ([]string, []string) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOTemplateRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOTemplateRead, path, err)
 		os.Exit(1)
 	}
 
 	var tf templateFile
 	if err := json.Unmarshal(data, &tf); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOTemplateRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOTemplateRead, path, err)
 		os.Exit(1)
 	}
 
@@ -69,7 +69,7 @@ func loadFromDatabase() ([]string, []string) {
 func openSEODatabase() *store.DB {
 	db, err := store.OpenDefault()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrDBOpen, err)
+		fmt.Fprintf(os.Stderr, constants.ErrDBOpen, "default", err)
 		os.Exit(1)
 	}
 
@@ -95,14 +95,14 @@ func seedIfEmpty(db *store.DB) {
 func seedFromFile(db *store.DB, path string) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOSeedRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOSeedRead, path, err)
 
 		return
 	}
 
 	var tf templateFile
 	if err := json.Unmarshal(data, &tf); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOSeedRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOSeedRead, path, err)
 
 		return
 	}

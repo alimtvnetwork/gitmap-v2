@@ -38,7 +38,7 @@ func OpenProfile(outputDir, profileName string) (*DB, error) {
 func openDBAt(dbPath string) (*DB, error) {
 	dbDir := filepath.Dir(dbPath)
 	if err := ensureDir(dbDir); err != nil {
-		return nil, fmt.Errorf(constants.ErrDBCreateDir, err)
+		return nil, fmt.Errorf(constants.ErrDBCreateDir, dbDir, err)
 	}
 
 	if err := acquireLock(dbDir); err != nil {
@@ -49,7 +49,7 @@ func openDBAt(dbPath string) (*DB, error) {
 	if err != nil {
 		releaseLock(dbDir)
 
-		return nil, fmt.Errorf(constants.ErrDBOpen, err)
+		return nil, fmt.Errorf(constants.ErrDBOpen, dbPath, err)
 	}
 
 	// SQLite does not support concurrent writes; pin to one connection

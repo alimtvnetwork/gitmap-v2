@@ -42,7 +42,7 @@ func resolveChangelogAlias(version string, openFile bool) (string, bool) {
 func handleChangelogOpen(latest bool, version string) {
 	err := openChangelogFile()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, err)
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogOpen, constants.ChangelogFile, err)
 		os.Exit(1)
 	}
 	if !latest && len(version) == 0 {
@@ -54,7 +54,7 @@ func handleChangelogOpen(latest bool, version string) {
 func dispatchChangelogOutput(version string, latest bool, limit int, source string) {
 	entries, err := release.ReadChangelog()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrChangelogRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogRead, constants.ChangelogFile, err)
 		os.Exit(1)
 	}
 	entries = filterChangelogBySource(entries, source)

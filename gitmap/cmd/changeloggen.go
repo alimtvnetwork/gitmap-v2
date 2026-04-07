@@ -75,7 +75,7 @@ func printChangelogPreview(section string) {
 func writeChangelogSection(section string) {
 	existing, err := os.ReadFile(constants.ChangelogFile)
 	if err != nil && !os.IsNotExist(err) {
-		fmt.Fprintf(os.Stderr, constants.ErrChangelogGenRead, err)
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogGenRead, constants.ChangelogFile, err)
 		os.Exit(1)
 	}
 
@@ -83,7 +83,7 @@ func writeChangelogSection(section string) {
 
 	err = os.WriteFile(constants.ChangelogFile, []byte(content), 0o644)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrChangelogGenWrite, err)
+		fmt.Fprintf(os.Stderr, constants.ErrChangelogGenWrite, constants.ChangelogFile, err)
 		os.Exit(1)
 	}
 

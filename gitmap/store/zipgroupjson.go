@@ -48,19 +48,19 @@ func (db *DB) WriteZipGroupsJSON(repoRoot string) error {
 
 	err = os.MkdirAll(dir, 0o755)
 	if err != nil {
-		return fmt.Errorf(constants.ErrZGJSONWrite, err)
+		return fmt.Errorf(constants.ErrZGJSONWrite, dir, err)
 	}
 
 	jsonPath := filepath.Join(dir, constants.ZGJSONFile)
 
 	jsonBytes, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
-		return fmt.Errorf(constants.ErrZGJSONWrite, err)
+		return fmt.Errorf(constants.ErrZGJSONWrite, jsonPath, err)
 	}
 
 	err = os.WriteFile(jsonPath, jsonBytes, 0o644)
 	if err != nil {
-		return fmt.Errorf(constants.ErrZGJSONWrite, err)
+		return fmt.Errorf(constants.ErrZGJSONWrite, jsonPath, err)
 	}
 
 	return nil

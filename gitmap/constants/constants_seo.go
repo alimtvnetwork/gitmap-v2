@@ -90,18 +90,18 @@ const (
 // SEO-write error messages.
 const (
 	ErrSEOURLRequired    = "error: --url is required in template mode\n"
-	ErrSEOCSVRead        = "error: failed to read CSV file: %v\n"
+	ErrSEOCSVRead        = "error: failed to read CSV file at %s: %v (operation: read)\n"
 	ErrSEOCSVEmpty       = "error: CSV file contains no rows\n"
-	ErrSEOTemplateRead   = "error: failed to read template file: %v\n"
+	ErrSEOTemplateRead   = "error: failed to read template file at %s: %v (operation: read)\n"
 	ErrSEOTemplateEmpty  = "error: no templates found\n"
 	ErrSEOIntervalFmt    = "error: invalid --interval format, expected min-max (e.g. 60-120)\n"
 	ErrSEONoFiles        = "error: no files found matching pattern\n"
-	ErrSEORotateNotFound = "error: rotate file not found: %s\n"
+	ErrSEORotateNotFound = "error: rotate file not found at %s (operation: resolve, reason: file does not exist)\n"
 	ErrSEOGitStage       = "error: git add failed: %v\n"
 	ErrSEOGitCommit      = "error: git commit failed: %v\n"
 	ErrSEOGitPush        = "error: git push failed: %v\n"
-	ErrSEOSeedRead       = "error: failed to read seed file: %v\n"
-	ErrSEOCreateWrite    = "error: failed to write template file: %v\n"
+	ErrSEOSeedRead       = "error: failed to read seed file at %s: %v (operation: read)\n"
+	ErrSEOCreateWrite    = "error: failed to write template file at %s: %v (operation: write)\n"
 	ErrSEODBInsert       = "error: failed to insert template: %v\n"
 )
 

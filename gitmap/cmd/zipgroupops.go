@@ -120,6 +120,6 @@ func syncZipGroupJSON(db *store.DB) {
 
 	err = db.WriteZipGroupsJSON(cwd)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrZGJSONWrite+"\n", err)
+		fmt.Fprintf(os.Stderr, constants.ErrZGJSONWrite+"\n", "zip-groups.json", err)
 	}
 }

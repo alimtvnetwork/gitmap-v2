@@ -34,7 +34,7 @@ func buildZipGroupAssets(opts Options) []string {
 
 	stagingDir, err := EnsureStagingDir()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrZGStagingDir, err)
+		fmt.Fprintf(os.Stderr, constants.ErrZGStagingDir, constants.AssetsStagingDir, err)
 
 		return nil
 	}

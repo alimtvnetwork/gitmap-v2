@@ -21,12 +21,12 @@ func createTemplateFile() {
 	sample := buildSampleTemplate()
 	data, err := json.MarshalIndent(sample, "", constants.JSONIndent)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOCreateWrite, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOCreateWrite, constants.SEOTemplateOutputFile, err)
 		os.Exit(1)
 	}
 
 	if err := os.WriteFile(constants.SEOTemplateOutputFile, data, 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSEOCreateWrite, err)
+		fmt.Fprintf(os.Stderr, constants.ErrSEOCreateWrite, constants.SEOTemplateOutputFile, err)
 		os.Exit(1)
 	}
 

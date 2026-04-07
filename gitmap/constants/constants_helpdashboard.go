@@ -27,7 +27,7 @@ const (
 
 // Help-dashboard error messages.
 const (
-	ErrHDNoDocsDir  = "  ✗ Docs site directory not found: %s\n"
+	ErrHDNoDocsDir  = "  ✗ Docs site directory not found at %s (operation: resolve, reason: directory does not exist)\n"
 	ErrHDNPMInstall = "  ✗ npm install failed: %v\n"
 	ErrHDDevServer  = "  ✗ Dev server failed: %v\n"
 	ErrHDServe      = "  ✗ Failed to start server: %v\n"

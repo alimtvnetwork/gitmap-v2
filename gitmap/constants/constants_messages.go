@@ -180,14 +180,14 @@ const (
 	ErrUpdateFailed           = "Update error: %v\n"
 	ErrPullSlugRequired       = "Error: repo name is required"
 	ErrPullUsage              = "Usage: gitmap pull <repo-name> [--verbose]"
-	ErrPullLoadFailed         = "Error: could not load gitmap.json: %v\n"
+	ErrPullLoadFailed         = "Error: could not load gitmap.json at %s: %v (operation: read)\n"
 	ErrPullNotFound           = "Error: no repo found matching '%s'\n"
 	ErrPullNotRepo            = "Error: %s is not a git repository\n"
 	ErrRescanNoCache          = "Error: no previous scan found. Run 'gitmap scan' first.\n%v\n"
-	ErrSetupLoadFailed        = "Error: could not load git-setup.json: %v\n"
-	ErrStatusLoadFailed       = "Error: could not load gitmap.json for status: %v\nRun 'gitmap scan' first.\n"
+	ErrSetupLoadFailed        = "Error: could not load git-setup.json at %s: %v (operation: read)\n"
+	ErrStatusLoadFailed       = "Error: could not load gitmap.json at %s for status: %v (operation: read)\nRun 'gitmap scan' first.\n"
 	ErrExecUsage              = "Usage: gitmap exec <git-args...>\nExample: gitmap exec fetch --prune"
-	ErrExecLoadFailed         = "Error: could not load gitmap.json: %v\nRun 'gitmap scan' first.\n"
+	ErrExecLoadFailed         = "Error: could not load gitmap.json at %s: %v (operation: read)\nRun 'gitmap scan' first.\n"
 	ErrReleaseVersionRequired = "Error: version is required.\nProvide a version argument, use --bump, or create a version.json file."
 	ErrReleaseUsage           = "Usage: gitmap release [version] [--assets <path>] [--commit <sha>] [--branch <name>] [--bump major|minor|patch] [--draft] [--dry-run]"
 	ErrReleaseBranchUsage     = "Usage: gitmap release-branch <release/vX.Y.Z> [--assets <path>] [--draft]"
@@ -200,11 +200,11 @@ const (
 	ErrReleaseBumpConflict    = "Error: --bump cannot be used with an explicit version argument.\n"
 	ErrReleaseCommitBranch    = "Error: --commit and --branch are mutually exclusive.\n"
 	ErrReleasePushFailed      = "Error: failed to push to remote: %v\n"
-	ErrReleaseVersionLoad     = "Error: could not read version.json: %v\n"
-	ErrReleaseMetaWrite       = "Error: could not write release metadata: %v\n"
-	ErrChangelogRead            = "Error: could not read CHANGELOG.md: %v\n"
+	ErrReleaseVersionLoad     = "Error: could not read version.json at %s: %v (operation: read)\n"
+	ErrReleaseMetaWrite       = "Error: could not write release metadata at %s: %v (operation: write)\n"
+	ErrChangelogRead            = "Error: could not read CHANGELOG.md at %s: %v (operation: read)\n"
 	ErrChangelogVersionNotFound = "Error: version %s not found in CHANGELOG.md\n"
-	ErrChangelogOpen            = "Error: could not open CHANGELOG.md: %v\n"
+	ErrChangelogOpen            = "Error: could not open CHANGELOG.md at %s: %v (operation: open)\n"
 )
 
 // List-versions error messages.
@@ -245,7 +245,7 @@ const (
 	MsgClearReleaseDryRun    = "  [dry-run] Would remove %s\n"
 	ErrClearReleaseUsage     = "Usage: gitmap clear-release-json <version> [--dry-run]\nExample: gitmap clear-release-json v2.20.0"
 	ErrClearReleaseNotFound  = "Error: no release file found for %s\n"
-	ErrClearReleaseFailed    = "Error: could not remove release file: %v\n"
+	ErrClearReleaseFailed    = "Error: could not remove release file at %s: %v (operation: delete)\n"
 )
 
 // Revert messages.

@@ -154,12 +154,12 @@ const (
 
 // Store error messages.
 const (
-	ErrDBOpen           = "failed to open database: %v"
+	ErrDBOpen           = "failed to open database at %s: %v (operation: open)"
 	ErrDBMigrate        = "failed to initialize tables: %v"
 	ErrDBUpsert         = "failed to upsert repo: %v"
 	ErrDBQuery          = "failed to query repos: %v"
 	ErrDBNoMatch        = "no repo matches slug: %s\n"
-	ErrDBCreateDir      = "failed to create database directory: %v"
+	ErrDBCreateDir      = "failed to create database directory at %s: %v (operation: mkdir)"
 	ErrDBGroupCreate    = "failed to create group: %v"
 	ErrDBGroupQuery     = "failed to query groups: %v"
 	ErrDBGroupAdd       = "failed to add repo to group: %v"

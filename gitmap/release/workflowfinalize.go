@@ -85,7 +85,7 @@ func writeMetadata(v Version, branchName, tag, sourceName string, assets []strin
 
 	err := WriteReleaseMeta(meta)
 	if err != nil {
-		return fmt.Errorf(constants.ErrReleaseMetaWrite, err)
+		return fmt.Errorf(constants.ErrReleaseMetaWrite, metaPath, err)
 	}
 	fmt.Printf(constants.MsgReleaseMeta, metaPath)
 

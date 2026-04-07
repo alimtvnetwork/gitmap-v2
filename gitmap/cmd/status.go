@@ -101,7 +101,7 @@ func loadRecordsJSONFallback() []model.ScanRecord {
 	jsonPath := filepath.Join(constants.DefaultOutputFolder, constants.DefaultJSONFile)
 	records, err := loadStatusRecords(jsonPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrStatusLoadFailed, err)
+		fmt.Fprintf(os.Stderr, constants.ErrStatusLoadFailed, jsonPath, err)
 		os.Exit(1)
 	}
 
