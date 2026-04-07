@@ -410,14 +410,15 @@ The `release.yml` workflow triggers automatically when:
    baked into the binary via `-ldflags`.
 3. **Compress** — Windows binaries are zipped; Linux/macOS are tar.gz'd.
 4. **Generate checksums** — SHA256 checksums for all dist files.
-5. **Generate install script** — a version-pinned `install.ps1` is created
-   and attached as a release asset.
+5. **Generate install scripts** — version-pinned `install.ps1` (Windows)
+   and `install.sh` (Linux/macOS) are created and attached as release
+   assets.
 6. **Extract changelog** — the matching section from `CHANGELOG.md` is
    extracted for the release body.
 7. **Build release body** — combines: changelog entry, release metadata
    table (version, commit, branch, build date, Go version), SHA256
-   checksums block, install instructions (PowerShell one-liner), and
-   platform/architecture asset matrix.
+   checksums block, install instructions (PowerShell and Bash
+   one-liners), and platform/architecture asset matrix.
 8. **Create GitHub Release** — publishes the release with all assets.
    Pre-release versions (containing `-`) are automatically marked as
    prerelease.
@@ -429,5 +430,6 @@ Each GitHub release body includes:
 - **Changelog entry** for the version
 - **Release info table**: version, short commit SHA, branch, build date, Go version
 - **SHA256 checksums** in a code block
-- **Install instructions**: PowerShell one-liner using the pinned `install.ps1`
+- **Install instructions**: PowerShell one-liner (`install.ps1`) for
+  Windows and Bash one-liner (`install.sh`) for Linux/macOS
 - **Asset matrix table**: platform, architecture, and filename for each binary
