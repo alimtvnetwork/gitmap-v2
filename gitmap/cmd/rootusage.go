@@ -42,6 +42,7 @@ func printUsageQuickStart() {
 	fmt.Println(constants.HelpExampleCD)
 	fmt.Println()
 	fmt.Println(constants.HelpGroupHint)
+	fmt.Println(constants.HelpCompactHint)
 }
 
 // printGroupScanning prints the scanning commands.
