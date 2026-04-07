@@ -245,6 +245,7 @@ gitmap clear-release-json v2.30.0
 | `list` | `ls` | Show all tracked repos with slugs (supports type filtering) |
 | `group` | `g` | Manage repo groups / activate a group for batch ops |
 | `multi-group` | `mg` | Select multiple groups for batch operations |
+| `alias` | `a` | Assign short names to repos for quick access |
 | `diff-profiles` | `dp` | Compare repos across two profiles |
 
 ```bash
@@ -253,6 +254,10 @@ gitmap cd my-api
 
 # Interactive repo picker filtered by group
 gitmap cd repos --group work
+
+# Set a default path for a repo name (skip picker)
+gitmap cd set-default my-api D:\repos\api-gateway
+gitmap cd clear-default my-api
 
 # Create a group and add repos
 gitmap group create work --desc "Work repos"
@@ -275,13 +280,21 @@ gitmap mg backend,frontend     # select multiple groups
 gitmap mg pull                 # pull from all selected groups
 gitmap mg clear                # clear selection
 
+# Create and use repo aliases
+gitmap alias set api github/user/api-gateway
+gitmap pull -A api             # pull using alias
+gitmap cd -A api               # navigate using alias
+gitmap alias suggest           # auto-suggest aliases for unaliased repos
+gitmap alias suggest --apply   # auto-accept all suggestions
+gitmap alias list              # list all aliases with paths
+
 # Compare two profiles
 gitmap diff-profiles home work
 ```
 
-→ Full details: [cd](gitmap/helptext/cd.md) · [list](gitmap/helptext/list.md) · [group](gitmap/helptext/group.md) · [multi-group](gitmap/helptext/multi-group.md) · [diff-profiles](gitmap/helptext/diff-profiles.md)
+→ Full details: [cd](gitmap/helptext/cd.md) · [list](gitmap/helptext/list.md) · [group](gitmap/helptext/group.md) · [multi-group](gitmap/helptext/multi-group.md) · [alias](gitmap/helptext/alias.md) · [diff-profiles](gitmap/helptext/diff-profiles.md)
 
-### History & Stats
+### History, Stats & Amend
 
 | Command | Alias | Description |
 |---------|-------|-------------|
@@ -298,8 +311,20 @@ gitmap history --limit 10
 # Show usage stats as JSON
 gitmap stats --json
 
-# Amend commit author
+# Amend commit author (all commits)
 gitmap amend --name "John Doe" --email "john@example.com"
+
+# Amend a specific commit
+gitmap amend abc123 --name "John Doe" --email "john@example.com"
+
+# Dry-run (preview without changing)
+gitmap amend --name "John" --email "john@co.com" --dry-run
+
+# Amend and force push
+gitmap amend --name "John" --email "john@co.com" --force-push
+
+# View amendment history
+gitmap amend-list --json --limit 5
 ```
 
 → Full details: [history](gitmap/helptext/history.md) · [history-reset](gitmap/helptext/history-reset.md) · [stats](gitmap/helptext/stats.md) · [amend](gitmap/helptext/amend.md) · [amend-list](gitmap/helptext/amend-list.md)
@@ -324,7 +349,7 @@ gitmap csharp-repos --json
 
 → Full details: [go-repos](gitmap/helptext/go-repos.md) · [node-repos](gitmap/helptext/node-repos.md) · [react-repos](gitmap/helptext/react-repos.md) · [cpp-repos](gitmap/helptext/cpp-repos.md) · [csharp-repos](gitmap/helptext/csharp-repos.md)
 
-### Data & Profiles
+### Data, Profiles & Bookmarks
 
 | Command | Alias | Description |
 |---------|-------|-------------|
@@ -343,12 +368,163 @@ gitmap import gitmap-export.json
 gitmap profile create work
 gitmap profile switch work
 
-# Save a bookmark
-gitmap bookmark save "daily" "scan ~/projects --quiet"
+# Save a bookmark and run it later
+gitmap bookmark save daily scan ~/projects
 gitmap bookmark run daily
+
+# List and delete bookmarks
+gitmap bookmark list --json
+gitmap bookmark delete daily
 ```
 
 → Full details: [export](gitmap/helptext/export.md) · [import](gitmap/helptext/import.md) · [profile](gitmap/helptext/profile.md) · [bookmark](gitmap/helptext/bookmark.md) · [db-reset](gitmap/helptext/db-reset.md)
+
+### Cloning & Versioned Repos
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `clone` | `c` | Re-clone repos from structured file |
+| `clone-next` | `cn` | Clone next versioned iteration of current repo |
+
+```bash
+# Clone from JSON output into a target directory
+gitmap clone json --target-dir ./restored
+
+# Clone using a specific SSH key
+gitmap clone repos.json --ssh-key work
+
+# Increment repo version by one (my-app-v3 → my-app-v4)
+gitmap cn v++
+
+# Jump to a specific version and auto-delete current folder
+gitmap cn v15 --delete
+
+# Keep the current folder without prompting
+gitmap cn v++ --keep
+
+# Clone with remote creation if missing
+gitmap cn v++ --create-remote
+```
+
+→ Full details: [clone](gitmap/helptext/clone.md) · [clone-next](gitmap/helptext/clone-next.md)
+
+### SSH Key Management
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `ssh` | — | Generate and manage SSH keys for Git authentication |
+
+```bash
+# Generate a new SSH key
+gitmap ssh --name work --path ~/.ssh/id_rsa_work
+
+# Display the public key
+gitmap ssh cat --name work
+
+# List all stored keys
+gitmap ssh list
+
+# Clone repos using a named SSH key
+gitmap clone repos.json --ssh-key work
+
+# Regenerate ~/.ssh/config managed entries
+gitmap ssh config
+```
+
+→ Full details: [ssh](gitmap/helptext/ssh.md)
+
+### Zip Groups (Release Archives)
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `zip-group` | `z` | Manage named collections of files for release archives |
+
+```bash
+# Create a zip group with paths
+gitmap z create "chrome extension" chrome-extension/dist
+
+# Create and add items separately
+gitmap z create docs-bundle
+gitmap z add docs-bundle ./README.md ./CHANGELOG.md ./docs/
+
+# Set custom archive name
+gitmap z create extras --archive extra-files.zip
+gitmap z add extras ./config/ ./scripts/deploy.sh
+
+# List all zip groups
+gitmap z list
+
+# Show items with dynamic folder expansion
+gitmap z show docs-bundle
+
+# Include in a release
+gitmap release v3.0.0 --zip-group docs-bundle
+```
+
+→ Full details: [zip-group](gitmap/helptext/zip-group.md)
+
+### Environment & Tool Installation
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `env` | `ev` | Manage persistent environment variables and PATH |
+| `install` | `in` | Install developer tools via platform package manager |
+
+```bash
+# Set and retrieve environment variables
+gitmap env set GOPATH "/home/user/go"
+gitmap env get GOPATH
+gitmap env list
+
+# Manage PATH entries
+gitmap env path add /usr/local/go/bin
+gitmap env path remove /usr/local/go/bin
+gitmap env path list
+
+# Preview changes
+gitmap env set NODE_ENV production --dry-run
+
+# Install developer tools
+gitmap install node
+gitmap install go --check          # check if installed
+gitmap install python --dry-run    # preview install command
+gitmap install vscode --manager winget
+gitmap install --list              # list all supported tools
+```
+
+→ Full details: [env](gitmap/helptext/env.md) · [install](gitmap/helptext/install.md)
+
+### Temp Releases & File-Sync Tasks
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `temp-release` | `tr` | Create lightweight temp release branches |
+| `task` | `tk` | Manage file-sync watch tasks |
+
+```bash
+# Create 10 temp release branches from last 10 commits
+gitmap tr 10 v1.$$ -s 5
+
+# Preview without creating
+gitmap tr 5 v2.$$$ --dry-run
+
+# List and clean up temp release branches
+gitmap tr list
+gitmap tr remove v1.05 to v1.10
+gitmap tr remove all
+
+# Create a file-sync task
+gitmap task create my-sync --src ./src --dest ./backup
+
+# Run sync task with verbose output
+gitmap tk run my-sync --interval 10 --verbose
+
+# List and manage tasks
+gitmap task list
+gitmap task delete my-sync
+```
+
+→ Full details: [temp-release](gitmap/helptext/temp-release.md) · [task](gitmap/helptext/task.md)
 
 ### Utilities
 
@@ -356,19 +532,41 @@ gitmap bookmark run daily
 |---------|-------|-------------|
 | `setup` | — | Interactive first-time configuration wizard |
 | `doctor` | — | Diagnose PATH, deploy, and version issues |
-| `update` | — | Self-update from source repo |
+| `update` | — | Self-update from source repo or via gitmap-updater |
 | `version` | `v` | Show version number |
+| `completion` | `cmp` | Generate shell tab-completion scripts |
+| `interactive` | `i` | Launch full-screen interactive TUI |
+| `has-any-updates` | `hau` | Check if remote has new commits |
+| `docs` | `d` | Open documentation website in browser |
 | `seo-write` | `sw` | Auto-commit SEO messages |
 | `gomod` | `gm` | Rename Go module path across repo |
-| `ssh` | — | Generate and manage SSH keys for Git authentication |
+| `changelog-generate` | `cg` | Auto-generate changelog from commits |
 | `prune` | `pr` | Delete stale release branches that have been tagged |
 
 ```bash
 # Run diagnostics
 gitmap doctor --fix-path
 
-# Self-update
+# Self-update (from source or via gitmap-updater fallback)
 gitmap update
+gitmap update --repo-path C:\gitmap-src
+
+# Generate shell completions
+gitmap completion powershell    # output script
+gitmap completion bash
+gitmap completion --list-repos  # for scripting
+
+# Launch interactive TUI
+gitmap interactive
+gitmap i --refresh 10
+
+# Check for remote updates
+gitmap hau
+
+# Auto-generate changelog
+gitmap changelog-generate                       # between latest two tags
+gitmap cg --from v2.22.0                        # from tag to HEAD
+gitmap cg --from v2.23.0 --to v2.24.0 --write  # write to CHANGELOG.md
 
 # Rename Go module path (dry-run)
 gitmap gomod "github.com/neworg/project" --dry-run
@@ -377,7 +575,7 @@ gitmap gomod "github.com/neworg/project" --dry-run
 gitmap seo-write --csv data.csv --max-commits 5
 ```
 
-→ Full details: [setup](gitmap/helptext/setup.md) · [doctor](gitmap/helptext/doctor.md) · [update](gitmap/helptext/update.md) · [version](gitmap/helptext/version.md) · [seo-write](gitmap/helptext/seo-write.md) · [gomod](gitmap/helptext/gomod.md) · [ssh](gitmap/helptext/ssh.md) · [prune](gitmap/helptext/prune.md)
+→ Full details: [setup](gitmap/helptext/setup.md) · [doctor](gitmap/helptext/doctor.md) · [update](gitmap/helptext/update.md) · [version](gitmap/helptext/version.md) · [completion](gitmap/helptext/completion.md) · [interactive](gitmap/helptext/interactive.md) · [has-any-updates](gitmap/helptext/has-any-updates.md) · [docs](gitmap/helptext/docs.md) · [seo-write](gitmap/helptext/seo-write.md) · [gomod](gitmap/helptext/gomod.md) · [changelog-generate](gitmap/helptext/changelog-generate.md) · [prune](gitmap/helptext/prune.md)
 
 ### Visualization
 
