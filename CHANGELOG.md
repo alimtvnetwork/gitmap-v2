@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.61.0 — Install Hint Polish & Post-Mortem #17 (2026-04-07)
+
+### Release Command
+
+- Improved post-release install hint formatting with emoji labels (📦 🪟 🐧) and better spacing.
+- Removed hash-style comments in favor of OS-specific emoji indicators for Windows and Linux/macOS install one-liners.
+- Extracted `ShouldPrintInstallHint()` as an exported function for testability.
+- Added unit tests for install hint repo detection (11 cases covering gitmap and non-gitmap repos).
+
+### Documentation
+
+- Added Post-Mortem #17: Go Flag Ordering — Silent Flag Drop, documenting the `flag` package behavior and `reorderFlagsBeforeArgs()` fix.
+
 ## v2.60.0 — Auto-Detect Pending Release Branch (2026-04-07)
 
 ### Release Command
