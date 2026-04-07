@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.57.0 — README & Memory Updates (2026-04-07)
+
+### Documentation
+
+- Split README Quick Start into focused code blocks: separate Install (Windows + Linux/macOS), Scan, and Navigate sections.
+- Created `one-liner-installer` memory documenting both `install.ps1` and `install.sh` as CI-generated versioned release assets.
+
 ## v2.56.1 — Clone-on-Missing-Path for Update (2026-04-07)
 
 ### Update Command
