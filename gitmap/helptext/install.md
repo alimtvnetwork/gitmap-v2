@@ -39,8 +39,16 @@ in
 | cpp             | g++            | C++ compiler (MinGW/g++)         |
 | php             | php            | PHP programming language         |
 | powershell      | pwsh           | PowerShell shell                 |
-| npp             | notepad++      | Notepad++ text editor            |
-| npp-settings    | —              | Notepad++ settings sync only     |
+
+## Notepad++ Variants
+
+| Command         | Shortcut        | Description                              |
+|-----------------|-----------------|------------------------------------------|
+| npp             | NPP + Settings  | Install Notepad++ and sync settings      |
+| npp-settings    | NPP Settings    | Sync Notepad++ settings only             |
+| install-npp     | Install NPP     | Install Notepad++ only (no settings)     |
+
+Settings are extracted from a bundled zip to `%APPDATA%\Notepad++`.
 
 ## Prerequisites
 
@@ -50,15 +58,7 @@ in
 
 ## Examples
 
-### Install a tool end-to-end
-
-    $ gitmap install vscode
-      Checking if vscode is installed...
-      Installing vscode...
-      Verifying vscode installation...
-      vscode installed successfully.
-
-### Install Notepad++ with settings
+### NPP + Settings — Install Notepad++ with settings
 
     $ gitmap install npp
       Checking if npp is installed...
@@ -68,14 +68,33 @@ in
       Verifying npp binary at: C:\Program Files\Notepad++\notepad++.exe
       Binary confirmed: C:\Program Files\Notepad++\notepad++.exe
       Syncing Notepad++ settings...
+      Extracting Notepad++ settings to C:\Users\User\AppData\Roaming\Notepad++...
       Settings synced to C:\Users\User\AppData\Roaming\Notepad++
 
-### Sync Notepad++ settings only
+### NPP Settings — Sync settings only
 
     $ gitmap install npp-settings
       Skipping Notepad++ installation (settings-only mode)
       Syncing Notepad++ settings...
+      Extracting Notepad++ settings to C:\Users\User\AppData\Roaming\Notepad++...
       Settings synced to C:\Users\User\AppData\Roaming\Notepad++
+
+### Install NPP — Install Notepad++ only (no settings)
+
+    $ gitmap install install-npp
+      Checking if npp is installed...
+      Installing npp...
+      Verifying npp installation...
+      npp installed successfully.
+      Skipping Notepad++ settings (install-only mode)
+
+### Install a tool end-to-end
+
+    $ gitmap install vscode
+      Checking if vscode is installed...
+      Installing vscode...
+      Verifying vscode installation...
+      vscode installed successfully.
 
 ### Check if a tool is already installed
 
@@ -83,19 +102,11 @@ in
       Checking if go is installed...
       go is already installed (version: go version go1.22.4 linux/amd64)
 
-    $ gitmap in bun --check
-      Checking if bun is installed...
-      bun is not installed.
-
 ### Preview install command with dry-run
 
     $ gitmap install python --dry-run
       Checking if python is installed...
       [dry-run] Would run: choco install python -y
-
-    $ gitmap install node --manager brew --dry-run
-      Checking if node is installed...
-      [dry-run] Would run: brew install node
 
 ## See Also
 

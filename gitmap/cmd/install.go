@@ -89,24 +89,30 @@ func executeInstall(opts installOptions) {
 		return
 	}
 
-	fmt.Printf(constants.MsgInstallChecking, opts.Tool)
+	installName := resolveNppInstallName(opts.Tool)
 
-	existingVersion := detectInstalledVersion(opts.Tool)
+	fmt.Printf(constants.MsgInstallChecking, installName)
+
+	existingVersion := detectInstalledVersion(installName)
 	if existingVersion != "" {
-		fmt.Printf(constants.MsgInstallFound, opts.Tool, existingVersion)
+		fmt.Printf(constants.MsgInstallFound, installName, existingVersion)
 
 		return
 	}
 
 	if opts.Check {
-		fmt.Printf(constants.MsgInstallNotFound, opts.Tool)
+		fmt.Printf(constants.MsgInstallNotFound, installName)
 
 		return
 	}
 
+	opts.Tool = installName
 	installTool(opts)
 
-	if opts.Tool == constants.ToolNpp {
+	if installName == constants.ToolNpp {
 		runNppSettings()
+	}
+	if opts.Tool == constants.ToolNppInstall {
+		fmt.Print(constants.MsgInstallNppSkipSet)
 	}
 }

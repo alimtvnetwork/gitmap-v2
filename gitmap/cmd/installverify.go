@@ -105,6 +105,7 @@ func toolBinaryName(tool string) string {
 		constants.ToolPHP:           "php",
 		constants.ToolPowerShell:    "pwsh",
 		constants.ToolNpp:           "notepad++",
+		constants.ToolNppInstall:    "notepad++",
 	}
 
 	binary, exists := binaryMap[tool]
