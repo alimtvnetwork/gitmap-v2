@@ -148,7 +148,7 @@ func printGroupProject() {
 	fmt.Println(constants.HelpCSharpRepos)
 }
 
-// printGroupSSH prints the SSH commands.
+// printGroupSSH prints the SSH key management commands.
 func printGroupSSH() {
 	fmt.Println()
 	fmt.Println(constants.HelpGroupSSH)
