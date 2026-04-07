@@ -101,6 +101,11 @@ func dispatchTooling(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdUninstall || command == constants.CmdUninstallAlias {
+		runUninstall(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

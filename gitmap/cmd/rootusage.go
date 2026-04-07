@@ -169,6 +169,7 @@ func printGroupEnvTools() {
 	fmt.Println(constants.HelpGroupEnvTools)
 	fmt.Println(constants.HelpEnv)
 	fmt.Println(constants.HelpInstall)
+	fmt.Println(constants.HelpUninstall)
 }
 
 // printGroupTasks prints the task commands.

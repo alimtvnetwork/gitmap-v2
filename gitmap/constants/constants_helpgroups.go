@@ -44,7 +44,7 @@ const (
 	CompactProject    = "  go-repos (gr), node-repos (nr), react-repos (rr), cpp-repos (cr), csharp-repos (csr)"
 	CompactSSH        = "  ssh"
 	CompactZip        = "  zip-group (z)"
-	CompactEnvTools   = "  env, install"
+	CompactEnvTools   = "  env, install (in), uninstall (un)"
 	CompactTasks      = "  task"
 	CompactVisualize  = "  dashboard (db)"
 	CompactUtilities  = "  setup, doctor, update, update-cleanup, version (v), completion (cmp), interactive (i), docs (d), gomod (gm), seo-write (sw), help"
