@@ -21,6 +21,14 @@ set -euo pipefail
 
 REPO="alimtvnetwork/gitmap-v2"
 BINARY_NAME="gitmap"
+TMP_DIR=""
+
+cleanup() {
+    if [ -n "${TMP_DIR}" ] && [ -d "${TMP_DIR}" ]; then
+        rm -rf "${TMP_DIR}"
+    fi
+}
+trap cleanup EXIT
 
 # ── Logging helpers ─────────────────────────────────────────────────
 
@@ -122,8 +130,7 @@ download_asset() {
     local asset_url="${base_url}/${asset_name}"
     local checksum_url="${base_url}/checksums.txt"
 
-    TMP_DIR="$(mktemp -d)"
-    trap 'rm -rf "${TMP_DIR}"' EXIT
+    # TMP_DIR is set by the caller (main).
 
     local archive_path="${TMP_DIR}/${asset_name}"
     local checksum_path="${TMP_DIR}/checksums.txt"
@@ -415,6 +422,8 @@ main() {
     version="$(resolve_version "${VERSION}")"
     install_dir="$(resolve_install_dir "${INSTALL_DIR}")"
 
+    # Create TMP_DIR in parent scope so install_binary and cleanup can access it.
+    TMP_DIR="$(mktemp -d)"
     archive_path="$(download_asset "${version}" "${os}" "${arch}")"
 
     install_binary "${archive_path}" "${install_dir}" "${os}" "${arch}" "${version}"
