@@ -5,6 +5,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.51.0",
+    items: [
+      "Reorganized `gitmap help` output into 17 categorized command groups (Scanning, Cloning, Git Operations, Navigation, Release, etc.).",
+      "Added `--compact` flag to `gitmap help` for a minimal command-and-alias-only listing.",
+      "`gitmap help --compact <group>` filters compact output by group name (case-insensitive, falls back to all on no match).",
+      "Added color-coded group headers using ANSI escape codes (bold cyan) for improved terminal readability.",
+      "Added Quick Start section with common command examples at the top of help output.",
+      "Each group header includes a hint to run commands with `--help` or `-h` for detailed usage.",
+      "Modularized help across `rootusage.go`, `rootusagecompact.go`, `rootusageflags.go`, and `constants_helpgroups.go`.",
+      "Repository renamed from `git-repo-navigator` to `gitmap-v2`; all URLs, scripts, and references updated.",
+    ],
+  },
+  {
     version: "v2.48.1",
     items: [
       "`clone-next` now automatically changes into the newly cloned directory after removing the old folder.",
