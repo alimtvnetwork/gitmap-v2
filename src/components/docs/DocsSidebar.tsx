@@ -83,6 +83,7 @@ const navItems = [
   { title: "Clone Next", url: "/clone-next", icon: GitBranch },
   { title: "Dashboard", url: "/dashboard", icon: BarChart3 },
   { title: "Setup", url: "/setup", icon: Settings },
+  { title: "Install", url: "/install", icon: Hammer },
   { title: "Spec Index", url: "/spec", icon: BookOpen },
   { title: "Design System", url: "/design-system", icon: Palette },
 ];
