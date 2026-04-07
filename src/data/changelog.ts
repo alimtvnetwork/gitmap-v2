@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.62.0",
+    date: "2026-04-07",
+    items: [
+      "Release branches (`release/**`) are no longer cancelled by `cancel-in-progress` — every release commit runs to completion.",
+      "CI workflow uses conditional `cancel-in-progress` expression to protect release branches while cancelling superseded runs on other branches.",
+      "Updated CI pipeline spec with release branch protection documentation.",
+    ],
+  },
+  {
     version: "v2.61.0",
     date: "2026-04-07",
     items: [
