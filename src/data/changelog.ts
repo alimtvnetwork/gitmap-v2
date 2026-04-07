@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.56.0",
+    date: "2026-04-07",
+    items: [
+      "Documented `install.sh` in installer spec — CLI flags, version-pinned examples, binary detection, and shell-aware auto-PATH.",
+      "Updated release command spec — CI pipeline section now references both `install.ps1` and `install.sh`.",
+      "Added 'Known Behavior: Concurrency Cancellation' to CI passthrough gate post-mortem — `cancel-in-progress` safely prevents caching.",
+      "Updated post-release auto-commit memory for `-y` flag behavior.",
+      "Added unit test for `-y` autocommit flag — verifies prompt bypass when `yes=true`.",
+    ],
+  },
+  {
     version: "v2.55.0",
     date: "2026-04-07",
     items: [

@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.56.0 — Installer Docs & CI Known Behaviors (2026-04-07)
+
+### Documentation
+
+- Updated `spec/01-app/82-install-script.md` — documented `install.sh` with CLI flags (`--version`, `--dir`, `--arch`, `--no-path`), version-pinned examples, `.tar.gz`/`.zip` fallback, 4-priority binary detection, and shell-aware auto-PATH append (bash/zsh/fish).
+- Updated `spec/01-app/12-release-command.md` — CI release pipeline section now mentions `install.sh` alongside `install.ps1` in both steps list and release body format.
+- Added "Known Behavior: Concurrency Cancellation" section to `spec/02-app-issues/16-ci-passthrough-gate-pattern.md` — documents that `cancel-in-progress` can prevent `mark-success` from caching, which is safe and self-healing.
+- Updated post-release auto-commit memory to reflect the new `-y` flag behavior.
+
+### Testing
+
+- Added unit test for `-y` flag in autocommit — verifies `promptAndCommit` skips stdin when `yes=true`.
+
 ## v2.55.0 — Release Auto-Confirm, Docs & Installer Fix (2026-04-07)
 
 ### Post-Mortems Documentation
