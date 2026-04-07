@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.53.0 — Help Dashboard & Install Docs
+
+### Help Dashboard Command
+
+- New `gitmap help-dashboard` (alias `hd`) command to serve the documentation site locally.
+- Dual-mode resolution: serves pre-built `dist/` via Go's built-in HTTP server; falls back to `npm install && npm run dev` if static assets are missing.
+- `--port` flag to configure the serving port (default: 5173).
+- Automatically opens the docs site in the default browser on launch.
+- Graceful shutdown on Ctrl+C for both static and dev modes.
+- New constants file `constants_helpdashboard.go` with all messages, defaults, and error strings.
+
+### Install & Help Dashboard Docs Pages
+
+- Added `/help-dashboard` docs page with terminal demos for static mode, dev fallback, and custom port usage.
+- Added `/install` docs page documenting `install` and `uninstall` commands, supported tools, databases, and package managers.
+- Both pages include feature cards, flags tables, file layout references, and interactive terminal demos.
+
 ## v2.52.0 — Lock Detection & Install System Overhaul
 
 ### Lock Detection (clone-next)
