@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.65.0",
+    date: "2026-04-07",
+    items: [
+      "Install flow now shows a structured Install Plan box with tool, version, manager, and command before execution.",
+      "Added numbered step progress: [1/4] Updating → [2/4] Installing → [3/4] Verifying → [4/4] Recording.",
+      "Chocolatey installs use `--no-progress` to prevent GUI popups blocking the terminal (fixes NPP install freeze).",
+      "Winget installs use `--silent` for unattended installs.",
+      "NPP verification checks exe path directly instead of PATH lookup; settings zip resolves relative to binary directory.",
+    ],
+  },
+  {
     version: "v2.64.0",
     date: "2026-04-07",
     items: [
