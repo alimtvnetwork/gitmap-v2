@@ -26,7 +26,7 @@ func runInstall(args []string) {
 	fs.BoolVar(&yes, constants.FlagInstallYes, false, constants.FlagDescInstallYes)
 	fs.BoolVar(&yes, "y", false, constants.FlagDescInstallYes)
 
-	reordered := reorderFlagsBeforeArgs(fs, args)
+	reordered := reorderFlagsBeforeArgs(args)
 	fs.Parse(reordered)
 
 	if list {
