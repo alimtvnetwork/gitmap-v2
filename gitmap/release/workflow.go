@@ -4,6 +4,7 @@ package release
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/localdirs"
@@ -50,9 +51,22 @@ type Result struct {
 func Execute(opts Options) error {
 	EnsureGitignore()
 
+	// Early check: if no version/bump provided and we're on a release/* branch,
+	// extract the version from the branch name and delegate.
+	if len(opts.Version) == 0 && len(opts.Bump) == 0 {
+		if delegated, delegateErr := tryDelegateFromCurrentBranch(opts); delegated {
+			return delegateErr
+		}
+	}
+
 	version, err := resolveVersion(opts)
 	if err != nil {
 		return err
+	}
+
+	// If version was specified and matches the current release branch, delegate.
+	if delegated, delegateErr := tryDelegateFromBranch(version, opts); delegated {
+		return delegateErr
 	}
 
 	err = checkDuplicate(version)
@@ -70,6 +84,60 @@ func Execute(opts Options) error {
 	}
 
 	return performRelease(version, sourceRef, sourceName, opts)
+}
+
+// tryDelegateFromBranch checks if we should delegate to ExecuteFromBranch.
+// This handles the case where the user is already on a release/* branch
+// and the tag hasn't been created yet (pending release).
+func tryDelegateFromBranch(v Version, opts Options) (bool, error) {
+	currentBranch, err := CurrentBranchName()
+	if err != nil {
+		return false, nil
+	}
+
+	branchName := constants.ReleaseBranchPrefix + v.String()
+
+	// Check if we're on this release branch (or any release/* branch matching the version).
+	if currentBranch != branchName {
+		return false, nil
+	}
+
+	// Branch exists but tag doesn't — this is a pending release.
+	tagExists := TagExistsLocally(v.String()) || TagExistsRemote(v.String())
+	if tagExists {
+		return false, nil
+	}
+
+	fmt.Printf(constants.MsgReleaseBranchPending, branchName)
+
+	return true, ExecuteFromBranch(branchName, opts.Assets, opts.Notes, opts.Draft, opts.DryRun, opts.NoCommit, opts.Yes)
+}
+
+// tryDelegateFromCurrentBranch checks if we're on a release/* branch
+// with no tag when no version was explicitly provided.
+func tryDelegateFromCurrentBranch(opts Options) (bool, error) {
+	currentBranch, err := CurrentBranchName()
+	if err != nil {
+		return false, nil
+	}
+
+	if !strings.HasPrefix(currentBranch, constants.ReleaseBranchPrefix) {
+		return false, nil
+	}
+
+	v, err := extractVersionFromBranch(currentBranch)
+	if err != nil {
+		return false, nil
+	}
+
+	tagExists := TagExistsLocally(v.String()) || TagExistsRemote(v.String())
+	if tagExists {
+		return false, nil
+	}
+
+	fmt.Printf(constants.MsgReleaseBranchPending, currentBranch)
+
+	return true, ExecuteFromBranch(currentBranch, opts.Assets, opts.Notes, opts.Draft, opts.DryRun, opts.NoCommit, opts.Yes)
 }
 
 // resolveVersion determines the version from CLI args, bump, or file.

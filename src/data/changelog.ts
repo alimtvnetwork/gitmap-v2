@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.60.0",
+    date: "2026-04-07",
+    items: [
+      "Auto-detect pending release branch — running `gitmap r` on a `release/*` branch with no tag now completes the release instead of erroring.",
+      "Running `gitmap release v1.1.0` while on `release/v1.1.0` delegates to the pending release flow automatically.",
+      "Added `tryDelegateFromCurrentBranch()` and `tryDelegateFromBranch()` for branch-aware release detection.",
+    ],
+  },
+  {
     version: "v2.59.0",
     date: "2026-04-07",
     items: [
