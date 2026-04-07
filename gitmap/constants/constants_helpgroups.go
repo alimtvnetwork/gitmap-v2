@@ -51,3 +51,23 @@ const (
 
 	CompactNoMatchFmt = "  No group matching '%s'. Showing all groups:\n"
 )
+
+// HelpGroupKeys returns short keywords for tab-completion of group filtering.
+var HelpGroupKeys = []string{
+	"scanning",
+	"cloning",
+	"gitops",
+	"navigation",
+	"release",
+	"release-info",
+	"data",
+	"history",
+	"amend",
+	"project",
+	"ssh",
+	"zip",
+	"environment",
+	"tasks",
+	"visualization",
+	"utilities",
+}
