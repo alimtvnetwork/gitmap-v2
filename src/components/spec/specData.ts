@@ -135,6 +135,7 @@ export const sections: SpecSection[] = [
     entries: [
       { id: "01", title: "NPP Installation & Settings Shortcut Standardization" },
     ],
+  },
   {
     folder: "04-generic-cli",
     title: "Generic CLI Blueprint",
