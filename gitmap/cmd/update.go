@@ -32,18 +32,18 @@ func runUpdate() {
 // resolveRepoPath returns the repo path from --repo-path flag or embedded constant.
 // If neither is available, it attempts to delegate to gitmap-updater.
 func resolveRepoPath() string {
-	if flagVal := getFlagValue(constants.FlagRepoPath); len(flagVal) > 0 {
-		saveRepoPathToDB(flagVal)
+	for _, repoPath := range []string{
+		resolveRepoPathFromFlag(),
+		resolveRepoPathFromEmbedded(),
+		resolveRepoPathFromDB(),
+	} {
+		if len(repoPath) == 0 {
+			continue
+		}
 
-		return flagVal
-	}
+		saveRepoPathToDB(repoPath)
 
-	if len(constants.RepoPath) > 0 && pathExists(constants.RepoPath) {
-		return constants.RepoPath
-	}
-
-	if saved := loadRepoPathFromDB(); len(saved) > 0 && pathExists(saved) {
-		return saved
+		return repoPath
 	}
 
 	if prompted := promptRepoPath(); len(prompted) > 0 {
