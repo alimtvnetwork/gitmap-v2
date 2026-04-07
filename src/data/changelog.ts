@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.59.0",
+    date: "2026-04-07",
+    items: [
+      "Post-release install hints — after releasing a gitmap repo, the CLI prints Windows (PowerShell) and Unix (Bash) install one-liners.",
+      "Repo detection via `GitmapRepoPrefix` constant — only gitmap repos trigger the install hint output.",
+      "Install hints appear in all release paths: standard, branch-based, and metadata-only.",
+    ],
+  },
+  {
     version: "v2.58.0",
     date: "2026-04-07",
     items: [
