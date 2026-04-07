@@ -134,7 +134,13 @@ instead of guessing.
     - remove the current folder automatically with `--delete`
     - keep it automatically with `--keep`
     - otherwise prompt the user interactively
-12. If the current folder was removed, change into the newly cloned directory
+12. If removal fails, scan for processes locking the folder:
+    - On Windows: use Sysinternals `handle.exe` or PowerShell WMI query.
+    - On Unix/macOS: use `lsof +D <path>`.
+    - Display the list of locking processes with name and PID.
+    - Prompt the user to terminate them.
+    - If confirmed, kill each process and retry `RemoveAll` after a brief delay.
+13. If the current folder was removed, change into the newly cloned directory
     and print a confirmation (`→ Now in <target>`).
 
 ## Flags
