@@ -102,3 +102,10 @@ The user mentioned the updater should update itself first. This creates a comple
 
 ## Estimated Scope
 ~10 files, medium-large feature. Core logic is straightforward since it reuses proven patterns (handoff copy, install.ps1, rename-first).
+
+## Lint Rules — Lessons Learned
+
+### `fmt.Fprintln` + trailing newline = redundant newline (gocritic)
+When a constant already ends with `\n` (including raw backtick strings with a trailing newline), use `fmt.Fprint` — never `fmt.Fprintln`. The `Fprintln` variant appends its own newline, causing a "redundant newline" lint error. This applies to all multi-line error constants defined with backtick literals.
+
+**Rule:** Use `fmt.Fprint(os.Stderr, constant)` for constants that already contain a trailing newline. Reserve `fmt.Fprintln` only for constants that do NOT end with `\n`.
