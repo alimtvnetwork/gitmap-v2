@@ -160,24 +160,25 @@ Answering `n` (or pressing Enter) aborts the release.
 
 ### Example 8: Release with auto-confirm and install hints (gitmap repo)
 
-    gitmap release v2.59.0 -y
+    gitmap release v2.61.0 -y
 
 **Output:**
 
-    Creating branch release/v2.59.0... done
-    Creating tag v2.59.0... done
+    Creating branch release/v2.61.0... done
+    Creating tag v2.61.0... done
     Pushing branch and tag... done
-    ✓ Metadata written to .gitmap/release/v2.59.0.json
+    ✓ Metadata written to .gitmap/release/v2.61.0.json
 
-    Release v2.59.0 complete.
+    Release v2.61.0 complete.
 
-    ■ Install gitmap v2.59.0:
 
-    # Windows (PowerShell)
-    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
+      📦 Install gitmap v2.61.0
 
-    # Linux / macOS
-    curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
+      🪟 Windows (PowerShell)
+         irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
+
+      🐧 Linux / macOS
+         curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
 
 Install hints only appear when the repo's remote origin matches the
 gitmap source repository. Non-gitmap repos are unaffected.
