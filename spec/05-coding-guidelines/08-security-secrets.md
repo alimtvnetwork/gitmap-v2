@@ -158,6 +158,35 @@ console.error("[auth] login failed", { userId, reason: err.message });
 
 ---
 
+## 10. Zip Extraction Security (Mandatory)
+
+All code that extracts zip archives **must** implement these two checks:
+
+### Path Traversal Prevention (gosec G305)
+
+Validate that every extracted file's resolved absolute path starts with the target directory prefix. Reject entries containing `../` sequences.
+
+```go
+absDest, _ := filepath.Abs(filepath.Join(targetDir, entry.Name))
+absTarget, _ := filepath.Abs(targetDir)
+if !strings.HasPrefix(absDest, absTarget+string(os.PathSeparator)) {
+    return fmt.Errorf("path traversal detected: %s", entry.Name)
+}
+```
+
+### Decompression Bomb Prevention (gosec G110)
+
+Cap extraction size per file using `io.LimitReader`. Default maximum: 10 MB for CLI tools.
+
+```go
+limited := io.LimitReader(rc, 10*1024*1024)
+_, err = io.Copy(outFile, limited)
+```
+
+See: `spec/02-app-issues/14-security-hardening-gosec-fixes.md`
+
+---
+
 ## References
 
 - [Code Quality Improvement](./01-code-quality-improvement.md)
