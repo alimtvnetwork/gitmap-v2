@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/constants"
+	"github.com/user/gitmap/store"
 )
 
 // runUninstall handles the "uninstall" command.
@@ -83,7 +84,7 @@ func confirmUninstall(tool string) bool {
 }
 
 // resolveUninstallManager determines which manager was used to install.
-func resolveUninstallManager(db *DB, tool string) string {
+func resolveUninstallManager(db *store.DB, tool string) string {
 	if db == nil {
 		return resolvePackageManager("")
 	}
