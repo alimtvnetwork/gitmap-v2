@@ -1,11 +1,11 @@
 # GitMap
 
-[![CI](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml/badge.svg)](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml)
-[![golangci-lint](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/ci.yml)
-[![Vulncheck](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/vulncheck.yml/badge.svg)](https://github.com/alimtvnetwork/git-repo-navigator/actions/workflows/vulncheck.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/alimtvnetwork/git-repo-navigator?style=flat-square&label=version)](https://github.com/alimtvnetwork/git-repo-navigator/releases)
+[![CI](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/ci.yml)
+[![golangci-lint](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/ci.yml)
+[![Vulncheck](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/vulncheck.yml/badge.svg)](https://github.com/alimtvnetwork/gitmap-v2/actions/workflows/vulncheck.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/alimtvnetwork/gitmap-v2?style=flat-square&label=version)](https://github.com/alimtvnetwork/gitmap-v2/releases)
 [![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com/alimtvnetwork/git-repo-navigator)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com/alimtvnetwork/gitmap-v2)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 
 A command-line tool that scans directory trees for Git repositories, extracts clone URLs and branch info, and outputs structured data. Every scan produces **all outputs** automatically:
@@ -27,19 +27,19 @@ All files are written to a `gitmap-output/` folder at the root of the scanned di
 **Windows (PowerShell — full bootstrap, works on any machine):**
 
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1'))
 ```
 
 **Windows (short form, PowerShell 5+):**
 
 ```powershell
-irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
 ```
 
 **Linux / macOS (Bash):**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.sh | sh
 ```
 
 ### Installer Options
@@ -54,7 +54,7 @@ curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/ma
 **Custom directory install (one-liner):**
 
 ```powershell
-irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1 | iex; Install-Gitmap -InstallDir "D:\DevTools\gitmap"
+irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex; Install-Gitmap -InstallDir "D:\DevTools\gitmap"
 ```
 
 **Custom directory install (downloaded script):**
@@ -74,8 +74,8 @@ irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitm
 ### Clone & Setup (Development)
 
 ```bash
-git clone https://github.com/alimtvnetwork/git-repo-navigator.git
-cd git-repo-navigator
+git clone https://github.com/alimtvnetwork/gitmap-v2.git
+cd gitmap-v2
 ./setup.sh
 ```
 

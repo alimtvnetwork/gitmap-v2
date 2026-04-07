@@ -19,13 +19,13 @@
     Force architecture (amd64, arm64). Default: auto-detect.
 
 .EXAMPLE
-    irm https://raw.githubusercontent.com/alimtvnetwork/git-repo-navigator/main/gitmap/scripts/install.ps1 | iex
+    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/scripts/install.ps1 | iex
 
 .EXAMPLE
     & ./install.ps1 -Version v2.48.0
 
 .NOTES
-    Repository: https://github.com/alimtvnetwork/git-repo-navigator
+    Repository: https://github.com/alimtvnetwork/gitmap-v2
 #>
 
 param(
@@ -37,7 +37,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Repo = "alimtvnetwork/git-repo-navigator"
+$Repo = "alimtvnetwork/gitmap-v2"
 $BinaryName = "gitmap.exe"
 
 # --- Logging helpers ---

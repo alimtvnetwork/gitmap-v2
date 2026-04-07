@@ -148,8 +148,8 @@ Before executing gitmap, the script prints diagnostic context:
 ```
   [RUN] Executing gitmap
   ──────────────────────────────────────────────────
-  → Runner CWD: D:\wp-work\riseup-asia\git-repo-navigator
-  → Repo root: D:\wp-work\riseup-asia\git-repo-navigator
+  → Runner CWD: D:\wp-work\riseup-asia\gitmap-v2
+  → Repo root: D:\wp-work\riseup-asia\gitmap-v2
   → Command: gitmap scan D:\wp-work
   → Scan target: D:\wp-work
   ──────────────────────────────────────────────────
@@ -158,7 +158,7 @@ Before executing gitmap, the script prints diagnostic context:
 | Line | Description |
 |------|-------------|
 | Runner CWD | Current working directory of the PowerShell session |
-| Repo root | Root of the git-repo-navigator project |
+| Repo root | Root of the gitmap-v2 project |
 | Command | Full command being executed |
 | Scan target | Resolved absolute path passed to `scan` (shown only for scan commands) |
 

@@ -8,8 +8,8 @@ development workflow, coding standards, and pull-request requirements.
 ## Getting Started
 
 ```bash
-git clone https://github.com/alimtvnetwork/git-repo-navigator.git
-cd git-repo-navigator
+git clone https://github.com/alimtvnetwork/gitmap-v2.git
+cd gitmap-v2
 ./setup.sh          # installs hooks, linter, and downloads Go deps
 ```
 
