@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.63.0",
+    date: "2026-04-07",
+    items: [
+      "Added `installed-dir` (alias `id`) command — prints the active gitmap binary path and directory.",
+      "Linux/macOS update now uses `run.sh --update` for native shell-based self-update with PATH binary sync.",
+      "Fixed update handoff on Linux: removed `.exe` extension, added `chmod +x` permission, expanded `~` in path prompt.",
+      "Fixed `gitmap install` on Ubuntu: runs `apt-get update` before install; added `-y` flag and error logging to `.gitmap/logs/`.",
+      "Fixed `install.sh` unbound `TMP_DIR` variable caused by subshell scoping.",
+    ],
+  },
+  {
     version: "v2.62.0",
     date: "2026-04-07",
     items: [

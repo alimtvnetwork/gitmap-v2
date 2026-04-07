@@ -1,5 +1,27 @@
 # Changelog
 
+## v2.63.0 — Installed Directory & Linux Update Flow (2026-04-07)
+
+### New Commands
+
+- Added `gitmap installed-dir` (alias `id`) — prints the full binary path and directory of the active gitmap installation, resolving symlinks to the real location.
+
+### Update Command
+
+- Linux/macOS update now uses `run.sh --update` instead of PowerShell, enabling native shell-based self-update on Unix systems.
+- After pulling latest source and rebuilding, the active PATH binary is automatically synced to the new version.
+- Added install path resolution using `which gitmap` with `EvalSymlinks` fallback for accurate binary location.
+- If `run.sh` is missing from the source repo, a clear error is shown instead of a PowerShell failure.
+
+### Bug Fixes
+
+- Fixed `gitmap update` on Linux: handoff binary no longer uses `.exe` extension and now gets `chmod +x` permission.
+- Fixed tilde `~` not expanding in update repo path prompt (e.g. `~/repos/gitmap` was treated as literal `~/`).
+- Fixed `gitmap install` on Ubuntu: `apt-get update` now runs before package installation to prevent exit code 100 errors.
+- Added `-y`/`--yes` flag to `gitmap install` for non-interactive installs with confirmation prompt.
+- Install failures now write detailed error logs to `.gitmap/logs/` with version, manager, command, and reason.
+- Fixed `install.sh` installer: `TMP_DIR` unbound variable error on exit caused by subshell scoping.
+
 ## v2.62.0 — CI Release Branch Protection (2026-04-07)
 
 ### CI/CD
