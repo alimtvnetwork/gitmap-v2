@@ -44,6 +44,7 @@ import CdPage from "./pages/Cd";
 import SetupPage from "./pages/Setup";
 import DesignSystemPage from "./pages/DesignSystem";
 import InstallPage from "./pages/Install";
+import HelpDashboardPage from "./pages/HelpDashboard";
 
 const queryClient = new QueryClient();
 
