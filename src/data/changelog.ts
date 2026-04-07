@@ -53,6 +53,16 @@ export const changelog: ChangelogEntry[] = [
     ],
   },
   {
+    version: "v2.53.0",
+    items: [
+      "New `gitmap help-dashboard` (alias `hd`) command to serve the documentation site locally.",
+      "Dual-mode resolution: serves pre-built `dist/` via Go's built-in HTTP server; falls back to `npm install && npm run dev`.",
+      "`--port` flag to configure the serving port (default: 5173).",
+      "Automatically opens the docs site in the default browser on launch.",
+      "Added `/help-dashboard` and `/install` docs pages with terminal demos, feature cards, and flags tables.",
+    ],
+  },
+  {
     version: "v2.52.0",
     items: [
       "Added lock detection to `clone-next`: scans for processes holding the target folder before deletion.",
