@@ -216,6 +216,7 @@ permissions:
 | App Spec | Covers |
 |----------|--------|
 | [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Cross-compilation and checksums in build pipeline |
+| [05-code-signing.md](../../03-general/05-code-signing.md) | SignPath.io integration, signing step placement, SmartScreen reputation |
 | [12-release-command.md](../../01-app/12-release-command.md) | gitmap release CLI, version resolution, CI workflow |
 
 ## Contributors
