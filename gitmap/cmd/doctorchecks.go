@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/user/gitmap/constants"
@@ -169,4 +170,69 @@ func checkLegacyDirs() int {
 	printOK(constants.DoctorLegacyDirsOK)
 
 	return 0
+}
+
+// checkSignature verifies whether the active binary has a valid digital signature.
+// Only runs on Windows — signature verification uses PowerShell's Get-AuthenticodeSignature.
+func checkSignature() int {
+	if runtime.GOOS != "windows" {
+		printWarn(constants.DoctorSignSkipUnix)
+
+		return 0
+	}
+
+	binaryPath, err := exec.LookPath(constants.GitMapBin)
+	if err != nil {
+		printWarn(constants.DoctorSignNoPath)
+
+		return 0
+	}
+
+	absPath, _ := filepath.Abs(binaryPath)
+
+	cmd := exec.Command("powershell", "-NoProfile", "-Command",
+		"(Get-AuthenticodeSignature '"+absPath+"').Status")
+	out, err := cmd.Output()
+	if err != nil {
+		printWarn(constants.DoctorSignCheckFail)
+
+		return 0
+	}
+
+	status := strings.TrimSpace(string(out))
+
+	if status == "Valid" {
+		signer := getSignatureSigner(absPath)
+		printOK(constants.DoctorSignOKFmt, absPath, signer)
+
+		return 0
+	}
+
+	if status == "NotSigned" {
+		printWarn(constants.DoctorSignUnsigned)
+
+		return 0
+	}
+
+	printIssue(constants.DoctorSignInvalidFmt, status)
+	printFix(constants.DoctorSignUnsignFix)
+
+	return 1
+}
+
+// getSignatureSigner extracts the signer subject from a signed binary.
+func getSignatureSigner(binaryPath string) string {
+	cmd := exec.Command("powershell", "-NoProfile", "-Command",
+		"(Get-AuthenticodeSignature '"+binaryPath+"').SignerCertificate.Subject")
+	out, err := cmd.Output()
+	if err != nil {
+		return "unknown signer"
+	}
+
+	subject := strings.TrimSpace(string(out))
+	if len(subject) == 0 {
+		return "unknown signer"
+	}
+
+	return subject
 }

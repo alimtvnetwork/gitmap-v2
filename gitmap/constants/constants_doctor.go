@@ -116,6 +116,20 @@ const (
 	DoctorNetworkOffline = "Network: github.com unreachable (offline mode)"
 )
 
+// Doctor digital signature messages.
+const (
+	DoctorSignTitle      = "Digital signature"
+	DoctorSignOKFmt      = "Signed: %s (%s)"
+	DoctorSignUnsigned   = "Binary is not digitally signed"
+	DoctorSignUnsignDet  = "Users will see SmartScreen warnings on Windows."
+	DoctorSignUnsignFix  = "See spec/03-general/05-code-signing.md for SignPath.io setup"
+	DoctorSignSkipUnix   = "Signature check: skipped (not Windows)"
+	DoctorSignNoPath     = "Signature check: skipped (binary not on PATH)"
+	DoctorSignCheckFail  = "Signature check: could not verify (PowerShell unavailable)"
+	DoctorSignInvalidFmt = "Signature invalid: %s"
+	DoctorSignInvalidDet = "The binary's signature is present but not valid."
+)
+
 // Doctor legacy directory messages.
 const (
 	DoctorLegacyDirsOK = "No legacy directories (.release/, gitmap-output/, .deployed/)"
