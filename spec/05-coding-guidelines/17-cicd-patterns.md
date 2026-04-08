@@ -30,8 +30,8 @@ Every pipeline follows a fixed stage sequence:
 
 ```yaml
 # Good
-- uses: actions/checkout@v4
-- uses: actions/setup-go@v5
+- uses: actions/checkout@v6
+- uses: actions/setup-go@v6
 
 # Bad
 - uses: actions/checkout@main
