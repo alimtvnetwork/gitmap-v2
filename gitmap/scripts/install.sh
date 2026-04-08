@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 # Re-exec under bash if invoked via sh/dash (which lack pipefail, local, etc.)
-if [ -z "${BASH_VERSION}" ]; then
+if [ -z "${BASH_VERSION:-}" ]; then
     if command -v bash >/dev/null 2>&1; then
+        case "${0##*/}" in
+            sh|dash|ash|ksh|mksh)
+                exec bash -s -- "$@"
+                ;;
+        esac
+
         exec bash "$0" "$@"
     else
         printf '\033[31m  Error: bash is required but not found. Install bash first.\033[0m\n' >&2
@@ -31,6 +37,11 @@ set -euo pipefail
 REPO="alimtvnetwork/gitmap-v2"
 BINARY_NAME="gitmap"
 TMP_DIR=""
+PATH_SHELL=""
+PATH_TARGET=""
+PATH_LINE=""
+PATH_STATUS=""
+PATH_RELOAD=""
 
 cleanup() {
     if [ -n "${TMP_DIR}" ] && [ -d "${TMP_DIR}" ]; then
@@ -41,8 +52,8 @@ trap cleanup EXIT
 
 # ── Logging helpers ─────────────────────────────────────────────────
 
-step()  { printf '  \033[36m%s\033[0m\n' "$*"; }
-ok()    { printf '  \033[32m%s\033[0m\n' "$*"; }
+step()  { printf '  \033[36m%s\033[0m\n' "$*" >&2; }
+ok()    { printf '  \033[32m%s\033[0m\n' "$*" >&2; }
 err()   { printf '  \033[31m%s\033[0m\n' "$*" >&2; }
 
 # ── Detect OS ───────────────────────────────────────────────────────
@@ -292,12 +303,11 @@ install_binary() {
 
 add_to_path() {
     local dir="$1"
+    local has_session_path=false
 
-    # Check if already in PATH
     case ":${PATH}:" in
         *":${dir}:"*)
-            step "Already in PATH."
-            return
+            has_session_path=true
             ;;
     esac
 
@@ -330,24 +340,57 @@ add_to_path() {
             ;;
     esac
 
+    PATH_SHELL="${shell_name}"
+    PATH_TARGET="${profile_file}"
+
+    local path_line
+    if [ "${shell_name}" = "fish" ]; then
+        path_line="fish_add_path ${dir}"
+        PATH_RELOAD="source ${profile_file}"
+    else
+        path_line="export PATH=\"\$PATH:${dir}\""
+        PATH_RELOAD=". ${profile_file}"
+    fi
+
+    PATH_LINE="${path_line}"
+
     # Check if already added to profile
     if [ -f "${profile_file}" ] && grep -qF "${dir}" "${profile_file}"; then
+        PATH_STATUS="already present"
         step "PATH entry already in ${profile_file}"
     else
-        local path_line
-        if [ "${shell_name}" = "fish" ]; then
-            path_line="fish_add_path ${dir}"
-        else
-            path_line="export PATH=\"\${PATH}:${dir}\""
-        fi
-
         mkdir -p "$(dirname "${profile_file}")"
         printf '\n# Added by gitmap installer\n%s\n' "${path_line}" >> "${profile_file}"
+        PATH_STATUS="added"
         ok "Added to PATH in ${profile_file}"
+    fi
+
+    if [ "${has_session_path}" = true ]; then
+        step "Already in PATH."
+
+        return
     fi
 
     # Update current session
     export PATH="${PATH}:${dir}"
+}
+
+print_install_summary() {
+    local installed_version="$1" bin_path="$2"
+
+    echo ""
+    step "Install summary"
+    printf '    Version: %s\n' "${installed_version}" >&2
+    printf '    Binary: %s\n' "${bin_path}" >&2
+    printf '    Install dir: %s\n' "$(dirname "${bin_path}")" >&2
+    if [ "${NO_PATH}" = true ]; then
+        printf '    PATH target: skipped (--no-path)\n' >&2
+
+        return
+    fi
+    printf '    Shell: %s\n' "${PATH_SHELL}" >&2
+    printf '    PATH target: %s (%s)\n' "${PATH_TARGET}" "${PATH_STATUS}" >&2
+    printf '    Reload: %s\n' "${PATH_RELOAD}" >&2
 }
 
 # ── Resolve install directory ──────────────────────────────────────
@@ -443,20 +486,28 @@ main() {
 
     # Verify the binary works
     local bin_path="${install_dir}/${BINARY_NAME}"
+    local installed_version="${version}"
     if [ -f "${bin_path}" ]; then
         echo ""
         local version_output
         if version_output="$("${bin_path}" version 2>&1)"; then
-            ok "  gitmap ${version_output}"
+            installed_version="${version_output}"
+            ok "gitmap ${version_output}"
         else
-            err "  Binary found but failed to run."
+            err "Binary found but failed to run."
         fi
     else
-        err "  Binary not found at ${bin_path}"
+        err "Binary not found at ${bin_path}"
+    fi
+
+    print_install_summary "${installed_version}" "${bin_path}"
+    if [ "${NO_PATH}" = false ]; then
+        step "Open a new terminal to use gitmap in your regular shell."
+        step "If you use a different shell (for example sh), add ${install_dir} there too."
     fi
 
     echo ""
-    ok "  Done! Run 'gitmap --help' to get started."
+    ok "Done! Run 'gitmap --help' to get started."
     echo ""
 }
 

@@ -301,10 +301,27 @@ function Add-ToPath([string]$dir) {
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
         Broadcast-EnvironmentChange
         Write-OK "Added to user PATH."
+        return @{ Target = "User PATH"; Status = "added" }
     }
-    else {
-        Write-Step "Already in user PATH."
+
+    Write-Step "Already in user PATH."
+    return @{ Target = "User PATH"; Status = "already present" }
+}
+
+function Write-InstallSummary([string]$version, [string]$binPath, [string]$installDir, [hashtable]$pathResult, [bool]$isNoPath) {
+    Write-Host ""
+    Write-Step "Install summary"
+    Write-Host "    Version: $version"
+    Write-Host "    Binary: $binPath"
+    Write-Host "    Install Dir: $installDir"
+
+    if ($isNoPath) {
+        Write-Host "    PATH Target: skipped (-NoPath)"
+        return
     }
+
+    Write-Host "    PATH Target: $($pathResult.Target) ($($pathResult.Status))"
+    Write-Host "    Session PATH: refreshed for current PowerShell session"
 }
 
 # --- Main ---
@@ -329,19 +346,24 @@ function Main {
             Remove-Item $result.TmpDir -Recurse -Force -ErrorAction SilentlyContinue
         }
 
+        $pathResult = @{ Target = "-NoPath"; Status = "skipped" }
         if (-not $NoPath) {
-            Add-ToPath $resolvedDir
+            $pathResult = Add-ToPath $resolvedDir
+
+            # Also try Chocolatey refreshenv if available
+            $refreshCmd = Get-Command refreshenv -ErrorAction SilentlyContinue
+            if ($refreshCmd) {
+                try { refreshenv | Out-Null } catch {}
+            }
+
+            # Force-rebuild $env:PATH in this scope so gitmap is usable immediately
+            $script:NewPath = Rebuild-SessionPath $resolvedDir
+        }
+        else {
+            $script:NewPath = $env:PATH
         }
 
-        # Also try Chocolatey refreshenv if available
-        $refreshCmd = Get-Command refreshenv -ErrorAction SilentlyContinue
-        if ($refreshCmd) {
-            try { refreshenv | Out-Null } catch {}
-        }
-
-        # Force-rebuild $env:PATH in this scope so gitmap is usable immediately
-        $script:NewPath = Rebuild-SessionPath $resolvedDir
-        return @{ InstallDir = $resolvedDir; NewPath = $script:NewPath }
+        return @{ InstallDir = $resolvedDir; NewPath = $script:NewPath; Version = $resolvedVersion; PathResult = $pathResult }
     }
     catch {
         Write-Err "Installation failed: $_"
@@ -366,20 +388,24 @@ $env:PATH = $installResult.NewPath
 
 # Verify the binary works
 $binPath = Join-Path $installResult.InstallDir $BinaryName
+$installedVersion = $installResult.Version
 if (Test-Path $binPath) {
     Write-Host ""
     try {
         $versionOutput = & $binPath version 2>&1
-        Write-OK "  gitmap $versionOutput"
+        $installedVersion = ($versionOutput | Out-String).Trim()
+        Write-OK "gitmap $installedVersion"
     }
     catch {
-        Write-Err "  Binary found but failed to run: $_"
+        Write-Err "Binary found but failed to run: $_"
     }
 }
 else {
-    Write-Err "  Binary not found at $binPath"
+    Write-Err "Binary not found at $binPath"
 }
 
+Write-InstallSummary $installedVersion $binPath $installResult.InstallDir $installResult.PathResult $NoPath.IsPresent
+
 Write-Host ""
-Write-OK "  Done! Run 'gitmap --help' to get started."
+Write-OK "Done! Run 'gitmap --help' to get started."
 Write-Host ""
