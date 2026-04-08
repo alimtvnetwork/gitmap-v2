@@ -124,23 +124,24 @@ if (Test-Path $lastReleaseScript) {
     & $lastReleaseScript -BinaryPath $activeBinary -RepoRoot "%s"
 }
 
-if (($activeAfter -eq "unknown") -or ($deployedAfter -eq "unknown") -or ($activeAfter -ne $deployedAfter)) {
+if ($activeAfter -ne "unknown" -and $deployedAfter -eq "unknown") {
+    Write-Host ""
+    Write-Host "  [WARN] Deployed binary could not be verified (not resolved or missing)." -ForegroundColor Yellow
+    Write-Host "  [TRACE] activeAfter=$activeAfter  deployedAfter=$deployedAfter" -ForegroundColor DarkGray
+    Write-Host "  [HINT] Check that powershell.json 'deployPath' points to the correct directory" -ForegroundColor Yellow
+    Write-Host "         and that the binary exists at: $deployedBinary" -ForegroundColor Yellow
+    Write-Host "  [OK] Active PATH binary updated successfully: $activeAfter" -ForegroundColor Green
+} elseif (($activeAfter -eq "unknown") -or ($activeAfter -ne $deployedAfter)) {
     Write-Host ""
     Write-Host "  [FAIL] Active PATH version does not match deployed version." -ForegroundColor Red
     Write-Host "  [TRACE] activeAfter=$activeAfter  deployedAfter=$deployedAfter" -ForegroundColor DarkGray
-    if ($deployedAfter -eq "unknown") {
-        Write-Host "  [HINT] Deployed binary could not be found or executed." -ForegroundColor Yellow
-        Write-Host "         Check that powershell.json 'deployPath' points to the correct directory" -ForegroundColor Yellow
-        Write-Host "         and that the binary exists at: $deployedBinary" -ForegroundColor Yellow
-    }
-    if ($activeAfter -ne "unknown" -and $deployedAfter -eq "unknown") {
-        Write-Host "  [HINT] The active PATH binary (v$activeAfter) updated successfully." -ForegroundColor Yellow
-        Write-Host "         Only the deployed-binary verification failed." -ForegroundColor Yellow
+    if ($activeAfter -eq "unknown") {
+        Write-Host "  [HINT] Active binary not found in PATH." -ForegroundColor Yellow
     }
     exit 1
+} else {
+    Write-Host "  [OK] Active PATH binary matches deployed version." -ForegroundColor Green
 }
-
-Write-Host "  [OK] Active PATH binary matches deployed version." -ForegroundColor Green
 `
 	UpdatePSPostActions = `
 if ($activeBinary -and (Test-Path $activeBinary)) {

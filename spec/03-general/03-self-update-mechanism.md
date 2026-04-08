@@ -265,14 +265,26 @@ visible without manual inspection:
   Active binary:    C:\Users\user\bin\gitmap.exe
   Deployed binary:  (not resolved)
 
-  [FAIL] Active PATH version does not match deployed version.
+  [WARN] Deployed binary could not be verified (not resolved or missing).
   [TRACE] activeAfter=gitmap v2.67.0  deployedAfter=unknown
-  [HINT] Deployed binary could not be found or executed.
-         Check that powershell.json 'deployPath' points to the correct directory
+  [HINT] Check that powershell.json 'deployPath' points to the correct directory
          and that the binary exists at: <path>
-  [HINT] The active PATH binary (v2.67.0) updated successfully.
-         Only the deployed-binary verification failed.
+  [OK] Active PATH binary updated successfully: gitmap v2.67.0
 ```
+
+### Verification Logic
+
+The version check uses a three-branch decision:
+
+| Condition | Result | Exit Code |
+|-----------|--------|-----------|
+| Active updated, deployed unknown | **Warning** — active PATH binary is valid, deployed path misconfigured | 0 (success) |
+| Active unknown, or active ≠ deployed | **Failure** — real version mismatch or PATH not working | 1 (error) |
+| Active = deployed | **Success** — both binaries match | 0 (success) |
+
+This ensures that a missing or misconfigured `deployPath` in
+`powershell.json` does not block an otherwise successful update.
+The user sees a clear warning but the update completes.
 
 ### Required Trace Points
 
@@ -281,15 +293,7 @@ visible without manual inspection:
 | `deployedBinary: not resolved` | `$deployedBinary` is `$null` (config missing or `deployPath` unset) |
 | `deployedBinary: path not found: <path>` | Config resolved but file doesn't exist at that path |
 | `Get-Command gitmap: not found in PATH` | Active binary not discoverable via PATH |
-| `activeAfter=... deployedAfter=...` | Always printed on mismatch for comparison |
-
-### Hint Messages
-
-When `deployedAfter` is `"unknown"` but `activeAfter` is valid, print
-a hint clarifying that the PATH binary updated successfully and only
-the deployed-binary verification failed. This prevents users from
-thinking the entire update failed when only the config-based deploy
-path is misconfigured.
+| `activeAfter=... deployedAfter=...` | Always printed on warning or mismatch |
 
 ## Error Handling
 
@@ -302,7 +306,8 @@ path is misconfigured.
 | Deploy locked after retries | Restore backup, fail with clear message |
 | Temp copy fails to launch | Print error, exit 1 |
 | Version unchanged after update | Warn user (version constant not bumped) |
-| Deployed binary unknown | Print trace + hint, exit 1 |
+| Deployed binary unknown, active OK | **Warning** (not failure), exit 0 |
+| Active binary unknown | Print trace, exit 1 |
 
 ## Platform Considerations
 
