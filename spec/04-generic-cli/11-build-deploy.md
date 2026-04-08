@@ -44,6 +44,12 @@ $ ./bin/toolname version
 v1.2.0
 ```
 
+## Build Once, Package Once
+
+Binaries are compiled **exactly once** per pipeline run. All downstream
+steps — compression, checksumming, installer generation, and publishing —
+operate on the already-built artifacts and **must never trigger a rebuild**.
+
 ## Deploy Patterns
 
 ### Nested Deploy Structure
