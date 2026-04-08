@@ -175,3 +175,59 @@ After successful `installTool()`, detect the installed version and save a record
 | **Phase 9** | Completion support for install/uninstall tool names | Shell scripts, completion handler |
 
 Each phase is independently shippable and testable.
+
+---
+
+## Part G: Pending Task Workflow (Task-Based Deletion)
+
+Spec: `spec/01-app/83-pending-task-workflow.md`
+Prevention: `spec/02-app-issues/21-pending-task-durability.md`
+
+### Rule
+Every `os.Remove` / `os.RemoveAll` must be preceded by a `PendingTask` insert.
+No silent loss of delete intent is acceptable.
+
+### Phase 1 — Database Layer
+| Step | Files |
+|------|-------|
+| Add `TaskType`, `PendingTask`, `CompletedTask` SQL to constants | `constants/constants_pending_task.go` |
+| Add model structs | `model/pendingtask.go`, `model/tasktype.go` |
+| Add store CRUD (insert, list, complete, fail, find) | `store/pendingtask.go`, `store/tasktype.go` |
+| Add seed logic for TaskType (Delete, Remove) | `store/store.go` (Migrate) |
+| Add create/drop to migration + reset | `store/store.go` |
+| Run `go test ./store/...` | — |
+
+### Phase 2 — Delete Workflow Integration
+| Step | Files |
+|------|-------|
+| Wrap `clone-next --delete` removal in task flow | `cmd/clonenext.go` |
+| Create helpers: `CreateTask`, `CompleteTask`, `FailTask` | `cmd/pendingtaskhelper.go` |
+| Duplicate prevention (same type + path) | `store/pendingtask.go` |
+| Run `go vet ./cmd` + `go test ./cmd` | — |
+
+### Phase 3 — CLI Commands
+| Step | Files |
+|------|-------|
+| Add `pending` command (list all pending tasks) | `cmd/pending.go` |
+| Add `do-pending` / `dp` command (retry all) | `cmd/dopending.go` |
+| Add `do-pending <id>` (retry single) | `cmd/dopending.go` |
+| Route in dispatcher | `cmd/roottooling.go` |
+| Add constants (commands, messages, errors) | `constants/constants_cli.go`, `constants/constants_pending_task.go` |
+
+### Phase 4 — Help Integration
+| Step | Files |
+|------|-------|
+| Create `helptext/pending.md` | `helptext/pending.md` |
+| Create `helptext/do-pending.md` | `helptext/do-pending.md` |
+| Add to root usage output | `cmd/rootusage.go` |
+| Add to UI commands data | `src/data/commands.ts` |
+| Update documentation site help page | `src/pages/` |
+
+### Phase 5 — Validation & Edge Cases
+| Step | Files |
+|------|-------|
+| Test missing folder retry | tests |
+| Test permission failure | tests |
+| Test duplicate prevention | tests |
+| Test completed-task transactional move | tests |
+| Run full `golangci-lint` | — |
