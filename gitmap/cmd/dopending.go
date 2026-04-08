@@ -45,7 +45,7 @@ func runDoPendingAll() {
 	fmt.Printf(constants.MsgPendingRetryAll, len(tasks))
 
 	for _, t := range tasks {
-		retryPendingTask(db, t.ID, t.TaskTypeName, t.TargetPath)
+		retryPendingTask(db, t.ID, t.TaskTypeName, t.TargetPath, t.WorkingDirectory, t.CommandArgs)
 	}
 }
 
@@ -71,5 +71,5 @@ func runDoPendingSingle(idStr string) {
 	}
 
 	fmt.Printf(constants.MsgPendingRetryOne, taskID)
-	retryPendingTask(db, task.ID, task.TaskTypeName, task.TargetPath)
+	retryPendingTask(db, task.ID, task.TaskTypeName, task.TargetPath, task.WorkingDirectory, task.CommandArgs)
 }
