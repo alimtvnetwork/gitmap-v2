@@ -1254,4 +1254,32 @@ export const commands: CommandDef[] = [
       { name: "setup", description: "Configure Git global settings" },
     ],
   },
+  {
+    category: "tools",
+    name: "pending", description: "List all pending tasks that have not yet completed successfully",
+    usage: "gitmap pending",
+    examples: [
+      { command: "gitmap pending", description: "List all pending tasks with ID, type, path, and failure reason" },
+    ],
+    seeAlso: [
+      { name: "do-pending", description: "Retry pending tasks" },
+      { name: "clone-next", description: "Clone next versioned iteration" },
+      { name: "task", description: "Manage file-sync watch tasks" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "do-pending", alias: "dp", description: "Retry all pending tasks or a specific task by ID",
+    usage: "gitmap do-pending [task-id]",
+    examples: [
+      { command: "gitmap do-pending", description: "Retry all pending tasks" },
+      { command: "gitmap dp", description: "Retry all using alias" },
+      { command: "gitmap do-pending 2", description: "Retry a specific task by its ID" },
+    ],
+    seeAlso: [
+      { name: "pending", description: "List all pending tasks" },
+      { name: "clone-next", description: "Clone next versioned iteration" },
+      { name: "task", description: "Manage file-sync watch tasks" },
+    ],
+  },
 ];
