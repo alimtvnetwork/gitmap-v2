@@ -36,6 +36,22 @@ func (db *DB) FindPendingTaskDuplicate(taskTypeID int64, targetPath string) int6
 	return id
 }
 
+// FindPendingTaskDuplicateWithCmd checks if a pending task exists for the given type, path, and command args.
+// Returns the existing task ID or 0 if none found.
+func (db *DB) FindPendingTaskDuplicateWithCmd(taskTypeID int64, targetPath, cmdArgs string) int64 {
+	row := db.conn.QueryRow(constants.SQLSelectPendingTaskByTypePathCmd,
+		taskTypeID, targetPath, cmdArgs)
+
+	var id int64
+
+	err := row.Scan(&id)
+	if err != nil {
+		return 0
+	}
+
+	return id
+}
+
 // ListPendingTasks returns all pending tasks ordered by ID.
 func (db *DB) ListPendingTasks() ([]model.PendingTaskRecord, error) {
 	rows, err := db.conn.Query(constants.SQLSelectAllPendingTasks)
@@ -93,14 +109,24 @@ func (db *DB) CompleteTask(taskID int64) error {
 		return fmt.Errorf(constants.ErrPendingTaskComplete, err)
 	}
 
-	return tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf(constants.ErrPendingTaskComplete, err)
+	}
+
+	return nil
 }
 
 // FailTask updates the failure reason for a pending task.
 func (db *DB) FailTask(taskID int64, reason string) error {
-	_, err := db.conn.Exec(constants.SQLUpdatePendingTaskFailure, reason, taskID)
+	result, err := db.conn.Exec(constants.SQLUpdatePendingTaskFailure, reason, taskID)
 	if err != nil {
 		return fmt.Errorf(constants.ErrPendingTaskFail, err)
+	}
+
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		return fmt.Errorf(constants.ErrPendingTaskNotFound, taskID)
 	}
 
 	return nil

@@ -10,6 +10,7 @@ import (
 )
 
 // createPendingTask inserts a pending task into the database.
+// For replayable task types, duplicate detection includes CommandArgs.
 // Returns the task ID and DB handle (caller must close), or 0 on failure.
 func createPendingTask(typeName, targetPath, workDir, sourceCmd, cmdArgs string) (int64, *store.DB) {
 	db, err := openDB()
@@ -27,7 +28,7 @@ func createPendingTask(typeName, targetPath, workDir, sourceCmd, cmdArgs string)
 		return 0, nil
 	}
 
-	existing := db.FindPendingTaskDuplicate(typeID, targetPath)
+	existing := findDuplicate(db, typeName, typeID, targetPath, cmdArgs)
 	if existing > 0 {
 		fmt.Fprintf(os.Stderr, constants.ErrPendingTaskExists, typeName, targetPath, existing)
 
@@ -43,6 +44,16 @@ func createPendingTask(typeName, targetPath, workDir, sourceCmd, cmdArgs string)
 	}
 
 	return taskID, db
+}
+
+// findDuplicate checks for an existing pending task using type-appropriate matching.
+// Delete/Remove tasks match on type+path only; replayable tasks match on type+path+cmdArgs.
+func findDuplicate(db *store.DB, typeName string, typeID int64, targetPath, cmdArgs string) int64 {
+	if typeName == constants.TaskTypeDelete || typeName == constants.TaskTypeRemove {
+		return db.FindPendingTaskDuplicate(typeID, targetPath)
+	}
+
+	return db.FindPendingTaskDuplicateWithCmd(typeID, targetPath, cmdArgs)
 }
 
 // buildCommandArgs joins CLI arguments into a storable string.

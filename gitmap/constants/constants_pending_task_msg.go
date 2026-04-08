@@ -28,6 +28,9 @@ const (
 	ReasonUserDeclined     = "user declined to terminate locking processes"
 	ReasonRetryFailed      = "retry removal failed: %v"
 	ReasonReplayFailed     = "command replay failed: %v"
+	ReasonTargetNotFound   = "target path does not exist: %s (operation: stat, reason: file does not exist)"
+	ReasonWorkDirNotFound  = "working directory does not exist: %s (operation: stat, reason: directory does not exist)"
+	ReasonPermissionDenied = "permission denied at path: %s (operation: %s, reason: %v)"
 )
 
 // Pending task help text.
@@ -39,7 +42,7 @@ const (
 // Pending task terminal messages.
 const (
 	MsgPendingTaskCreated   = "Task #%d created: %s %s\n"
-	MsgPendingTaskCompleted = "Task #%d completed: %s %s\n"
+	MsgPendingTaskCompleted = "Task #%d completed: %s\n"
 	MsgPendingTaskFailed    = "Task #%d failed: %s\n"
 	MsgPendingListHeader    = "Pending Tasks:\n"
 	MsgPendingListRow       = "  #%-6d %-8s %-40s %s\n"
@@ -47,4 +50,5 @@ const (
 	MsgPendingRetryAll      = "Retrying %d pending task(s)...\n"
 	MsgPendingRetryOne      = "Retrying task #%d...\n"
 	MsgPendingReplaying     = "Replaying: gitmap %s\n"
+	MsgPendingSkipNotExist  = "Task #%d skipped: target path no longer exists, marking complete\n"
 )
