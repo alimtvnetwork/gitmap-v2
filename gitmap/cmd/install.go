@@ -139,12 +139,16 @@ func executeInstall(opts installOptions) {
 		}
 	}
 
+	// Track original tool name before it was resolved.
+	originalTool := tool
+
 	installTool(opts)
 
-	if installName == constants.ToolNpp {
+	// Sync settings for "npp" but not for "install-npp".
+	if originalTool == constants.ToolNpp {
 		runNppSettings()
 	}
-	if opts.Tool == constants.ToolNppInstall {
+	if originalTool == constants.ToolNppInstall {
 		fmt.Print(constants.MsgInstallNppSkipSet)
 	}
 }
