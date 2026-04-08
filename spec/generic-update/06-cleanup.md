@@ -169,6 +169,13 @@ prefix pattern for your tool.
 - Log every file removed so the user has visibility.
 - On Windows, some files may be locked — skip them without error.
 
+## Application-Specific References
+
+| App Spec | Covers |
+|----------|--------|
+| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | `.old` artifact lifecycle during deploy |
+| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Post-update cleanup of handoff and `.old` files |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.

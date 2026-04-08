@@ -211,6 +211,13 @@ permissions:
 - No notification steps (email, Slack) in the pipeline.
 - Release jobs must not be cancellable mid-execution.
 
+## Application-Specific References
+
+| App Spec | Covers |
+|----------|--------|
+| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Cross-compilation and checksums in build pipeline |
+| [12-release-command.md](../../01-app/12-release-command.md) | gitmap release CLI, version resolution, CI workflow |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
