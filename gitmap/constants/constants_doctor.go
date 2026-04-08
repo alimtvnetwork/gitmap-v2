@@ -35,7 +35,7 @@ const (
 	DoctorPathBinaryFmt   = "PATH binary: %s (%s)"
 	DoctorPathMissTitle   = "gitmap not found on PATH"
 	DoctorPathMissDetail  = "The gitmap binary is not accessible from your terminal."
-	DoctorPathMissFix     = "Add your deploy directory to PATH (e.g., E:\\bin-run\\gitmap)"
+	DoctorPathMissFix     = "Add your deploy directory to PATH (check deployPath in powershell.json or run 'gitmap installed-dir')"
 	DoctorDeployReadFail  = "Cannot read powershell.json"
 	DoctorDeployReadDet   = "Deploy path detection unavailable."
 	DoctorNoDeployPath    = "No deployPath in powershell.json"
