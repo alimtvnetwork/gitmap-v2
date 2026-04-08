@@ -143,6 +143,14 @@ func (db *DB) migrateTRCommitSha() {
 	_, _ = db.conn.Exec(constants.SQLMigrateTRCommitSha)
 }
 
+// migratePendingTaskColumns adds WorkingDirectory and CommandArgs to existing tables.
+func (db *DB) migratePendingTaskColumns() {
+	_, _ = db.conn.Exec(constants.SQLMigratePendingWorkDir)
+	_, _ = db.conn.Exec(constants.SQLMigratePendingCmdArgs)
+	_, _ = db.conn.Exec(constants.SQLMigrateCompletedWorkDir)
+	_, _ = db.conn.Exec(constants.SQLMigrateCompletedCmdArgs)
+}
+
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
