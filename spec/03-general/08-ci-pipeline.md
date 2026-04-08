@@ -20,9 +20,14 @@ implement concurrency controls to cancel superseded runs.
 | Vulnerability  | `govulncheck` — fails only on third-party issues  |
 | Test           | Parallel matrix: unit, store, integration, tui    |
 | Test Summary   | Aggregates failures, generates coverage breakdown |
+| Build          | Cross-compile 6 targets after tests pass          |
+| Build Summary  | Lists all binaries with sizes                      |
 
-**No binary builds on main.** Artifact production is delegated
-exclusively to the release pipeline.
+**Binary builds on main.** After all tests pass, the CI pipeline
+cross-compiles 6 binaries (windows/linux/darwin × amd64/arm64)
+versioned as `dev-<sha>` and uploads them as artifacts (14-day
+retention). This provides pre-built binaries for every green commit
+without requiring a formal release.
 
 ### 2. Release (`release.yml`)
 
