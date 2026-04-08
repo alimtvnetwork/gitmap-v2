@@ -807,10 +807,7 @@ $deployedBinaryPath = $null
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 
-    $effectiveDeployPath = $config.deployPath
-    if ($DeployPath.Length -gt 0) {
-        $effectiveDeployPath = $DeployPath
-    }
+    $effectiveDeployPath = Resolve-DeployTarget -Config $config -OverridePath $DeployPath
     $deployedBinaryPath = Join-Path (Join-Path $effectiveDeployPath "gitmap") $config.binaryName
 
     $activeCmd = Get-Command gitmap -ErrorAction SilentlyContinue
