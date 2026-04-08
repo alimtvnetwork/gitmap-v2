@@ -300,3 +300,53 @@ jobs:
           name: gitmap-${{ matrix.os }}-${{ matrix.arch }}
           path: gitmap/gitmap-*
           retention-days: 14
+
+  build-summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [sha-check, build]
+    if: always() && needs.build.result == 'success'
+    steps:
+      - name: Already validated
+        if: needs.sha-check.outputs.already-built == 'true'
+        run: echo "✅ SHA ${{ github.sha }} already built all targets"
+
+      - name: Download all binaries
+        if: needs.sha-check.outputs.already-built != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: gitmap-*
+          path: binaries
+
+      - name: Print build summary
+        if: needs.sha-check.outputs.already-built != 'true'
+        shell: bash
+        run: |
+          echo ""
+          echo "========================================="
+          echo "  BUILD SUMMARY"
+          echo "========================================="
+          echo ""
+          printf "  %-45s %s\n" "Binary" "Size"
+          printf "  %-45s %s\n" "---------------------------------------------" "--------"
+
+          total_size=0
+          count=0
+
+          for dir in binaries/gitmap-*; do
+            if [ ! -d "$dir" ]; then continue; fi
+            for file in "$dir"/*; do
+              if [ ! -f "$file" ]; then continue; fi
+              name=$(basename "$file")
+              size=$(stat --format="%s" "$file" 2>/dev/null || stat -f "%z" "$file" 2>/dev/null)
+              human=$(numfmt --to=iec --suffix=B "$size" 2>/dev/null || echo "${size}B")
+              printf "  %-45s %s\n" "$name" "$human"
+              total_size=$((total_size + size))
+              count=$((count + 1))
+            done
+          done
+
+          echo ""
+          total_human=$(numfmt --to=iec --suffix=B "$total_size" 2>/dev/null || echo "${total_size}B")
+          echo "  Total: $count binaries, $total_human"
+          echo "========================================="
