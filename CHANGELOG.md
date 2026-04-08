@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.67.0 — Smart Deploy Path Resolution (2026-04-08)
+## v2.67.0 — Smart Deploy & Rename-First (2026-04-08)
 
 ### Improvements
 
@@ -8,8 +8,12 @@
 - Deploy target resolution follows a 3-tier priority: `--deploy-path` CLI flag → globally installed PATH location → `powershell.json` default.
 - First-time installs use the config default; subsequent builds automatically deploy to the active binary's directory.
 - Added `Resolve-DeployTarget` function to `run.ps1` and `resolve_deploy_target` function to `run.sh` for full cross-platform parity.
-- Added "Build once, package once" constraint to `spec/05-coding-guidelines/17-cicd-patterns.md` under Artifact Management.
-- Updated `spec/01-app/09-build-deploy.md` with deploy target resolution documentation.
+- Deploy step now uses **rename-first strategy**: renames the existing binary to `.old` before copying the new one, avoiding Windows file-lock failures when deploying to a running binary.
+- Rollback restores the `.old` file via rename (not copy) for consistency.
+- Added "Build once, package once" constraint to `spec/05-coding-guidelines/17-cicd-patterns.md` and `spec/04-generic-cli/11-build-deploy.md`.
+- Updated `spec/01-app/09-build-deploy.md` with deploy target resolution and rename-first deploy documentation.
+- Added smart deploy path resolution and rename-first deploy to cross-platform parity table in `spec/01-app/42-cross-platform.md`.
+- Replaced hardcoded `E:\bin-run` path in `gitmap doctor` fix suggestion with dynamic guidance.
 
 ## v2.66.0 — CI Hardening & Pipeline Docs (2026-04-08)
 

@@ -12,8 +12,11 @@ export const changelog: ChangelogEntry[] = [
       "`run.ps1` and `run.sh` now auto-detect the globally installed `gitmap` location and deploy there instead of using a hardcoded path.",
       "Deploy target follows 3-tier priority: `--deploy-path` flag → PATH detection → `powershell.json` default.",
       "Added `Resolve-DeployTarget` (PS1) and `resolve_deploy_target` (Bash) for cross-platform parity.",
-      "Added 'Build once, package once' constraint to CI/CD patterns spec.",
-      "Updated build-deploy spec with deploy target resolution documentation.",
+      "Deploy step now uses rename-first strategy: renames existing binary to `.old` before copying, avoiding Windows file-lock failures.",
+      "Added 'Build once, package once' constraint to CI/CD patterns and generic CLI specs.",
+      "Documented rename-first deploy strategy and 3-tier resolution in build-deploy spec.",
+      "Added smart deploy and rename-first to cross-platform parity table.",
+      "Replaced hardcoded `E:\\bin-run` in `gitmap doctor` fix suggestion with dynamic guidance.",
     ],
   },
   {
