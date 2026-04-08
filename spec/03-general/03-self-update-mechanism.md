@@ -308,6 +308,31 @@ is needed.
 12. **Never add `Read-Host` or interactive prompts** to generated
     scripts — they run in non-interactive PowerShell sessions.
 
+## Cross-References (Generic Specifications)
+
+This document is an application-level summary. The following generic,
+tool-agnostic specs provide detailed breakdowns of each mechanism:
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Overall architecture | [01-self-update-overview.md](../generic-update/01-self-update-overview.md) | Platform behavior table, two update strategies (source vs binary), repo resolution tiers, version comparison |
+| Deploy path resolution | [02-deploy-path-resolution.md](../generic-update/02-deploy-path-resolution.md) | 3-tier deploy target resolution (CLI flag → PATH → config) |
+| Rename-first deploy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Full PowerShell + Bash implementations, rollback, PATH sync, retry reduction (20→5) |
+| Build scripts | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline (pull → deps → build → deploy), config loading, ldflags |
+| Handoff mechanism | [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) | Copy-and-handoff flow, worker launch, UTF-8 BOM, binary-based handoff (standalone updater) |
+| Cleanup | [06-cleanup.md](../generic-update/06-cleanup.md) | Artifact inventory, `update-cleanup` command, `.old` lifecycle, auto vs manual cleanup |
+
+### Mapping: This Document → Generic Specs
+
+| Section Here | Generic Equivalent |
+|-------------|-------------------|
+| Layer 1 (Copy and Re-launch) | `05-handoff-mechanism.md` §Solution: Copy-and-Handoff |
+| Layer 2 (Skip-if-Current) | `01-self-update-overview.md` §Version Comparison |
+| Layer 3 (Deploy with Rollback) | `03-rename-first-deploy.md` §Rollback |
+| Cleanup Command | `06-cleanup.md` §Cleanup Command |
+| Alternative: Rename Trick | `03-rename-first-deploy.md` §The Solution: Rename-First |
+| Platform Considerations | `01-self-update-overview.md` §Platform Behavior |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.

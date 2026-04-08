@@ -336,6 +336,32 @@ if (Test-Path $lastReleaseScript) {
 | Print error details before `exit 1` | User sees what went wrong |
 | Use `try/finally` with `Push-Location/Pop-Location` | Always restore working directory |
 
+## Cross-References (Generic Specifications)
+
+This document is an application-level summary. The following generic,
+tool-agnostic specs provide detailed breakdowns of each mechanism:
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Build pipeline | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` full pipeline, config loading, ldflags, `--force-pull`, logging helpers |
+| Deploy strategy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Rename-first flow, rollback, PATH sync, retry reduction (20→5) |
+| Self-update orchestration | [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) | Copy-and-handoff, worker launch, UTF-8 BOM, binary-based fallback |
+| Cleanup | [06-cleanup.md](../generic-update/06-cleanup.md) | `.old` lifecycle, `update-cleanup` command, temp directory hygiene |
+| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | Cross-compilation, checksums, version-pinned install scripts |
+| Install scripts | [03-install-scripts.md](../generic-release/03-install-scripts.md) | `install.ps1` / `install.sh` generation, SHA-256 verification |
+| Release metadata | [06-release-metadata.md](../generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, asset maps |
+
+### Mapping: This Document → Generic Specs
+
+| Section Here | Generic Equivalent |
+|-------------|-------------------|
+| Script Architecture (run.ps1) | `04-build-scripts.md` §PowerShell |
+| Configuration Pattern | `04-build-scripts.md` §Config Loading |
+| Deploy Patterns (Retry-on-Lock) | `03-rename-first-deploy.md` §Implementation |
+| Self-Update Orchestration | `05-handoff-mechanism.md` §Solution: Copy-and-Handoff |
+| Last Release Detection Script | `04-build-scripts.md` §Validation |
+| Error Handling | `03-rename-first-deploy.md` §Rollback |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
