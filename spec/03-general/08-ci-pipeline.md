@@ -137,9 +137,19 @@ suites. Each suite produces:
 - `test-output.txt` — full verbose output for failure analysis.
 - `coverage-<suite>.out` — atomic coverage profile.
 
-The `test-summary` job downloads all artifacts, aggregates failures
-into a single report, and merges coverage profiles for a per-package
-breakdown using `go tool cover`.
+The `test-summary` job downloads all artifacts and delegates
+failure analysis to `.github/scripts/test-summary.sh`. This script:
+
+1. Iterates each suite's `test-output.txt`.
+2. Counts pass/fail per suite.
+3. For each failing test, extracts the test name and the actual
+   failure reason (assertion errors, expected/got mismatches,
+   panics, undefined references) from the verbose output.
+4. Produces a **"FAILURE REPORT (copy-paste ready)"** block at the
+   end — a self-contained summary that can be shared directly
+   without scrolling through full logs.
+
+Coverage profiles are merged separately via `go tool cover`.
 
 ---
 
@@ -147,8 +157,8 @@ breakdown using `go tool cover`.
 
 | Context         | Binary Production | Rationale                        |
 |-----------------|-------------------|----------------------------------|
-| `main` branch   | None              | CI validates, doesn't produce    |
-| Pull requests   | None              | Same as main — validation only   |
+| `main` branch   | 6 targets         | Dev binaries for every green SHA |
+| Pull requests   | 6 targets         | Same as main                     |
 | `release/**`    | 6 targets         | Official artifacts for release   |
 | `v*` tags       | 6 targets         | Tagged release artifacts         |
 
