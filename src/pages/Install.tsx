@@ -1,7 +1,7 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
 import TerminalDemo from "@/components/docs/TerminalDemo";
-import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal } from "lucide-react";
+import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal, Shield, FileText, AlertTriangle } from "lucide-react";
 
 const terminalLines = [
   { text: "gitmap install --list", type: "input" as const, delay: 800 },
@@ -22,8 +22,20 @@ const terminalLines = [
   { text: "", type: "output" as const },
   { text: "  Checking if node is installed...", type: "output" as const },
   { text: "  node is not installed.", type: "output" as const },
-  { text: "  Installing node...", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  ┌─ Install Plan ─────────────────────", type: "header" as const },
+  { text: "  │ Tool:    node", type: "output" as const },
+  { text: "  │ Version: latest", type: "output" as const },
+  { text: "  │ Manager: choco", type: "output" as const },
+  { text: "  │ Command: choco install nodejs -y --no-progress", type: "output" as const },
+  { text: "  └────────────────────────────────────", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  [1/4] Installing node via choco...", type: "output" as const },
+  { text: "  ✓ node install command completed successfully.", type: "accent" as const },
+  { text: "  [3/4] Verifying installation...", type: "output" as const },
   { text: "  ✓ node installed successfully.", type: "accent" as const },
+  { text: "  → Detected version: v22.5.0", type: "output" as const },
+  { text: "  [4/4] Recording installation...", type: "accent" as const },
   { text: "  Recorded node v22.5.0 in database.", type: "accent" as const },
 ];
 
@@ -162,6 +174,92 @@ gitmap uninstall <tool> [flags]`} />
               </div>
             ))}
           </div>
+        </section>
+
+        {/* v2.65.0 Install UX */}
+        <section className="mb-10">
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">
+            <span className="flex items-center gap-2"><Shield className="h-5 w-5" /> v2.65.0 — Install UX</span>
+          </h2>
+          <p className="text-muted-foreground text-sm mb-4">
+            v2.65.0 overhauled the install experience with structured output, GUI-safe verification, and detailed error logging.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {[
+              {
+                icon: FileText,
+                title: "Install Plan Box",
+                desc: "Every install starts with a structured plan showing tool, version, manager, and the exact command before execution.",
+              },
+              {
+                icon: Download,
+                title: "Numbered Steps",
+                desc: "Progress is shown as [1/4] Update → [2/4] Install → [3/4] Verify → [4/4] Record for clear tracking.",
+              },
+              {
+                icon: Shield,
+                title: "GUI-Safe Verification",
+                desc: "GUI tools (Notepad++, GitHub Desktop) skip --version checks that would open a window and block the terminal. Only exe path verification is used.",
+              },
+              {
+                icon: AlertTriangle,
+                title: "Error Logging",
+                desc: "On failure, a detailed log is written to .gitmap/logs/<tool>-error-<timestamp>.log with version, command, output, and error reason.",
+              },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="border border-border rounded-lg p-4 bg-card">
+                <Icon className="w-5 h-5 text-primary mb-2" />
+                <h3 className="font-mono font-semibold text-sm mb-1">{title}</h3>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="font-mono font-semibold text-sm mb-2">Silent Install Flags</h3>
+          <p className="text-muted-foreground text-xs mb-3">
+            GUI applications use silent flags to prevent blocking the terminal during installation:
+          </p>
+          <div className="overflow-x-auto mb-4">
+            <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Manager</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Silent Flag</th>
+                  <th className="text-left px-4 py-2 font-mono text-xs text-muted-foreground">Purpose</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["Chocolatey", "--no-progress", "Suppresses progress bar UI during download"],
+                  ["Winget", "--silent", "Runs installer without GUI interaction"],
+                  ["APT", "-y", "Auto-confirms prompts without blocking"],
+                ].map(([mgr, flag, purpose], i) => (
+                  <tr key={i} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-2 text-sm text-foreground">{mgr}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-primary">{flag}</td>
+                    <td className="px-4 py-2 text-xs text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="font-mono font-semibold text-sm mb-2">Error Log Format</h3>
+          <CodeBlock code={`gitmap install error log
+========================
+
+Tool:            npp
+Version:         latest
+Package Manager: choco
+Command:         choco install notepadplusplus -y --no-progress
+Timestamp:       2026-04-08T14:32:01Z
+Error:           exit status 1
+
+--- Installer Output ---
+
+Chocolatey v2.4.0
+Installing notepadplusplus...`} />
         </section>
 
         {/* Install Flags */}
