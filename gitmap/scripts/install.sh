@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+# Re-exec under bash if invoked via sh/dash (which lack pipefail, local, etc.)
+if [ -z "${BASH_VERSION}" ]; then
+    if command -v bash >/dev/null 2>&1; then
+        exec bash "$0" "$@"
+    else
+        printf '\033[31m  Error: bash is required but not found. Install bash first.\033[0m\n' >&2
+        exit 1
+    fi
+fi
 # ─────────────────────────────────────────────────────────────────────
 # gitmap installer for Linux and macOS
 #
