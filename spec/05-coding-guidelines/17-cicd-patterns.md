@@ -143,6 +143,14 @@ Phase 3 (contract): Remove old column after verification
 
 ## Artifact Management
 
+### Build Once, Package Once
+
+Binaries are compiled **exactly once** per pipeline run. All downstream
+steps — compression, checksumming, installer generation, and publishing —
+operate on the already-built artifacts and **must never trigger a rebuild**.
+This eliminates the risk of version skew between what was tested and what
+is released.
+
 ### Naming Convention
 
 ```
