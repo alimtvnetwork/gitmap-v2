@@ -211,6 +211,7 @@ The GitHub Release description is assembled from multiple sources:
 
 ## Constraints
 
+- **Build once, package once** — binaries are compiled exactly once; compression, checksums, and publishing operate on the already-built artifacts and must never trigger a rebuild
 - Every release commit must run to completion — never cancel release pipelines
 - Version is resolved from the Git ref, never hardcoded
 - All binaries are statically linked (`CGO_ENABLED=0`)
