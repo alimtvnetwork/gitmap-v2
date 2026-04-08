@@ -69,6 +69,9 @@ const (
 	CmdReleaseSelfAlias2     = "rs"
 	CmdHelpDashboard         = "help-dashboard"
 	CmdHelpDashboardAlias    = "hd"
+	CmdPending               = "pending"
+	CmdDoPending             = "do-pending"
+	CmdDoPendingAlias        = "dp"
 )
 
 // Clone shorthands.
