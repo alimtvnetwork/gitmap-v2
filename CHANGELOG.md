@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.67.0 — Smart Deploy Path Resolution (2026-04-08)
+
+### Improvements
+
+- `run.ps1` and `run.sh` now auto-detect the globally installed `gitmap` binary location and deploy there instead of using a hardcoded path.
+- Deploy target resolution follows a 3-tier priority: `--deploy-path` CLI flag → globally installed PATH location → `powershell.json` default.
+- First-time installs use the config default; subsequent builds automatically deploy to the active binary's directory.
+- Added `Resolve-DeployTarget` function to `run.ps1` and `resolve_deploy_target` function to `run.sh` for full cross-platform parity.
+- Added "Build once, package once" constraint to `spec/05-coding-guidelines/17-cicd-patterns.md` under Artifact Management.
+- Updated `spec/01-app/09-build-deploy.md` with deploy target resolution documentation.
+
 ## v2.66.0 — CI Hardening & Pipeline Docs (2026-04-08)
 
 ### Improvements

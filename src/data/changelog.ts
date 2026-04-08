@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.67.0",
+    date: "2026-04-08",
+    items: [
+      "`run.ps1` and `run.sh` now auto-detect the globally installed `gitmap` location and deploy there instead of using a hardcoded path.",
+      "Deploy target follows 3-tier priority: `--deploy-path` flag → PATH detection → `powershell.json` default.",
+      "Added `Resolve-DeployTarget` (PS1) and `resolve_deploy_target` (Bash) for cross-platform parity.",
+      "Added 'Build once, package once' constraint to CI/CD patterns spec.",
+      "Updated build-deploy spec with deploy target resolution documentation.",
+    ],
+  },
+  {
     version: "v2.66.0",
     date: "2026-04-08",
     items: [
