@@ -95,6 +95,9 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateSSHKeys,
 		constants.SQLCreateTempReleases,
 		constants.SQLCreateInstalledTools,
+		constants.SQLCreateTaskType,
+		constants.SQLCreatePendingTask,
+		constants.SQLCreateCompletedTask,
 	}
 
 	for _, stmt := range statements {
@@ -108,7 +111,11 @@ func (db *DB) Migrate() error {
 	db.migrateZipGroupItemPaths()
 	db.migrateTRCommitSha()
 
-	return db.SeedProjectTypes()
+	if err := db.SeedProjectTypes(); err != nil {
+		return err
+	}
+
+	return db.SeedTaskTypes()
 }
 
 // migrateSourceColumn adds the Source column to existing Releases tables.
@@ -138,6 +145,9 @@ func (db *DB) migrateTRCommitSha() {
 // Reset drops all tables and recreates them for a fresh start.
 func (db *DB) Reset() error {
 	drops := []string{
+		constants.SQLDropCompletedTask,
+		constants.SQLDropPendingTask,
+		constants.SQLDropTaskType,
 		constants.SQLDropSettings,
 		constants.SQLDropGoRunnableFiles,
 		constants.SQLDropGoProjectMetadata,
