@@ -68,7 +68,8 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap/script
 4. Verify SHA-256 checksum against `checksums.txt`.
 5. Extract zip to install directory (rename-first if binary is running).
 6. Add install directory to user PATH (unless `--NoPath`).
-7. Print installed version via `gitmap version`.
+7. Print an install summary with installed version, binary path, install directory,
+   and PATH target/status.
 
 ### File
 
@@ -120,7 +121,8 @@ curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v2/main/gitmap
 9. Set executable permission (`chmod +x`).
 10. Auto-detect shell (bash/zsh/fish) and append PATH entry to the
     correct profile file (`~/.bashrc`, `~/.zshrc`, or `~/.config/fish/config.fish`).
-11. Print installed version via `gitmap version`.
+11. Print an install summary with installed version, binary path, install directory,
+    detected shell, PATH target/status, and reload guidance.
 
 ### File
 
@@ -165,6 +167,13 @@ Windows modifies the registry-backed user PATH immediately and broadcasts
 the change via `WM_SETTINGCHANGE`. Unix scripts auto-detect the active
 shell and append a PATH entry to the appropriate profile file. The
 `--no-path` / `-NoPath` flag skips this step on both platforms.
+
+The post-install summary must always show:
+- installed version
+- binary path
+- install directory
+- PATH target and whether it was added, already present, or skipped
+- shell/profile guidance where applicable
 
 ---
 

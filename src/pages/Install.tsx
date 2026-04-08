@@ -35,6 +35,12 @@ const terminalLines = [
   { text: "  [3/4] Verifying installation...", type: "output" as const },
   { text: "  ✓ node installed successfully.", type: "accent" as const },
   { text: "  → Detected version: v22.5.0", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  Install summary", type: "header" as const },
+  { text: "    Version: v22.5.0", type: "output" as const },
+  { text: "    Binary: C:\\Program Files\\nodejs\\node.exe", type: "output" as const },
+  { text: "    Install dir: C:\\Program Files\\nodejs", type: "output" as const },
+  { text: "    PATH target: User PATH (already present)", type: "output" as const },
   { text: "  [4/4] Recording installation...", type: "accent" as const },
   { text: "  Recorded node v22.5.0 in database.", type: "accent" as const },
 ];
@@ -206,6 +212,11 @@ gitmap uninstall <tool> [flags]`} />
                 icon: AlertTriangle,
                 title: "Error Logging",
                 desc: "On failure, a detailed log is written to .gitmap/logs/<tool>-error-<timestamp>.log with version, command, output, and error reason.",
+              },
+              {
+                icon: Terminal,
+                title: "Install Summary",
+                desc: "Installers now print the installed version, binary path, install directory, and PATH target/status so users know exactly what changed.",
               },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="border border-border rounded-lg p-4 bg-card">
@@ -389,6 +400,34 @@ Installing notepadplusplus...`} />
   ✓ Copied: Get-LastRelease.ps1
 
   ✅ 6 scripts installed to /home/alim/Desktop/gitmap-scripts`} />
+          </div>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Installer Summary Output</h2>
+          <p className="text-muted-foreground text-sm mb-4">
+            Every installer now ends with a clear summary so you can see the installed version, exact binary location, and where the PATH change was applied.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="border border-border rounded-lg p-4 bg-card">
+              <h3 className="font-mono font-semibold text-sm mb-2">PowerShell / Windows</h3>
+              <CodeBlock code={`Install summary
+    Version: v2.65.0
+    Binary: C:\\Users\\me\\AppData\\Local\\gitmap\\gitmap.exe
+    Install Dir: C:\\Users\\me\\AppData\\Local\\gitmap
+    PATH Target: User PATH (added)
+    Session PATH: refreshed for current PowerShell session`} />
+            </div>
+            <div className="border border-border rounded-lg p-4 bg-card">
+              <h3 className="font-mono font-semibold text-sm mb-2">Unix / macOS</h3>
+              <CodeBlock code={`Install summary
+    Version: v2.65.0
+    Binary: /Users/me/.local/bin/gitmap
+    Install dir: /Users/me/.local/bin
+    Shell: zsh
+    PATH target: /Users/me/.zshrc (added)
+    Reload: . /Users/me/.zshrc`} />
+            </div>
           </div>
         </section>
 
