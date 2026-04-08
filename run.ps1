@@ -494,16 +494,58 @@ function Copy-DataFolder {
     }
 }
 
+# -- Resolve deploy target -------------------------------------
+# Priority: 1) -DeployPath flag  2) globally installed gitmap location  3) powershell.json default
+function Resolve-DeployTarget {
+    param($Config, $OverridePath)
+
+    # 1) Explicit CLI override always wins
+    if ($OverridePath.Length -gt 0) {
+        Write-Info "Deploy target: CLI override -> $OverridePath"
+
+        return $OverridePath
+    }
+
+    # 2) If gitmap is already on PATH, deploy to its parent directory
+    $activeCmd = Get-Command gitmap -ErrorAction SilentlyContinue
+    if ($activeCmd) {
+        $activePath = $activeCmd.Source
+        if (Test-Path $activePath) {
+            $resolvedActive = (Resolve-Path $activePath).Path
+            $activeDir = Split-Path $resolvedActive -Parent
+            $activeDirName = Split-Path $activeDir -Leaf
+
+            # The binary lives in <deploy-target>/gitmap/gitmap.exe
+            # So the deploy target is the parent of the gitmap/ folder
+            if ($activeDirName -eq "gitmap") {
+                $deployTarget = Split-Path $activeDir -Parent
+                Write-Info "Deploy target: detected from PATH -> $deployTarget"
+
+                return $deployTarget
+            }
+
+            # Binary is directly in a folder (not nested under gitmap/)
+            # Deploy target = that folder's parent so we create gitmap/ there
+            $deployTarget = Split-Path $activeDir -Parent
+            Write-Info "Deploy target: detected from PATH -> $deployTarget"
+
+            return $deployTarget
+        }
+    }
+
+    # 3) Fall back to powershell.json default
+    Write-Info "Deploy target: powershell.json default -> $($Config.deployPath)"
+
+    return $Config.deployPath
+}
+
 # -- Deploy to target directory --------------------------------
 function Deploy-Binary {
     param($Config, $BinaryPath, $OverridePath)
 
     Write-Step "4/4" "Deploying"
 
-    $target = $Config.deployPath
-    if ($OverridePath.Length -gt 0) {
-        $target = $OverridePath
-    }
+    $target = Resolve-DeployTarget -Config $Config -OverridePath $OverridePath
 
     Write-Info "Target: $target"
 
@@ -765,10 +807,7 @@ $deployedBinaryPath = $null
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 
-    $effectiveDeployPath = $config.deployPath
-    if ($DeployPath.Length -gt 0) {
-        $effectiveDeployPath = $DeployPath
-    }
+    $effectiveDeployPath = Resolve-DeployTarget -Config $config -OverridePath $DeployPath
     $deployedBinaryPath = Join-Path (Join-Path $effectiveDeployPath "gitmap") $config.binaryName
 
     $activeCmd = Get-Command gitmap -ErrorAction SilentlyContinue
