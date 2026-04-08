@@ -86,7 +86,7 @@ jobs:
           govulncheck ./... 2>&1 | tee /tmp/vulncheck.out
           rc=$?
           if [ $rc -ne 0 ]; then
-            if grep -q "packages you import" /tmp/vulncheck.out | grep -v "0 vulnerabilities in packages"; then
+            if grep "packages you import" /tmp/vulncheck.out | grep -qv "0 vulnerabilities in packages"; then
               echo "::error::Third-party vulnerabilities detected"
               exit 1
             fi
