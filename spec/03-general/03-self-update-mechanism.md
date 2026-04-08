@@ -252,6 +252,45 @@ copy(newBinary, "tool.exe")          # No lock conflict
 This is more deterministic than retry loops but requires the deploy
 step to run from a different process than the one holding the lock.
 
+## Error Diagnostics
+
+When version verification fails after an update, the script must
+print trace-level diagnostic output so the root cause is immediately
+visible without manual inspection:
+
+```
+  Version before:   gitmap v2.66.0
+  Version active:   gitmap v2.67.0
+  Version deployed: unknown
+  Active binary:    C:\Users\user\bin\gitmap.exe
+  Deployed binary:  (not resolved)
+
+  [FAIL] Active PATH version does not match deployed version.
+  [TRACE] activeAfter=gitmap v2.67.0  deployedAfter=unknown
+  [HINT] Deployed binary could not be found or executed.
+         Check that powershell.json 'deployPath' points to the correct directory
+         and that the binary exists at: <path>
+  [HINT] The active PATH binary (v2.67.0) updated successfully.
+         Only the deployed-binary verification failed.
+```
+
+### Required Trace Points
+
+| Trace | When |
+|-------|------|
+| `deployedBinary: not resolved` | `$deployedBinary` is `$null` (config missing or `deployPath` unset) |
+| `deployedBinary: path not found: <path>` | Config resolved but file doesn't exist at that path |
+| `Get-Command gitmap: not found in PATH` | Active binary not discoverable via PATH |
+| `activeAfter=... deployedAfter=...` | Always printed on mismatch for comparison |
+
+### Hint Messages
+
+When `deployedAfter` is `"unknown"` but `activeAfter` is valid, print
+a hint clarifying that the PATH binary updated successfully and only
+the deployed-binary verification failed. This prevents users from
+thinking the entire update failed when only the config-based deploy
+path is misconfigured.
+
 ## Error Handling
 
 | Scenario | Behavior |
@@ -263,6 +302,7 @@ step to run from a different process than the one holding the lock.
 | Deploy locked after retries | Restore backup, fail with clear message |
 | Temp copy fails to launch | Print error, exit 1 |
 | Version unchanged after update | Warn user (version constant not bumped) |
+| Deployed binary unknown | Print trace + hint, exit 1 |
 
 ## Platform Considerations
 
