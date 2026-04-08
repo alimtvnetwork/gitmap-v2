@@ -10,6 +10,21 @@ import (
 	"github.com/user/gitmap/constants"
 )
 
+// isGUITool returns true for tools that open a GUI window on --version.
+func isGUITool(tool string) bool {
+	if tool == constants.ToolNpp {
+		return true
+	}
+	if tool == constants.ToolNppInstall {
+		return true
+	}
+	if tool == constants.ToolGitHubDesktop {
+		return true
+	}
+
+	return false
+}
+
 // verifyInstallation confirms a tool is accessible after install.
 func verifyInstallation(tool string) {
 	fmt.Printf(constants.MsgInstallVerifying, tool)
@@ -24,6 +39,13 @@ func verifyInstallation(tool string) {
 
 			return
 		}
+	}
+
+	// GUI tools must not run --version (it opens the window and blocks).
+	if isGUITool(tool) {
+		fmt.Fprintf(os.Stderr, constants.ErrInstallVerifyFailed, tool)
+
+		return
 	}
 
 	binary := toolBinaryName(tool)
@@ -87,6 +109,11 @@ func detectInstalledVersion(tool string) string {
 		if _, err := os.Stat(exePath); err == nil {
 			return "installed (at " + exePath + ")"
 		}
+	}
+
+	// GUI tools must not run --version.
+	if isGUITool(tool) {
+		return ""
 	}
 
 	binary := toolBinaryName(tool)
