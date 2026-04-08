@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -42,9 +43,16 @@ func isReplayableTaskType(typeName string) bool {
 
 // retryDeleteTask attempts to delete the target path for a pending task.
 func retryDeleteTask(db *store.DB, taskID int64, targetPath string) {
+	if !pathExists(targetPath) {
+		fmt.Printf(constants.MsgPendingSkipNotExist, taskID)
+		completeTaskWithLog(db, taskID)
+
+		return
+	}
+
 	err := os.RemoveAll(targetPath)
 	if err != nil {
-		reason := fmt.Sprintf(constants.ReasonRetryFailed, err)
+		reason := formatPathError(targetPath, "delete", err)
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
 		_ = db.FailTask(taskID, reason)
 
@@ -52,7 +60,7 @@ func retryDeleteTask(db *store.DB, taskID int64, targetPath string) {
 	}
 
 	fmt.Printf(constants.MsgPendingTaskCompleted, taskID, targetPath)
-	_ = db.CompleteTask(taskID)
+	completeTaskWithLog(db, taskID)
 }
 
 // retryReplayTask re-executes a stored CLI command.
@@ -60,6 +68,14 @@ func retryReplayTask(db *store.DB, taskID int64, workDir, cmdArgs string) {
 	args := strings.Fields(cmdArgs)
 	if len(args) == 0 {
 		reason := fmt.Sprintf(constants.ReasonReplayFailed, "empty command args")
+		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
+		_ = db.FailTask(taskID, reason)
+
+		return
+	}
+
+	if workDir != "" && !pathExists(workDir) {
+		reason := fmt.Sprintf(constants.ReasonWorkDirNotFound, workDir)
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
 		_ = db.FailTask(taskID, reason)
 
@@ -91,5 +107,29 @@ func retryReplayTask(db *store.DB, taskID int64, workDir, cmdArgs string) {
 	}
 
 	fmt.Printf(constants.MsgPendingTaskCompleted, taskID, cmdArgs)
-	_ = db.CompleteTask(taskID)
+	completeTaskWithLog(db, taskID)
+}
+
+// pathExists returns true if the given path exists on the file system.
+func pathExists(path string) bool {
+	_, err := os.Stat(path)
+
+	return err == nil
+}
+
+// formatPathError returns a Code Red formatted error with path context.
+func formatPathError(path, operation string, err error) string {
+	if errors.Is(err, os.ErrPermission) {
+		return fmt.Sprintf(constants.ReasonPermissionDenied, path, operation, err)
+	}
+
+	return fmt.Sprintf(constants.ReasonRetryFailed, err)
+}
+
+// completeTaskWithLog marks a task complete and logs any transactional failure.
+func completeTaskWithLog(db *store.DB, taskID int64) {
+	err := db.CompleteTask(taskID)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnPendingCompleteFail, taskID, err)
+	}
 }

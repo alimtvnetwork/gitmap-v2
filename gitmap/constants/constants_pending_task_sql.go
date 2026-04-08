@@ -21,6 +21,9 @@ const (
 	SQLSelectPendingTaskByTypePath = `SELECT p.Id FROM PendingTask p
 		WHERE p.TaskTypeId = ? AND p.TargetPath = ?`
 
+	SQLSelectPendingTaskByTypePathCmd = `SELECT p.Id FROM PendingTask p
+		WHERE p.TaskTypeId = ? AND p.TargetPath = ? AND p.CommandArgs = ?`
+
 	SQLUpdatePendingTaskFailure = `UPDATE PendingTask
 		SET FailureReason = ?, UpdatedAt = CURRENT_TIMESTAMP
 		WHERE Id = ?`
