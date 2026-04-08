@@ -20,9 +20,14 @@ implement concurrency controls to cancel superseded runs.
 | Vulnerability  | `govulncheck` — fails only on third-party issues  |
 | Test           | Parallel matrix: unit, store, integration, tui    |
 | Test Summary   | Aggregates failures, generates coverage breakdown |
+| Build          | Cross-compile 6 targets after tests pass          |
+| Build Summary  | Lists all binaries with sizes                      |
 
-**No binary builds on main.** Artifact production is delegated
-exclusively to the release pipeline.
+**Binary builds on main.** After all tests pass, the CI pipeline
+cross-compiles 6 binaries (windows/linux/darwin × amd64/arm64)
+versioned as `dev-<sha>` and uploads them as artifacts (14-day
+retention). This provides pre-built binaries for every green commit
+without requiring a formal release.
 
 ### 2. Release (`release.yml`)
 
@@ -132,9 +137,19 @@ suites. Each suite produces:
 - `test-output.txt` — full verbose output for failure analysis.
 - `coverage-<suite>.out` — atomic coverage profile.
 
-The `test-summary` job downloads all artifacts, aggregates failures
-into a single report, and merges coverage profiles for a per-package
-breakdown using `go tool cover`.
+The `test-summary` job downloads all artifacts and delegates
+failure analysis to `.github/scripts/test-summary.sh`. This script:
+
+1. Iterates each suite's `test-output.txt`.
+2. Counts pass/fail per suite.
+3. For each failing test, extracts the test name and the actual
+   failure reason (assertion errors, expected/got mismatches,
+   panics, undefined references) from the verbose output.
+4. Produces a **"FAILURE REPORT (copy-paste ready)"** block at the
+   end — a self-contained summary that can be shared directly
+   without scrolling through full logs.
+
+Coverage profiles are merged separately via `go tool cover`.
 
 ---
 
@@ -142,8 +157,8 @@ breakdown using `go tool cover`.
 
 | Context         | Binary Production | Rationale                        |
 |-----------------|-------------------|----------------------------------|
-| `main` branch   | None              | CI validates, doesn't produce    |
-| Pull requests   | None              | Same as main — validation only   |
+| `main` branch   | 6 targets         | Dev binaries for every green SHA |
+| Pull requests   | 6 targets         | Same as main                     |
 | `release/**`    | 6 targets         | Official artifacts for release   |
 | `v*` tags       | 6 targets         | Tagged release artifacts         |
 
@@ -155,12 +170,13 @@ immediately attached to a GitHub Release with checksums.
 
 ## File Layout
 
-| File                           | Purpose                          |
-|--------------------------------|----------------------------------|
-| `.github/workflows/ci.yml`     | Lint, test, coverage on main/PRs |
-| `.github/workflows/release.yml`| Cross-compile and publish        |
-| `.github/workflows/vulncheck.yml`| Weekly vulnerability scan      |
-| `.golangci.yml`                | Linter configuration (28 rules)  |
+| File                              | Purpose                              |
+|-----------------------------------|--------------------------------------|
+| `.github/workflows/ci.yml`        | Lint, test, build, coverage on main  |
+| `.github/workflows/release.yml`   | Cross-compile and publish releases   |
+| `.github/workflows/vulncheck.yml` | Weekly vulnerability scan            |
+| `.github/scripts/test-summary.sh` | Failure report aggregation script    |
+| `.golangci.yml`                   | Linter configuration (28 rules)      |
 
 ---
 
@@ -168,8 +184,8 @@ immediately attached to a GitHub Release with checksums.
 
 1. Pushing two commits in quick succession to the same branch
    cancels the first CI run and only completes the second.
-2. Pushing to `main` runs lint, vulncheck, and tests but does
-   **not** produce binary artifacts.
+2. Pushing to `main` runs lint, vulncheck, tests, and builds
+   6 cross-compiled binaries uploaded as artifacts.
 3. Pushing to `release/**` or a `v*` tag produces 6 binaries
    and uploads them as GitHub Release assets.
 4. The weekly vulncheck runs independently and does not block
