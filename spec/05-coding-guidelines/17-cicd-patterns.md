@@ -69,6 +69,15 @@ Every pipeline follows a fixed stage sequence:
 - Frozen lock files in CI — fail if lock file is out of date
 - Vendor dependencies for hermetic builds when network reliability is a concern
 
+### CI Tool Versions
+
+Pin all CI tool installs to exact version tags — `go install tool@latest` is prohibited:
+
+| Tool | Pinned Version | Used In |
+|------|---------------|---------|
+| `golangci-lint` | `v1.64.8` | `setup.sh`, `ci.yml` |
+| `govulncheck` | `v1.1.4` | `ci.yml`, `vulncheck.yml` |
+
 ## Deployment Gates
 
 ### Environment Promotion
