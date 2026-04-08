@@ -2,11 +2,13 @@
 
 ## Overview
 
-Every delete or remove operation in gitmap (e.g. `clone-next --delete`,
-future file/folder removal paths) must be recorded as a task in SQLite
-**before** the actual operation is attempted. This ensures no work is
-silently lost when deletion fails due to locks, permissions, or missing
-targets.
+Every file-system operation in gitmap (delete, remove, scan, clone, pull,
+exec) must be recorded as a task in SQLite **before** the actual operation
+is attempted. This ensures no work is silently lost when an operation fails
+due to locks, permissions, or missing targets.
+
+The system stores the full CLI command so that failed tasks can be
+automatically replayed via `gitmap do-pending`.
 
 ## Database Schema
 
@@ -23,7 +25,7 @@ CREATE TABLE IF NOT EXISTS TaskType (
 );
 ```
 
-Seed values: `Delete`, `Remove`.
+Seed values: `Delete`, `Remove`, `Scan`, `Clone`, `Pull`, `Exec`.
 
 ### PendingTask
 
@@ -31,13 +33,15 @@ Holds every task that has not yet completed successfully.
 
 ```sql
 CREATE TABLE IF NOT EXISTS PendingTask (
-    Id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    TaskTypeId    INTEGER NOT NULL REFERENCES TaskType(Id),
-    TargetPath    TEXT    NOT NULL,
-    SourceCommand TEXT    NOT NULL,
-    FailureReason TEXT    DEFAULT '',
-    CreatedAt     TEXT    DEFAULT CURRENT_TIMESTAMP,
-    UpdatedAt     TEXT    DEFAULT CURRENT_TIMESTAMP
+    Id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    TaskTypeId       INTEGER NOT NULL REFERENCES TaskType(Id),
+    TargetPath       TEXT    NOT NULL,
+    WorkingDirectory TEXT    DEFAULT '',
+    SourceCommand    TEXT    NOT NULL,
+    CommandArgs      TEXT    DEFAULT '',
+    FailureReason    TEXT    DEFAULT '',
+    CreatedAt        TEXT    DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt        TEXT    DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
@@ -47,32 +51,39 @@ Archive of successfully executed tasks.
 
 ```sql
 CREATE TABLE IF NOT EXISTS CompletedTask (
-    Id             INTEGER PRIMARY KEY AUTOINCREMENT,
-    OriginalTaskId INTEGER NOT NULL,
-    TaskTypeId     INTEGER NOT NULL REFERENCES TaskType(Id),
-    TargetPath     TEXT    NOT NULL,
-    SourceCommand  TEXT    NOT NULL,
-    CompletedAt    TEXT    DEFAULT CURRENT_TIMESTAMP,
-    CreatedAt      TEXT    NOT NULL
+    Id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    OriginalTaskId   INTEGER NOT NULL,
+    TaskTypeId       INTEGER NOT NULL REFERENCES TaskType(Id),
+    TargetPath       TEXT    NOT NULL,
+    WorkingDirectory TEXT    DEFAULT '',
+    SourceCommand    TEXT    NOT NULL,
+    CommandArgs      TEXT    DEFAULT '',
+    CompletedAt      TEXT    DEFAULT CURRENT_TIMESTAMP,
+    CreatedAt        TEXT    NOT NULL
 );
 ```
 
-### Relationships
+### Column Descriptions
 
-- `PendingTask.TaskTypeId` → `TaskType.Id`
-- `CompletedTask.TaskTypeId` → `TaskType.Id`
-- `CompletedTask.OriginalTaskId` stores the original `PendingTask.Id`
-  value captured before the row is removed from `PendingTask`.
+| Column | Purpose |
+|--------|---------|
+| TargetPath | File or folder being acted on |
+| WorkingDirectory | CWD when the command was invoked |
+| SourceCommand | Command name that initiated the task (e.g. `clone-next`) |
+| CommandArgs | Full CLI arguments for replay (e.g. `scan --mode ssh ./repos`) |
+| FailureReason | Human-readable reason for last failure |
 
 ## Execution Lifecycle
 
 ### 1. Task Creation
 
-Before any delete/remove operation:
+Before any file-system operation:
 
-1. Resolve `TaskTypeId` from `TaskType` (e.g. `Delete`).
-2. Insert row into `PendingTask` with `TargetPath`, `SourceCommand`.
-3. Only after successful insert, attempt the actual operation.
+1. Resolve `TaskTypeId` from `TaskType`.
+2. Capture current working directory.
+3. Build `CommandArgs` from `os.Args`.
+4. Insert row into `PendingTask`.
+5. Only after successful insert, attempt the actual operation.
 
 ### 2. Success Path
 
@@ -86,11 +97,16 @@ Before any delete/remove operation:
 2. Update `FailureReason` with human-readable context.
 3. Update `UpdatedAt` to current timestamp.
 
-### 4. Missing Target
+### 4. Replay via do-pending
 
-If the target file/folder does not exist at retry time, the task remains
-pending. The user must explicitly decide whether to dismiss or force-complete
-it. This prevents silent data loss when paths are relocated.
+For replayable types (Scan, Clone, Pull, Exec):
+1. Re-execute `gitmap <CommandArgs>` as a subprocess.
+2. Set `cmd.Dir` to `WorkingDirectory`.
+3. On success → complete. On failure → update reason.
+
+For delete types (Delete, Remove):
+1. Attempt `os.RemoveAll(TargetPath)`.
+2. On success → complete. On failure → update reason.
 
 ## CLI Commands
 
@@ -98,7 +114,7 @@ it. This prevents silent data loss when paths are relocated.
 
 Display all rows in `PendingTask`.
 
-Output columns: Id, Type, TargetPath, SourceCommand, FailureReason, CreatedAt.
+Output columns: Id, Type, TargetPath, FailureReason.
 
 ### `gitmap do-pending` (alias `dp`)
 
@@ -115,77 +131,37 @@ If a `PendingTask` already exists with the same `TaskTypeId` and
 `TargetPath`, do not create a duplicate. Log a message indicating the
 existing pending task Id.
 
-## Integration Points
+## Task Types Covered
 
-### clone-next (`cn`)
+| Type | Commands | Replay Method |
+|------|----------|---------------|
+| Delete | clone-next --delete | os.RemoveAll |
+| Remove | future removal paths | os.RemoveAll |
+| Scan | scan, rescan | subprocess replay |
+| Clone | clone | subprocess replay |
+| Pull | pull | subprocess replay |
+| Exec | exec | subprocess replay |
 
-When `--delete` flag triggers folder removal:
+## Constants Organization
 
-1. Create `PendingTask` (Type=Delete, SourceCommand=clone-next).
-2. Attempt removal (with lock-check retry logic).
-3. On success → `CompletedTask`. On failure → keep pending.
-
-### Future Commands
-
-Any command that removes files/folders must follow the same pattern.
-The `pending` package provides `CreateTask`, `CompleteTask`, and
-`FailTask` helpers.
-
-## Help Integration
-
-### Standard Help (`gitmap help`)
-
-Add to the "Data" or "Maintenance" group:
-
-```
-  pending              List pending tasks
-  do-pending (dp)      Retry pending tasks
-```
-
-### Detailed Help (`gitmap pending --help`)
-
-Show task lifecycle explanation, output format, and examples.
-
-### UI Help
-
-The documentation site must include a "Pending Tasks" section explaining:
-- Why deletes may remain pending (locks, permissions, missing targets).
-- How to inspect pending items.
-- How to retry all or by specific Id.
-
-## Constants
-
-All SQL, error messages, and format strings must be in
-`constants/constants_pending_task.go`. No magic strings in logic files.
-
-## Store Package
-
-```
-store/
-├── pendingtask.go      Insert, list, complete, fail, find by Id
-└── tasktype.go         Seed, lookup by name
-```
-
-## Model Package
-
-```
-model/
-├── pendingtask.go      PendingTask, CompletedTask structs
-└── tasktype.go         TaskType struct
-```
+| File | Content |
+|------|---------|
+| `constants_pending_task.go` | Table names, type seeds, CREATE/ALTER SQL |
+| `constants_pending_task_sql.go` | CRUD query SQL |
+| `constants_pending_task_msg.go` | Error/warning/message constants |
 
 ## Acceptance Criteria
 
-1. Every delete/remove inserts into `PendingTask` before execution.
-2. No delete path bypasses task creation.
-3. Failed deletions remain visible in `PendingTask`.
-4. Successful deletions appear in `CompletedTask` and are removed from `PendingTask`.
+1. Every file-system operation inserts into `PendingTask` before execution.
+2. No operation path bypasses task creation.
+3. Failed operations remain visible in `PendingTask`.
+4. Successful operations appear in `CompletedTask` and are removed from `PendingTask`.
 5. `gitmap pending` lists all pending tasks with Id, type, path, reason.
 6. `gitmap do-pending` retries all; `gitmap dp` is an alias.
 7. `gitmap do-pending <id>` retries a single task.
 8. Duplicate pending tasks for the same type+path are prevented.
-9. All commands appear in standard help, detailed help, and UI help.
-10. Database uses PascalCase, integer PKs, and FK constraints.
+9. Replayable tasks store full CLI args and working directory.
+10. All commands appear in standard help, detailed help, and UI help.
 
 ## Contributors
 

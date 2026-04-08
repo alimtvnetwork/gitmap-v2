@@ -110,6 +110,7 @@ func (db *DB) Migrate() error {
 	db.migrateNotesColumn()
 	db.migrateZipGroupItemPaths()
 	db.migrateTRCommitSha()
+	db.migratePendingTaskColumns()
 
 	if err := db.SeedProjectTypes(); err != nil {
 		return err
@@ -140,6 +141,14 @@ func (db *DB) migrateZipGroupItemPaths() {
 // migrateTRCommitSha renames the Commit column to CommitSha in TempReleases.
 func (db *DB) migrateTRCommitSha() {
 	_, _ = db.conn.Exec(constants.SQLMigrateTRCommitSha)
+}
+
+// migratePendingTaskColumns adds WorkingDirectory and CommandArgs to existing tables.
+func (db *DB) migratePendingTaskColumns() {
+	_, _ = db.conn.Exec(constants.SQLMigratePendingWorkDir)
+	_, _ = db.conn.Exec(constants.SQLMigratePendingCmdArgs)
+	_, _ = db.conn.Exec(constants.SQLMigrateCompletedWorkDir)
+	_, _ = db.conn.Exec(constants.SQLMigrateCompletedCmdArgs)
 }
 
 // Reset drops all tables and recreates them for a fresh start.

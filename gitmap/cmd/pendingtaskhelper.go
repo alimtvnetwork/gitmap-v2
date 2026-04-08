@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/store"
@@ -10,7 +11,7 @@ import (
 
 // createPendingTask inserts a pending task into the database.
 // Returns the task ID and DB handle (caller must close), or 0 on failure.
-func createPendingTask(typeName, targetPath, sourceCmd string) (int64, *store.DB) {
+func createPendingTask(typeName, targetPath, workDir, sourceCmd, cmdArgs string) (int64, *store.DB) {
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnPendingDBOpen, err)
@@ -33,7 +34,7 @@ func createPendingTask(typeName, targetPath, sourceCmd string) (int64, *store.DB
 		return existing, db
 	}
 
-	taskID, err := db.InsertPendingTask(typeID, targetPath, sourceCmd)
+	taskID, err := db.InsertPendingTask(typeID, targetPath, workDir, sourceCmd, cmdArgs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnPendingInsertFailed, err)
 		db.Close()
@@ -42,6 +43,11 @@ func createPendingTask(typeName, targetPath, sourceCmd string) (int64, *store.DB
 	}
 
 	return taskID, db
+}
+
+// buildCommandArgs joins CLI arguments into a storable string.
+func buildCommandArgs(args []string) string {
+	return strings.Join(args, " ")
 }
 
 // completePendingTask moves a pending task to the completed table.

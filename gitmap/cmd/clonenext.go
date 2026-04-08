@@ -194,7 +194,7 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 // All removal attempts are tracked as pending tasks in the database.
 func removeFolderWithLockCheck(name, path string) bool {
 	// Record the delete intent as a pending task before any OS operation.
-	taskID, db := createPendingTask(constants.TaskTypeDelete, path, constants.CmdCloneNext)
+	taskID, db := createPendingTask(constants.TaskTypeDelete, path, "", constants.CmdCloneNext, "")
 	if db != nil {
 		defer db.Close()
 	}
