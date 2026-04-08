@@ -22,7 +22,7 @@ type AutoCommitResult struct {
 // If only .gitmap/release/ files changed, it commits and pushes silently.
 // If other files also changed, it prompts the user (or auto-confirms with yes=true).
 // On decline, it commits only .gitmap/release/.
-func AutoCommit(version string, dryRun bool, yes bool) AutoCommitResult {
+func AutoCommit(version string, dryRun, yes bool) AutoCommitResult {
 	fmt.Print(constants.MsgAutoCommitScanning)
 
 	if verbose.IsEnabled() {

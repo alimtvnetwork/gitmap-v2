@@ -231,15 +231,15 @@ func writeInstallErrorLog(tool, manager, version string, args []string, output [
 
 	var sb strings.Builder
 
-	sb.WriteString(fmt.Sprintf("gitmap install error log\n"))
-	sb.WriteString(fmt.Sprintf("========================\n\n"))
+	sb.WriteString("gitmap install error log\n")
+	sb.WriteString("========================\n\n")
 	sb.WriteString(fmt.Sprintf("Tool:            %s\n", tool))
 	sb.WriteString(fmt.Sprintf("Version:         %s\n", versionLabel))
 	sb.WriteString(fmt.Sprintf("Package Manager: %s\n", manager))
 	sb.WriteString(fmt.Sprintf("Command:         %s\n", strings.Join(args, " ")))
 	sb.WriteString(fmt.Sprintf("Timestamp:       %s\n", time.Now().Format(time.RFC3339)))
 	sb.WriteString(fmt.Sprintf("Error:           %v\n", installErr))
-	sb.WriteString(fmt.Sprintf("\n--- Installer Output ---\n\n"))
+	sb.WriteString("\n--- Installer Output ---\n\n")
 
 	if len(output) > 0 {
 		sb.Write(output)
