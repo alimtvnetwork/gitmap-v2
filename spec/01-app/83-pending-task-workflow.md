@@ -182,6 +182,15 @@ captured from `os.Args` for replay. If the batch exits with a non-zero
 code, the task is failed with the exit code. On full success, the task
 is marked complete.
 
+### exec (fourth integration)
+
+The `runExec` function enqueues an `Exec` task after parsing flags and
+loading target records but before starting the batch execution loop.
+The target path is the current working directory. CLI args are captured
+from `os.Args` for replay. If the batch exits with a non-zero code,
+the task is failed with the exit code. On full success, the task is
+marked complete.
+
 ## Edge Case Handling
 
 | Scenario | Behavior |
