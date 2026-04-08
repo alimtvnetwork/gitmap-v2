@@ -93,13 +93,30 @@ const (
 
 // Pending task error messages.
 const (
-	ErrPendingTaskInsert   = "failed to insert pending task: %v"
-	ErrPendingTaskQuery    = "failed to query pending tasks: %v"
-	ErrPendingTaskComplete = "failed to complete task: %v"
-	ErrPendingTaskFail     = "failed to update task failure: %v"
+	ErrPendingTaskInsert   = "failed to insert pending task: %v (operation: insert)"
+	ErrPendingTaskQuery    = "failed to query pending tasks: %v (operation: query)"
+	ErrPendingTaskComplete = "failed to complete task: %v (operation: complete)"
+	ErrPendingTaskFail     = "failed to update task failure: %v (operation: update)"
 	ErrPendingTaskNotFound = "pending task not found: %d\n"
 	ErrTaskTypeNotFound    = "task type not found: %s"
 	ErrPendingTaskExists   = "pending task already exists for %s at %s (Id %d)\n"
+)
+
+// Pending task warning messages.
+const (
+	WarnPendingDBOpen       = "Warning: could not open DB for task tracking: %v\n"
+	WarnPendingTypeLookup   = "Warning: task type lookup failed: %v\n"
+	WarnPendingInsertFailed = "Warning: could not record pending task: %v\n"
+	WarnPendingCompleteFail = "Warning: could not mark task #%d complete: %v\n"
+	WarnPendingFailUpdate   = "Warning: could not update task #%d failure: %v\n"
+)
+
+// Pending task failure reasons for FailureReason field.
+const (
+	ReasonLockScanFailed   = "lock scan failed: %v"
+	ReasonNoLockingProcs   = "removal failed, no locking processes found: %v"
+	ReasonUserDeclined     = "user declined to terminate locking processes"
+	ReasonRetryFailed      = "retry removal failed: %v"
 )
 
 // Pending task terminal messages.
