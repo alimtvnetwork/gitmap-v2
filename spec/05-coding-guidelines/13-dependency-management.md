@@ -116,10 +116,10 @@ govulncheck ./...
 
 | Severity | Response Time | Action                    |
 |----------|---------------|---------------------------|
-| Critical | Same day      | Patch, test, deploy       |
-| High     | 48 hours      | Patch in next release     |
-| Moderate | Next sprint   | Evaluate and schedule     |
-| Low      | Quarterly     | Bundle with routine updates |
+| Critical | 24 hours      | Patch, test, deploy       |
+| High     | 72 hours      | Patch in next release     |
+| Medium   | 2 weeks       | Evaluate and schedule     |
+| Low      | Next cycle    | Bundle with routine updates |
 
 ### License Compliance
 
