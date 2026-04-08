@@ -1,5 +1,23 @@
 # Changelog
 
+## v2.66.0 — CI Hardening & Pipeline Docs (2026-04-08)
+
+### Improvements
+
+- Pinned `govulncheck` to `v1.1.4` in CI and vulncheck workflows for reproducible builds.
+- Updated GitHub Actions to Node.js 24 compatible versions (`actions/checkout@v6`, `actions/setup-go@v6`).
+- Added `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` environment variable across all workflows.
+- Created portable `spec/pipeline/` documentation folder (CI, release, vulnerability scanning) for cross-AI shareability.
+- Added CI Tool Versions pinning table to dependency specs (13, 17, 27) for consistency.
+- Aligned severity response times across all dependency management specs.
+- Updated stale action version examples in specs 17 and 27 from `@v4`/`@v5` to `@v6`.
+- Added cross-reference from `spec/03-general/08-ci-pipeline.md` to `spec/pipeline/`.
+
+### Bug Fixes
+
+- Fixed `ShouldPrintInstallHint` not matching SSH remote URLs (`git@github.com:org/repo.git`) due to colon separator not being normalized to a slash.
+- Fixed vulncheck pipeline logic error where `-q` flag on initial `grep` suppressed stdout, breaking the vulnerability classification pipe.
+
 ## v2.65.0 — Install UX Overhaul (2026-04-07)
 
 ### Improvements
