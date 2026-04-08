@@ -119,6 +119,12 @@ const (
 	ReasonRetryFailed      = "retry removal failed: %v"
 )
 
+// Pending task help text.
+const (
+	HelpPending   = "  pending              List all pending tasks"
+	HelpDoPending = "  do-pending (dp)      Retry pending tasks (all or by ID)"
+)
+
 // Pending task terminal messages.
 const (
 	MsgPendingTaskCreated   = "Task #%d created: %s %s\n"

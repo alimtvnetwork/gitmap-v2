@@ -177,6 +177,8 @@ func printGroupTasks() {
 	fmt.Println()
 	fmt.Println(constants.HelpGroupTasks)
 	fmt.Println(constants.HelpTask)
+	fmt.Println(constants.HelpPending)
+	fmt.Println(constants.HelpDoPending)
 }
 
 // printGroupVisualize prints the visualization commands.
