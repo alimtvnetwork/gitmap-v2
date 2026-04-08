@@ -9,7 +9,9 @@
 ## Guardrail: Installer Output Contract
 - Every installer flow must end with a visible summary showing installed version, binary path, install directory, and PATH target/status.
 - Unix installers must print which shell/profile file received the PATH entry and how to reload it.
+- Unix installers must explicitly warn that OTHER shells (sh, bash, fish) will NOT have gitmap unless the user manually adds the PATH line to those shells' profiles too.
 - Windows installers must print whether User PATH was updated or already present.
+- PowerShell installers must show the installed version and binary path.
 
 ## Part A: README Redesign (styled after scripts-fixer-v5)
 1. **Center-aligned header** with badges, tagline, and horizontal rules
