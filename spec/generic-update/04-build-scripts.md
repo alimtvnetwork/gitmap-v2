@@ -283,6 +283,13 @@ Pull fails due to local changes?
 - `go mod tidy` runs before every build for dependency consistency.
 - Version is displayed immediately after build: `<binary> version`.
 
+## Application-Specific References
+
+| App Spec | Covers |
+|----------|--------|
+| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | PowerShell `run.ps1` architecture, config, logging, ldflags, last-release detection |
+| [09-build-deploy.md](../../01-app/09-build-deploy.md) | gitmap `run.ps1` steps, CLI flags, version display |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.

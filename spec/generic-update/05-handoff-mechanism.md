@@ -244,6 +244,13 @@ When the source repo is not available, use a standalone updater binary:
 - All output (stdout/stderr) must be piped to the terminal so the
   user sees progress.
 
+## Application-Specific References
+
+| App Spec | Covers |
+|----------|--------|
+| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Self-update orchestration (Windows-safe handoff) |
+| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Two-phase handoff, worker launch, foreground blocking |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.

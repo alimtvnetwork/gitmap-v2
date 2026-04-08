@@ -223,6 +223,14 @@ destination is free after rename, so retries are for rare edge cases:
   attempting the deploy (the destination might still be writable).
 - On Linux/macOS, `mv` is the rename equivalent and works identically.
 
+## Application-Specific References
+
+| App Spec | Covers |
+|----------|--------|
+| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Retry-on-lock deploy and PATH sync |
+| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Rename-first during self-update, rollback on failure |
+| [09-build-deploy.md](../../01-app/09-build-deploy.md) | gitmap rename-first deploy with retry |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.
