@@ -37,6 +37,21 @@ Produces 6 cross-compiled binaries (windows/linux/darwin ×
 amd64/arm64) for both `gitmap` and `gitmap-updater`. Generates
 versioned artifacts, SHA256 checksums, and changelog excerpts.
 
+#### Code Signing
+
+Windows `.exe` binaries are optionally signed via [SignPath.io](https://signpath.io)
+after compilation but before compression/checksumming.
+
+| Variable / Secret | Type | Purpose |
+|-------------------|------|---------|
+| `SIGNPATH_SIGNING_ENABLED` | Repository **variable** | Set to `true` to enable signing; omit or set to any other value to skip |
+| `SIGNPATH_API_TOKEN` | Repository **secret** | API token from SignPath dashboard |
+| `SIGNPATH_ORGANIZATION_ID` | Repository **secret** | Organization ID from SignPath |
+| `SIGNPATH_PROJECT_SLUG` | Repository **secret** | Project slug configured in SignPath |
+| `SIGNPATH_SIGNING_POLICY_SLUG` | Repository **secret** | Signing policy slug (e.g., `release-signing`) |
+
+See [05-code-signing.md](05-code-signing.md) for full setup instructions.
+
 ### 3. Vulnerability Scan (`vulncheck.yml`)
 
 **Triggers:** Weekly schedule (Mondays 09:00 UTC), manual dispatch.
