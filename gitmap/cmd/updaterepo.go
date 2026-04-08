@@ -29,8 +29,8 @@ func resolveRepoPathFromDB() string {
 	return normalizeRepoPath(loadRepoPathFromDB())
 }
 
-// pathExists checks if a directory exists on disk.
-func pathExists(path string) bool {
+// dirExists checks if a directory exists on disk.
+func dirExists(path string) bool {
 	info, err := os.Stat(path)
 	if err != nil {
 		return false
@@ -101,7 +101,7 @@ func findRepoRoot(path string) string {
 
 // isGitmapSourceRepo checks for the update script and source markers.
 func isGitmapSourceRepo(path string) bool {
-	if !pathExists(path) || !fileExists(filepath.Join(path, updateRunScript)) {
+	if !dirExists(path) || !fileExists(filepath.Join(path, updateRunScript)) {
 		return false
 	}
 
