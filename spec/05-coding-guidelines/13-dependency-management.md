@@ -46,6 +46,23 @@ Lock every dependency to an exact version in the manifest:
 require modernc.org/sqlite v1.29.6
 ```
 
+### CI Tool Versions
+
+Pin CI tool installs to exact version tags — `@latest` is prohibited:
+
+| Tool | Pinned Version | Used In |
+|------|---------------|---------|
+| `golangci-lint` | `v1.64.8` | `setup.sh`, `ci.yml` |
+| `govulncheck` | `v1.1.4` | `ci.yml`, `vulncheck.yml` |
+
+```bash
+# Correct — pinned
+go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+
+# Wrong — non-reproducible
+go install golang.org/x/vuln/cmd/govulncheck@latest
+```
+
 ### Lock Files
 
 - Always commit lock files (`bun.lock`, `go.sum`, `package-lock.json`).
