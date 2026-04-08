@@ -24,6 +24,18 @@ func runPull(args []string) {
 	}
 	records := resolvePullTargets(slug, groupName, all)
 
+	workDir, _ := os.Getwd()
+	cmdArgs := buildCommandArgs(append([]string{"pull"}, os.Args[2:]...))
+	targetPath := workDir
+	if len(records) == 1 {
+		targetPath = records[0].AbsolutePath
+	}
+
+	taskID, taskDB := createPendingTask(constants.TaskTypePull, targetPath, workDir, "pull", cmdArgs)
+	if taskDB != nil {
+		defer taskDB.Close()
+	}
+
 	prog := cloner.NewBatchProgress(len(records), "Pull", false)
 	prog.SetStopOnFail(stopOnFail)
 	for _, rec := range records {
@@ -37,8 +49,11 @@ func runPull(args []string) {
 	prog.PrintFailureReport()
 
 	if code := prog.ExitCodeForBatch(); code != 0 {
+		failPendingTask(taskDB, taskID, fmt.Sprintf("pull batch failed with exit code %d", code))
 		os.Exit(code)
 	}
+
+	completePendingTask(taskDB, taskID)
 }
 
 // parsePullFlags parses flags for the pull command.
