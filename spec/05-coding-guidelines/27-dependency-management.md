@@ -68,6 +68,15 @@ a verified security review.
 | No manual lock file edits | Only tools should modify lock files |
 | Pin CI action versions | Use full SHA or exact tag, never `@latest` or `@main` |
 
+### CI Tool Versions
+
+Pin all CI tool installs to exact version tags — `go install tool@latest` is prohibited:
+
+| Tool | Pinned Version | Used In |
+|------|---------------|---------|
+| `golangci-lint` | `v1.64.8` | `setup.sh`, `ci.yml` |
+| `govulncheck` | `v1.1.4` | `ci.yml`, `vulncheck.yml` |
+
 ---
 
 ## 2. Audit Workflows
