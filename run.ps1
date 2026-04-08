@@ -562,23 +562,36 @@ function Deploy-Binary {
     }
 
     $destFile = Join-Path $appDir $Config.binaryName
-
-    # Rollback safety: backup existing binary with .old suffix before overwriting
     $backupFile = "$destFile.old"
     $hasBackup = $false
+    $deploySuccess = $false
+
     if (Test-Path $destFile) {
+        # Rename-first strategy: Windows allows renaming a running binary
+        # but not overwriting it. Rename to .old, then copy the new one.
         try {
-            Copy-Item $destFile $backupFile -Force -ErrorAction Stop
+            if (Test-Path $backupFile) {
+                Remove-Item $backupFile -Force -ErrorAction SilentlyContinue
+            }
+            Rename-Item $destFile $backupFile -Force -ErrorAction Stop
             $hasBackup = $true
-            Write-Info "Backed up existing binary to $($Config.binaryName).old"
+            Write-Info "Renamed existing binary to $($Config.binaryName).old (rename-first)"
         } catch {
-            Write-Warn "Could not create backup: $_"
+            Write-Warn "Rename-first failed: $_"
+            # Fallback: try a backup copy instead
+            try {
+                Copy-Item $destFile $backupFile -Force -ErrorAction Stop
+                $hasBackup = $true
+                Write-Info "Backed up existing binary to $($Config.binaryName).old"
+            } catch {
+                Write-Warn "Could not create backup: $_"
+            }
         }
     }
 
-    $maxAttempts = 20
+    # Copy new binary — after rename-first, the destination is free
+    $maxAttempts = 5
     $attempt = 1
-    $deploySuccess = $false
     while ($true) {
         try {
             Copy-Item $BinaryPath $destFile -Force -ErrorAction Stop
@@ -587,10 +600,10 @@ function Deploy-Binary {
         } catch {
             if ($attempt -ge $maxAttempts) {
                 # Restore backup on failure
-                if ($hasBackup -and (Test-Path $backupFile)) {
+                if ($hasBackup -and (Test-Path $backupFile) -and (-not (Test-Path $destFile))) {
                     Write-Warn "Deploy failed - restoring previous binary from backup"
                     try {
-                        Copy-Item $backupFile $destFile -Force -ErrorAction Stop
+                        Rename-Item $backupFile $destFile -Force -ErrorAction Stop
                         Write-Success "Rollback complete - previous version restored"
                     } catch {
                         Write-Fail "Rollback also failed: $_"
@@ -598,7 +611,7 @@ function Deploy-Binary {
                 }
                 throw
             }
-            Write-Warn "Target binary is in use; retrying ($attempt/$maxAttempts)..."
+            Write-Warn "Target still locked; retrying ($attempt/$maxAttempts)..."
             Start-Sleep -Milliseconds 500
             $attempt++
         }

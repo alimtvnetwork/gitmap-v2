@@ -457,37 +457,45 @@ deploy_binary() {
     mkdir -p "$app_dir"
 
     local dest_file="$app_dir/$BINARY_NAME"
-
-    # Backup existing binary
     local backup_file="${dest_file}.old"
     local has_backup=false
+    local deploy_success=false
+
     if [[ -f "$dest_file" ]]; then
-        if cp "$dest_file" "$backup_file" 2>/dev/null; then
+        # Rename-first strategy: move the existing binary out of the way
+        # so the copy target is free (avoids "text file busy" on some systems)
+        rm -f "$backup_file" 2>/dev/null || true
+        if mv "$dest_file" "$backup_file" 2>/dev/null; then
             has_backup=true
-            write_info "Backed up existing binary to ${BINARY_NAME}.old"
+            write_info "Renamed existing binary to ${BINARY_NAME}.old (rename-first)"
         else
-            write_warn "Could not create backup"
+            # Fallback: copy-based backup
+            if cp "$dest_file" "$backup_file" 2>/dev/null; then
+                has_backup=true
+                write_info "Backed up existing binary to ${BINARY_NAME}.old"
+            else
+                write_warn "Could not create backup"
+            fi
         fi
     fi
 
-    # Deploy with retry
+    # Copy new binary — after rename-first, the destination is free
     local max_attempts=5
     local attempt=1
-    local deploy_success=false
     while [[ $attempt -le $max_attempts ]]; do
         if cp "$BINARY_PATH" "$dest_file" 2>/dev/null; then
             deploy_success=true
             break
         fi
-        write_warn "Target binary is in use; retrying ($attempt/$max_attempts)..."
+        write_warn "Target still locked; retrying ($attempt/$max_attempts)..."
         sleep 1
         attempt=$((attempt + 1))
     done
 
     if [[ "$deploy_success" == "false" ]]; then
-        if [[ "$has_backup" == "true" ]] && [[ -f "$backup_file" ]]; then
+        if [[ "$has_backup" == "true" ]] && [[ -f "$backup_file" ]] && [[ ! -f "$dest_file" ]]; then
             write_warn "Deploy failed - restoring previous binary from backup"
-            cp "$backup_file" "$dest_file" 2>/dev/null && write_success "Rollback complete" || write_fail "Rollback also failed"
+            mv "$backup_file" "$dest_file" 2>/dev/null && write_success "Rollback complete" || write_fail "Rollback also failed"
         fi
         write_fail "Deploy failed after $max_attempts attempts"
         exit 1
