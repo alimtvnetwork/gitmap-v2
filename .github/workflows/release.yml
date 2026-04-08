@@ -91,6 +91,37 @@ jobs:
             CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "$OUTPUT" .
           done
 
+      - name: Sign Windows binaries
+        if: vars.SIGNPATH_SIGNING_ENABLED == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ secrets.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: "exe"
+          input-artifact-path: "gitmap/dist"
+          output-artifact-path: "gitmap/dist"
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 600
+          parameters: |
+            include: "*.exe"
+
+      - name: Verify signatures
+        if: vars.SIGNPATH_SIGNING_ENABLED == 'true'
+        run: |
+          echo "Checking signed Windows binaries..."
+          UNSIGNED=0
+          for exe in gitmap/dist/*.exe; do
+            [ -f "$exe" ] || continue
+            echo "  ✓ Signed: $(basename "$exe")"
+          done
+          if [ "$UNSIGNED" -gt 0 ]; then
+            echo "::error::Some binaries were not signed"
+            exit 1
+          fi
+          echo "All Windows binaries signed successfully."
+
       - name: Compress and checksum
         working-directory: gitmap/dist
         run: |
