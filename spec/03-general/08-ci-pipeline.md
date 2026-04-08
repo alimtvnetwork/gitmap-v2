@@ -178,6 +178,15 @@ GitHub Releases with SHA256 checksums.
 | `.github/scripts/test-summary.sh` | Failure report aggregation script    |
 | `.golangci.yml`                   | Linter configuration (28 rules)      |
 
+## References
+
+For detailed, portable pipeline implementation guides (suitable for sharing with any AI or engineer), see:
+
+- [spec/pipeline/README.md](../pipeline/README.md) — Index and quick reference
+- [spec/pipeline/01-ci-pipeline.md](../pipeline/01-ci-pipeline.md) — CI patterns (SHA dedup, test matrix, builds)
+- [spec/pipeline/02-release-pipeline.md](../pipeline/02-release-pipeline.md) — Release automation (versioning, install scripts)
+- [spec/pipeline/03-vulnerability-scanning.md](../pipeline/03-vulnerability-scanning.md) — Vulnerability scanning
+
 ---
 
 ## Acceptance Criteria
