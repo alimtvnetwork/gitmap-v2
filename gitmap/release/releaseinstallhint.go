@@ -26,6 +26,11 @@ func ShouldPrintInstallHint(remoteURL string) bool {
 	}
 
 	normalized := strings.TrimSuffix(strings.ToLower(remoteURL), ".git")
+	// Normalize SSH URLs: "git@github.com:org/repo" → "github.com/org/repo"
+	if idx := strings.Index(normalized, "@"); idx >= 0 {
+		normalized = strings.Replace(normalized[idx+1:], ":", "/", 1)
+	}
+
 	prefix := strings.TrimSuffix(strings.ToLower(constants.GitmapRepoPrefix), ".git")
 
 	return strings.Contains(normalized, prefix)
