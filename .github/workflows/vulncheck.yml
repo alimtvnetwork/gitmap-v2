@@ -22,7 +22,7 @@ jobs:
           cache-dependency-path: gitmap/go.sum
 
       - name: Install govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+        run: go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
 
       - name: Run govulncheck
         working-directory: gitmap
@@ -32,7 +32,7 @@ jobs:
           rc=$?
           if [ $rc -ne 0 ]; then
             # Fail only if non-stdlib vulnerabilities are found
-            if grep -q "packages you import" /tmp/vulncheck.out | grep -v "0 vulnerabilities in packages"; then
+            if grep "packages you import" /tmp/vulncheck.out | grep -qv "0 vulnerabilities in packages"; then
               echo "::error::Third-party vulnerabilities detected"
               exit 1
             fi
