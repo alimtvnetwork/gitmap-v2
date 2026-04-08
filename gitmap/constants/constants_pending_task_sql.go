@@ -44,10 +44,3 @@ const (
 
 // SQL: task type lookup.
 const SQLSelectTaskTypeByName = `SELECT Id FROM TaskType WHERE Name = ?`
-
-// SQL: drop pending task tables.
-const (
-	SQLDropCompletedTask = "DROP TABLE IF EXISTS CompletedTask"
-	SQLDropPendingTask   = "DROP TABLE IF EXISTS PendingTask"
-	SQLDropTaskType      = "DROP TABLE IF EXISTS TaskType"
-)
