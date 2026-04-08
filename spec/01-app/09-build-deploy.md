@@ -81,19 +81,33 @@ bin/
     └── config.json
 ```
 
+## Deploy Target Resolution
+
+The deploy target is resolved with a 3-tier priority:
+
+| Priority | Source | Description |
+|----------|--------|-------------|
+| 1 | `-DeployPath` flag | Explicit CLI override — always wins |
+| 2 | Global PATH lookup | If `gitmap` is already on PATH, deploy to its detected install directory |
+| 3 | `powershell.json` | Fall back to `deployPath` from config (default `E:\bin-run`) |
+
+This means **first-time installs** use the `powershell.json` default, but
+**subsequent builds** automatically detect where gitmap is running from and
+deploy there — no manual path configuration needed.
+
 ## Deploy Structure
 
 The deploy target uses a nested `gitmap/` subfolder:
 
 ```
-E:\bin-run\
+<deploy-target>\
 └── gitmap\
     ├── gitmap.exe
     └── data\
         └── config.json
 ```
 
-The `E:\bin-run\gitmap\` directory must be on the system `PATH` so
+The `<deploy-target>\gitmap\` directory must be on the system `PATH` so
 the user can run `gitmap` from any terminal.
 
 ## Embedded Repo Path
