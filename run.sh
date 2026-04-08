@@ -396,14 +396,59 @@ copy_data_folder() {
     fi
 }
 
+# -- Resolve deploy target -------------------------------------
+# Priority: 1) --deploy-path flag  2) globally installed gitmap location  3) powershell.json default
+resolve_deploy_target() {
+    # 1) Explicit CLI override always wins
+    if [[ -n "$DEPLOY_PATH" ]]; then
+        write_info "Deploy target: CLI override -> $DEPLOY_PATH"
+        echo "$DEPLOY_PATH"
+
+        return
+    fi
+
+    # 2) If gitmap is already on PATH, deploy to its parent directory
+    local active_cmd
+    active_cmd=$(command -v gitmap 2>/dev/null || true)
+    if [[ -n "$active_cmd" ]] && [[ -f "$active_cmd" ]]; then
+        local resolved_active
+        resolved_active=$(readlink -f "$active_cmd" 2>/dev/null || echo "$active_cmd")
+        local active_dir
+        active_dir=$(dirname "$resolved_active")
+        local active_dir_name
+        active_dir_name=$(basename "$active_dir")
+
+        # The binary lives in <deploy-target>/gitmap/gitmap
+        # So the deploy target is the parent of the gitmap/ folder
+        if [[ "$active_dir_name" == "gitmap" ]]; then
+            local deploy_target
+            deploy_target=$(dirname "$active_dir")
+            write_info "Deploy target: detected from PATH -> $deploy_target"
+            echo "$deploy_target"
+
+            return
+        fi
+
+        # Binary is directly in a folder (not nested under gitmap/)
+        local deploy_target
+        deploy_target=$(dirname "$active_dir")
+        write_info "Deploy target: detected from PATH -> $deploy_target"
+        echo "$deploy_target"
+
+        return
+    fi
+
+    # 3) Fall back to powershell.json default
+    write_info "Deploy target: powershell.json default -> $DEPLOY_TARGET"
+    echo "$DEPLOY_TARGET"
+}
+
 # -- Deploy to target directory --------------------------------
 deploy_binary() {
     write_step "4/4" "Deploying"
 
-    local target="$DEPLOY_TARGET"
-    if [[ -n "$DEPLOY_PATH" ]]; then
-        target="$DEPLOY_PATH"
-    fi
+    local target
+    target=$(resolve_deploy_target)
 
     write_info "Target: $target"
     mkdir -p "$target"
