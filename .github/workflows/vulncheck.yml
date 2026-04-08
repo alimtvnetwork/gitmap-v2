@@ -9,14 +9,17 @@ concurrency:
   group: vulncheck-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   vulncheck:
     name: govulncheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: gitmap/go.mod
           cache-dependency-path: gitmap/go.sum
@@ -31,7 +34,6 @@ jobs:
           govulncheck ./... 2>&1 | tee /tmp/vulncheck.out
           rc=$?
           if [ $rc -ne 0 ]; then
-            # Fail only if non-stdlib vulnerabilities are found
             if grep "packages you import" /tmp/vulncheck.out | grep -qv "0 vulnerabilities in packages"; then
               echo "::error::Third-party vulnerabilities detected"
               exit 1

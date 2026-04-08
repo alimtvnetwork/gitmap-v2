@@ -10,6 +10,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/heads/release/') }}
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   sha-check:
     name: Check if already built
@@ -34,10 +37,10 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed lint"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: needs.sha-check.outputs.already-built != 'true'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         if: needs.sha-check.outputs.already-built != 'true'
         with:
           go-version-file: gitmap/go.mod
@@ -65,10 +68,10 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed vulncheck"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: needs.sha-check.outputs.already-built != 'true'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         if: needs.sha-check.outputs.already-built != 'true'
         with:
           go-version-file: gitmap/go.mod
@@ -114,10 +117,10 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed tests (${{ matrix.name }})"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: needs.sha-check.outputs.already-built != 'true'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         if: needs.sha-check.outputs.already-built != 'true'
         with:
           go-version-file: gitmap/go.mod
@@ -165,10 +168,10 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed all tests"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: needs.sha-check.outputs.already-built != 'true'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         if: needs.sha-check.outputs.already-built != 'true'
         with:
           go-version-file: gitmap/go.mod
@@ -273,10 +276,10 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already built (${{ matrix.os }}/${{ matrix.arch }})"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: needs.sha-check.outputs.already-built != 'true'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         if: needs.sha-check.outputs.already-built != 'true'
         with:
           go-version-file: gitmap/go.mod
