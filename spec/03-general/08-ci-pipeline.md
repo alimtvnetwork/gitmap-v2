@@ -193,4 +193,10 @@ GitHub Releases with SHA256 checksums.
 5. Pull request CI runs are scoped to the PR ref and do not
    cancel runs on `main` or other PRs.
 6. Test failures in one suite do not prevent other suites from
-   completing (`fail-fast: false`).
+    completing (`fail-fast: false`).
+7. When any test suite fails, the test summary produces a
+   **"FAILURE REPORT (copy-paste ready)"** block listing each
+   failing test name and its specific failure reason (assertion
+   errors, expected/got mismatches, panics, undefined references).
+8. The build summary job prints a formatted table of all 6
+   binaries with their human-readable file sizes.
