@@ -42,8 +42,18 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, dir, err)
 		os.Exit(1)
 	}
+
+	// Enqueue scan as a pending task before execution.
+	workDir, _ := os.Getwd()
+	cmdArgs := buildCommandArgs(append([]string{"scan"}, os.Args[2:]...))
+	taskID, taskDB := createPendingTask(constants.TaskTypeScan, absDir, workDir, "scan", cmdArgs)
+	if taskDB != nil {
+		defer taskDB.Close()
+	}
+
 	repos, err := scanner.ScanDir(absDir, cfg.ExcludeDirs)
 	if err != nil {
+		failPendingTask(taskDB, taskID, fmt.Sprintf(constants.ErrScanFailed, absDir, err))
 		fmt.Fprintf(os.Stderr, constants.ErrScanFailed, absDir, err)
 		os.Exit(1)
 	}
@@ -59,6 +69,9 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	importReleases(absDir, outputDir)
 	addToDesktop(records, ghDesktop)
 	openOutputFolder(outputDir, openFolder)
+
+	// Mark scan task as completed after all steps succeed.
+	completePendingTask(taskDB, taskID)
 }
 
 // upsertToDB persists scan results into the SQLite database.
