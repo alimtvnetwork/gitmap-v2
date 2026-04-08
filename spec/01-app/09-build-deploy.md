@@ -12,6 +12,7 @@ Build configuration lives in `gitmap/powershell.json`.
 |------|-------------|
 | 1. Git Pull | Pulls latest changes from remote |
 | 2. Resolve Deps | Runs `go mod tidy` in `gitmap/` |
+| 2b. Win Resources | Runs `go-winres make` to embed icon + metadata (Windows only, optional) |
 | 3. Build | Compiles binary to `./bin/gitmap.exe` |
 | 3b. Version | Runs the built binary with `version` and prints result |
 | 4. Deploy | Copies binary + `data/` to deploy target (with retry on lock) |
