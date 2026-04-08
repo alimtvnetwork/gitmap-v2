@@ -6,6 +6,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.66.0",
+    date: "2026-04-08",
+    items: [
+      "Pinned `govulncheck` to `v1.1.4` in CI and vulncheck workflows for reproducible builds.",
+      "Updated GitHub Actions to Node.js 24 compatible versions (`actions/checkout@v6`, `actions/setup-go@v6`).",
+      "Added `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` environment variable across all workflows.",
+      "Created portable `spec/pipeline/` documentation folder for cross-AI shareability.",
+      "Aligned CI tool pinning and severity response times across dependency specs (13, 17, 27).",
+      "Added cross-reference from `spec/03-general/08-ci-pipeline.md` to `spec/pipeline/`.",
+      "Fixed `ShouldPrintInstallHint` not matching SSH remote URLs due to colon separator not being normalized.",
+      "Fixed vulncheck pipeline stdout suppression caused by `-q` flag on initial `grep`.",
+    ],
+  },
+  {
     version: "v2.65.0",
     date: "2026-04-07",
     items: [
