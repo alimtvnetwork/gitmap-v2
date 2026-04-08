@@ -2,6 +2,14 @@
 
 The CI pipeline (GitHub Actions) uses a parallel matrix strategy ('fail-fast: false') to execute four distinct test suites: unit, store, integration, and tui. Test output and coverage profiles ('-covermode=atomic') are collected as artifacts and consolidated by a final 'test-summary' job. This summary job aggregates failures into a single report, calculates project-wide coverage using 'go tool cover', and generates a per-package breakdown. To ensure visibility, the test stage uses 'set +e' and 'grep' to filter for specific Go failure patterns (e.g., '--- FAIL', 'build failed', 'undefined') before exiting with the original code.
 
+## Failure Report Script
+
+The `.github/scripts/test-summary.sh` script parses each suite's `test-output.txt` to extract failing test names and their specific failure reasons (assertion errors, expected/got mismatches, panics, undefined references). It produces a **"FAILURE REPORT (copy-paste ready)"** block at the end — a self-contained summary that can be shared directly without scrolling through full logs. The script uses `awk` to capture lines between `=== RUN` and `--- FAIL` markers, filtering for `.go:<line>:` patterns and error keywords.
+
+## Binary Builds on Main
+
+After all tests pass, a `build` matrix job cross-compiles 6 binaries (windows/linux/darwin × amd64/arm64) versioned as `dev-<sha>` using `CGO_ENABLED=0` and uploads them as artifacts with 14-day retention. A subsequent `build-summary` job downloads all artifacts and prints a formatted table of binary names and human-readable file sizes.
+
 ## SHA-Based Build Deduplication (Passthrough Gate Pattern)
 
 A 'sha-check' gate job runs before all other jobs. It probes the GitHub Actions cache for key 'ci-passed-<SHA>' using 'lookup-only: true'. Downstream jobs always run (no job-level `if` skipping) but use **step-level conditionals**: when the SHA is already cached, each job executes only an "Already validated" echo step and exits with ✅ Success. This ensures the GitHub UI always shows green checkmarks — never grey "skipped" icons that look like failures and block required status checks. When the cache misses, steps guarded by `if: needs.sha-check.outputs.already-built != 'true'` execute normally. The cache write is **inlined as the final step of `test-summary`** (not a separate `mark-success` job) to prevent `cancel-in-progress` from cancelling the cache save while all validation jobs have already passed. Failed pipelines never cache, so re-runs of the same SHA execute fully. Documented in spec/05-coding-guidelines/29-ci-sha-deduplication.md.
