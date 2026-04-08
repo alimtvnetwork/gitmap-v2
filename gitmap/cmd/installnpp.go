@@ -1,13 +1,10 @@
 package cmd
 
 import (
-	"archive/zip"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 
 	"github.com/user/gitmap/constants"
 )
