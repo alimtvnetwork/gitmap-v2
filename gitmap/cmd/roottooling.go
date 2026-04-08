@@ -106,6 +106,16 @@ func dispatchTooling(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdPending {
+		runPending()
+
+		return true
+	}
+	if command == constants.CmdDoPending || command == constants.CmdDoPendingAlias {
+		runDoPending(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
