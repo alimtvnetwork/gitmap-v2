@@ -106,6 +106,7 @@ All constraints from `08-code-style.md` apply to every file you write.
 - [ ] Add deploy step with nested directory structure
 - [ ] Add retry-on-lock logic for Windows deploy
 - [ ] Add version verification after build (run binary with `version`)
+- [ ] For installer scripts, print a post-install summary with version, binary path, install directory, and PATH target/status
 - [ ] Implement `update` command with copy-and-handoff self-update
 - [ ] Implement `update-cleanup` command for artifact removal
 

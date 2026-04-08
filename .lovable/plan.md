@@ -6,6 +6,11 @@
 - Treat unused imports and stale references as blocking regressions, not cleanup for later.
 - For install-flow changes under `gitmap/cmd`, verify `go test ./cmd` and `go vet ./cmd` before finalizing.
 
+## Guardrail: Installer Output Contract
+- Every installer flow must end with a visible summary showing installed version, binary path, install directory, and PATH target/status.
+- Unix installers must print which shell/profile file received the PATH entry and how to reload it.
+- Windows installers must print whether User PATH was updated or already present.
+
 ## Part A: README Redesign (styled after scripts-fixer-v5)
 1. **Center-aligned header** with badges, tagline, and horizontal rules
 2. **Quick Start** section at the top (one-liner install + first scan)
