@@ -101,7 +101,7 @@ func findRepoRoot(path string) string {
 
 // isGitmapSourceRepo checks for the update script and source markers.
 func isGitmapSourceRepo(path string) bool {
-	if !pathExists(path) || !fileExists(filepath.Join(path, updateRunScript)) {
+	if !dirExists(path) || !fileExists(filepath.Join(path, updateRunScript)) {
 		return false
 	}
 
