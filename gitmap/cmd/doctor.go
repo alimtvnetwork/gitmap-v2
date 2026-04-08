@@ -40,6 +40,7 @@ func runDoctorChecks() int {
 	issues += checkLockFile()
 	issues += checkNetwork()
 	issues += checkLegacyDirs()
+	issues += checkSignature()
 
 	return issues
 }
