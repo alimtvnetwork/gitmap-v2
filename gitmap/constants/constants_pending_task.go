@@ -53,6 +53,13 @@ const SQLCreateCompletedTask = `CREATE TABLE IF NOT EXISTS CompletedTask (
 const SQLSeedTaskTypes = `INSERT OR IGNORE INTO TaskType (Name)
 	VALUES ('Delete'), ('Remove'), ('Scan'), ('Clone'), ('Pull'), ('Exec')`
 
+// SQL: drop pending task tables.
+const (
+	SQLDropCompletedTask = "DROP TABLE IF EXISTS CompletedTask"
+	SQLDropPendingTask   = "DROP TABLE IF EXISTS PendingTask"
+	SQLDropTaskType      = "DROP TABLE IF EXISTS TaskType"
+)
+
 // SQL: migrate existing tables to add new columns.
 const (
 	SQLMigratePendingWorkDir  = "ALTER TABLE PendingTask ADD COLUMN WorkingDirectory TEXT DEFAULT ''"
