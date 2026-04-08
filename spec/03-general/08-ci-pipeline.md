@@ -162,9 +162,9 @@ Coverage profiles are merged separately via `go tool cover`.
 | `release/**`    | 6 targets         | Official artifacts for release   |
 | `v*` tags       | 6 targets         | Tagged release artifacts         |
 
-This separation follows the **"build once, promote often"** principle:
-binaries are only compiled in the release pipeline where they are
-immediately attached to a GitHub Release with checksums.
+CI builds produce `dev-<sha>` artifacts for testing and validation.
+Release builds produce official versioned artifacts attached to
+GitHub Releases with SHA256 checksums.
 
 ---
 
