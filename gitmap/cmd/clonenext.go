@@ -191,11 +191,20 @@ func handleCloneNextRemoval(folderName, fullPath, targetPath string, deleteFlag,
 
 // removeFolderWithLockCheck attempts to remove a directory, and if it fails,
 // scans for locking processes and offers to terminate them before retrying.
+// All removal attempts are tracked as pending tasks in the database.
 func removeFolderWithLockCheck(name, path string) bool {
+	// Record the delete intent as a pending task before any OS operation.
+	taskID, db := createPendingTask(constants.TaskTypeDelete, path, constants.CmdCloneNext)
+	if db != nil {
+		defer db.Close()
+	}
+
 	// First attempt.
 	err := os.RemoveAll(path)
 	if err == nil {
 		fmt.Printf(constants.MsgCloneNextRemoved, name)
+		completePendingTask(db, taskID)
+
 		return true
 	}
 
@@ -206,11 +215,15 @@ func removeFolderWithLockCheck(name, path string) bool {
 	procs, scanErr := lockcheck.FindLockingProcesses(path)
 	if scanErr != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnLockCheckScanFailed, scanErr)
+		failPendingTask(db, taskID, fmt.Sprintf("lock scan failed: %v", scanErr))
+
 		return false
 	}
 
 	if len(procs) == 0 {
 		fmt.Print(constants.MsgLockCheckNoneFound)
+		failPendingTask(db, taskID, fmt.Sprintf("removal failed, no locking processes found: %v", err))
+
 		return false
 	}
 
@@ -221,6 +234,8 @@ func removeFolderWithLockCheck(name, path string) bool {
 	var answer string
 	_, _ = fmt.Scanln(&answer)
 	if strings.ToLower(strings.TrimSpace(answer)) != "y" {
+		failPendingTask(db, taskID, "user declined to terminate locking processes")
+
 		return false
 	}
 
@@ -243,10 +258,14 @@ func removeFolderWithLockCheck(name, path string) bool {
 	retryErr := os.RemoveAll(path)
 	if retryErr != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, name, retryErr)
+		failPendingTask(db, taskID, fmt.Sprintf("retry removal failed: %v", retryErr))
+
 		return false
 	}
 
 	fmt.Printf(constants.MsgCloneNextRemoved, name)
+	completePendingTask(db, taskID)
+
 	return true
 }
 
