@@ -29,8 +29,8 @@ func resolveRepoPathFromDB() string {
 	return normalizeRepoPath(loadRepoPathFromDB())
 }
 
-// pathExists checks if a directory exists on disk.
-func pathExists(path string) bool {
+// dirExists checks if a directory exists on disk.
+func dirExists(path string) bool {
 	info, err := os.Stat(path)
 	if err != nil {
 		return false
