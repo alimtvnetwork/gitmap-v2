@@ -101,6 +101,7 @@ func executeInstall(opts installOptions) {
 		return
 	}
 
+	originalTool := opts.Tool
 	installName := resolveNppInstallName(opts.Tool)
 
 	fmt.Printf(constants.MsgInstallChecking, installName)
@@ -139,8 +140,6 @@ func executeInstall(opts installOptions) {
 		}
 	}
 
-	// Track original tool name before it was resolved.
-	originalTool := tool
 
 	installTool(opts)
 
