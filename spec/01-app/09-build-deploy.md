@@ -110,6 +110,27 @@ The deploy target uses a nested `gitmap/` subfolder:
 The `<deploy-target>\gitmap\` directory must be on the system `PATH` so
 the user can run `gitmap` from any terminal.
 
+## Rename-First Deploy Strategy
+
+When the target binary already exists, the deploy step uses a
+**rename-first** strategy to avoid file-lock failures (especially on
+Windows, where a running `.exe` cannot be overwritten):
+
+1. **Rename** the existing binary to `<binary>.old` (Windows allows
+   renaming a running executable).
+2. **Copy** the newly built binary into the now-free destination path.
+3. If the copy fails after retries, **rollback** by renaming `.old`
+   back to the original name.
+
+```
+existing gitmap.exe  →  gitmap.exe.old   (rename — succeeds even if locked)
+new build bin/gitmap.exe  →  gitmap.exe  (copy — destination is free)
+```
+
+The `.old` file is left in place and cleaned up by
+`gitmap update-cleanup`. On Linux/macOS, `mv` is used instead of
+`Rename-Item`, providing identical behavior.
+
 ## Embedded Repo Path
 
 The build step embeds the **absolute path of the source repo** into the
@@ -178,9 +199,10 @@ Before executing gitmap, the script prints diagnostic context:
 
 ## Deploy Target
 
-The default deploy path (`E:\bin-run`) contains a `gitmap/` subfolder
-with the binary and data. `E:\bin-run\gitmap` must be on the system
-`PATH` so the tool can be run from any terminal.
+The deploy target is resolved via the 3-tier priority described in
+**Deploy Target Resolution** above. The resolved directory contains a
+`gitmap/` subfolder with the binary and data. That subfolder must be on
+the system `PATH` so the tool can be run from any terminal.
 
 ## Logging
 
