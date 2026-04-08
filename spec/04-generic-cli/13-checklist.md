@@ -5,6 +5,8 @@
 This is a sequenced implementation plan. Execute each phase in order.
 Reference the numbered spec files for detailed patterns.
 All constraints from `08-code-style.md` apply to every file you write.
+- After any Go refactor or file split, run `go test ./<affected-package>` immediately.
+- Do not leave unused imports or stale symbols for a later cleanup pass.
 
 ---
 
@@ -129,6 +131,7 @@ All constraints from `08-code-style.md` apply to every file you write.
 - [ ] Update `README.md` with grouped command reference + examples
 - [ ] Verify all files ≤ 200 lines (split if exceeded)
 - [ ] Verify all functions ≤ 15 lines (extract helpers if exceeded)
+- [ ] Verify every edited Go file has zero unused imports after refactors
 - [ ] Verify no magic strings (all in `constants`)
 - [ ] Verify positive conditionals only (no `!`, no `!=`)
 - [ ] Verify blank line before every `return`

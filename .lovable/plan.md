@@ -1,6 +1,11 @@
 
 # Plan: Install System Overhaul + README Redesign
 
+## Guardrail: Go Refactor Validation
+- After any Go file split or refactor, run `go test ./<affected-package>` before marking the work done.
+- Treat unused imports and stale references as blocking regressions, not cleanup for later.
+- For install-flow changes under `gitmap/cmd`, verify `go test ./cmd` and `go vet ./cmd` before finalizing.
+
 ## Part A: README Redesign (styled after scripts-fixer-v5)
 1. **Center-aligned header** with badges, tagline, and horizontal rules
 2. **Quick Start** section at the top (one-liner install + first scan)
