@@ -433,3 +433,14 @@ Each GitHub release body includes:
 - **Install instructions**: PowerShell one-liner (`install.ps1`) for
   Windows and Bash one-liner (`install.sh`) for Linux/macOS
 - **Asset matrix table**: platform, architecture, and filename for each binary
+
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | CI trigger, stage sequence, compression, checksums, publish |
+| Install scripts | [03-install-scripts.md](../generic-release/03-install-scripts.md) | Version-pinned `install.ps1` / `install.sh`, SHA-256 verification |
+| Release metadata | [06-release-metadata.md](../generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, asset maps |
+| Release assets | [05-release-assets.md](../generic-release/05-release-assets.md) | Asset naming, compression, checksums |
+| Cross-compilation | [01-cross-compilation.md](../generic-release/01-cross-compilation.md) | Multi-platform Go build targets |
+| Release data model | [13-release-data-model.md](13-release-data-model.md) | Per-release metadata, `latest.json`, semver rules |

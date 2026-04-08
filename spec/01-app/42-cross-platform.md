@@ -128,3 +128,12 @@ Triggers on tags matching `v*`.
 - Bash scripts require `bash 4+` (macOS ships `bash 3` — use `#!/usr/bin/env bash`)
 - Binary names: `gitmap` on Unix, `gitmap.exe` on Windows
 - No external CLI dependencies beyond `git`, `go`, `jq` or `python3`
+
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Build scripts | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline, config loading, platform detection |
+| PowerShell patterns | [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Script architecture, step-based execution |
+| Deploy strategy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Rename-first on Windows, `mv` on Unix |
+| Cross-compilation | [01-cross-compilation.md](../generic-release/01-cross-compilation.md) | Multi-platform Go build targets |
