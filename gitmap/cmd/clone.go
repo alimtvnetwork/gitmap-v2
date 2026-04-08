@@ -95,8 +95,18 @@ func validateShorthandPath(resolved string) string {
 
 // executeClone runs the clone operation and prints the summary.
 func executeClone(source, targetDir string, safePull, ghDesktop bool) {
+	// Enqueue clone as a pending task before execution.
+	absTarget, _ := filepath.Abs(targetDir)
+	workDir, _ := os.Getwd()
+	cmdArgs := buildCommandArgs(append([]string{"clone"}, os.Args[2:]...))
+	taskID, taskDB := createPendingTask(constants.TaskTypeClone, absTarget, workDir, "clone", cmdArgs)
+	if taskDB != nil {
+		defer taskDB.Close()
+	}
+
 	summary, err := cloner.CloneFromFile(source, targetDir, safePull)
 	if err != nil {
+		failPendingTask(taskDB, taskID, fmt.Sprintf(constants.ErrCloneFailed, source, err))
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFailed, source, err)
 		os.Exit(1)
 	}
@@ -104,6 +114,9 @@ func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 	fmt.Printf(constants.MsgCloneComplete, summary.Succeeded, summary.Failed)
 	printCloneFailures(summary)
 	registerCloned(summary, targetDir, ghDesktop)
+
+	// Mark clone task as completed after all steps succeed.
+	completePendingTask(taskDB, taskID)
 }
 
 // printCloneFailures lists any repos that failed to clone.
