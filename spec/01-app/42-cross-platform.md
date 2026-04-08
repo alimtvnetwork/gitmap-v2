@@ -23,18 +23,20 @@ Reads configuration from the same `powershell.json` file using `jq` or
 
 ### Parity
 
-| Feature                  | run.ps1 | run.sh |
-|--------------------------|---------|--------|
-| Git pull with branch check | ✅    | ✅     |
-| Dependency resolution    | ✅      | ✅     |
-| Source file validation   | ✅      | ✅     |
-| Build with ldflags       | ✅      | ✅     |
-| Data folder copy         | ✅      | ✅     |
-| Deploy with retry        | ✅      | ✅     |
-| Rollback on failure      | ✅      | ✅     |
-| PATH sync detection      | ✅      | ✅     |
-| Test mode (`-t`)         | ✅      | ✅     |
-| Colored output           | ✅      | ✅     |
+| Feature                        | run.ps1 | run.sh |
+|--------------------------------|---------|--------|
+| Git pull with branch check     | ✅      | ✅     |
+| Dependency resolution          | ✅      | ✅     |
+| Source file validation         | ✅      | ✅     |
+| Build with ldflags             | ✅      | ✅     |
+| Data folder copy               | ✅      | ✅     |
+| Smart deploy path resolution   | ✅      | ✅     |
+| Rename-first deploy            | ✅      | ✅     |
+| Deploy with retry              | ✅      | ✅     |
+| Rollback on failure            | ✅      | ✅     |
+| PATH sync detection            | ✅      | ✅     |
+| Test mode (`-t`)               | ✅      | ✅     |
+| Colored output                 | ✅      | ✅     |
 
 ---
 
