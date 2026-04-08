@@ -13,14 +13,14 @@ import (
 func createPendingTask(typeName, targetPath, sourceCmd string) (int64, *store.DB) {
 	db, err := openDB()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: could not open DB for task tracking: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.WarnPendingDBOpen, err)
 
 		return 0, nil
 	}
 
 	typeID, err := db.GetTaskTypeID(typeName)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: task type lookup failed: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.WarnPendingTypeLookup, err)
 		db.Close()
 
 		return 0, nil
@@ -35,7 +35,7 @@ func createPendingTask(typeName, targetPath, sourceCmd string) (int64, *store.DB
 
 	taskID, err := db.InsertPendingTask(typeID, targetPath, sourceCmd)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: could not record pending task: %v\n", err)
+		fmt.Fprintf(os.Stderr, constants.WarnPendingInsertFailed, err)
 		db.Close()
 
 		return 0, nil
@@ -52,7 +52,7 @@ func completePendingTask(db *store.DB, taskID int64) {
 
 	err := db.CompleteTask(taskID)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: could not mark task #%d complete: %v\n", taskID, err)
+		fmt.Fprintf(os.Stderr, constants.WarnPendingCompleteFail, taskID, err)
 	}
 }
 
@@ -64,6 +64,6 @@ func failPendingTask(db *store.DB, taskID int64, reason string) {
 
 	err := db.FailTask(taskID, reason)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: could not update task #%d failure: %v\n", taskID, err)
+		fmt.Fprintf(os.Stderr, constants.WarnPendingFailUpdate, taskID, err)
 	}
 }
