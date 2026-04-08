@@ -131,6 +131,14 @@ If a `PendingTask` already exists with the same `TaskTypeId` and
 `TargetPath`, do not create a duplicate. Log a message indicating the
 existing pending task Id.
 
+For replayable task types (Scan, Clone, Pull, Exec), duplicate detection
+also includes `CommandArgs`. This allows the same target path to have
+multiple pending tasks if the CLI arguments differ (e.g., `scan --mode ssh`
+vs `scan --mode https` on the same directory).
+
+Delete and Remove tasks match on type+path only, since the operation
+is always the same regardless of how the delete was triggered.
+
 ## Task Types Covered
 
 | Type | Commands | Replay Method |
@@ -141,6 +149,39 @@ existing pending task Id.
 | Clone | clone | subprocess replay |
 | Pull | pull | subprocess replay |
 | Exec | exec | subprocess replay |
+
+## Integrated Commands
+
+Commands that have been wired into the pending task system:
+
+### scan (first integration)
+
+The `executeScan` function enqueues a `Scan` task before starting
+directory traversal. The target path is the absolute scan directory.
+CLI args are captured from `os.Args` so that `do-pending` can replay
+the exact scan invocation. On successful completion (all outputs
+written, DB upserted, projects detected), the task is marked complete.
+If `ScanDir` fails, the failure reason is recorded and the task remains
+pending.
+
+### clone (second integration)
+
+The `executeClone` function enqueues a `Clone` task before calling
+`CloneFromFile`. The target path is the absolute target directory.
+On success (all repos cloned, summary printed, Desktop registration
+done), the task is marked complete. If `CloneFromFile` returns an
+error, the failure reason is recorded.
+
+## Edge Case Handling
+
+| Scenario | Behavior |
+|----------|----------|
+| Target path does not exist (delete) | Task auto-completes, logs skip |
+| Working directory missing (replay) | Task fails with Code Red path diagnostic |
+| Permission denied | Failure reason includes path, operation, and OS error |
+| Empty CommandArgs (replay) | Task fails immediately, reason recorded |
+| FailTask on non-existent ID | Returns error (RowsAffected = 0) |
+| CompleteTask commit failure | Transaction rolls back, error logged |
 
 ## Constants Organization
 
@@ -160,8 +201,11 @@ existing pending task Id.
 6. `gitmap do-pending` retries all; `gitmap dp` is an alias.
 7. `gitmap do-pending <id>` retries a single task.
 8. Duplicate pending tasks for the same type+path are prevented.
-9. Replayable tasks store full CLI args and working directory.
-10. All commands appear in standard help, detailed help, and UI help.
+9. Replayable tasks use type+path+cmdArgs for duplicate detection.
+10. Replayable tasks store full CLI args and working directory.
+11. All commands appear in standard help, detailed help, and UI help.
+12. Delete tasks auto-complete when target path no longer exists.
+13. Permission errors include full Code Red path diagnostics.
 
 ## Contributors
 
