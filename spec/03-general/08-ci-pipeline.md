@@ -170,12 +170,13 @@ immediately attached to a GitHub Release with checksums.
 
 ## File Layout
 
-| File                           | Purpose                          |
-|--------------------------------|----------------------------------|
-| `.github/workflows/ci.yml`     | Lint, test, coverage on main/PRs |
-| `.github/workflows/release.yml`| Cross-compile and publish        |
-| `.github/workflows/vulncheck.yml`| Weekly vulnerability scan      |
-| `.golangci.yml`                | Linter configuration (28 rules)  |
+| File                              | Purpose                              |
+|-----------------------------------|--------------------------------------|
+| `.github/workflows/ci.yml`        | Lint, test, build, coverage on main  |
+| `.github/workflows/release.yml`   | Cross-compile and publish releases   |
+| `.github/workflows/vulncheck.yml` | Weekly vulnerability scan            |
+| `.github/scripts/test-summary.sh` | Failure report aggregation script    |
+| `.golangci.yml`                   | Linter configuration (28 rules)      |
 
 ---
 
@@ -183,8 +184,8 @@ immediately attached to a GitHub Release with checksums.
 
 1. Pushing two commits in quick succession to the same branch
    cancels the first CI run and only completes the second.
-2. Pushing to `main` runs lint, vulncheck, and tests but does
-   **not** produce binary artifacts.
+2. Pushing to `main` runs lint, vulncheck, tests, and builds
+   6 cross-compiled binaries uploaded as artifacts.
 3. Pushing to `release/**` or a `v*` tag produces 6 binaries
    and uploads them as GitHub Release assets.
 4. The weekly vulncheck runs independently and does not block
