@@ -98,9 +98,17 @@ $cmdAfter = Get-Command gitmap -ErrorAction SilentlyContinue
 if ($cmdAfter -and (Test-Path $cmdAfter.Source)) {
     $activeBinary = $cmdAfter.Source
     $activeAfter = & $activeBinary version 2>&1
+} else {
+    Write-Host "  [TRACE] Get-Command gitmap: not found in PATH" -ForegroundColor DarkGray
 }
 if ($deployedBinary -and (Test-Path $deployedBinary)) {
     $deployedAfter = & $deployedBinary version 2>&1
+} else {
+    if (-not $deployedBinary) {
+        Write-Host "  [TRACE] deployedBinary: not resolved (check powershell.json deployPath)" -ForegroundColor DarkGray
+    } else {
+        Write-Host "  [TRACE] deployedBinary: path not found: $deployedBinary" -ForegroundColor DarkGray
+    }
 }
 `
 	UpdatePSVerify = `
@@ -108,6 +116,8 @@ Write-Host ""
 Write-Host "  Version before:   $activeBefore" -ForegroundColor DarkGray
 Write-Host "  Version active:   $activeAfter" -ForegroundColor DarkGray
 Write-Host "  Version deployed: $deployedAfter" -ForegroundColor DarkGray
+Write-Host "  Active binary:    $activeBinary" -ForegroundColor DarkGray
+Write-Host "  Deployed binary:  $(if ($deployedBinary) { $deployedBinary } else { '(not resolved)' })" -ForegroundColor DarkGray
 
 $lastReleaseScript = Join-Path (Join-Path (Join-Path "%s" "gitmap") "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
@@ -115,7 +125,18 @@ if (Test-Path $lastReleaseScript) {
 }
 
 if (($activeAfter -eq "unknown") -or ($deployedAfter -eq "unknown") -or ($activeAfter -ne $deployedAfter)) {
+    Write-Host ""
     Write-Host "  [FAIL] Active PATH version does not match deployed version." -ForegroundColor Red
+    Write-Host "  [TRACE] activeAfter=$activeAfter  deployedAfter=$deployedAfter" -ForegroundColor DarkGray
+    if ($deployedAfter -eq "unknown") {
+        Write-Host "  [HINT] Deployed binary could not be found or executed." -ForegroundColor Yellow
+        Write-Host "         Check that powershell.json 'deployPath' points to the correct directory" -ForegroundColor Yellow
+        Write-Host "         and that the binary exists at: $deployedBinary" -ForegroundColor Yellow
+    }
+    if ($activeAfter -ne "unknown" -and $deployedAfter -eq "unknown") {
+        Write-Host "  [HINT] The active PATH binary (v$activeAfter) updated successfully." -ForegroundColor Yellow
+        Write-Host "         Only the deployed-binary verification failed." -ForegroundColor Yellow
+    }
     exit 1
 }
 
