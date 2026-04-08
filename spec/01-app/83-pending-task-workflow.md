@@ -172,6 +172,16 @@ On success (all repos cloned, summary printed, Desktop registration
 done), the task is marked complete. If `CloneFromFile` returns an
 error, the failure reason is recorded.
 
+### pull (third integration)
+
+The `runPull` function enqueues a `Pull` task after resolving targets
+but before starting the batch pull loop. For single-repo pulls, the
+target path is the repo's absolute path; for multi-repo pulls (--all
+or --group), it falls back to the working directory. CLI args are
+captured from `os.Args` for replay. If the batch exits with a non-zero
+code, the task is failed with the exit code. On full success, the task
+is marked complete.
+
 ## Edge Case Handling
 
 | Scenario | Behavior |
