@@ -1,7 +1,7 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
 import TerminalDemo from "@/components/docs/TerminalDemo";
-import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal } from "lucide-react";
+import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal, Shield, FileText, AlertTriangle } from "lucide-react";
 
 const terminalLines = [
   { text: "gitmap install --list", type: "input" as const, delay: 800 },
@@ -22,8 +22,20 @@ const terminalLines = [
   { text: "", type: "output" as const },
   { text: "  Checking if node is installed...", type: "output" as const },
   { text: "  node is not installed.", type: "output" as const },
-  { text: "  Installing node...", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  ┌─ Install Plan ─────────────────────", type: "header" as const },
+  { text: "  │ Tool:    node", type: "output" as const },
+  { text: "  │ Version: latest", type: "output" as const },
+  { text: "  │ Manager: choco", type: "output" as const },
+  { text: "  │ Command: choco install nodejs -y --no-progress", type: "output" as const },
+  { text: "  └────────────────────────────────────", type: "output" as const },
+  { text: "", type: "output" as const },
+  { text: "  [1/4] Installing node via choco...", type: "output" as const },
+  { text: "  ✓ node install command completed successfully.", type: "accent" as const },
+  { text: "  [3/4] Verifying installation...", type: "output" as const },
   { text: "  ✓ node installed successfully.", type: "accent" as const },
+  { text: "  → Detected version: v22.5.0", type: "output" as const },
+  { text: "  [4/4] Recording installation...", type: "accent" as const },
   { text: "  Recorded node v22.5.0 in database.", type: "accent" as const },
 ];
 
