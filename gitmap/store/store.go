@@ -110,6 +110,7 @@ func (db *DB) Migrate() error {
 	db.migrateNotesColumn()
 	db.migrateZipGroupItemPaths()
 	db.migrateTRCommitSha()
+	db.migratePendingTaskColumns()
 
 	if err := db.SeedProjectTypes(); err != nil {
 		return err
