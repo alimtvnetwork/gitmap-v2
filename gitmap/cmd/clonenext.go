@@ -215,14 +215,14 @@ func removeFolderWithLockCheck(name, path string) bool {
 	procs, scanErr := lockcheck.FindLockingProcesses(path)
 	if scanErr != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnLockCheckScanFailed, scanErr)
-		failPendingTask(db, taskID, fmt.Sprintf("lock scan failed: %v", scanErr))
+		failPendingTask(db, taskID, fmt.Sprintf(constants.ReasonLockScanFailed, scanErr))
 
 		return false
 	}
 
 	if len(procs) == 0 {
 		fmt.Print(constants.MsgLockCheckNoneFound)
-		failPendingTask(db, taskID, fmt.Sprintf("removal failed, no locking processes found: %v", err))
+		failPendingTask(db, taskID, fmt.Sprintf(constants.ReasonNoLockingProcs, err))
 
 		return false
 	}
@@ -234,7 +234,7 @@ func removeFolderWithLockCheck(name, path string) bool {
 	var answer string
 	_, _ = fmt.Scanln(&answer)
 	if strings.ToLower(strings.TrimSpace(answer)) != "y" {
-		failPendingTask(db, taskID, "user declined to terminate locking processes")
+		failPendingTask(db, taskID, constants.ReasonUserDeclined)
 
 		return false
 	}
@@ -258,7 +258,7 @@ func removeFolderWithLockCheck(name, path string) bool {
 	retryErr := os.RemoveAll(path)
 	if retryErr != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, name, retryErr)
-		failPendingTask(db, taskID, fmt.Sprintf("retry removal failed: %v", retryErr))
+		failPendingTask(db, taskID, fmt.Sprintf(constants.ReasonRetryFailed, retryErr))
 
 		return false
 	}
