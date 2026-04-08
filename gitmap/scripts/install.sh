@@ -502,8 +502,13 @@ main() {
 
     print_install_summary "${installed_version}" "${bin_path}"
     if [ "${NO_PATH}" = false ]; then
-        step "Open a new terminal to use gitmap in your regular shell."
-        step "If you use a different shell (for example sh), add ${install_dir} there too."
+        echo ""
+        printf '  \033[33m⚠\033[0m  PATH was added to %s only (%s).\n' "${PATH_TARGET}" "${PATH_SHELL}" >&2
+        printf '     Other shells (sh, bash, fish) will NOT see gitmap unless you\n' >&2
+        printf '     add the following line to their profile too:\n' >&2
+        printf '     \033[36m%s\033[0m\n' "${PATH_LINE}" >&2
+        echo ""
+        step "Open a new terminal or run: ${PATH_RELOAD}"
     fi
 
     echo ""
