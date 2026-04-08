@@ -164,3 +164,11 @@ Version parsing lives in `release/semver.go`:
 | `Parse`       | Parse and pad a version string to full semver    |
 | `Bump`        | Increment major, minor, or patch                 |
 | `GreaterThan` | Compare two versions for ordering                |
+
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Release metadata | [06-release-metadata.md](../generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, version tag verification |
+| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | CI trigger, stage sequence, prerelease detection |
+| Release command | [12-release-command.md](12-release-command.md) | CLI commands, version resolution, pending workflows |

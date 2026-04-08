@@ -327,6 +327,20 @@ if (Test-Path $lastReleaseScript) {
 - **No error exits** — the script always succeeds; missing data simply
   shows `unknown`.
 
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Build pipeline | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` full pipeline, config loading, ldflags |
+| Deploy strategy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Rename-first flow, rollback, PATH sync, retry reduction |
+| Deploy path resolution | [02-deploy-path-resolution.md](../generic-update/02-deploy-path-resolution.md) | 3-tier deploy target resolution (CLI → PATH → config) |
+| Self-update overview | [01-self-update-overview.md](../generic-update/01-self-update-overview.md) | Platform behavior, update strategies, version comparison |
+| Handoff mechanism | [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) | Copy-and-handoff, worker launch, foreground blocking |
+| Cleanup | [06-cleanup.md](../generic-update/06-cleanup.md) | `.old` lifecycle, `update-cleanup` command |
+| PowerShell patterns | [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Script architecture, config, logging, deploy, self-update |
+| Self-update mechanism | [03-self-update-mechanism.md](../03-general/03-self-update-mechanism.md) | Three-layer approach, skip-if-current, error diagnostics |
+| Icon embedding | [04-windows-icon-embedding.md](../03-general/04-windows-icon-embedding.md) | go-winres integration, `.syso` generation |
+
 ## Contributors
 
 - [**Md. Alim Ul Karim**](https://www.linkedin.com/in/alimkarim) — Creator & Lead Architect. System architect with 20+ years of professional software engineering experience across enterprise, fintech, and distributed systems. Recognized as one of the top software architects globally. Alim's architectural philosophy — consistency over cleverness, convention over configuration — is the driving force behind every design decision in this framework.

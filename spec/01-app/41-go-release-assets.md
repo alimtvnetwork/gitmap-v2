@@ -151,3 +151,12 @@ When `--dry-run` is active, the asset step prints:
 6. Non-Go repos are unaffected — no asset step runs.
 7. Build failures for individual targets do not abort the release.
 8. All uploaded assets appear on the GitHub release page.
+
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Cross-compilation | [01-cross-compilation.md](../generic-release/01-cross-compilation.md) | Multi-platform Go build targets and naming |
+| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | Build-once constraint, compression, checksums, publish |
+| Release assets | [05-release-assets.md](../generic-release/05-release-assets.md) | Asset naming conventions, archive format |
+| Checksums | [04-checksums-verification.md](../generic-release/04-checksums-verification.md) | SHA-256 generation and verification |

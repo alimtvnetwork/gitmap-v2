@@ -194,3 +194,11 @@ The post-install summary must always show:
 - [Future Features](82-future-features.md)
 - [Release Workflow](../../.github/workflows/release.yml)
 - [Release Workflow](../../.github/workflows/release.yml)
+
+## Cross-References (Generic Specifications)
+
+| Topic | Generic Spec | Covers |
+|-------|-------------|--------|
+| Install scripts | [03-install-scripts.md](../generic-release/03-install-scripts.md) | Version-pinned installers, SHA-256 verification, PATH registration |
+| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | Script generation via placeholder substitution |
+| Checksums | [04-checksums-verification.md](../generic-release/04-checksums-verification.md) | SHA-256 generation and verification |
