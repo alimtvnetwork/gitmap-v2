@@ -208,7 +208,7 @@ const (
 	MsgInstallNppExtract   = "Extracting Notepad++ settings to %s...\n"
 	MsgInstallPrompt       = "\n  → Install %s %s using %s? (y/N): "
 	MsgInstallPromptNoVer  = "\n  → Install %s (latest) using %s? (y/N): "
-	MsgInstallAborted      = "\n  Installation cancelled by user.\n"
+	MsgInstallAborted      = "\n  Installation canceled by user.\n"
 	MsgInstallVersion      = "  → Version: %s\n"
 	MsgInstallVersionLabel = "  → Version: latest\n"
 	MsgInstallManager      = "  → Package manager: %s\n"
