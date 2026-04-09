@@ -2,53 +2,63 @@
 
 ## Ticket
 
-After installing gitmap via `curl | bash` on macOS, running `gitmap` immediately
-returns `zsh: command not found: gitmap`. The user must manually source their
-profile or open a new terminal.
+After installing gitmap via `curl | bash` on macOS (or `irm | iex` on Windows),
+running `gitmap` immediately returns "command not found" / "not recognized".
+The user must manually source their profile or open a new terminal.
 
 ## Symptoms
+
+### Unix (macOS / Linux)
 
 1. User runs `curl -fsSL .../install.sh | bash` on macOS (zsh default).
 2. Installer adds PATH entry to `~/.zprofile` (or `~/.zshrc`).
 3. Installer prints `export PATH=...` and reload instructions.
 4. User types `gitmap` → `zsh: command not found: gitmap`.
-5. User types `gitmap --help` → same error.
+
+### Windows
+
+1. User runs `irm .../install.ps1 | iex` in PowerShell.
+2. Installer adds install directory to User PATH in the registry.
+3. User types `gitmap` → `gitmap: The term 'gitmap' is not recognized`.
+4. CMD and Git Bash sessions also cannot find `gitmap`.
 
 ## Root Cause
 
-Two separate issues compound:
+Three separate issues compound across platforms:
 
-### 1. Subshell isolation (unfixable)
+### 1. Subshell / process isolation (unfixable)
 
-When invoked via `curl | bash`, the installer runs in a **child process**.
-The `export PATH=...` on line 375 only affects that subshell — the parent
-interactive shell never receives the updated PATH. This is fundamental POSIX
-behavior and cannot be fixed from inside the script.
+- **Unix**: `curl | bash` runs the installer in a child process. The
+  `export PATH=...` only affects that subshell — the parent interactive
+  shell never receives the updated PATH (fundamental POSIX behavior).
+- **Windows**: `irm | iex` runs in the current session, but registry-based
+  PATH changes only take effect in **new** processes. CMD and Git Bash
+  sessions that are already open never see the update.
 
-### 2. Single-profile write (fixable)
+### 2. Single-profile / single-environment write (fixable)
 
-The installer writes the PATH entry to only **one** profile file, chosen by
-`$SHELL` detection. Users who open a different shell (bash, sh, fish) or whose
-terminal reads a different profile (`.zprofile` vs `.zshrc`) won't find gitmap.
-
-On macOS, the default `$SHELL` is zsh but `.zshrc` may not exist on a fresh
-system, causing the installer to write to `.zprofile` instead. While
-Terminal.app reads `.zprofile` for login shells, many terminal emulators
-(iTerm2, VS Code terminal) open interactive non-login shells that only
-read `.zshrc`.
+- **Unix**: The installer wrote the PATH entry to only **one** profile file,
+  chosen by `$SHELL` detection. Users in a different shell or terminal
+  emulator that reads a different profile wouldn't find gitmap.
+- **Windows**: The installer only updated the Windows Registry User PATH.
+  PowerShell `$PROFILE` and Git Bash profiles (`~/.bashrc`,
+  `~/.bash_profile`) were not touched, so those environments required
+  the user to open a brand-new terminal.
 
 ### 3. No immediate activation instruction
 
-The post-install message says "Open a new terminal or run: . ~/.zprofile"
-but users expect `gitmap` to just work immediately. The instruction to source
-the profile is buried after several lines of output and easy to miss.
+The post-install message was either absent or buried, making users expect
+`gitmap` to just work immediately after install.
 
 ## Fix
 
 ### Phase 1: Multi-profile PATH registration
 
-Write the `export PATH=...` line to **all** detected profile files that exist
-or are standard for the platform:
+Write the PATH entry to **all** detected profile files that exist or are
+standard for the platform. Each write is idempotent — skipped if the
+entry already exists in the file.
+
+#### Unix (`install.sh`)
 
 | Shell | Profiles written |
 |-------|-----------------|
@@ -58,13 +68,23 @@ or are standard for the platform:
 
 Additionally, always write to `~/.profile` as a catch-all for POSIX `sh`.
 
-Each profile write is idempotent — skipped if the directory entry already
-exists in the file.
+#### Windows (`install.ps1`)
+
+| Environment | Target |
+|-------------|--------|
+| System-wide | Windows Registry — User `PATH` environment variable |
+| PowerShell  | `$PROFILE` (`Microsoft.PowerShell_profile.ps1`) |
+| Git Bash    | `~/.bashrc` AND `~/.bash_profile` |
+
+All profile writes use a `# gitmap-path` marker for idempotent
+insertion and future cleanup during uninstall.
 
 ### Phase 2: Immediate activation guidance
 
-After installation, print a **prominent**, shell-specific activation command
-that the user can copy-paste immediately:
+After installation, print a **prominent**, environment-specific activation
+command that the user can copy-paste immediately.
+
+#### Unix example
 
 ```
   ✓ Installed! To start using gitmap right now, run:
@@ -74,26 +94,45 @@ that the user can copy-paste immediately:
   Or open a new terminal window.
 ```
 
-The activation command uses the **primary** profile file (the one most likely
-to be read by the current terminal), not `.zprofile`.
+#### Windows example
+
+```
+  ✓ Installed! To start using gitmap right now:
+
+    PowerShell:  $env:PATH += ";C:\Users\you\.local\bin"
+    CMD:         set PATH=%PATH%;C:\Users\you\.local\bin
+    Git Bash:    export PATH="$PATH:/c/Users/you/.local/bin"
+
+  Or open a new terminal window.
+```
 
 ### Phase 3: Session PATH export
 
-The script already does `export PATH="${PATH}:${dir}"` which works when the
-script is sourced directly (`source install.sh`) but not via pipe. Document
-this limitation clearly.
+- **Unix**: The script does `export PATH="${PATH}:${dir}"` which works when
+  sourced directly (`source install.sh`) but not via pipe. This limitation
+  is documented in the post-install output.
+- **Windows**: The script does `$env:PATH += ";${dir}"` which takes effect
+  in the current PowerShell session immediately. Registry changes require
+  a new process; `SendMessageTimeout` broadcasts `WM_SETTINGCHANGE` to
+  notify other applications.
 
 ## Prevention
 
-1. All installer scripts must write PATH to **multiple** profile files to
-   cover login shells, interactive shells, and POSIX sh.
+1. All installer scripts must write PATH to **multiple** profile files /
+   environments to cover login shells, interactive shells, POSIX sh,
+   PowerShell, CMD, and Git Bash.
 2. Post-install output must show a single, copy-pasteable activation command
-   **prominently** (not buried in a summary block).
-3. The installer must explicitly state that `curl | bash` cannot modify the
-   parent shell's environment.
+   **prominently** (not buried in a summary block) for each detected
+   environment.
+3. The installer must explicitly state that pipe-based invocation
+   (`curl | bash`, `irm | iex`) cannot always modify the parent shell's
+   environment.
+4. Profile writes must use an idempotent marker (e.g. `# gitmap-path`) to
+   prevent duplicate entries and enable clean uninstall.
 
 ## Related
 
-- `spec/02-app-issues/20-path-not-available-in-other-shells.md` — cross-shell visibility
+- `spec/02-app-issues/20-path-not-available-in-other-shells.md` — cross-shell visibility (superseded)
 - `spec/01-app/82-install-script.md` — installer specification
-- `gitmap/scripts/install.sh` — implementation
+- `gitmap/scripts/install.sh` — Unix implementation
+- `gitmap/scripts/install.ps1` — Windows implementation
