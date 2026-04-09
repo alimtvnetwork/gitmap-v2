@@ -819,6 +819,7 @@ $versionOutput = & $binaryPath version 2>&1
 Write-Info "Version: $versionOutput"
 
 $deployedBinaryPath = $null
+if ($Deploy) { $NoDeploy = $false }
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 
