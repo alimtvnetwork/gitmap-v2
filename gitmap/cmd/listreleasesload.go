@@ -149,6 +149,8 @@ func tagToRecord(t release.TagEntry) model.ReleaseRecord {
 func cacheReleasesToDB(records []model.ReleaseRecord) {
 	db, err := openDB()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not cache releases to database: %v\n", err)
+
 		return
 	}
 	defer db.Close()

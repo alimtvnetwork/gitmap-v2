@@ -39,6 +39,8 @@ func saveScanCache(outputDir string, cache model.ScanCache) {
 	path := filepath.Join(outputDir, constants.DefaultScanCacheFile)
 	data, err := json.MarshalIndent(cache, "", constants.JSONIndent)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to marshal scan cache: %v\n", err)
+
 		return
 	}
 	_ = os.MkdirAll(filepath.Dir(path), constants.DirPermission)

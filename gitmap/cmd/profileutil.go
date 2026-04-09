@@ -65,6 +65,8 @@ func saveProfileOrExit(cfg model.ProfileConfig) {
 func initProfileDB(name string) {
 	db, err := store.OpenDefaultProfile(name)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not initialize profile database for %s: %v\n", name, err)
+
 		return
 	}
 	defer db.Close()

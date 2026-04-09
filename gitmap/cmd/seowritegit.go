@@ -65,6 +65,8 @@ func gitPush() {
 func appendToFile(path, text string) {
 	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to open file %s for append: %v\n", path, err)
+
 		return
 	}
 	defer f.Close()
@@ -76,6 +78,8 @@ func appendToFile(path, text string) {
 func revertFile(path, text string) {
 	data, err := os.ReadFile(path)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to read file %s for revert: %v\n", path, err)
+
 		return
 	}
 

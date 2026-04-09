@@ -73,11 +73,15 @@ func buildAuditRecord(f amendFlags, commits []model.CommitEntry, branch, mode, p
 func saveAmendToDB(f amendFlags, commits []model.CommitEntry, branch, mode, prevName, prevEmail string) {
 	db, err := store.OpenDefault()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not save amendment to database: %v\n", err)
+
 		return
 	}
 	defer db.Close()
 
 	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: database migration failed: %v\n", err)
+
 		return
 	}
 
