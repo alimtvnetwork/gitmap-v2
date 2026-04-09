@@ -83,7 +83,7 @@ Lines starting with `#` and blank lines are skipped.
 #### Zip extraction and routing
 
 The OBS sync command looks for a `.zip` file in the source directory. When
-found, it follows a 3-step extraction process:
+found, it follows a 4-step extraction process:
 
 1. **Extract** the `.zip` to a temporary directory.
 2. **Route `.json` files** to `<target>/basic/scenes/` -- these are OBS
