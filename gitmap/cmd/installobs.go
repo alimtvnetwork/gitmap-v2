@@ -276,19 +276,5 @@ func copyDirRecursive(src, dst string) (int, error) {
 
 	return copied, nil
 }
-// copyFile is defined in update.go and shared across the cmd package.
-	if err != nil {
-		return err
-	}
-	defer in.Close()
 
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, in)
-
-	return err
-}
+// NOTE: copyFile is defined in update.go and shared across the cmd package.
