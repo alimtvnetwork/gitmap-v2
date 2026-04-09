@@ -23,7 +23,9 @@ func runTempReleaseCreate(args []string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
 	if start == 0 {
 		start = resolveAutoStart(db, prefix)

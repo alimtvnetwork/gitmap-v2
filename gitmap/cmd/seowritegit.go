@@ -92,7 +92,9 @@ func revertFile(path, text string) {
 	}
 
 	cleaned := strings.Replace(string(data), "\n"+text, "", 1)
-	_ = os.WriteFile(path, []byte(cleaned), 0o644)
+	if err := os.WriteFile(path, []byte(cleaned), 0o644); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not revert file %s: %v\n", path, err)
+	}
 }
 
 // printHeader outputs the commit plan header.
