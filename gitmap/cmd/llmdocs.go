@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -17,6 +18,7 @@ func runLLMDocs(args []string) {
 
 	fs := flag.NewFlagSet("llm-docs", flag.ExitOnError)
 	toStdout := fs.Bool(constants.FlagLLMDocsStdout, false, constants.FlagDescLLMDocsStdout)
+	format := fs.String(constants.FlagLLMDocsFormat, "markdown", constants.FlagDescLLMDocsFormat)
 
 	reordered := reorderFlagsBeforeArgs(args)
 
@@ -25,7 +27,12 @@ func runLLMDocs(args []string) {
 		os.Exit(1)
 	}
 
-	content := buildLLMDocument()
+	if *format != "markdown" && *format != "json" {
+		fmt.Fprintf(os.Stderr, constants.ErrLLMDocsFormat, *format)
+		os.Exit(1)
+	}
+
+	content := buildLLMOutput(*format)
 
 	if *toStdout {
 		fmt.Print(content)
@@ -41,7 +48,12 @@ func runLLMDocs(args []string) {
 		os.Exit(1)
 	}
 
-	outPath := filepath.Join(wd, "LLM.md")
+	ext := ".md"
+	if *format == "json" {
+		ext = ".json"
+	}
+
+	outPath := filepath.Join(wd, "LLM"+ext)
 
 	if writeErr := os.WriteFile(outPath, []byte(content), 0o644); writeErr != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrLLMDocsWrite, writeErr)
@@ -49,6 +61,53 @@ func runLLMDocs(args []string) {
 	}
 
 	fmt.Printf(constants.MsgLLMDocsWritten, outPath)
+}
+
+// buildLLMOutput returns the document in the requested format.
+func buildLLMOutput(format string) string {
+	if format == "json" {
+		return buildLLMJSON()
+	}
+
+	return buildLLMDocument()
+}
+
+// buildLLMJSON assembles a JSON representation of the LLM reference.
+func buildLLMJSON() string {
+	groups := buildCommandGroups()
+
+	type jsonCmd struct {
+		Name    string `json:"name"`
+		Alias   string `json:"alias"`
+		Desc    string `json:"description"`
+		Example string `json:"example,omitempty"`
+	}
+
+	type jsonGroup struct {
+		Title    string    `json:"title"`
+		Commands []jsonCmd `json:"commands"`
+	}
+
+	out := make([]jsonGroup, 0, len(groups))
+
+	for _, g := range groups {
+		jg := jsonGroup{Title: g.title}
+
+		for _, c := range g.commands {
+			jg.Commands = append(jg.Commands, jsonCmd{
+				Name:    c.name,
+				Alias:   c.alias,
+				Desc:    c.desc,
+				Example: c.example,
+			})
+		}
+
+		out = append(out, jg)
+	}
+
+	data, _ := json.MarshalIndent(out, "", "  ")
+
+	return string(data) + "\n"
 }
 
 // buildLLMDocument assembles the complete LLM.md content dynamically.

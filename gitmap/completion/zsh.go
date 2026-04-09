@@ -98,8 +98,13 @@ _gitmap() {
             _describe 'arg' hints
             ;;
         llm-docs|ld)
-            local -a flags=("--stdout")
-            _describe 'flag' flags
+            if [[ "${words[CURRENT-1]}" == "--format" ]]; then
+                local -a formats=("markdown" "json")
+                _describe 'format' formats
+            else
+                local -a flags=("--stdout" "--format")
+                _describe 'flag' flags
+            fi
             ;;
         help)
             if [[ "${words[CURRENT-1]}" == "--compact" ]]; then

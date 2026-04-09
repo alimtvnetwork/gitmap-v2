@@ -18,6 +18,7 @@ ld
 | Flag | Default | Description |
 |------|---------|-------------|
 | --stdout | false | Print to stdout instead of writing LLM.md file |
+| --format | markdown | Output format: markdown or json |
 
 ## Prerequisites
 
@@ -43,15 +44,24 @@ ld
     ↻ Generating LLM.md from command registry...
     ✓ LLM.md written to /home/user/projects/LLM.md
 
-### Example 3: Print to stdout and pipe to clipboard
+### Example 3: Generate JSON output
+
+    gitmap llm-docs --format json
+
+**Output:**
+
+    ↻ Generating LLM.md from command registry...
+    ✓ LLM.md written to D:\repos\my-project\LLM.json
+
+### Example 4: Print to stdout and pipe to clipboard
 
     gitmap llm-docs --stdout | pbcopy    # macOS
     gitmap llm-docs --stdout | clip      # Windows
     gitmap llm-docs --stdout | xclip -sel clip  # Linux
 
-### Example 4: Pipe directly to an AI tool
+### Example 5: Pipe JSON directly to an AI tool
 
-    gitmap ld --stdout | ai-chat --context -
+    gitmap ld --stdout --format json | ai-chat --context -
 
 ## What's Included
 
