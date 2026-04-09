@@ -113,6 +113,12 @@ func executeInstall(opts installOptions) {
 		return
 	}
 
+	if opts.Tool == constants.ToolWTSync {
+		runWTSettingsOnly()
+
+		return
+	}
+
 	originalTool := opts.Tool
 	installName := resolveNppInstallName(opts.Tool)
 
