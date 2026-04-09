@@ -1,7 +1,15 @@
-Create a "settings/03 - obs/" folder with your OBS Studio config:
-- Copy profiles and scenes from your OBS config directory
-- Windows: %APPDATA%\obs-studio
-- macOS:   ~/Library/Application Support/obs-studio
-- Linux:   ~/.config/obs-studio
+OBS Studio Settings Package
+==========================
 
-Run: gitmap install obs-settings
+Contains scene collections (.json) and profile folders.
+
+gitmap install obs-settings handles sync automatically:
+1. Extracts the .zip to a temp directory
+2. Copies .json files to %APPDATA%\obs-studio\basic\scenes\
+3. Copies profile folders to %APPDATA%\obs-studio\basic\profiles\
+4. Cleans up temp
+
+OBS discovers scenes and profiles from these directories on startup.
+
+Usage:
+  gitmap install obs-settings   # Sync settings only

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"archive/zip"
 	"fmt"
 	"io"
 	"os"
@@ -16,6 +17,8 @@ func runOBSSettingsOnly() {
 }
 
 // syncOBSSettings copies OBS Studio settings from the bundled folder.
+// It looks for a .zip file first (scene collections + profiles), then
+// falls back to copying loose files/directories.
 func syncOBSSettings() {
 	target := obsSettingsTarget()
 	if target == "" {
@@ -36,6 +39,15 @@ func syncOBSSettings() {
 		return
 	}
 
+	// Look for a .zip file to extract.
+	zipFile := findFirstZip(sourcePath)
+	if zipFile != "" {
+		extractOBSSettingsZip(zipFile, target)
+
+		return
+	}
+
+	// Fallback: copy loose files/directories.
 	copied, copyErr := copyDirRecursive(sourcePath, target)
 	if copyErr != nil {
 		fmt.Fprintf(os.Stderr, "  Error: failed to copy OBS settings: %v\n", copyErr)
@@ -77,6 +89,142 @@ func obsSettingsTarget() string {
 
 		return filepath.Join(home, ".config", "obs-studio")
 	}
+}
+
+// findFirstZip returns the path of the first .zip file in a directory.
+func findFirstZip(dir string) string {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return ""
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		if strings.HasSuffix(strings.ToLower(entry.Name()), ".zip") {
+			return filepath.Join(dir, entry.Name())
+		}
+	}
+
+	return ""
+}
+
+// extractOBSSettingsZip extracts an OBS settings zip and routes files to
+// the correct OBS subdirectories:
+//   - .json files -> basic/scenes/
+//   - directories -> basic/profiles/
+func extractOBSSettingsZip(zipPath, target string) {
+	fmt.Printf("  -> Extracting OBS settings from: %s\n", filepath.Base(zipPath))
+
+	reader, err := zip.OpenReader(zipPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to open OBS settings zip: %v\n", err)
+
+		return
+	}
+	defer reader.Close()
+
+	// Create temp directory for extraction.
+	tmpDir, err := os.MkdirTemp("", "gitmap-obs-extract-*")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to create temp directory: %v\n", err)
+
+		return
+	}
+	defer os.RemoveAll(tmpDir)
+
+	// Extract all files to temp.
+	for _, file := range reader.File {
+		extractOBSZipEntry(tmpDir, file)
+	}
+
+	// Route extracted files to the correct OBS directories.
+	scenesDir := filepath.Join(target, "basic", "scenes")
+	profilesDir := filepath.Join(target, "basic", "profiles")
+
+	os.MkdirAll(scenesDir, 0o755)
+	os.MkdirAll(profilesDir, 0o755)
+
+	entries, err := os.ReadDir(tmpDir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to read extracted files: %v\n", err)
+
+		return
+	}
+
+	scenes := 0
+	profiles := 0
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(tmpDir, entry.Name())
+
+		if entry.IsDir() {
+			// Directories are profile folders.
+			dstPath := filepath.Join(profilesDir, entry.Name())
+			n, dirErr := copyDirRecursive(srcPath, dstPath)
+
+			if dirErr != nil {
+				fmt.Fprintf(os.Stderr, "  ! Failed to copy profile %s: %v\n", entry.Name(), dirErr)
+
+				continue
+			}
+
+			profiles++
+			_ = n
+		} else if strings.HasSuffix(strings.ToLower(entry.Name()), ".json") {
+			// JSON files are scene collections.
+			dstPath := filepath.Join(scenesDir, entry.Name())
+			copyErr := copyFile(srcPath, dstPath)
+
+			if copyErr != nil {
+				fmt.Fprintf(os.Stderr, "  ! Failed to copy scene %s: %v\n", entry.Name(), copyErr)
+
+				continue
+			}
+
+			scenes++
+		}
+	}
+
+	fmt.Printf("  -> Synced %d scene(s) and %d profile(s) to %s\n", scenes, profiles, target)
+}
+
+// extractOBSZipEntry extracts a single entry from the OBS zip.
+func extractOBSZipEntry(target string, file *zip.File) {
+	cleanName := filepath.FromSlash(file.Name)
+	destPath := filepath.Join(target, cleanName)
+
+	// Path traversal protection.
+	absTarget, _ := filepath.Abs(target)
+	absDest, _ := filepath.Abs(destPath)
+
+	if !strings.HasPrefix(absDest, absTarget+string(os.PathSeparator)) {
+		return
+	}
+
+	if file.FileInfo().IsDir() {
+		os.MkdirAll(destPath, 0o755)
+
+		return
+	}
+
+	os.MkdirAll(filepath.Dir(destPath), 0o755)
+
+	src, err := file.Open()
+	if err != nil {
+		return
+	}
+	defer src.Close()
+
+	dst, err := os.Create(destPath)
+	if err != nil {
+		return
+	}
+	defer dst.Close()
+
+	io.Copy(dst, io.LimitReader(src, 50*1024*1024)) // 50 MB limit for OBS files
 }
 
 // copyDirRecursive copies all files from src to dst recursively.
