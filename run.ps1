@@ -31,6 +31,7 @@ param(
     [switch]$NoPull,
     [switch]$NoDeploy,
     [switch]$ForcePull,
+    [Alias("d")]
     [string]$DeployPath = "",
     [switch]$Update,
     [switch]$R,
