@@ -109,16 +109,14 @@ func wantSection(set map[string]bool, name string) bool {
 // buildLLMOutput returns the document in the requested format.
 func buildLLMOutput(format string, sections map[string]bool) string {
 	if format == "json" {
-		return buildLLMJSON()
+		return buildLLMJSON(sections)
 	}
 
 	return buildLLMDocument(sections)
 }
 
 // buildLLMJSON assembles a JSON representation of the LLM reference.
-func buildLLMJSON() string {
-	groups := buildCommandGroups()
-
+func buildLLMJSON(sections map[string]bool) string {
 	type jsonCmd struct {
 		Name    string `json:"name"`
 		Alias   string `json:"alias"`
@@ -131,24 +129,63 @@ func buildLLMJSON() string {
 		Commands []jsonCmd `json:"commands"`
 	}
 
-	out := make([]jsonGroup, 0, len(groups))
-
-	for _, g := range groups {
-		jg := jsonGroup{Title: g.title}
-
-		for _, c := range g.commands {
-			jg.Commands = append(jg.Commands, jsonCmd{
-				Name:    c.name,
-				Alias:   c.alias,
-				Desc:    c.desc,
-				Example: c.example,
-			})
-		}
-
-		out = append(out, jg)
+	type jsonDoc struct {
+		Commands     []jsonGroup `json:"commands,omitempty"`
+		Architecture *string     `json:"architecture,omitempty"`
+		Flags        *string     `json:"flags,omitempty"`
+		Conventions  *string     `json:"conventions,omitempty"`
+		Structure    *string     `json:"structure,omitempty"`
+		Database     *string     `json:"database,omitempty"`
+		Installation *string     `json:"installation,omitempty"`
+		Patterns     *string     `json:"patterns,omitempty"`
 	}
 
-	data, _ := json.MarshalIndent(out, "", "  ")
+	var doc jsonDoc
+
+	if wantSection(sections, "commands") {
+		groups := buildCommandGroups()
+		doc.Commands = make([]jsonGroup, 0, len(groups))
+
+		for _, g := range groups {
+			jg := jsonGroup{Title: g.title}
+
+			for _, c := range g.commands {
+				jg.Commands = append(jg.Commands, jsonCmd{
+					Name:    c.name,
+					Alias:   c.alias,
+					Desc:    c.desc,
+					Example: c.example,
+				})
+			}
+
+			doc.Commands = append(doc.Commands, jg)
+		}
+	}
+
+	sectionWriters := []struct {
+		key   string
+		write func(*strings.Builder)
+		field **string
+	}{
+		{"architecture", writeLLMArchitecture, &doc.Architecture},
+		{"flags", writeLLMGlobalFlags, &doc.Flags},
+		{"conventions", writeLLMCodingConventions, &doc.Conventions},
+		{"structure", writeLLMProjectStructure, &doc.Structure},
+		{"database", writeLLMDatabase, &doc.Database},
+		{"installation", writeLLMInstallation, &doc.Installation},
+		{"patterns", writeLLMPatterns, &doc.Patterns},
+	}
+
+	for _, sw := range sectionWriters {
+		if wantSection(sections, sw.key) {
+			var sb strings.Builder
+			sw.write(&sb)
+			s := sb.String()
+			*sw.field = &s
+		}
+	}
+
+	data, _ := json.MarshalIndent(doc, "", "  ")
 
 	return string(data) + "\n"
 }
