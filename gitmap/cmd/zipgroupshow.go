@@ -135,5 +135,9 @@ func expandFolder(folderPath string) []string {
 		return nil
 	})
 
+	if walkErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not walk folder %s: %v\n", folderPath, walkErr)
+	}
+
 	return files
 }
