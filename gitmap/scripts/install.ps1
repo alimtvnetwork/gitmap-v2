@@ -383,18 +383,35 @@ function Add-ToPath([string]$dir) {
 
 function Write-InstallSummary([string]$version, [string]$binPath, [string]$installDir, [hashtable]$pathResult, [bool]$isNoPath) {
     Write-Host ""
-    Write-Step "Install summary"
-    Write-Host "    Version: $version"
-    Write-Host "    Binary: $binPath"
+    Write-Host "  -----------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "  gitmap install summary" -ForegroundColor White
+    Write-Host "  -----------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "    Version    : $version"
+    Write-Host "    Binary     : $binPath"
     Write-Host "    Install Dir: $installDir"
 
     if ($isNoPath) {
-        Write-Host "    PATH Target: skipped (-NoPath)"
+        Write-Host "    PATH       : skipped (-NoPath)"
         return
     }
 
-    Write-Host "    PATH Target: $($pathResult.Target) ($($pathResult.Status))"
-    Write-Host "    Session PATH: refreshed for current PowerShell session"
+    Write-Host "    PATH target: $($pathResult.Target) ($($pathResult.Status))"
+    Write-Host "    Session    : refreshed for current PowerShell session"
+
+    Write-Host ""
+    Write-Host "  Profiles modified:" -ForegroundColor White
+    Write-Host "    - User PATH (registry)  : CMD, new PowerShell windows"
+    Write-Host "    - PowerShell `$PROFILE    : all PowerShell sessions"
+    Write-Host "    - ~/.bashrc             : Git Bash interactive shells"
+    Write-Host "    - ~/.bash_profile       : Git Bash login shells"
+
+    Write-Host ""
+    Write-Host "  If gitmap is not found in a new terminal, run:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "    PowerShell:  `$env:PATH = `"$installDir;`$env:PATH`"" -ForegroundColor Cyan
+    Write-Host "    CMD:         set PATH=$installDir;%PATH%" -ForegroundColor Cyan
+    Write-Host "    Git Bash:    export PATH=`"$($installDir -replace '\\','/'):`$PATH`"" -ForegroundColor Cyan
+    Write-Host ""
 }
 
 # --- Main ---
