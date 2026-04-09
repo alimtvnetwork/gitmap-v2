@@ -44,7 +44,10 @@ func executeScan(dir string, cfg model.Config, outFile string, ghDesktop, openFo
 	}
 
 	// Enqueue scan as a pending task before execution.
-	workDir, _ := os.Getwd()
+	workDir, wdErr := os.Getwd()
+	if wdErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine working directory: %v\n", wdErr)
+	}
 	cmdArgs := buildCommandArgs(append([]string{"scan"}, os.Args[2:]...))
 	taskID, taskDB := createPendingTask(constants.TaskTypeScan, absDir, workDir, "scan", cmdArgs)
 	if taskDB != nil {

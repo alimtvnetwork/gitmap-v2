@@ -122,7 +122,9 @@ func makeExecutable(path string) {
 		return
 	}
 
-	_ = os.Chmod(path, 0o755)
+	if err := os.Chmod(path, 0o755); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not make %s executable: %v\n", path, err)
+	}
 }
 
 // launchHandoff runs the handoff binary with update-runner command.

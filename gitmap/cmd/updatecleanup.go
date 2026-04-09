@@ -26,7 +26,12 @@ func runUpdateCleanup() {
 
 // cleanupTempCopies removes leftover handoff binaries from previous updates.
 func cleanupTempCopies() int {
-	selfPath, _ := os.Executable()
+	selfPath, err := os.Executable()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine executable path: %v\n", err)
+
+		return 0
+	}
 	patterns := buildTempPatterns(selfPath)
 
 	return removeMatchingFiles(patterns, selfPath)

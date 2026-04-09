@@ -97,7 +97,9 @@ func clearMultiGroup() {
 	}
 	defer db.Close()
 
-	_ = db.DeleteSetting(constants.SettingActiveMultiGroup)
+	if err := db.DeleteSetting(constants.SettingActiveMultiGroup); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not clear multi-group setting: %v\n", err)
+	}
 	fmt.Print(constants.MsgMGCleared)
 }
 
