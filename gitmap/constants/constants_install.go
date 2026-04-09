@@ -39,6 +39,13 @@ const (
 	ToolOBSSync       = "obs-settings"
 	ToolWTSync        = "wt-settings"
 	ToolScripts       = "scripts"
+	ToolDbeaver       = "dbeaver"
+	ToolStickyNotes   = "sticky-notes"
+	ToolLiteDB        = "litedb"
+	ToolVSCodeCtx     = "vscode-ctx"
+	ToolPwshCtx       = "pwsh-ctx"
+	ToolOBS           = "obs"
+	ToolAllDevTools   = "all"
 )
 
 // Supported tool names — Databases.
