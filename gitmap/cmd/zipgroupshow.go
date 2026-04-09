@@ -75,7 +75,10 @@ func executeZipGroupShow(name string) {
 		os.Exit(1)
 	}
 
-	group, _ := db.FindZipGroupByName(name)
+	group, grpErr := db.FindZipGroupByName(name)
+	if grpErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not load zip group %s: %v\n", name, grpErr)
+	}
 	printZipGroupShow(group, items)
 }
 
@@ -113,7 +116,7 @@ func printZipGroupShow(group model.ZipGroup, items []model.ZipGroupItem) {
 func expandFolder(folderPath string) []string {
 	var files []string
 
-	_ = filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+	walkErr := filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}

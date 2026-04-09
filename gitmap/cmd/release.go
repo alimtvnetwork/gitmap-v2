@@ -40,7 +40,10 @@ func runRelease(args []string) {
 
 // executeRelease builds options and runs the release workflow.
 func executeRelease(version, assets, commit, branch, bump, notes, targets string, zipGroups, zipItems []string, bundleName string, draft, dryRun, verbose, compress, checksums, bin, noCommit, yes bool) {
-	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+	cfg, cfgErr := config.LoadFromFile(constants.DefaultConfigPath)
+	if cfgErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not load config: %v\n", cfgErr)
+	}
 
 	opts := release.Options{
 		Version: version, Assets: assets,
@@ -147,7 +150,10 @@ func parseReleaseFlags(args []string) (version, assets, commit, branch, bump, no
 
 // printListTargets resolves and prints the target matrix, then returns.
 func printListTargets(flagTargets string) {
-	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+	cfg, cfgErr := config.LoadFromFile(constants.DefaultConfigPath)
+	if cfgErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not load config: %v\n", cfgErr)
+	}
 
 	targets, err := release.ResolveTargets(flagTargets, cfg.Release.Targets)
 	if err != nil {
