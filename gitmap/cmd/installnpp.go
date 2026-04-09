@@ -92,7 +92,10 @@ func resolveSettingsPath(subpaths ...string) string {
 	}
 
 	for _, candidate := range candidates {
-		abs, _ := filepath.Abs(candidate)
+		abs, absErr := filepath.Abs(candidate)
+		if absErr != nil {
+			abs = candidate
+		}
 		if _, statErr := os.Stat(candidate); statErr == nil {
 			fmt.Printf("  -> Resolved path: %s\n", abs)
 

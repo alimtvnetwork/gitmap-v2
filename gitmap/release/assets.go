@@ -182,5 +182,7 @@ func CleanupStagingDir() {
 		verbose.Get().Log("staging: removing directory %s", constants.AssetsStagingDir)
 	}
 
-	os.RemoveAll(constants.AssetsStagingDir)
+	if err := os.RemoveAll(constants.AssetsStagingDir); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not remove staging directory %s: %v\n", constants.AssetsStagingDir, err)
+	}
 }

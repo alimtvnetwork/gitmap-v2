@@ -39,7 +39,11 @@ func resolveActiveBinary() (string, string) {
 		return "", ""
 	}
 
-	absActive, _ := filepath.Abs(activePath)
+	absActive, absErr := filepath.Abs(activePath)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", activePath, absErr)
+		absActive = activePath
+	}
 
 	return absActive, getBinaryVersion(absActive)
 }
@@ -53,7 +57,11 @@ func resolveDeployedForSync() (string, string) {
 		return "", ""
 	}
 
-	absDeployed, _ := filepath.Abs(deployedPath)
+	absDeployed, absErr := filepath.Abs(deployedPath)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", deployedPath, absErr)
+		absDeployed = deployedPath
+	}
 
 	return absDeployed, getBinaryVersion(absDeployed)
 }

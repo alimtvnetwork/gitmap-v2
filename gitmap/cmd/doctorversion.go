@@ -33,7 +33,11 @@ func getActiveVersion() (string, string) {
 		return "", ""
 	}
 
-	absPath, _ := filepath.Abs(path)
+	absPath, absErr := filepath.Abs(path)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", path, absErr)
+		absPath = path
+	}
 
 	return getBinaryVersion(absPath), absPath
 }
@@ -105,8 +109,16 @@ func checkActiveVsDeployed(activeVersion, deployedVersion, activePath, deployedP
 		return 0
 	}
 
-	absActive, _ := filepath.Abs(activePath)
-	absDeployed, _ := filepath.Abs(deployedPath)
+	absActive, err1 := filepath.Abs(activePath)
+	if err1 != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", activePath, err1)
+		absActive = activePath
+	}
+	absDeployed, err2 := filepath.Abs(deployedPath)
+	if err2 != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", deployedPath, err2)
+		absDeployed = deployedPath
+	}
 	if absActive == absDeployed {
 		return 0
 	}
