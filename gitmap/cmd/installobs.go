@@ -276,10 +276,7 @@ func copyDirRecursive(src, dst string) (int, error) {
 
 	return copied, nil
 }
-
-// copyFile copies a single file from src to dst.
-func copyFile(src, dst string) error {
-	in, err := os.Open(src)
+// copyFile is defined in update.go and shared across the cmd package.
 	if err != nil {
 		return err
 	}

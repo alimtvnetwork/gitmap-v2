@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-
-	"github.com/user/gitmap/constants"
 )
 
 // runVSCodeSettingsOnly syncs VS Code settings without installing the binary.
