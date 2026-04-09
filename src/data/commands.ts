@@ -1282,4 +1282,18 @@ export const commands: CommandDef[] = [
       { name: "task", description: "Manage file-sync watch tasks" },
     ],
   },
+  {
+    category: "tools",
+    name: "llm-docs", alias: "ld", description: "Generate a consolidated LLM.md reference file for AI assistants to understand all commands",
+    usage: "gitmap llm-docs",
+    examples: [
+      { command: "gitmap llm-docs", description: "Generate LLM.md in the current directory" },
+      { command: "gitmap ld", description: "Generate using alias" },
+    ],
+    seeAlso: [
+      { name: "help", description: "Show CLI help text" },
+      { name: "docs", description: "Open documentation website" },
+      { name: "version", description: "Show version number" },
+    ],
+  },
 ];
