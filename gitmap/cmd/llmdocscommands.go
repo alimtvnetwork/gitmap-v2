@@ -37,7 +37,7 @@ func writeLLMCommandGroup(sb *strings.Builder, g llmCmdGroup) {
 	sb.WriteString("|---------|-------|--------------|\n")
 
 	for _, c := range g.commands {
-		sb.WriteString(fmt.Sprintf("| `%s` | `%s` | %s |\n", c.name, c.alias, c.desc))
+		fmt.Fprintf(sb, "| `%s` | `%s` | %s |\n", c.name, c.alias, c.desc)
 	}
 
 	sb.WriteString("\n**Examples:**\n```bash\n")

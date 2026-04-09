@@ -1,6 +1,7 @@
 package release
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
