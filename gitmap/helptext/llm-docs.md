@@ -19,6 +19,7 @@ ld
 |------|---------|-------------|
 | --stdout | false | Print to stdout instead of writing LLM.md file |
 | --format | markdown | Output format: markdown or json |
+| --sections | all | Comma-separated sections: commands,architecture,flags,conventions,structure,database,installation,patterns |
 
 ## Prerequisites
 
@@ -59,7 +60,11 @@ ld
     gitmap llm-docs --stdout | clip      # Windows
     gitmap llm-docs --stdout | xclip -sel clip  # Linux
 
-### Example 5: Pipe JSON directly to an AI tool
+### Example 5: Only include commands and architecture sections
+
+    gitmap llm-docs --sections commands,architecture
+
+### Example 6: Pipe JSON directly to an AI tool
 
     gitmap ld --stdout --format json | ai-chat --context -
 
