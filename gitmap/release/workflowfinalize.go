@@ -2,6 +2,7 @@ package release
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
