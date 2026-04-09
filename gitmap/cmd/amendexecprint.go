@@ -34,12 +34,18 @@ func buildAuthorString(f amendFlags) string {
 	email := f.email
 
 	if name == "" {
-		out, _ := exec.Command("git", "config", "user.name").Output()
+		out, err := exec.Command("git", "config", "user.name").Output()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not read git user.name: %v\n", err)
+		}
 		name = strings.TrimSpace(string(out))
 	}
 
 	if email == "" {
-		out, _ := exec.Command("git", "config", "user.email").Output()
+		out, err := exec.Command("git", "config", "user.email").Output()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not read git user.email: %v\n", err)
+		}
 		email = strings.TrimSpace(string(out))
 	}
 

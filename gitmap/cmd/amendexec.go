@@ -65,8 +65,16 @@ func detectPreviousAuthor(commits []model.CommitEntry) (string, string) {
 	}
 
 	sha := commits[0].SHA
-	nameOut, _ := exec.Command("git", "log", "-1", "--format=%an", sha).Output()
-	emailOut, _ := exec.Command("git", "log", "-1", "--format=%ae", sha).Output()
+
+	nameOut, nameErr := exec.Command("git", "log", "-1", "--format=%an", sha).Output()
+	if nameErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not read author name for %s: %v\n", sha, nameErr)
+	}
+
+	emailOut, emailErr := exec.Command("git", "log", "-1", "--format=%ae", sha).Output()
+	if emailErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not read author email for %s: %v\n", sha, emailErr)
+	}
 
 	return strings.TrimSpace(string(nameOut)), strings.TrimSpace(string(emailOut))
 }
