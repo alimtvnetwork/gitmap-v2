@@ -18,7 +18,7 @@ func runLLMDocs(args []string) {
 	fs := flag.NewFlagSet("llm-docs", flag.ExitOnError)
 	toStdout := fs.Bool(constants.FlagLLMDocsStdout, false, constants.FlagDescLLMDocsStdout)
 
-	reordered := reorderFlagsBeforeArgs(args, nil)
+	reordered := reorderFlagsBeforeArgs(args)
 
 	if err := fs.Parse(reordered); err != nil {
 		fmt.Fprintf(os.Stderr, "llm-docs: %v\n", err)
