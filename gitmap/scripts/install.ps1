@@ -287,6 +287,9 @@ public static class GitMapEnvNative {
 }
 
 function Add-ToPath([string]$dir) {
+    $modified = @()
+
+    # --- 1. Windows User PATH (registry) — covers CMD + new PowerShell windows ---
     $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
     $userHasDir = Test-PathEntry $currentUserPath $dir
 
@@ -300,28 +303,115 @@ function Add-ToPath([string]$dir) {
 
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
         Broadcast-EnvironmentChange
-        Write-OK "Added to user PATH."
-        return @{ Target = "User PATH"; Status = "added" }
+        Write-OK "Added to User PATH (registry)."
+        $modified += "User PATH (registry)"
+    }
+    else {
+        Write-Step "Already in User PATH (registry)."
     }
 
-    Write-Step "Already in user PATH."
-    return @{ Target = "User PATH"; Status = "already present" }
+    # --- 2. PowerShell $PROFILE — ensures PATH in all PowerShell sessions ---
+    $psProfilePath = $PROFILE
+    if ($psProfilePath) {
+        $exportLine = "`$env:PATH = `"$dir;`$env:PATH`""
+        $marker = "# gitmap-path"
+        $markerLine = "$exportLine $marker"
+
+        $profileExists = Test-Path $psProfilePath
+        $alreadyPresent = $false
+
+        if ($profileExists) {
+            $content = Get-Content $psProfilePath -Raw -ErrorAction SilentlyContinue
+            if ($content -and ($content -match [regex]::Escape($marker))) {
+                $alreadyPresent = $true
+            }
+        }
+
+        if (-not $alreadyPresent) {
+            # Ensure parent directory exists
+            $profileDir = Split-Path $psProfilePath -Parent
+            if ($profileDir -and -not (Test-Path $profileDir)) {
+                New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+            }
+            Add-Content -Path $psProfilePath -Value "`n$markerLine" -Encoding UTF8
+            Write-OK "Added to PowerShell profile: $psProfilePath"
+            $modified += "PowerShell `$PROFILE"
+        }
+        else {
+            Write-Step "Already in PowerShell profile."
+        }
+    }
+
+    # --- 3. Git Bash profiles (~/.bashrc, ~/.bash_profile) ---
+    $homeDir = $env:USERPROFILE
+    if ($homeDir) {
+        $bashExportLine = "export PATH=`"$($dir -replace '\\','/'):`$PATH`""
+        $bashMarker = "# gitmap-path"
+        $bashProfiles = @(
+            (Join-Path $homeDir ".bashrc"),
+            (Join-Path $homeDir ".bash_profile")
+        )
+
+        foreach ($bashProfile in $bashProfiles) {
+            $bashAlreadyPresent = $false
+            $bashProfileName = Split-Path $bashProfile -Leaf
+
+            if (Test-Path $bashProfile) {
+                $bashContent = Get-Content $bashProfile -Raw -ErrorAction SilentlyContinue
+                if ($bashContent -and ($bashContent -match [regex]::Escape($bashMarker))) {
+                    $bashAlreadyPresent = $true
+                }
+            }
+
+            if (-not $bashAlreadyPresent) {
+                Add-Content -Path $bashProfile -Value "`n$bashExportLine $bashMarker" -Encoding UTF8
+                Write-OK "Added to Git Bash profile: ~/$bashProfileName"
+                $modified += "~/$bashProfileName"
+            }
+            else {
+                Write-Step "Already in ~/$bashProfileName."
+            }
+        }
+    }
+
+    if ($modified.Count -gt 0) {
+        return @{ Target = ($modified -join ", "); Status = "added" }
+    }
+
+    return @{ Target = "All profiles"; Status = "already present" }
 }
 
 function Write-InstallSummary([string]$version, [string]$binPath, [string]$installDir, [hashtable]$pathResult, [bool]$isNoPath) {
     Write-Host ""
-    Write-Step "Install summary"
-    Write-Host "    Version: $version"
-    Write-Host "    Binary: $binPath"
+    Write-Host "  -----------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "  gitmap install summary" -ForegroundColor White
+    Write-Host "  -----------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "    Version    : $version"
+    Write-Host "    Binary     : $binPath"
     Write-Host "    Install Dir: $installDir"
 
     if ($isNoPath) {
-        Write-Host "    PATH Target: skipped (-NoPath)"
+        Write-Host "    PATH       : skipped (-NoPath)"
         return
     }
 
-    Write-Host "    PATH Target: $($pathResult.Target) ($($pathResult.Status))"
-    Write-Host "    Session PATH: refreshed for current PowerShell session"
+    Write-Host "    PATH target: $($pathResult.Target) ($($pathResult.Status))"
+    Write-Host "    Session    : refreshed for current PowerShell session"
+
+    Write-Host ""
+    Write-Host "  Profiles modified:" -ForegroundColor White
+    Write-Host "    - User PATH (registry)  : CMD, new PowerShell windows"
+    Write-Host "    - PowerShell `$PROFILE    : all PowerShell sessions"
+    Write-Host "    - ~/.bashrc             : Git Bash interactive shells"
+    Write-Host "    - ~/.bash_profile       : Git Bash login shells"
+
+    Write-Host ""
+    Write-Host "  If gitmap is not found in a new terminal, run:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "    PowerShell:  `$env:PATH = `"$installDir;`$env:PATH`"" -ForegroundColor Cyan
+    Write-Host "    CMD:         set PATH=$installDir;%PATH%" -ForegroundColor Cyan
+    Write-Host "    Git Bash:    export PATH=`"$($installDir -replace '\\','/'):`$PATH`"" -ForegroundColor Cyan
+    Write-Host ""
 }
 
 # --- Main ---
