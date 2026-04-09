@@ -45,6 +45,15 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Resolved version: $VERSION"
 
+      - name: Generate Windows resources
+        working-directory: gitmap
+        run: |
+          go install github.com/tc-hib/go-winres@v0.3.3
+          VERSION="${{ steps.version.outputs.version }}"
+          CLEAN_VERSION="${VERSION#v}"
+          go-winres make --product-version "$CLEAN_VERSION" --file-version "$CLEAN_VERSION"
+          ls -la rsrc_windows_*.syso
+
       - name: Build release binaries
         working-directory: gitmap
         run: |
