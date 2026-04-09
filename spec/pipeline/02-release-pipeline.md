@@ -85,6 +85,57 @@ If the project produces multiple binaries (e.g., a main tool and an updater), bu
 
 ---
 
+## Docs-Site Bundling
+
+If the project includes a documentation site (e.g., React/Vite), the release pipeline builds and bundles it as a release asset so the CLI can serve it locally.
+
+### Build Step
+
+```yaml
+- name: Setup Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: 22
+
+- name: Build docs-site
+  run: |
+    npm ci
+    npm run build
+    cd dist
+    zip -r ../dist-output/docs-site.zip .
+```
+
+### How It Fits
+
+1. Runs **after** binary compilation but **before** compression/checksums
+2. Produces `docs-site.zip` in the `dist/` folder alongside binaries
+3. The checksum step covers `docs-site.zip` automatically (it checksums all files in `dist/`)
+4. Ships as a standard release asset via `softprops/action-gh-release`
+
+### Install Script Integration
+
+Both install scripts download `docs-site.zip` from the release and extract it next to the binary:
+
+```
+<install-dir>/
+  <binary>
+  docs-site/
+    dist/
+      index.html
+      assets/
+        ...
+```
+
+The CLI's `help-dashboard` command auto-extracts `docs-site.zip` on first run if the `docs-site/` directory is missing, so the docs work out of the box even if the installer skipped extraction.
+
+### Graceful Fallback
+
+- If the docs-site build fails, the release should still succeed — `docs-site.zip` is optional
+- Install scripts treat download failure as non-fatal (print a skip message, continue)
+- The CLI falls back to `npm run dev` if no static `dist/` is found
+
+---
+
 ## Compression and Checksums
 
 ### Compression Rules
