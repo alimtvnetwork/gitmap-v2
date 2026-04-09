@@ -35,6 +35,8 @@ const (
 	ToolNpp           = "npp"
 	ToolNppSettings   = "npp-settings"
 	ToolNppInstall    = "install-npp"
+	ToolVSCodeSync    = "vscode-settings"
+	ToolOBSSync       = "obs-settings"
 	ToolScripts       = "scripts"
 )
 
