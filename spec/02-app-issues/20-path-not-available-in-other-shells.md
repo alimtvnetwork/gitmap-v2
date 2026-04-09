@@ -1,5 +1,10 @@
 # PATH Not Available in Other Shells After Install
 
+> **Superseded** — The multi-profile PATH registration introduced in
+> [issue 22](./22-installer-path-not-active-after-install.md) resolves this
+> problem. The installer now writes to all standard shell profiles, making
+> this single-profile limitation obsolete.
+
 ## Ticket
 
 After installing gitmap via `curl | sh` on macOS (zsh default), the binary
