@@ -101,6 +101,18 @@ func executeInstall(opts installOptions) {
 		return
 	}
 
+	if opts.Tool == constants.ToolVSCodeSync {
+		runVSCodeSettingsOnly()
+
+		return
+	}
+
+	if opts.Tool == constants.ToolOBSSync {
+		runOBSSettingsOnly()
+
+		return
+	}
+
 	originalTool := opts.Tool
 	installName := resolveNppInstallName(opts.Tool)
 
