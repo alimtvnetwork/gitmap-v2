@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.68.0 — (2026-04-09)
+
+### Improvements
+
+- *(pending)*
+
 ## v2.67.0 — Smart Deploy & Rename-First (2026-04-08)
 
 ### Improvements
