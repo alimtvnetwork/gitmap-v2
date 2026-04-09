@@ -72,6 +72,8 @@ const (
 	CmdPending               = "pending"
 	CmdDoPending             = "do-pending"
 	CmdDoPendingAlias        = "dp"
+	CmdLLMDocs               = "llm-docs"
+	CmdLLMDocsAlias          = "ld"
 )
 
 // Clone shorthands.
