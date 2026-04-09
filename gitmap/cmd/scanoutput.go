@@ -39,7 +39,11 @@ func writeCSVOutput(records []model.ScanRecord, outputDir, outFile string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteCSV(file, records)
+	if err := formatter.WriteCSV(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write CSV to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgCSVWritten, path)
 }
 
@@ -51,7 +55,11 @@ func writeJSONOutput(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteJSON(file, records)
+	if err := formatter.WriteJSON(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write JSON to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgJSONWritten, path)
 }
 
@@ -75,7 +83,11 @@ func writeFolderStructure(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteStructure(file, records)
+	if err := formatter.WriteStructure(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write structure to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgStructureWritten, path)
 }
 
@@ -87,7 +99,11 @@ func writeCloneScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteCloneScript(file, records)
+	if err := formatter.WriteCloneScript(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write clone script to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgCloneScript, path)
 }
 
@@ -99,7 +115,11 @@ func writeDirectCloneScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteDirectCloneScript(file, records)
+	if err := formatter.WriteDirectCloneScript(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write direct clone script to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgDirectClone, path)
 }
 
@@ -111,7 +131,11 @@ func writeDirectCloneSSHScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteDirectCloneSSHScript(file, records)
+	if err := formatter.WriteDirectCloneSSHScript(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write SSH clone script to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgDirectCloneSSH, path)
 }
 
@@ -123,7 +147,11 @@ func writeDesktopScript(records []model.ScanRecord, outputDir string) {
 		return
 	}
 	defer file.Close()
-	_ = formatter.WriteDesktopScript(file, records)
+	if err := formatter.WriteDesktopScript(file, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write desktop script to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgDesktopScript, path)
 }
 
