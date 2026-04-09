@@ -72,6 +72,11 @@ func dispatchUtility(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdLLMDocs || command == constants.CmdLLMDocsAlias {
+		runLLMDocs(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }

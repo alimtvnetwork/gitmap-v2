@@ -21,6 +21,7 @@ func printGroupUtilities() {
 	fmt.Println(constants.HelpHelpDash)
 	fmt.Println(constants.HelpGoMod)
 	fmt.Println(constants.HelpSEOWrite)
+	fmt.Println(constants.HelpLLMDocs)
 	fmt.Println(constants.HelpHelp)
 }
 
