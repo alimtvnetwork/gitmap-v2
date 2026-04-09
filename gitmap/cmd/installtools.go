@@ -146,6 +146,12 @@ func isBrewCaskTool(tool string) bool {
 	if tool == constants.ToolPowerShell {
 		return true
 	}
+	if tool == constants.ToolDbeaver {
+		return true
+	}
+	if tool == constants.ToolOBS {
+		return true
+	}
 
 	return false
 }
