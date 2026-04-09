@@ -39,6 +39,13 @@ const (
 	ToolOBSSync       = "obs-settings"
 	ToolWTSync        = "wt-settings"
 	ToolScripts       = "scripts"
+	ToolDbeaver       = "dbeaver"
+	ToolStickyNotes   = "sticky-notes"
+	ToolLiteDB        = "litedb"
+	ToolVSCodeCtx     = "vscode-ctx"
+	ToolPwshCtx       = "pwsh-ctx"
+	ToolOBS           = "obs"
+	ToolAllDevTools   = "all"
 )
 
 // Supported tool names — Databases.
@@ -133,12 +140,20 @@ const (
 	ChocoPkgElasticsearch = "elasticsearch"
 	ChocoPkgDuckDB        = "duckdb"
 	ChocoPkgNpp           = "notepadplusplus"
+	ChocoPkgDbeaver       = "dbeaver"
+	ChocoPkgOBS           = "obs-studio"
+	ChocoPkgPowerShell    = "powershell-core"
+	ChocoPkgStickyNotes   = "microsoft-windows-terminal" // sticky notes is a Windows Store app
 )
 
 // Winget package IDs.
 const (
-	WingetPkgVSCode     = "Microsoft.VisualStudioCode"
-	WingetPkgPowerShell = "Microsoft.PowerShell"
+	WingetPkgVSCode       = "Microsoft.VisualStudioCode"
+	WingetPkgPowerShell   = "Microsoft.PowerShell"
+	WingetPkgDbeaver      = "dbeaver.DBeaverCommunity"
+	WingetPkgOBS          = "OBSProject.OBSStudio"
+	WingetPkgStickyNotes  = "9NBLGGH4QGHW" // Microsoft Sticky Notes Store ID
+	WingetPkgGitHubDesktop = "GitHub.GitHubDesktop"
 )
 
 // Apt package IDs.
@@ -181,6 +196,8 @@ const (
 	BrewPkgNeo4j         = "neo4j"
 	BrewPkgElasticsearch = "elasticsearch"
 	BrewPkgDuckDB        = "duckdb"
+	BrewPkgDbeaver       = "dbeaver-community"
+	BrewPkgOBS           = "obs"
 )
 
 // Snap package IDs.
@@ -322,6 +339,13 @@ var InstallToolDescriptions = map[string]string{
 	ToolNeo4j:         "Neo4j graph database",
 	ToolElasticsearch: "Elasticsearch search and analytics",
 	ToolDuckDB:        "DuckDB analytical columnar database",
+	ToolDbeaver:       "DBeaver database management tool",
+	ToolStickyNotes:   "Microsoft Sticky Notes",
+	ToolLiteDB:        "LiteDB embedded NoSQL database for .NET",
+	ToolOBS:           "OBS Studio screen recorder and streamer",
+	ToolVSCodeCtx:     "Add VS Code to Windows right-click context menu",
+	ToolPwshCtx:       "Add PowerShell to Windows right-click context menu",
+	ToolAllDevTools:   "Install all core developer tools at once",
 	ToolNpp:           "NPP + Settings -- Notepad++ with settings",
 	ToolNppSettings:   "NPP Settings -- Notepad++ settings sync only",
 	ToolNppInstall:    "Install NPP -- Notepad++ install only (no settings)",
@@ -337,12 +361,15 @@ var InstallToolCategories = map[string][]string{
 		ToolVSCode, ToolNodeJS, ToolYarn, ToolBun, ToolPnpm,
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
-		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
-		ToolVSCodeSync, ToolOBSSync, ToolWTSync, ToolScripts,
+		ToolChocolatey, ToolWinget, ToolDbeaver, ToolOBS,
+		ToolStickyNotes, ToolVSCodeCtx, ToolPwshCtx,
+		ToolNpp, ToolNppSettings, ToolNppInstall,
+		ToolVSCodeSync, ToolOBSSync, ToolWTSync,
+		ToolScripts, ToolAllDevTools,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
 		ToolMongoDB, ToolCouchDB, ToolRedis, ToolCassandra,
-		ToolNeo4j, ToolElasticsearch, ToolDuckDB,
+		ToolNeo4j, ToolElasticsearch, ToolDuckDB, ToolLiteDB,
 	},
 }

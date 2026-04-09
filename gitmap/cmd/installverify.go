@@ -21,6 +21,15 @@ func isGUITool(tool string) bool {
 	if tool == constants.ToolGitHubDesktop {
 		return true
 	}
+	if tool == constants.ToolDbeaver {
+		return true
+	}
+	if tool == constants.ToolOBS {
+		return true
+	}
+	if tool == constants.ToolStickyNotes {
+		return true
+	}
 
 	return false
 }
@@ -89,8 +98,10 @@ func expectedExePath(tool string) string {
 	}
 
 	exeMap := map[string]string{
-		constants.ToolNpp:    `C:\Program Files\Notepad++\notepad++.exe`,
-		constants.ToolVSCode: `C:\Program Files\Microsoft VS Code\Code.exe`,
+		constants.ToolNpp:     `C:\Program Files\Notepad++\notepad++.exe`,
+		constants.ToolVSCode:  `C:\Program Files\Microsoft VS Code\Code.exe`,
+		constants.ToolDbeaver: `C:\Program Files\DBeaver\dbeaver.exe`,
+		constants.ToolOBS:     `C:\Program Files\obs-studio\bin\64bit\obs64.exe`,
 	}
 
 	path, exists := exeMap[tool]
