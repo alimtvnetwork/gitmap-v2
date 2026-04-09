@@ -2,9 +2,14 @@
 
 ## v2.68.0 — (2026-04-09)
 
-### Improvements
+### Fixed
 
-- *(pending)*
+- Fixed `TempReleases` migration crash: `ALTER TABLE RENAME COLUMN "Commit"` failed with `no such column` when the column was already renamed or never existed. Migration now silently skips the rename when the column is absent.
+
+### Added
+
+- Added 5 new pipeline specification files (`04`–`08`) covering installation flow, changelog integration, version/help system, environment variable setup, and terminal output standards.
+- Added AI Handoff Checklist to `spec/pipeline/README.md` with recommended reading order for onboarding.
 
 ## v2.67.0 — Smart Deploy & Rename-First (2026-04-08)
 
