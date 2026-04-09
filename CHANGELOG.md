@@ -8,6 +8,9 @@
 
 ### Added
 
+- Release pipeline now builds the docs-site (React/Vite) and bundles `dist/` into `docs-site.zip` as a release asset.
+- Install scripts (`install.ps1`, `install.sh`) automatically download and extract `docs-site.zip` alongside the binary.
+- `gitmap hd` auto-extracts `docs-site.zip` on first run if the `docs-site/` directory is missing — no manual setup needed.
 - Added 5 new pipeline specification files (`04`–`08`) covering installation flow, changelog integration, version/help system, environment variable setup, and terminal output standards.
 - Added AI Handoff Checklist to `spec/pipeline/README.md` with recommended reading order for onboarding.
 
