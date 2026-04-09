@@ -91,6 +91,22 @@ jobs:
             CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "$OUTPUT" .
           done
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build docs-site
+        run: |
+          echo "Building docs-site..."
+          npm ci
+          npm run build
+          echo "Bundling docs-site/dist into docs-site.zip..."
+          cd dist
+          zip -r ../gitmap/dist/docs-site.zip .
+          cd ..
+          echo "  docs-site.zip created ($(stat --format='%s' gitmap/dist/docs-site.zip | numfmt --to=iec --suffix=B))"
+
       - name: Sign Windows binaries
         if: vars.SIGNPATH_SIGNING_ENABLED == 'true'
         uses: signpath/github-action-submit-signing-request@v1
