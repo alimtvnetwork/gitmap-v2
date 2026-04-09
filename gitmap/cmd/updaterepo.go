@@ -54,6 +54,8 @@ func normalizeRepoPath(path string) string {
 
 	absPath, err := filepath.Abs(cleaned)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to resolve absolute path for %s: %v\n", cleaned, err)
+
 		return ""
 	}
 
@@ -200,6 +202,8 @@ func cloneRepoInto(targetPath string) bool {
 func saveRepoPathToDB(path string) {
 	db, err := store.OpenDefault()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not save repo path to database: %v\n", err)
+
 		return
 	}
 	defer db.Close()

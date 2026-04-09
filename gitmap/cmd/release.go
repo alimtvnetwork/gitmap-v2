@@ -187,6 +187,8 @@ func persistReleaseToDB() {
 
 	db, err := store.OpenDefault()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not cache release to database: %v\n", err)
+
 		return
 	}
 	defer db.Close()

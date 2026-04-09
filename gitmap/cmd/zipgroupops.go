@@ -115,6 +115,8 @@ func executeZipGroupRename(name, archiveName string) {
 func syncZipGroupJSON(db *store.DB) {
 	cwd, err := os.Getwd()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to get working directory: %v\n", err)
+
 		return
 	}
 

@@ -215,6 +215,8 @@ func extractOBSZipEntry(target string, file *zip.File) {
 
 	if file.FileInfo().IsDir() {
 		if mkErr := os.MkdirAll(destPath, 0o755); mkErr != nil {
+			fmt.Fprintf(os.Stderr, "  ! Failed to create directory %s: %v\n", destPath, mkErr)
+
 			return
 		}
 
@@ -222,22 +224,30 @@ func extractOBSZipEntry(target string, file *zip.File) {
 	}
 
 	if mkErr := os.MkdirAll(filepath.Dir(destPath), 0o755); mkErr != nil {
+		fmt.Fprintf(os.Stderr, "  ! Failed to create parent directory for %s: %v\n", destPath, mkErr)
+
 		return
 	}
 
 	src, err := file.Open()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ! Failed to open zip entry %s: %v\n", file.Name, err)
+
 		return
 	}
 	defer src.Close()
 
 	dst, err := os.Create(destPath)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ! Failed to create file %s: %v\n", destPath, err)
+
 		return
 	}
 	defer dst.Close()
 
 	if _, copyErr := io.Copy(dst, io.LimitReader(src, 50*1024*1024)); copyErr != nil {
+		fmt.Fprintf(os.Stderr, "  ! Failed to extract %s: %v\n", file.Name, copyErr)
+
 		return
 	}
 }

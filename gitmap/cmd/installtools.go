@@ -225,6 +225,8 @@ func writeInstallErrorLog(tool, manager, version string, args []string, output [
 
 	err := os.MkdirAll(logDir, 0o755)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not create log directory %s: %v\n", logDir, err)
+
 		return ""
 	}
 
@@ -257,6 +259,8 @@ func writeInstallErrorLog(tool, manager, version string, args []string, output [
 
 	err = os.WriteFile(logPath, []byte(sb.String()), 0o644)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not write error log to %s: %v\n", logPath, err)
+
 		return ""
 	}
 
