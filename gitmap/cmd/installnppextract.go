@@ -44,8 +44,14 @@ func extractZipEntry(target string, file *zip.File) {
 	cleanName := filepath.FromSlash(file.Name)
 	destPath := filepath.Join(target, cleanName)
 
-	absTarget, _ := filepath.Abs(target)
-	absDest, _ := filepath.Abs(destPath)
+	absTarget, absErr := filepath.Abs(target)
+	if absErr != nil {
+		absTarget = target
+	}
+	absDest, destErr := filepath.Abs(destPath)
+	if destErr != nil {
+		absDest = destPath
+	}
 
 	if !strings.HasPrefix(absDest, absTarget+string(os.PathSeparator)) {
 		fmt.Fprintf(os.Stderr, constants.ErrNppExtractEntry, file.Name, destPath, fmt.Errorf("path traversal detected"))

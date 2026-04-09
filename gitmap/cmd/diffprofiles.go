@@ -67,7 +67,9 @@ func loadProfileRepos(name string) []model.ScanRecord {
 	}
 	defer db.Close()
 
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
 	repos, err := db.ListRepos()
 	if err != nil {

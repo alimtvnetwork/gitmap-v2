@@ -206,8 +206,14 @@ func extractOBSZipEntry(target string, file *zip.File) {
 	destPath := filepath.Join(target, cleanName)
 
 	// Path traversal protection.
-	absTarget, _ := filepath.Abs(target)
-	absDest, _ := filepath.Abs(destPath)
+	absTarget, absErr := filepath.Abs(target)
+	if absErr != nil {
+		absTarget = target
+	}
+	absDest, destErr := filepath.Abs(destPath)
+	if destErr != nil {
+		absDest = destPath
+	}
 
 	if !strings.HasPrefix(absDest, absTarget+string(os.PathSeparator)) {
 		return
