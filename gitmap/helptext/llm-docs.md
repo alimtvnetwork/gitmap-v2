@@ -43,14 +43,15 @@ ld
     ↻ Generating LLM.md from command registry...
     ✓ LLM.md written to /home/user/projects/LLM.md
 
-### Example 3: Share with an AI assistant
+### Example 3: Print to stdout and pipe to clipboard
 
-    gitmap ld
-    cat LLM.md | pbcopy          # macOS — copy to clipboard
-    cat LLM.md | clip             # Windows — copy to clipboard
-    cat LLM.md | xclip -sel clip  # Linux — copy to clipboard
+    gitmap llm-docs --stdout | pbcopy    # macOS
+    gitmap llm-docs --stdout | clip      # Windows
+    gitmap llm-docs --stdout | xclip -sel clip  # Linux
 
-Then paste the content into your AI chat for context.
+### Example 4: Pipe directly to an AI tool
+
+    gitmap ld --stdout | ai-chat --context -
 
 ## What's Included
 
