@@ -168,8 +168,14 @@ func (db *DB) migrateZipGroupItemPaths() {
 }
 
 // migrateTRCommitSha renames the Commit column to CommitSha in TempReleases.
+// Silently skips if the column was already renamed or never existed.
 func (db *DB) migrateTRCommitSha() {
-	db.addColumnIfNotExists(constants.SQLMigrateTRCommitSha)
+	_, err := db.conn.Exec(constants.SQLMigrateTRCommitSha)
+	if err == nil || strings.Contains(err.Error(), "no such column") || isDuplicateColumnError(err) {
+		return
+	}
+
+	fmt.Fprintf(os.Stderr, "  ⚠ Migration failed: %v (statement: %s)\n", err, constants.SQLMigrateTRCommitSha)
 }
 
 // migratePendingTaskColumns adds WorkingDirectory and CommandArgs to existing tables.
