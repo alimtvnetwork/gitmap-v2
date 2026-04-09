@@ -117,7 +117,9 @@ func activateGroup(name string) {
 		os.Exit(1)
 	}
 
-	_ = db.SetSetting(constants.SettingActiveGroup, name)
+	if err := db.SetSetting(constants.SettingActiveGroup, name); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not save active group setting: %v\n", err)
+	}
 	fmt.Printf(constants.MsgGroupActivated, name)
 	printHints(activeGroupHints())
 }
@@ -131,6 +133,8 @@ func clearActiveGroup() {
 	}
 	defer db.Close()
 
-	_ = db.DeleteSetting(constants.SettingActiveGroup)
+	if err := db.DeleteSetting(constants.SettingActiveGroup); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not clear active group setting: %v\n", err)
+	}
 	fmt.Println(constants.MsgGroupCleared)
 }
