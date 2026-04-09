@@ -37,6 +37,7 @@ const (
 	ToolNppInstall    = "install-npp"
 	ToolVSCodeSync    = "vscode-settings"
 	ToolOBSSync       = "obs-settings"
+	ToolWTSync        = "wt-settings"
 	ToolScripts       = "scripts"
 )
 
@@ -326,6 +327,7 @@ var InstallToolDescriptions = map[string]string{
 	ToolNppInstall:    "Install NPP -- Notepad++ install only (no settings)",
 	ToolVSCodeSync:    "VS Code Settings -- sync VS Code settings and extensions",
 	ToolOBSSync:       "OBS Settings -- sync OBS Studio profiles and scenes",
+	ToolWTSync:        "WT Settings -- sync Windows Terminal settings.json",
 	ToolScripts:       "Clone gitmap scripts to local folder",
 }
 
@@ -336,7 +338,7 @@ var InstallToolCategories = map[string][]string{
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
 		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
-		ToolVSCodeSync, ToolOBSSync, ToolScripts,
+		ToolVSCodeSync, ToolOBSSync, ToolWTSync, ToolScripts,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
