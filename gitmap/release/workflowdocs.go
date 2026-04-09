@@ -1,6 +1,7 @@
 package release
 
 import (
+	"archive/zip"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -82,7 +83,7 @@ func createDocsSiteZip(archivePath, distDir string, items []string) error {
 	}
 	defer outFile.Close()
 
-	w := newZipWriter(outFile)
+	w := zip.NewWriter(outFile)
 	defer w.Close()
 
 	for _, itemPath := range items {
