@@ -93,13 +93,17 @@ func saveAmendToDB(f amendFlags, commits []model.CommitEntry, branch, mode, prev
 		toCommit = commits[len(commits)-1].SHA
 	}
 
-	_ = db.InsertAmendment(branch, fromCommit, toCommit, len(commits),
-		prevName, prevEmail, f.name, f.email, mode, f.forcePush)
+	if err := db.InsertAmendment(branch, fromCommit, toCommit, len(commits),
+		prevName, prevEmail, f.name, f.email, mode, f.forcePush); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not save amendment to DB: %v\n", err)
+	}
 }
 
 // ensureAmendDir creates the audit directory if it doesn't exist.
 func ensureAmendDir(dir string) {
-	_ = os.MkdirAll(dir, constants.DirPermission)
+	if err := os.MkdirAll(dir, constants.DirPermission); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not create audit directory %s: %v\n", dir, err)
+	}
 }
 
 // formatAuditTimestamp formats a time for use in filenames.
