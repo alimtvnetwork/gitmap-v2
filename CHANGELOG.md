@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.69.1 — (2026-04-09)
+
+### Improvements
+
+- *(pending)*
+
+---
+
 ## v2.69.0 — (2026-04-09)
 
 ### Added
