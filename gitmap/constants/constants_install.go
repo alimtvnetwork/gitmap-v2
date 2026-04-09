@@ -140,12 +140,20 @@ const (
 	ChocoPkgElasticsearch = "elasticsearch"
 	ChocoPkgDuckDB        = "duckdb"
 	ChocoPkgNpp           = "notepadplusplus"
+	ChocoPkgDbeaver       = "dbeaver"
+	ChocoPkgOBS           = "obs-studio"
+	ChocoPkgPowerShell    = "powershell-core"
+	ChocoPkgStickyNotes   = "microsoft-windows-terminal" // sticky notes is a Windows Store app
 )
 
 // Winget package IDs.
 const (
-	WingetPkgVSCode     = "Microsoft.VisualStudioCode"
-	WingetPkgPowerShell = "Microsoft.PowerShell"
+	WingetPkgVSCode       = "Microsoft.VisualStudioCode"
+	WingetPkgPowerShell   = "Microsoft.PowerShell"
+	WingetPkgDbeaver      = "dbeaver.DBeaverCommunity"
+	WingetPkgOBS          = "OBSProject.OBSStudio"
+	WingetPkgStickyNotes  = "9NBLGGH4QGHW" // Microsoft Sticky Notes Store ID
+	WingetPkgGitHubDesktop = "GitHub.GitHubDesktop"
 )
 
 // Apt package IDs.
@@ -188,6 +196,8 @@ const (
 	BrewPkgNeo4j         = "neo4j"
 	BrewPkgElasticsearch = "elasticsearch"
 	BrewPkgDuckDB        = "duckdb"
+	BrewPkgDbeaver       = "dbeaver-community"
+	BrewPkgOBS           = "obs"
 )
 
 // Snap package IDs.
