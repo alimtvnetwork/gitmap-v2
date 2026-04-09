@@ -31,8 +31,9 @@ param(
     [switch]$NoPull,
     [switch]$NoDeploy,
     [switch]$ForcePull,
-    [Alias("d")]
     [string]$DeployPath = "",
+    [Alias("d")]
+    [switch]$Deploy,
     [switch]$Update,
     [switch]$R,
     [Alias("t")]
@@ -818,6 +819,7 @@ $versionOutput = & $binaryPath version 2>&1
 Write-Info "Version: $versionOutput"
 
 $deployedBinaryPath = $null
+if ($Deploy) { $NoDeploy = $false }
 if (-not $NoDeploy) {
     Deploy-Binary -Config $config -BinaryPath $binaryPath -OverridePath $DeployPath
 
