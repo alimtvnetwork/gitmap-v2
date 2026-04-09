@@ -52,7 +52,12 @@ func resolveShellProfile(shell string) string {
 
 // profilePathForShell maps a shell name to its profile file path.
 func profilePathForShell(shell string) string {
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine home directory: %v\n", err)
+
+		return ""
+	}
 
 	if shell == "zsh" {
 		return filepath.Join(home, constants.EnvProfileZshRC)
@@ -63,7 +68,12 @@ func profilePathForShell(shell string) string {
 
 // detectShellProfile returns the path to the active shell profile.
 func detectShellProfile() string {
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine home directory: %v\n", err)
+
+		return ""
+	}
 	shell := os.Getenv("SHELL")
 
 	if strings.Contains(shell, "zsh") {

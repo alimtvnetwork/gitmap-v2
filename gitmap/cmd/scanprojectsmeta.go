@@ -27,7 +27,9 @@ func upsertGoProjectMeta(db *store.DB, r detector.DetectionResult) {
 	}
 	r.GoMeta.ID = saved.ID
 	runnableIDs := upsertGoRunnables(db, r.GoMeta)
-	_ = db.DeleteStaleGoRunnables(r.GoMeta.ID, runnableIDs)
+	if err := db.DeleteStaleGoRunnables(r.GoMeta.ID, runnableIDs); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not clean stale Go runnables: %v\n", err)
+	}
 }
 
 // upsertGoRunnables persists all runnable files and returns their IDs.
@@ -63,8 +65,12 @@ func upsertCSharpProjectMeta(db *store.DB, r detector.DetectionResult) {
 	r.CSharp.ID = saved.ID
 	fileIDs := upsertCSharpFiles(db, r.CSharp)
 	keyIDs := upsertCSharpKeyFiles(db, r.CSharp)
-	_ = db.DeleteStaleCSharpFiles(r.CSharp.ID, fileIDs)
-	_ = db.DeleteStaleCSharpKeyFiles(r.CSharp.ID, keyIDs)
+	if err := db.DeleteStaleCSharpFiles(r.CSharp.ID, fileIDs); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not clean stale C# files: %v\n", err)
+	}
+	if err := db.DeleteStaleCSharpKeyFiles(r.CSharp.ID, keyIDs); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not clean stale C# key files: %v\n", err)
+	}
 }
 
 // upsertCSharpFiles persists C# project files and returns their IDs.

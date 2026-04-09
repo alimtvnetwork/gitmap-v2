@@ -26,7 +26,10 @@ func runInteractive() {
 
 	refresh := parseInteractiveFlags(os.Args[2:])
 
-	cfg, _ := config.LoadFromFile(constants.DefaultConfigPath)
+	cfg, cfgErr := config.LoadFromFile(constants.DefaultConfigPath)
+	if cfgErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not load config: %v\n", cfgErr)
+	}
 
 	if refresh > 0 {
 		cfg.DashboardRefresh = refresh

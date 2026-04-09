@@ -43,8 +43,16 @@ func saveScanCache(outputDir string, cache model.ScanCache) {
 
 		return
 	}
-	_ = os.MkdirAll(filepath.Dir(path), constants.DirPermission)
-	_ = os.WriteFile(path, data, 0o644)
+	if err := os.MkdirAll(filepath.Dir(path), constants.DirPermission); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not create cache directory: %v\n", err)
+
+		return
+	}
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write scan cache to %s: %v\n", path, err)
+
+		return
+	}
 	fmt.Printf(constants.MsgScanCacheSaved, path)
 }
 

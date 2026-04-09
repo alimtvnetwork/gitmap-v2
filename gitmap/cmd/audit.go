@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/user/gitmap/model"
@@ -27,7 +28,10 @@ func recordAuditStart(command string, args []string) (int64, time.Time) {
 	}
 	defer db.Close()
 
-	id, _ := db.InsertHistory(record)
+	id, insertErr := db.InsertHistory(record)
+	if insertErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not record command history: %v\n", insertErr)
+	}
 
 	return id, start
 }
@@ -52,7 +56,9 @@ func recordAuditEnd(id int64, start time.Time, exitCode int, summary string, rep
 	}
 	defer db.Close()
 
-	_ = db.UpdateHistory(record)
+	if err := db.UpdateHistory(record); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not update command history: %v\n", err)
+	}
 }
 
 // openAuditDB opens the database silently (no error output).
@@ -62,7 +68,9 @@ func openAuditDB() (*store.DB, error) {
 		return nil, err
 	}
 
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Audit DB migration failed: %v\n", err)
+	}
 
 	return db, nil
 }

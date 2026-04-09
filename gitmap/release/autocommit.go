@@ -138,7 +138,10 @@ func commitReleaseOnly(files []string, msg string) AutoCommitResult {
 		return AutoCommitResult{Committed: true, Message: msg}
 	}
 
-	branch, _ := CurrentBranchName()
+	branch, branchErr := CurrentBranchName()
+	if branchErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine current branch: %v\n", branchErr)
+	}
 
 	if verbose.IsEnabled() {
 		verbose.Get().Log("autocommit: pushed to %s", branch)

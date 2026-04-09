@@ -115,12 +115,16 @@ func insertTemplates(db *store.DB, tf templateFile) {
 	total := 0
 
 	for _, t := range tf.Titles {
-		_ = db.InsertTemplate(constants.TemplateKindTitle, t)
+		if err := db.InsertTemplate(constants.TemplateKindTitle, t); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not insert title template: %v\n", err)
+		}
 		total++
 	}
 
 	for _, d := range tf.Descriptions {
-		_ = db.InsertTemplate(constants.TemplateKindDescription, d)
+		if err := db.InsertTemplate(constants.TemplateKindDescription, d); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not insert description template: %v\n", err)
+		}
 		total++
 	}
 

@@ -41,12 +41,18 @@ func gitCommitWithAuthor(title, description, authorName, authorEmail string) {
 // resolveAuthorFlag builds the --author "Name <email>" string.
 func resolveAuthorFlag(name, email string) string {
 	if name == "" {
-		out, _ := exec.Command("git", "config", "user.name").Output()
+		out, gitErr := exec.Command("git", "config", "user.name").Output()
+		if gitErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not read git user.name: %v\n", gitErr)
+		}
 		name = strings.TrimSpace(string(out))
 	}
 
 	if email == "" {
-		out, _ := exec.Command("git", "config", "user.email").Output()
+		out, gitErr := exec.Command("git", "config", "user.email").Output()
+		if gitErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not read git user.email: %v\n", gitErr)
+		}
 		email = strings.TrimSpace(string(out))
 	}
 
@@ -71,7 +77,9 @@ func appendToFile(path, text string) {
 	}
 	defer f.Close()
 
-	_, _ = f.WriteString("\n" + text)
+	if _, writeErr := f.WriteString("\n" + text); writeErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not append to %s: %v\n", path, writeErr)
+	}
 }
 
 // revertFile removes the appended text from the file.
@@ -84,7 +92,9 @@ func revertFile(path, text string) {
 	}
 
 	cleaned := strings.Replace(string(data), "\n"+text, "", 1)
-	_ = os.WriteFile(path, []byte(cleaned), 0o644)
+	if err := os.WriteFile(path, []byte(cleaned), 0o644); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not revert file %s: %v\n", path, err)
+	}
 }
 
 // printHeader outputs the commit plan header.

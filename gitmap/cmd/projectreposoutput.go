@@ -43,5 +43,7 @@ func printProjectsSummary(projects []model.DetectedProject) {
 func printProjectsJSON(projects []model.DetectedProject) {
 	encoder := json.NewEncoder(os.Stdout)
 	encoder.SetIndent("", "  ")
-	_ = encoder.Encode(projects)
+	if err := encoder.Encode(projects); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode projects JSON: %v\n", err)
+	}
 }

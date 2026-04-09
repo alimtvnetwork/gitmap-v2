@@ -54,7 +54,9 @@ func removeTempReleaseRange(from, to string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
 	targets := collectRangeTargets(db, from, to)
 
@@ -109,9 +111,14 @@ func removeTempReleaseAll() {
 		os.Exit(1)
 	}
 	defer db.Close()
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
-	releases, _ := db.ListTempReleases()
+	releases, listErr := db.ListTempReleases()
+	if listErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not list temp releases: %v\n", listErr)
+	}
 	if len(releases) == 0 {
 		fmt.Print(constants.MsgTRNoneToRemove)
 
@@ -132,7 +139,9 @@ func removeTempReleaseAll() {
 	}
 
 	removeBranches(branches)
-	_ = db.DeleteAllTempReleases()
+	if err := db.DeleteAllTempReleases(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not delete all temp releases from DB: %v\n", err)
+	}
 	fmt.Printf(constants.MsgTRRemoved, len(branches))
 }
 
@@ -155,18 +164,24 @@ func resolveTRBranch(version string) string {
 // removeBranches deletes branches locally and from remote.
 func removeBranches(branches []string) {
 	for _, b := range branches {
-		_ = release.DeleteLocalBranch(b)
+		if err := release.DeleteLocalBranch(b); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not delete local branch %s: %v\n", b, err)
+		}
 	}
 
 	if len(branches) > 0 {
-		_ = release.DeleteRemoteBranches(branches)
+		if err := release.DeleteRemoteBranches(branches); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not delete remote branches: %v\n", err)
+		}
 	}
 }
 
 // cleanupTRFromDB removes temp-release records from the database.
 func cleanupTRFromDB(db *store.DB, branches []string) {
 	for _, b := range branches {
-		_ = db.DeleteTempRelease(b)
+		if err := db.DeleteTempRelease(b); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not delete temp release %s from DB: %v\n", b, err)
+		}
 	}
 }
 

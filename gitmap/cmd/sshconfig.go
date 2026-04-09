@@ -116,7 +116,12 @@ func sshConfigPath() string {
 
 // sshDir returns the path to ~/.ssh.
 func sshDir() string {
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine home directory: %v\n", err)
+
+		return ""
+	}
 
 	return filepath.Join(home, ".ssh")
 }

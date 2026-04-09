@@ -42,7 +42,10 @@ func printGroupList(db *store.DB, groups []model.Group) {
 	fmt.Println(constants.MsgGroupHeader)
 	fmt.Println(constants.MsgListSeparator)
 	for _, g := range groups {
-		count, _ := db.CountGroupRepos(g.Name)
+		count, countErr := db.CountGroupRepos(g.Name)
+		if countErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not count repos for group %s: %v\n", g.Name, countErr)
+		}
 		fmt.Printf(constants.MsgGroupRowFmt, g.Name, count, g.Description)
 	}
 }

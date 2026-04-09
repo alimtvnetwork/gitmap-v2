@@ -73,7 +73,9 @@ func createBranchAtHead(branch string) {
 func checkoutBranch(branch string) {
 	cmd := exec.Command(constants.GitBin, constants.GitCheckout, branch)
 	cmd.Stderr = os.Stderr
-	_ = cmd.Run()
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not checkout branch %s: %v\n", branch, err)
+	}
 }
 
 // goModCurrentBranch returns the name of the current branch.
@@ -102,7 +104,9 @@ func isWorkTreeDirty() bool {
 func commitGoModChanges(oldPath, newPath string, fileCount int) {
 	stageCmd := exec.Command(constants.GitBin, constants.GitAdd, constants.GitAddAll)
 	stageCmd.Stderr = os.Stderr
-	_ = stageCmd.Run()
+	if err := stageCmd.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not stage changes: %v\n", err)
+	}
 
 	msg := fmt.Sprintf(constants.GoModCommitMsgFmt, oldPath, newPath, fileCount)
 	commitCmd := exec.Command(constants.GitBin, constants.GitCommit, constants.GitCommitMsg, msg)

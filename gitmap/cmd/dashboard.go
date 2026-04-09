@@ -82,5 +82,7 @@ func openDashboard(path string) {
 		cmd = exec.Command(constants.CmdXdgOpen, path)
 	}
 
-	_ = cmd.Start()
+	if err := cmd.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not open dashboard in browser: %v\n", err)
+	}
 }

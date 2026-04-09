@@ -54,7 +54,9 @@ func retryDeleteTask(db *store.DB, taskID int64, targetPath string) {
 	if err != nil {
 		reason := formatPathError(targetPath, "delete", err)
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
-		_ = db.FailTask(taskID, reason)
+		if failErr := db.FailTask(taskID, reason); failErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not mark task %d as failed: %v\n", taskID, failErr)
+		}
 
 		return
 	}
@@ -69,7 +71,9 @@ func retryReplayTask(db *store.DB, taskID int64, workDir, cmdArgs string) {
 	if len(args) == 0 {
 		reason := fmt.Sprintf(constants.ReasonReplayFailed, "empty command args")
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
-		_ = db.FailTask(taskID, reason)
+		if failErr := db.FailTask(taskID, reason); failErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not mark task %d as failed: %v\n", taskID, failErr)
+		}
 
 		return
 	}
@@ -77,7 +81,9 @@ func retryReplayTask(db *store.DB, taskID int64, workDir, cmdArgs string) {
 	if workDir != "" && !pathExists(workDir) {
 		reason := fmt.Sprintf(constants.ReasonWorkDirNotFound, workDir)
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
-		_ = db.FailTask(taskID, reason)
+		if failErr := db.FailTask(taskID, reason); failErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not mark task %d as failed: %v\n", taskID, failErr)
+		}
 
 		return
 	}
@@ -101,7 +107,9 @@ func retryReplayTask(db *store.DB, taskID int64, workDir, cmdArgs string) {
 	if err != nil {
 		reason := fmt.Sprintf(constants.ReasonReplayFailed, err)
 		fmt.Printf(constants.MsgPendingTaskFailed, taskID, reason)
-		_ = db.FailTask(taskID, reason)
+		if failErr := db.FailTask(taskID, reason); failErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not mark task %d as failed: %v\n", taskID, failErr)
+		}
 
 		return
 	}

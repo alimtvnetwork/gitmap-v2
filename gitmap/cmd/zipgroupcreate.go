@@ -66,7 +66,10 @@ func executeZipGroupCreate(name, archiveName string, paths []string) {
 		addResolvedZipGroupItem(db, name, p)
 	}
 
-	count, _ := db.CountZipGroupItems(name)
+	count, countErr := db.CountZipGroupItems(name)
+	if countErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not count zip group items: %v\n", countErr)
+	}
 	fmt.Printf(constants.MsgZGCreatedPath, name, fmt.Sprintf("%d", count), "item(s)")
 	printHints(zipGroupCreateHints())
 	syncZipGroupJSON(db)

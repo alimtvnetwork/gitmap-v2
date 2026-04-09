@@ -108,6 +108,11 @@ func printStatsTerminal(overall model.OverallStats, commands []model.CommandStat
 // printStatsJSON outputs stats as JSON.
 func printStatsJSON(overall model.OverallStats, commands []model.CommandStats) {
 	overall.Commands = commands
-	data, _ := json.MarshalIndent(overall, "", "  ")
+	data, err := json.MarshalIndent(overall, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal stats to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }

@@ -13,7 +13,11 @@ type maxDeflateWriter struct {
 
 // newMaxDeflateWriter creates a Deflate writer with level 9 compression.
 func newMaxDeflateWriter(w io.Writer) io.WriteCloser {
-	fw, _ := flate.NewWriter(w, flate.BestCompression)
+	fw, err := flate.NewWriter(w, flate.BestCompression)
+	if err != nil {
+		// Fall back to default compression if BestCompression fails.
+		fw, _ = flate.NewWriter(w, flate.DefaultCompression)
+	}
 
 	return &maxDeflateWriter{fw: fw}
 }

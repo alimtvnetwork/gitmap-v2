@@ -24,7 +24,10 @@ func runPull(args []string) {
 	}
 	records := resolvePullTargets(slug, groupName, all)
 
-	workDir, _ := os.Getwd()
+	workDir, wdErr := os.Getwd()
+	if wdErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine working directory: %v\n", wdErr)
+	}
 	cmdArgs := buildCommandArgs(append([]string{"pull"}, os.Args[2:]...))
 	targetPath := workDir
 	if len(records) == 1 {

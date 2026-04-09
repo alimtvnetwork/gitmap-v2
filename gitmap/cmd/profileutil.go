@@ -71,12 +71,16 @@ func initProfileDB(name string) {
 	}
 	defer db.Close()
 
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Profile DB migration failed: %v\n", err)
+	}
 }
 
 // removeProfileDB deletes the database file for a profile.
 func removeProfileDB(name string) {
 	dbFile := store.ProfileDBFile(name)
 	path := filepath.Join(constants.DefaultOutputFolder, constants.DBDir, dbFile)
-	_ = os.Remove(path)
+	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not remove profile DB %s: %v\n", path, err)
+	}
 }

@@ -155,13 +155,17 @@ func cacheReleasesToDB(records []model.ReleaseRecord) {
 	}
 	defer db.Close()
 
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Release cache DB migration failed: %v\n", err)
+	}
 	upsertRecords(db, records)
 }
 
 // upsertRecords persists each record to the database.
 func upsertRecords(db *store.DB, records []model.ReleaseRecord) {
 	for _, r := range records {
-		_ = db.UpsertRelease(r)
+		if err := db.UpsertRelease(r); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not cache release %s: %v\n", r.Version, err)
+		}
 	}
 }

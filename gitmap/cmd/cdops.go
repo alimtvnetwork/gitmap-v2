@@ -53,7 +53,10 @@ func lookupCDRecords(name string) []model.ScanRecord {
 
 	repos, err := db.FindBySlug(strings.ToLower(name))
 	if err != nil || len(repos) == 0 {
-		all, _ := db.ListRepos()
+		all, listErr := db.ListRepos()
+		if listErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not list repos: %v\n", listErr)
+		}
 
 		return findBySlug(all, name)
 	}
@@ -138,12 +141,18 @@ func parseCDReposFlags(args []string) string {
 // loadCDReposList loads repos optionally filtered by group.
 func loadCDReposList(db *store.DB, group string) []model.ScanRecord {
 	if len(group) > 0 {
-		repos, _ := db.ShowGroup(group)
+		repos, grpErr := db.ShowGroup(group)
+		if grpErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not load group %s: %v\n", group, grpErr)
+		}
 
 		return repos
 	}
 
-	repos, _ := db.ListRepos()
+	repos, listErr := db.ListRepos()
+	if listErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not list repos: %v\n", listErr)
+	}
 
 	return repos
 }

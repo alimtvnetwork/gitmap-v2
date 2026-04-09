@@ -98,6 +98,11 @@ func printWatchJSON(records []model.ScanRecord, noFetch bool) {
 		"summary":   summary,
 	}
 
-	data, _ := json.MarshalIndent(out, "", "  ")
+	data, err := json.MarshalIndent(out, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal watch result to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }

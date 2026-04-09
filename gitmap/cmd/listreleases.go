@@ -139,6 +139,11 @@ func printReleaseRow(r model.ReleaseRecord) {
 
 // printReleasesJSON renders releases as JSON to stdout.
 func printReleasesJSON(releases []model.ReleaseRecord) {
-	data, _ := json.MarshalIndent(releases, "", constants.JSONIndent)
+	data, err := json.MarshalIndent(releases, "", constants.JSONIndent)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal releases to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }

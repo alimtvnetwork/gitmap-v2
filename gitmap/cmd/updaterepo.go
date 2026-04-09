@@ -208,7 +208,9 @@ func saveRepoPathToDB(path string) {
 	}
 	defer db.Close()
 
-	_ = db.SetSetting(constants.SettingSourceRepoPath, path)
+	if err := db.SetSetting(constants.SettingSourceRepoPath, path); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not save repo path to DB: %v\n", err)
+	}
 }
 
 // loadRepoPathFromDB reads the source repo path from the Settings table.

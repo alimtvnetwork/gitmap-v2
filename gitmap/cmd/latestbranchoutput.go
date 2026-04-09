@@ -55,7 +55,9 @@ func printLatestJSON(result latestBranchResult, items []gitutil.RemoteBranchInfo
 	}
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", constants.JSONIndent)
-	_ = enc.Encode(out)
+	if err := enc.Encode(out); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode latest branch JSON: %v\n", err)
+	}
 }
 
 // buildLatestJSON constructs the base JSON output struct.
@@ -94,7 +96,11 @@ func buildTopItems(items []gitutil.RemoteBranchInfo, top int) []latestBranchTopI
 func printLatestCSV(items []gitutil.RemoteBranchInfo, remote string, top int) {
 	count := resolveTopCount(top, len(items))
 	w := csv.NewWriter(os.Stdout)
-	_ = w.Write(constants.LatestBranchCSVHeaders)
+	if err := w.Write(constants.LatestBranchCSVHeaders); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to write CSV header: %v\n", err)
+
+		return
+	}
 	for _, item := range items[:count] {
 		writeCSVRow(w, item, remote)
 	}
@@ -116,14 +122,16 @@ func resolveTopCount(top, total int) int {
 
 // writeCSVRow writes a single CSV row for a branch item.
 func writeCSVRow(w *csv.Writer, item gitutil.RemoteBranchInfo, remote string) {
-	_ = w.Write([]string{
+	if err := w.Write([]string{
 		gitutil.StripRemotePrefix(item.RemoteRef),
 		remote,
 		gitutil.TruncSha(item.Sha),
 		gitutil.FormatDisplayDate(item.CommitDate),
 		item.Subject,
 		item.RemoteRef,
-	})
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to write CSV row: %v\n", err)
+	}
 }
 
 // printLatestTerminal outputs the latest branch result as text.
