@@ -15,7 +15,9 @@ ld
 
 ## Flags
 
-None.
+| Flag | Default | Description |
+|------|---------|-------------|
+| --stdout | false | Print to stdout instead of writing LLM.md file |
 
 ## Prerequisites
 
