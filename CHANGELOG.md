@@ -2,6 +2,14 @@
 
 ## v2.69.0 — (2026-04-09)
 
+### Added
+
+- Windows binaries now embed a custom emerald green terminal icon, application manifest, and version info via `go-winres`.
+- Added `gitmap/winres.json` and `gitmap/assets/icon.png` for Windows resource generation.
+- Release pipeline generates `.syso` resource files before compilation, injecting the release version into the binary metadata.
+- Added `spec/pipeline/09-binary-icon-branding.md` documenting the full `go-winres` workflow for AI/engineer handoff.
+- Added the gitmap icon to the README header.
+
 ### Fixed
 
 - Fixed `run.ps1 -d` switch: replaced `[Alias("d")]` on `[string]$DeployPath` with a dedicated `[switch]$Deploy` parameter so `-d` works without requiring a path argument.
