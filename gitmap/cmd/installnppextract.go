@@ -13,10 +13,11 @@ import (
 
 // extractNppSettingsZip extracts the bundled settings zip to the target.
 func extractNppSettingsZip(target string) {
-	zipPath := resolveNppDataPath(filepath.Join("npp-settings", "npp-settings.zip"))
+	// Try the current filename first, then legacy name.
+	zipPath := resolveNppDataPath("02. Notepad++ settings.zip")
 
 	fmt.Printf(constants.MsgInstallNppExtract, target)
-	fmt.Printf("  → Settings zip: %s\n", zipPath)
+	fmt.Printf("  -> Settings zip: %s\n", zipPath)
 
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
