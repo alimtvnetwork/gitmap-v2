@@ -63,16 +63,17 @@ func nppSettingsTarget() string {
 	return filepath.Join(appData, "Notepad++")
 }
 
-// resolveNppDataPath resolves the npp-settings data path relative to the binary.
-func resolveNppDataPath(subpath string) string {
+// resolveSettingsPath resolves a settings file path, searching multiple
+// locations relative to the binary and CWD. This supports both the legacy
+// data/ layout and the current settings/ layout.
+func resolveSettingsPath(subpaths ...string) string {
 	exe, err := os.Executable()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve executable path: %v\n", err)
+		fmt.Fprintf(os.Stderr, "  ! Could not resolve executable path: %v\n", err)
 
-		return filepath.Join("data", subpath)
+		return subpaths[0]
 	}
 
-	// Resolve symlinks to find the real binary location.
 	realExe, err := filepath.EvalSymlinks(exe)
 	if err != nil {
 		realExe = exe
@@ -80,23 +81,36 @@ func resolveNppDataPath(subpath string) string {
 
 	binDir := filepath.Dir(realExe)
 
-	// Search order: binary-relative, then CWD-relative.
-	candidates := []string{
-		filepath.Join(binDir, "data", subpath),
-		filepath.Join("data", subpath),
+	// Build candidate list: for each subpath, try binary-relative then CWD-relative.
+	var candidates []string
+
+	for _, subpath := range subpaths {
+		candidates = append(candidates,
+			filepath.Join(binDir, subpath),
+			subpath,
+		)
 	}
 
 	for _, candidate := range candidates {
 		abs, _ := filepath.Abs(candidate)
 		if _, statErr := os.Stat(candidate); statErr == nil {
-			fmt.Printf("  → Resolved data path: %s\n", abs)
+			fmt.Printf("  -> Resolved path: %s\n", abs)
 
 			return candidate
 		}
 
-		fmt.Printf("  → Searched: %s (not found)\n", abs)
+		fmt.Printf("  -> Searched: %s (not found)\n", abs)
 	}
 
-	// Return the binary-relative path as default (will produce a clear error).
 	return candidates[0]
+}
+
+// resolveNppDataPath resolves the npp-settings data path relative to the binary.
+// Searches settings/ folder first (current layout), then data/ (legacy).
+func resolveNppDataPath(subpath string) string {
+	return resolveSettingsPath(
+		filepath.Join("settings", "01 - notepad++", subpath),
+		filepath.Join("data", "npp-settings", subpath),
+		filepath.Join("data", subpath),
+	)
 }
