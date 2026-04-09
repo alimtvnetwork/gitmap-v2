@@ -78,5 +78,6 @@ func AllCommands() []string {
 		"clone-next", "cn",
 		"uninstall", "un",
 		"help",
+		"llm-docs", "ld",
 	}
 }
