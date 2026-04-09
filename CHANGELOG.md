@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.69.0 — (2026-04-09)
+
+### Fixed
+
+- Fixed `run.ps1 -d` switch: replaced `[Alias("d")]` on `[string]$DeployPath` with a dedicated `[switch]$Deploy` parameter so `-d` works without requiring a path argument.
+
+---
+
 ## v2.68.1 — (2026-04-09)
 
 ### Fixed
