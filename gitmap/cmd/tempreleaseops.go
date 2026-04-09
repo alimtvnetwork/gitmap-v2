@@ -129,7 +129,9 @@ func createTempBranches(commits []release.TempReleaseCommit, prefix string, star
 		}
 
 		fmt.Printf(constants.MsgTRCreated, branchName, c.Short)
-		_ = db.InsertTempRelease(branchName, prefix, seq, c.SHA, c.Message)
+		if err := db.InsertTempRelease(branchName, prefix, seq, c.SHA, c.Message); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not save temp release %s to DB: %v\n", branchName, err)
+		}
 		created = append(created, branchName)
 	}
 
