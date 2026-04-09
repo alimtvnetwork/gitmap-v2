@@ -41,6 +41,13 @@ func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 	adHocAssets := buildAdHocZipAssets(opts)
 	assets = append(assets, adHocAssets...)
 
+	// Bundle docs-site for help-dashboard command.
+	if stagingDir, stagingErr := EnsureStagingDir(); stagingErr == nil {
+		if docsSiteAsset := buildDocsSiteAsset(stagingDir); len(docsSiteAsset) > 0 {
+			assets = append(assets, docsSiteAsset)
+		}
+	}
+
 	if opts.Compress && len(assets) > 0 {
 		compressed, compErr := CompressAssets(assets)
 		if compErr == nil && len(compressed) > 0 {
