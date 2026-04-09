@@ -34,7 +34,7 @@ func tryCopyWithRetry(src, dst string, maxAttempts int, delay time.Duration) boo
 // tryRenameFallback renames the locked target to .old, then copies.
 func tryRenameFallback(src, dst string) bool {
 	backup := dst + constants.BackupSuffix
-	os.Remove(backup)
+	_ = os.Remove(backup)
 
 	err := os.Rename(dst, backup)
 	if err != nil {
