@@ -528,6 +528,49 @@ function Main {
     }
 }
 
+# --- Uninstall mode ---
+if ($Uninstall) {
+    Write-Host ""
+    Write-Host "  gitmap uninstaller" -ForegroundColor White
+    Write-Host ""
+
+    $resolvedDir = Resolve-InstallDir $InstallDir
+    $binPath = Join-Path $resolvedDir $BinaryName
+
+    # Remove PATH entries from all profiles
+    $removedProfiles = Remove-FromPath $resolvedDir
+
+    # Remove binary and install directory
+    if (Test-Path $binPath) {
+        Remove-Item $binPath -Force -ErrorAction SilentlyContinue
+        Write-OK "Removed binary: $binPath"
+    }
+
+    $oldPath = "$binPath.old"
+    if (Test-Path $oldPath) {
+        Remove-Item $oldPath -Force -ErrorAction SilentlyContinue
+    }
+
+    # Remove install dir if empty
+    if ((Test-Path $resolvedDir) -and @(Get-ChildItem $resolvedDir).Count -eq 0) {
+        Remove-Item $resolvedDir -Force -ErrorAction SilentlyContinue
+        Write-OK "Removed empty directory: $resolvedDir"
+    }
+
+    # Rebuild session PATH without the dir
+    $machinePath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+    $userPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+    $parts = @()
+    if ($machinePath) { $parts += ($machinePath -split ";") }
+    if ($userPath) { $parts += ($userPath -split ";") }
+    $env:PATH = ($parts | Where-Object { $_.Trim() -ine $resolvedDir -and $_.Trim() -ne "" }) -join ";"
+
+    Write-Host ""
+    Write-OK "gitmap has been uninstalled."
+    Write-Host ""
+    return
+}
+
 $installResult = Main
 
 if (-not $installResult) {
