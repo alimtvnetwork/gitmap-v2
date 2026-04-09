@@ -1,11 +1,5 @@
 package constants
 
-// llm-docs command.
-const (
-	CmdLLMDocs      = "llm-docs"
-	CmdLLMDocsAlias = "ld"
-)
-
 // llm-docs messages.
 const (
 	MsgLLMDocsWritten = "  ✓ LLM.md written to %s\n"
