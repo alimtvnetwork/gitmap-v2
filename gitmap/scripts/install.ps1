@@ -32,7 +32,8 @@ param(
     [string]$Version = "",
     [string]$InstallDir = "",
     [string]$Arch = "",
-    [switch]$NoPath
+    [switch]$NoPath,
+    [switch]$Uninstall
 )
 
 $ErrorActionPreference = "Stop"
@@ -381,6 +382,68 @@ function Add-ToPath([string]$dir) {
     return @{ Target = "All profiles"; Status = "already present" }
 }
 
+# --- Remove from PATH (uninstall) ---
+
+function Remove-FromPath([string]$dir) {
+    $removed = @()
+    $marker = "# gitmap-path"
+
+    # --- 1. Windows User PATH (registry) ---
+    $currentUserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+    if ($currentUserPath -and (Test-PathEntry $currentUserPath $dir)) {
+        $parts = ($currentUserPath -split ";") | Where-Object { $_.Trim() -ine $dir -and $_.Trim() -ne "" }
+        $newPath = $parts -join ";"
+        [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+        Broadcast-EnvironmentChange
+        Write-OK "Removed from User PATH (registry)."
+        $removed += "User PATH (registry)"
+    }
+
+    # --- 2. PowerShell $PROFILE ---
+    $psProfilePath = $PROFILE
+    if ($psProfilePath -and (Test-Path $psProfilePath)) {
+        $lines = Get-Content $psProfilePath
+        $filtered = $lines | Where-Object { $_ -notmatch [regex]::Escape($marker) }
+        if ($filtered.Count -lt $lines.Count) {
+            $filtered | Set-Content $psProfilePath -Encoding UTF8
+            Write-OK "Removed marker lines from PowerShell profile: $psProfilePath"
+            $removed += "PowerShell `$PROFILE"
+        }
+    }
+
+    # --- 3. Git Bash profiles ---
+    $homeDir = $env:USERPROFILE
+    if ($homeDir) {
+        $bashProfiles = @(
+            (Join-Path $homeDir ".bashrc"),
+            (Join-Path $homeDir ".bash_profile")
+        )
+
+        foreach ($bashProfile in $bashProfiles) {
+            if (Test-Path $bashProfile) {
+                $lines = Get-Content $bashProfile
+                $filtered = $lines | Where-Object { $_ -notmatch [regex]::Escape($marker) }
+                if ($filtered.Count -lt $lines.Count) {
+                    $filtered | Set-Content $bashProfile -Encoding UTF8
+                    $name = Split-Path $bashProfile -Leaf
+                    Write-OK "Removed marker lines from ~/$name"
+                    $removed += "~/$name"
+                }
+            }
+        }
+    }
+
+    if ($removed.Count -gt 0) {
+        Write-Host ""
+        Write-OK "PATH entries removed from: $($removed -join ', ')"
+    }
+    else {
+        Write-Step "No gitmap PATH entries found in any profile."
+    }
+
+    return $removed
+}
+
 function Write-InstallSummary([string]$version, [string]$binPath, [string]$installDir, [hashtable]$pathResult, [bool]$isNoPath) {
     Write-Host ""
     Write-Host "  -----------------------------------------------" -ForegroundColor DarkGray
@@ -463,6 +526,49 @@ function Main {
         Write-Host ""
         return $null
     }
+}
+
+# --- Uninstall mode ---
+if ($Uninstall) {
+    Write-Host ""
+    Write-Host "  gitmap uninstaller" -ForegroundColor White
+    Write-Host ""
+
+    $resolvedDir = Resolve-InstallDir $InstallDir
+    $binPath = Join-Path $resolvedDir $BinaryName
+
+    # Remove PATH entries from all profiles
+    $removedProfiles = Remove-FromPath $resolvedDir
+
+    # Remove binary and install directory
+    if (Test-Path $binPath) {
+        Remove-Item $binPath -Force -ErrorAction SilentlyContinue
+        Write-OK "Removed binary: $binPath"
+    }
+
+    $oldPath = "$binPath.old"
+    if (Test-Path $oldPath) {
+        Remove-Item $oldPath -Force -ErrorAction SilentlyContinue
+    }
+
+    # Remove install dir if empty
+    if ((Test-Path $resolvedDir) -and @(Get-ChildItem $resolvedDir).Count -eq 0) {
+        Remove-Item $resolvedDir -Force -ErrorAction SilentlyContinue
+        Write-OK "Removed empty directory: $resolvedDir"
+    }
+
+    # Rebuild session PATH without the dir
+    $machinePath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+    $userPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+    $parts = @()
+    if ($machinePath) { $parts += ($machinePath -split ";") }
+    if ($userPath) { $parts += ($userPath -split ";") }
+    $env:PATH = ($parts | Where-Object { $_.Trim() -ine $resolvedDir -and $_.Trim() -ne "" }) -join ";"
+
+    Write-Host ""
+    Write-OK "gitmap has been uninstalled."
+    Write-Host ""
+    return
 }
 
 $installResult = Main
