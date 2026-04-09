@@ -142,9 +142,13 @@ func generateAndStore(db *store.DB, name, keyPath, email, host string) {
 	fingerprint := readFingerprint(keyPath)
 
 	if db.SSHKeyExists(name) {
-		_ = db.UpdateSSHKey(name, keyPath, string(pubKey), fingerprint, email)
+		if err := db.UpdateSSHKey(name, keyPath, string(pubKey), fingerprint, email); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not update SSH key in DB: %v\n", err)
+		}
 	} else {
-		_, _ = db.InsertSSHKey(name, keyPath, string(pubKey), fingerprint, email)
+		if _, err := db.InsertSSHKey(name, keyPath, string(pubKey), fingerprint, email); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not save SSH key to DB: %v\n", err)
+		}
 	}
 
 	fmt.Fprintf(os.Stdout, constants.MsgSSHGenerated, name)

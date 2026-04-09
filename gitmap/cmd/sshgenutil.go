@@ -43,13 +43,22 @@ func readFingerprint(keyPath string) string {
 
 // removeKeyFiles deletes private and public key files.
 func removeKeyFiles(privatePath string) {
-	_ = os.Remove(privatePath)
-	_ = os.Remove(privatePath + ".pub")
+	if err := os.Remove(privatePath); err != nil && !os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not remove %s: %v\n", privatePath, err)
+	}
+	if err := os.Remove(privatePath + ".pub"); err != nil && !os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not remove %s: %v\n", privatePath+".pub", err)
+	}
 }
 
 // defaultSSHKeyPath returns the default key path based on name.
 func defaultSSHKeyPath(name string) string {
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine home directory: %v\n", err)
+
+		return filepath.Join(".", ".ssh", "id_rsa")
+	}
 	if name == constants.DefaultSSHKeyName {
 		return filepath.Join(home, ".ssh", "id_rsa")
 	}
@@ -60,7 +69,12 @@ func defaultSSHKeyPath(name string) string {
 // expandHome expands ~ to the user's home directory.
 func expandHome(path string) string {
 	if strings.HasPrefix(path, "~") {
-		home, _ := os.UserHomeDir()
+		home, homeErr := os.UserHomeDir()
+		if homeErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not determine home directory: %v\n", homeErr)
+
+			return path
+		}
 		path = filepath.Join(home, path[1:])
 	}
 
