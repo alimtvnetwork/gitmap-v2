@@ -22,12 +22,12 @@ func installTool(opts installOptions) {
 	}
 
 	// Step 1: Show install plan.
-	fmt.Printf("\n  ┌─ Install Plan ─────────────────────\n")
-	fmt.Printf("  │ Tool:    %s\n", opts.Tool)
-	fmt.Printf("  │ Version: %s\n", versionLabel)
-	fmt.Printf("  │ Manager: %s\n", manager)
-	fmt.Printf("  │ Command: %s\n", strings.Join(installCmd, " "))
-	fmt.Printf("  └────────────────────────────────────\n\n")
+	fmt.Printf("\n  +-- Install Plan ---------------------\n")
+	fmt.Printf("  | Tool:    %s\n", opts.Tool)
+	fmt.Printf("  | Version: %s\n", versionLabel)
+	fmt.Printf("  | Manager: %s\n", manager)
+	fmt.Printf("  | Command: %s\n", strings.Join(installCmd, " "))
+	fmt.Printf("  +--------------------------------------\n\n")
 
 	if opts.DryRun {
 		if manager == constants.PkgMgrApt {
@@ -39,27 +39,29 @@ func installTool(opts installOptions) {
 		return
 	}
 
-	// Step 2: Package index update (apt only).
+	totalSteps := 3
+	step := 1
+
+	// Step: Package index update (apt only).
 	if manager == constants.PkgMgrApt {
-		fmt.Print("  [1/4] Updating package index...\n")
+		totalSteps = 4
+		fmt.Printf("  [%d/%d] Updating package index...\n", step, totalSteps)
 		runAptUpdate(opts.Verbose)
+		step++
 	}
 
-	// Step 3: Install.
-	step := "2"
-	if manager != constants.PkgMgrApt {
-		step = "1"
-	}
-
-	fmt.Printf("  [%s/4] Installing %s via %s...\n", step, opts.Tool, manager)
+	// Step: Install.
+	fmt.Printf("  [%d/%d] Installing %s v%s via %s...\n", step, totalSteps, opts.Tool, versionLabel, manager)
 	runInstallCommand(installCmd, opts)
+	step++
 
-	// Step 4: Verify.
-	fmt.Printf("  [3/4] Verifying installation...\n")
+	// Step: Verify.
+	fmt.Printf("  [%d/%d] Verifying installation...\n", step, totalSteps)
 	verifyInstallation(opts.Tool)
+	step++
 
-	// Step 5: Record in database.
-	fmt.Printf("  [4/4] Recording installation...\n")
+	// Step: Record in database.
+	fmt.Printf("  [%d/%d] Recording installation...\n", step, totalSteps)
 	recordInstallation(opts.Tool, manager)
 }
 

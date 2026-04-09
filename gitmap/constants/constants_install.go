@@ -35,6 +35,8 @@ const (
 	ToolNpp           = "npp"
 	ToolNppSettings   = "npp-settings"
 	ToolNppInstall    = "install-npp"
+	ToolVSCodeSync    = "vscode-settings"
+	ToolOBSSync       = "obs-settings"
 	ToolScripts       = "scripts"
 )
 
@@ -319,9 +321,11 @@ var InstallToolDescriptions = map[string]string{
 	ToolNeo4j:         "Neo4j graph database",
 	ToolElasticsearch: "Elasticsearch search and analytics",
 	ToolDuckDB:        "DuckDB analytical columnar database",
-	ToolNpp:           "NPP + Settings — Notepad++ with settings",
-	ToolNppSettings:   "NPP Settings — Notepad++ settings sync only",
-	ToolNppInstall:    "Install NPP — Notepad++ install only (no settings)",
+	ToolNpp:           "NPP + Settings -- Notepad++ with settings",
+	ToolNppSettings:   "NPP Settings -- Notepad++ settings sync only",
+	ToolNppInstall:    "Install NPP -- Notepad++ install only (no settings)",
+	ToolVSCodeSync:    "VS Code Settings -- sync VS Code settings and extensions",
+	ToolOBSSync:       "OBS Settings -- sync OBS Studio profiles and scenes",
 	ToolScripts:       "Clone gitmap scripts to local folder",
 }
 
@@ -332,7 +336,7 @@ var InstallToolCategories = map[string][]string{
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
 		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
-		ToolScripts,
+		ToolVSCodeSync, ToolOBSSync, ToolScripts,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
