@@ -54,7 +54,9 @@ func removeTempReleaseRange(from, to string) {
 		os.Exit(1)
 	}
 	defer db.Close()
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
 	targets := collectRangeTargets(db, from, to)
 
@@ -109,9 +111,14 @@ func removeTempReleaseAll() {
 		os.Exit(1)
 	}
 	defer db.Close()
-	_ = db.Migrate()
+	if err := db.Migrate(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ DB migration failed: %v\n", err)
+	}
 
-	releases, _ := db.ListTempReleases()
+	releases, listErr := db.ListTempReleases()
+	if listErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not list temp releases: %v\n", listErr)
+	}
 	if len(releases) == 0 {
 		fmt.Print(constants.MsgTRNoneToRemove)
 
