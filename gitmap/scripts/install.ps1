@@ -32,7 +32,8 @@ param(
     [string]$Version = "",
     [string]$InstallDir = "",
     [string]$Arch = "",
-    [switch]$NoPath
+    [switch]$NoPath,
+    [switch]$Uninstall
 )
 
 $ErrorActionPreference = "Stop"
