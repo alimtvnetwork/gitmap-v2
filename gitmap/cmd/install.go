@@ -119,6 +119,24 @@ func executeInstall(opts installOptions) {
 		return
 	}
 
+	if opts.Tool == constants.ToolVSCodeCtx {
+		runVSCodeContextMenu()
+
+		return
+	}
+
+	if opts.Tool == constants.ToolPwshCtx {
+		runPwshContextMenu()
+
+		return
+	}
+
+	if opts.Tool == constants.ToolAllDevTools {
+		runAllDevTools(opts)
+
+		return
+	}
+
 	originalTool := opts.Tool
 	installName := resolveNppInstallName(opts.Tool)
 
