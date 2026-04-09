@@ -560,12 +560,14 @@ main() {
     print_install_summary "${installed_version}" "${bin_path}"
     if [ "${NO_PATH}" = false ]; then
         echo ""
-        printf '  \033[33m⚠\033[0m  PATH was added to %s only (%s).\n' "${PATH_TARGET}" "${PATH_SHELL}" >&2
-        printf '     Other shells (sh, bash, fish) will NOT see gitmap unless you\n' >&2
-        printf '     add the following line to their profile too:\n' >&2
-        printf '     \033[36m%s\033[0m\n' "${PATH_LINE}" >&2
-        echo ""
-        step "Open a new terminal or run: ${PATH_RELOAD}"
+        printf '  \033[32m✓\033[0m  To start using gitmap \033[1mright now\033[0m, run:\n' >&2
+        echo "" >&2
+        printf '      \033[36m%s\033[0m\n' "${PATH_RELOAD}" >&2
+        echo "" >&2
+        printf '     Or open a new terminal window.\n' >&2
+        echo "" >&2
+        printf '  \033[90mInstalled to: %s\033[0m\n' "${install_dir}/${BINARY_NAME}" >&2
+        printf '  \033[90mPATH added to: %s %s %s %s\033[0m\n' "~/.zshrc" "~/.zprofile" "~/.bashrc" "~/.profile" >&2
     fi
 
     echo ""
