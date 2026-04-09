@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.68.1 — (2026-04-09)
+
+### Fixed
+
+- Fixed gosec G305 (file traversal) and G110 (decompression bomb) in `helpdashboard.go` zip extraction — paths are now validated against the target directory and extraction is size-limited to 100 MB.
+- Fixed `run.ps1 -d` failing with "Missing an argument for parameter 'DeployPath'" — added `[Alias("d")]` to `$DeployPath` so `-d` resolves unambiguously.
+
+---
+
 ## v2.68.0 — (2026-04-09)
 
 ### Fixed
