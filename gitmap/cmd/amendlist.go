@@ -133,6 +133,11 @@ func printAmendmentRow(a store.AmendmentRow) {
 
 // printAmendmentsJSON renders amendments as JSON to stdout.
 func printAmendmentsJSON(amendments []store.AmendmentRow) {
-	data, _ := json.MarshalIndent(amendments, "", constants.JSONIndent)
+	data, err := json.MarshalIndent(amendments, "", constants.JSONIndent)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal amendments to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }

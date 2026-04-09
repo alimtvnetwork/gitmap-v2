@@ -96,8 +96,15 @@ func validateShorthandPath(resolved string) string {
 // executeClone runs the clone operation and prints the summary.
 func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 	// Enqueue clone as a pending task before execution.
-	absTarget, _ := filepath.Abs(targetDir)
-	workDir, _ := os.Getwd()
+	absTarget, absErr := filepath.Abs(targetDir)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", targetDir, absErr)
+		absTarget = targetDir
+	}
+	workDir, wdErr := os.Getwd()
+	if wdErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine working directory: %v\n", wdErr)
+	}
 	cmdArgs := buildCommandArgs(append([]string{"clone"}, os.Args[2:]...))
 	taskID, taskDB := createPendingTask(constants.TaskTypeClone, absTarget, workDir, "clone", cmdArgs)
 	if taskDB != nil {
@@ -135,7 +142,11 @@ func printCloneFailures(s model.CloneSummary) {
 // registerCloned adds successfully cloned repos to GitHub Desktop.
 func registerCloned(s model.CloneSummary, targetDir string, enabled bool) {
 	if enabled {
-		absTarget, _ := filepath.Abs(targetDir)
+		absTarget, absErr := filepath.Abs(targetDir)
+		if absErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", targetDir, absErr)
+			absTarget = targetDir
+		}
 		records := make([]model.ScanRecord, 0, s.Succeeded)
 		for _, r := range s.Cloned {
 			r.Record.AbsolutePath = filepath.Join(absTarget, r.Record.RelativePath)

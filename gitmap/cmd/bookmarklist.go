@@ -61,7 +61,12 @@ func printBookmarkTerminal(records []model.BookmarkRecord) {
 
 // printBookmarkJSON outputs bookmarks as JSON.
 func printBookmarkJSON(records []model.BookmarkRecord) {
-	data, _ := json.MarshalIndent(records, "", "  ")
+	data, err := json.MarshalIndent(records, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal bookmarks to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }
 

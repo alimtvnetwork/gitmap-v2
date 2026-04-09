@@ -89,7 +89,12 @@ func printDPJSON(nameA, nameB string, result dpResult) {
 		"same":      len(result.same),
 	}
 
-	data, _ := json.MarshalIndent(out, "", "  ")
+	data, err := json.MarshalIndent(out, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal diff result to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }
 

@@ -146,6 +146,11 @@ func resolveStatus(code int) string {
 
 // printHistoryJSON outputs history as JSON.
 func printHistoryJSON(records []model.CommandHistoryRecord) {
-	data, _ := json.MarshalIndent(records, "", "  ")
+	data, err := json.MarshalIndent(records, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal history to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }

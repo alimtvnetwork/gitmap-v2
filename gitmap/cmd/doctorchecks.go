@@ -34,7 +34,11 @@ func checkActiveBinary() int {
 		return 1
 	}
 
-	absPath, _ := filepath.Abs(path)
+	absPath, absErr := filepath.Abs(path)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", path, absErr)
+		absPath = path
+	}
 	version := getBinaryVersion(absPath)
 	printOK(constants.DoctorPathBinaryFmt, absPath, version)
 
@@ -188,7 +192,11 @@ func checkSignature() int {
 		return 0
 	}
 
-	absPath, _ := filepath.Abs(binaryPath)
+	absPath, absErr := filepath.Abs(binaryPath)
+	if absErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", binaryPath, absErr)
+		absPath = binaryPath
+	}
 
 	cmd := exec.Command("powershell", "-NoProfile", "-Command",
 		"(Get-AuthenticodeSignature '"+absPath+"').Status")

@@ -138,11 +138,15 @@ func isGitmapSourceRepo(root string) bool {
 func saveSourceRepoDB(path string) {
 	db, err := store.OpenDefault()
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not open DB to save source repo path: %v\n", err)
+
 		return
 	}
 	defer db.Close()
 
-	_ = db.SetSetting(constants.SettingSourceRepoPath, path)
+	if err := db.SetSetting(constants.SettingSourceRepoPath, path); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not save source repo path to DB: %v\n", err)
+	}
 }
 
 // loadSourceRepoDB reads the source repo path from the Settings table.

@@ -2,6 +2,7 @@ package release
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -41,6 +42,13 @@ func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 	adHocAssets := buildAdHocZipAssets(opts)
 	assets = append(assets, adHocAssets...)
 
+	// Bundle docs-site for help-dashboard command.
+	if stagingDir, stagingErr := EnsureStagingDir(); stagingErr == nil {
+		if docsSiteAsset := buildDocsSiteAsset(stagingDir); len(docsSiteAsset) > 0 {
+			assets = append(assets, docsSiteAsset)
+		}
+	}
+
 	if opts.Compress && len(assets) > 0 {
 		compressed, compErr := CompressAssets(assets)
 		if compErr == nil && len(compressed) > 0 {
@@ -75,7 +83,10 @@ func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 
 // writeMetadata persists release info and updates latest.
 func writeMetadata(v Version, branchName, tag, sourceName string, assets []string, opts Options) error {
-	commit, _ := CurrentCommitSHA()
+	commit, commitErr := CurrentCommitSHA()
+	if commitErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine current commit SHA: %v\n", commitErr)
+	}
 	meta := buildReleaseMeta(v, branchName, tag, sourceName, commit, assets, opts)
 
 	metaPath := constants.DefaultReleaseDir + "/" + v.String() + constants.ExtJSON

@@ -13,6 +13,7 @@ const (
 	HDDefaultPort = 5173
 	HDDistDir     = "dist"
 	HDDocsDir     = "docs-site"
+	DocsSiteArchive = "docs-site.zip"
 )
 
 // Help-dashboard terminal messages.
@@ -27,9 +28,16 @@ const (
 
 // Help-dashboard error messages.
 const (
-	ErrHDNoDocsDir  = "  ✗ Docs site directory not found at %s (operation: resolve, reason: directory does not exist)\n"
-	ErrHDNPMInstall = "  ✗ npm install failed: %v\n"
-	ErrHDDevServer  = "  ✗ Dev server failed: %v\n"
-	ErrHDServe      = "  ✗ Failed to start server: %v\n"
+	ErrHDNoDocsDir   = "  ✗ Docs site directory not found at %s (operation: resolve, reason: directory does not exist)\n"
+	ErrHDNPMInstall  = "  ✗ npm install failed: %v\n"
+	ErrHDDevServer   = "  ✗ Dev server failed: %v\n"
+	ErrHDServe       = "  ✗ Failed to start server: %v\n"
 	ErrHDNPMNotFound = "  ✗ npm not found — install Node.js to use dev mode\n"
+	ErrDocsSiteBundle = "  ✗ Failed to bundle docs-site: %v\n"
+)
+
+// Docs-site release messages.
+const (
+	MsgDocsSiteBundling = "  Bundling docs-site from %s...\n"
+	MsgDocsSiteBundled  = "  ✓ Docs site bundled: %s\n"
 )

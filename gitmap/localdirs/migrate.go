@@ -53,12 +53,20 @@ func migrateSingleDir(oldDir, subDir string) {
 func mergeAndRemoveLegacy(oldDir, target string) {
 	var merged, skipped int
 
-	_ = filepath.WalkDir(oldDir, func(path string, d fs.DirEntry, err error) error {
+	walkErr := filepath.WalkDir(oldDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Walk error at %s: %v\n", path, err)
+
 			return nil
 		}
 
-		rel, _ := filepath.Rel(oldDir, path)
+		rel, relErr := filepath.Rel(oldDir, path)
+		if relErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not compute relative path for %s: %v\n", path, relErr)
+
+			return nil
+		}
+
 		if rel == "." {
 			return nil
 		}
@@ -66,7 +74,9 @@ func mergeAndRemoveLegacy(oldDir, target string) {
 		dest := filepath.Join(target, rel)
 
 		if d.IsDir() {
-			_ = os.MkdirAll(dest, constants.DirPermission)
+			if mkErr := os.MkdirAll(dest, constants.DirPermission); mkErr != nil {
+				fmt.Fprintf(os.Stderr, "  ⚠ Could not create directory %s: %v\n", dest, mkErr)
+			}
 
 			return nil
 		}
@@ -79,10 +89,14 @@ func mergeAndRemoveLegacy(oldDir, target string) {
 
 		data, readErr := os.ReadFile(path)
 		if readErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not read %s: %v\n", path, readErr)
+
 			return nil
 		}
 
 		if writeErr := os.WriteFile(dest, data, constants.FilePermission); writeErr != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not write %s: %v\n", dest, writeErr)
+
 			return nil
 		}
 
@@ -90,6 +104,10 @@ func mergeAndRemoveLegacy(oldDir, target string) {
 
 		return nil
 	})
+
+	if walkErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Walk failed for %s: %v\n", oldDir, walkErr)
+	}
 
 	if err := os.RemoveAll(oldDir); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrMigrationFailed, oldDir, err)
@@ -116,5 +134,7 @@ func fileExists(path string) bool {
 
 // ensureGitMapDir creates the .gitmap/ directory if it does not exist.
 func ensureGitMapDir() {
-	_ = os.MkdirAll(constants.GitMapDir, constants.DirPermission)
+	if err := os.MkdirAll(constants.GitMapDir, constants.DirPermission); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not create %s: %v\n", constants.GitMapDir, err)
+	}
 }
