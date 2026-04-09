@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/user/gitmap/constants"
 )
@@ -18,7 +19,12 @@ func (db *DB) migrateLegacyIDs() {
 
 	db.dropProjectTables()
 	db.dropGroupRepos()
-	db.rebuildReposTable()
+
+	if err := db.rebuildReposTable(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Legacy ID migration failed: %v\n", err)
+
+		return
+	}
 
 	fmt.Println(constants.MsgLegacyIDMigrationDone)
 }
@@ -26,6 +32,7 @@ func (db *DB) migrateLegacyIDs() {
 // hasLegacyTextID checks if the Id column of a table is TEXT via PRAGMA.
 func (db *DB) hasLegacyTextID(table string) bool {
 	query := fmt.Sprintf("PRAGMA table_info(%s)", table)
+
 	rows, err := db.conn.Query(query)
 	if err != nil {
 		return false
@@ -37,9 +44,11 @@ func (db *DB) hasLegacyTextID(table string) bool {
 		var name, colType string
 		var notNull, pk int
 		var dflt interface{}
+
 		if err := rows.Scan(&cid, &name, &colType, &notNull, &dflt, &pk); err != nil {
 			continue
 		}
+
 		if name == "Id" && colType == "TEXT" {
 			return true
 		}
@@ -61,29 +70,51 @@ func (db *DB) dropProjectTables() {
 	}
 
 	for _, stmt := range drops {
-		_, _ = db.conn.Exec(stmt)
+		if _, err := db.conn.Exec(stmt); err != nil {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not drop table during migration: %v\n", err)
+		}
 	}
 }
 
 // dropGroupRepos removes the GroupRepos join table (FK to Repos).
 func (db *DB) dropGroupRepos() {
-	_, _ = db.conn.Exec(constants.SQLDropGroupRepos)
+	if _, err := db.conn.Exec(constants.SQLDropGroupRepos); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not drop GroupRepos during migration: %v\n", err)
+	}
 }
 
 // rebuildReposTable recreates Repos with INTEGER PRIMARY KEY AUTOINCREMENT,
 // preserving all data except the old UUID IDs.
-func (db *DB) rebuildReposTable() {
-	_, _ = db.conn.Exec("PRAGMA foreign_keys = OFF")
+func (db *DB) rebuildReposTable() error {
+	if _, err := db.conn.Exec("PRAGMA foreign_keys = OFF"); err != nil {
+		return fmt.Errorf("disable foreign keys: %w", err)
+	}
 
-	_, _ = db.conn.Exec("ALTER TABLE Repos RENAME TO Repos_legacy")
+	if _, err := db.conn.Exec("ALTER TABLE Repos RENAME TO Repos_legacy"); err != nil {
+		return fmt.Errorf("rename Repos to Repos_legacy: %w", err)
+	}
 
-	_, _ = db.conn.Exec(constants.SQLCreateRepos)
-	_, _ = db.conn.Exec(constants.SQLCreateAbsPathIndex)
+	if _, err := db.conn.Exec(constants.SQLCreateRepos); err != nil {
+		return fmt.Errorf("create new Repos table: %w", err)
+	}
 
-	_, _ = db.conn.Exec(`INSERT INTO Repos (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
+	if _, err := db.conn.Exec(constants.SQLCreateAbsPathIndex); err != nil {
+		return fmt.Errorf("create AbsPath index: %w", err)
+	}
+
+	if _, err := db.conn.Exec(`INSERT INTO Repos (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
 		SELECT Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes
-		FROM Repos_legacy`)
+		FROM Repos_legacy`); err != nil {
+		return fmt.Errorf("copy data from Repos_legacy: %w", err)
+	}
 
-	_, _ = db.conn.Exec("DROP TABLE IF EXISTS Repos_legacy")
-	_, _ = db.conn.Exec("PRAGMA foreign_keys = ON")
+	if _, err := db.conn.Exec("DROP TABLE IF EXISTS Repos_legacy"); err != nil {
+		return fmt.Errorf("drop Repos_legacy: %w", err)
+	}
+
+	if _, err := db.conn.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		return fmt.Errorf("re-enable foreign keys: %w", err)
+	}
+
+	return nil
 }

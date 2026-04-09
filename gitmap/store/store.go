@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/user/gitmap/constants"
 
@@ -14,8 +15,8 @@ import (
 
 // DB wraps the SQLite database connection.
 type DB struct {
-	conn   *sql.DB
-	dbDir  string
+	conn  *sql.DB
+	dbDir string
 }
 
 // Open creates or opens the SQLite database for the active profile.
@@ -119,36 +120,64 @@ func (db *DB) Migrate() error {
 	return db.SeedTaskTypes()
 }
 
+// addColumnIfNotExists runs an ALTER TABLE ADD COLUMN statement.
+// It silently ignores "duplicate column" errors (expected on repeat runs)
+// but logs any other unexpected failure.
+func (db *DB) addColumnIfNotExists(stmt string) {
+	_, err := db.conn.Exec(stmt)
+	if err == nil {
+		return
+	}
+
+	if isDuplicateColumnError(err) {
+		return
+	}
+
+	fmt.Fprintf(os.Stderr, "  ⚠ Migration failed: %v (statement: %s)\n", err, stmt)
+}
+
+// isDuplicateColumnError checks if an error is a "duplicate column" error.
+func isDuplicateColumnError(err error) bool {
+	return strings.Contains(err.Error(), "duplicate column")
+}
+
 // migrateSourceColumn adds the Source column to existing Releases tables.
 func (db *DB) migrateSourceColumn() {
-	_, _ = db.conn.Exec(constants.SQLAddSourceColumn)
+	db.addColumnIfNotExists(constants.SQLAddSourceColumn)
 }
 
 // migrateNotesColumn adds the Notes column to existing Releases tables.
 func (db *DB) migrateNotesColumn() {
-	_, _ = db.conn.Exec(constants.SQLAddNotesColumn)
+	db.addColumnIfNotExists(constants.SQLAddNotesColumn)
 }
 
 // migrateZipGroupItemPaths adds RepoPath, RelativePath, FullPath columns
 // to existing ZipGroupItems tables and copies Path into FullPath.
 func (db *DB) migrateZipGroupItemPaths() {
-	_, _ = db.conn.Exec(constants.SQLMigrateZGIRepoPath)
-	_, _ = db.conn.Exec(constants.SQLMigrateZGIRelativePath)
-	_, _ = db.conn.Exec(constants.SQLMigrateZGIFullPath)
-	_, _ = db.conn.Exec(constants.SQLMigrateZGICopyPath)
+	db.addColumnIfNotExists(constants.SQLMigrateZGIRepoPath)
+	db.addColumnIfNotExists(constants.SQLMigrateZGIRelativePath)
+	db.addColumnIfNotExists(constants.SQLMigrateZGIFullPath)
+
+	// Copy existing Path values into FullPath — this is a data migration,
+	// not an ADD COLUMN, so it uses a direct exec with error logging.
+	if _, err := db.conn.Exec(constants.SQLMigrateZGICopyPath); err != nil {
+		if !strings.Contains(err.Error(), "no such column") {
+			fmt.Fprintf(os.Stderr, "  ⚠ Could not copy ZipGroupItem paths: %v\n", err)
+		}
+	}
 }
 
 // migrateTRCommitSha renames the Commit column to CommitSha in TempReleases.
 func (db *DB) migrateTRCommitSha() {
-	_, _ = db.conn.Exec(constants.SQLMigrateTRCommitSha)
+	db.addColumnIfNotExists(constants.SQLMigrateTRCommitSha)
 }
 
 // migratePendingTaskColumns adds WorkingDirectory and CommandArgs to existing tables.
 func (db *DB) migratePendingTaskColumns() {
-	_, _ = db.conn.Exec(constants.SQLMigratePendingWorkDir)
-	_, _ = db.conn.Exec(constants.SQLMigratePendingCmdArgs)
-	_, _ = db.conn.Exec(constants.SQLMigrateCompletedWorkDir)
-	_, _ = db.conn.Exec(constants.SQLMigrateCompletedCmdArgs)
+	db.addColumnIfNotExists(constants.SQLMigratePendingWorkDir)
+	db.addColumnIfNotExists(constants.SQLMigratePendingCmdArgs)
+	db.addColumnIfNotExists(constants.SQLMigrateCompletedWorkDir)
+	db.addColumnIfNotExists(constants.SQLMigrateCompletedCmdArgs)
 }
 
 // Reset drops all tables and recreates them for a fresh start.
