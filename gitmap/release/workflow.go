@@ -178,7 +178,10 @@ func performRelease(v Version, sourceRef, sourceName string, opts Options) error
 	branchName := constants.ReleaseBranchPrefix + v.String()
 	tag := v.String()
 
-	originalBranch, _ := CurrentBranchName()
+	originalBranch, branchErr := CurrentBranchName()
+	if branchErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine current branch: %v\n", branchErr)
+	}
 
 	fmt.Printf(constants.MsgReleaseStart, tag)
 
