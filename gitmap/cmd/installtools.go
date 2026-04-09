@@ -291,6 +291,7 @@ func resolveChocoPackage(tool string) string {
 		constants.ToolGitHubDesktop: constants.ChocoPkgGitHubDesktop,
 		constants.ToolCPP:           constants.ChocoPkgCPP,
 		constants.ToolPHP:           constants.ChocoPkgPHP,
+		constants.ToolPowerShell:    constants.ChocoPkgPowerShell,
 		constants.ToolMySQL:         constants.ChocoPkgMySQL,
 		constants.ToolMariaDB:       constants.ChocoPkgMariaDB,
 		constants.ToolPostgreSQL:    constants.ChocoPkgPostgreSQL,
@@ -303,6 +304,8 @@ func resolveChocoPackage(tool string) string {
 		constants.ToolDuckDB:        constants.ChocoPkgDuckDB,
 		constants.ToolNpp:           constants.ChocoPkgNpp,
 		constants.ToolNppInstall:    constants.ChocoPkgNpp,
+		constants.ToolDbeaver:       constants.ChocoPkgDbeaver,
+		constants.ToolOBS:           constants.ChocoPkgOBS,
 	}
 
 	pkg, exists := chocoMap[tool]
@@ -316,8 +319,12 @@ func resolveChocoPackage(tool string) string {
 // resolveWingetPackage maps tool names to Winget package IDs.
 func resolveWingetPackage(tool string) string {
 	wingetMap := map[string]string{
-		constants.ToolVSCode:     constants.WingetPkgVSCode,
-		constants.ToolPowerShell: constants.WingetPkgPowerShell,
+		constants.ToolVSCode:        constants.WingetPkgVSCode,
+		constants.ToolPowerShell:    constants.WingetPkgPowerShell,
+		constants.ToolDbeaver:       constants.WingetPkgDbeaver,
+		constants.ToolOBS:           constants.WingetPkgOBS,
+		constants.ToolStickyNotes:   constants.WingetPkgStickyNotes,
+		constants.ToolGitHubDesktop: constants.WingetPkgGitHubDesktop,
 	}
 
 	pkg, exists := wingetMap[tool]
@@ -378,6 +385,8 @@ func resolveBrewPackage(tool string) string {
 		constants.ToolNeo4j:         constants.BrewPkgNeo4j,
 		constants.ToolElasticsearch: constants.BrewPkgElasticsearch,
 		constants.ToolDuckDB:        constants.BrewPkgDuckDB,
+		constants.ToolDbeaver:       constants.BrewPkgDbeaver,
+		constants.ToolOBS:           constants.BrewPkgOBS,
 	}
 
 	pkg, exists := brewMap[tool]
