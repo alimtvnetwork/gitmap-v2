@@ -19,6 +19,7 @@ func runLLMDocs(args []string) {
 	fs := flag.NewFlagSet("llm-docs", flag.ExitOnError)
 	toStdout := fs.Bool(constants.FlagLLMDocsStdout, false, constants.FlagDescLLMDocsStdout)
 	format := fs.String(constants.FlagLLMDocsFormat, "markdown", constants.FlagDescLLMDocsFormat)
+	sections := fs.String(constants.FlagLLMDocsSections, "", constants.FlagDescLLMDocsSections)
 
 	reordered := reorderFlagsBeforeArgs(args)
 
@@ -32,7 +33,9 @@ func runLLMDocs(args []string) {
 		os.Exit(1)
 	}
 
-	content := buildLLMOutput(*format)
+	sectionSet := parseSections(*sections)
+
+	content := buildLLMOutput(*format, sectionSet)
 
 	if *toStdout {
 		fmt.Print(content)
@@ -63,13 +66,53 @@ func runLLMDocs(args []string) {
 	fmt.Printf(constants.MsgLLMDocsWritten, outPath)
 }
 
+// parseSections converts the comma-separated --sections value into a set.
+// An empty string means all sections are included.
+func parseSections(raw string) map[string]bool {
+	if raw == "" {
+		return nil
+	}
+
+	valid := make(map[string]bool)
+	for _, s := range strings.Split(constants.LLMDocsValidSections, ",") {
+		valid[s] = true
+	}
+
+	set := make(map[string]bool)
+
+	for _, s := range strings.Split(raw, ",") {
+		s = strings.TrimSpace(s)
+		if s == "" {
+			continue
+		}
+
+		if !valid[s] {
+			fmt.Fprintf(os.Stderr, constants.ErrLLMDocsSections, s)
+			os.Exit(1)
+		}
+
+		set[s] = true
+	}
+
+	return set
+}
+
+// wantSection returns true if the section should be included.
+func wantSection(set map[string]bool, name string) bool {
+	if set == nil {
+		return true
+	}
+
+	return set[name]
+}
+
 // buildLLMOutput returns the document in the requested format.
-func buildLLMOutput(format string) string {
+func buildLLMOutput(format string, sections map[string]bool) string {
 	if format == "json" {
 		return buildLLMJSON()
 	}
 
-	return buildLLMDocument()
+	return buildLLMDocument(sections)
 }
 
 // buildLLMJSON assembles a JSON representation of the LLM reference.
@@ -111,18 +154,42 @@ func buildLLMJSON() string {
 }
 
 // buildLLMDocument assembles the complete LLM.md content dynamically.
-func buildLLMDocument() string {
+func buildLLMDocument(sections map[string]bool) string {
 	var sb strings.Builder
 
 	writeLLMHeader(&sb)
-	writeLLMArchitecture(&sb)
-	writeLLMCommands(&sb)
-	writeLLMGlobalFlags(&sb)
-	writeLLMCodingConventions(&sb)
-	writeLLMProjectStructure(&sb)
-	writeLLMDatabase(&sb)
-	writeLLMInstallation(&sb)
-	writeLLMPatterns(&sb)
+
+	if wantSection(sections, "architecture") {
+		writeLLMArchitecture(&sb)
+	}
+
+	if wantSection(sections, "commands") {
+		writeLLMCommands(&sb)
+	}
+
+	if wantSection(sections, "flags") {
+		writeLLMGlobalFlags(&sb)
+	}
+
+	if wantSection(sections, "conventions") {
+		writeLLMCodingConventions(&sb)
+	}
+
+	if wantSection(sections, "structure") {
+		writeLLMProjectStructure(&sb)
+	}
+
+	if wantSection(sections, "database") {
+		writeLLMDatabase(&sb)
+	}
+
+	if wantSection(sections, "installation") {
+		writeLLMInstallation(&sb)
+	}
+
+	if wantSection(sections, "patterns") {
+		writeLLMPatterns(&sb)
+	}
 
 	return sb.String()
 }

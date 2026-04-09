@@ -142,8 +142,10 @@ func generatePowerShell() string {
     if ($cmd -eq "llm-docs" -or $cmd -eq "ld") {
         if ($prev -eq "--format") {
             $items = @("markdown", "json")
+        } elseif ($prev -eq "--sections") {
+            $items = @("commands", "architecture", "flags", "conventions", "structure", "database", "installation", "patterns")
         } else {
-            $items = @("--stdout", "--format")
+            $items = @("--stdout", "--format", "--sections")
         }
         $items | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }

@@ -75,8 +75,10 @@ func generateBash() string {
         llm-docs|ld)
             if [[ "$prev" == "--format" ]]; then
                 COMPREPLY=($(compgen -W "markdown json" -- "$cur"))
+            elif [[ "$prev" == "--sections" ]]; then
+                COMPREPLY=($(compgen -W "commands architecture flags conventions structure database installation patterns" -- "$cur"))
             else
-                COMPREPLY=($(compgen -W "--stdout --format" -- "$cur"))
+                COMPREPLY=($(compgen -W "--stdout --format --sections" -- "$cur"))
             fi
             ;;
         help)

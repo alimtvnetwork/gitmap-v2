@@ -101,8 +101,11 @@ _gitmap() {
             if [[ "${words[CURRENT-1]}" == "--format" ]]; then
                 local -a formats=("markdown" "json")
                 _describe 'format' formats
+            elif [[ "${words[CURRENT-1]}" == "--sections" ]]; then
+                local -a sects=("commands" "architecture" "flags" "conventions" "structure" "database" "installation" "patterns")
+                _describe 'section' sects
             else
-                local -a flags=("--stdout" "--format")
+                local -a flags=("--stdout" "--format" "--sections")
                 _describe 'flag' flags
             fi
             ;;
