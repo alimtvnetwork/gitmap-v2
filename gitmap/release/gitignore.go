@@ -51,5 +51,7 @@ func EnsureGitignore() {
 	}
 
 	content += strings.Join(toAdd, "\n") + "\n"
-	_ = os.WriteFile(path, []byte(content), 0o644)
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not write .gitignore at %s: %v\n", path, err)
+	}
 }

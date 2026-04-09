@@ -54,7 +54,10 @@ func validateExistingBranch(branchName string, v Version) error {
 
 // completeBranchRelease checks out the branch and runs tag/push/release.
 func completeBranchRelease(v Version, branchName, assetsPath, notes string, draft, noCommit, yes bool) error {
-	originalBranch, _ := CurrentBranchName()
+	originalBranch, branchErr := CurrentBranchName()
+	if branchErr != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine current branch: %v\n", branchErr)
+	}
 
 	err := CheckoutBranch(branchName)
 	if err != nil {
