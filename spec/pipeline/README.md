@@ -16,6 +16,7 @@ Generic, portable documentation for the project's CI/CD pipeline architecture. T
 | [06-version-and-help.md](./06-version-and-help.md) | Version display, help system, command-level docs, CI version verification |
 | [07-environment-variable-setup.md](./07-environment-variable-setup.md) | `env` command: persistent variables, PATH registration, auto-home, drive setup |
 | [08-terminal-output-standards.md](./08-terminal-output-standards.md) | Output formatting conventions: icons, tables, progress, errors, CI summaries |
+| [09-binary-icon-branding.md](./09-binary-icon-branding.md) | Windows binary icon embedding via `go-winres`: icon, manifest, version info |
 
 ---
 
