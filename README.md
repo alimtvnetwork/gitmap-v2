@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="gitmap/assets/icon.png" alt="GitMap icon" width="80" height="80">
+
 # GitMap
 
 **Git repository scanner, manager, and navigator CLI**
