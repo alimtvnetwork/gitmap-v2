@@ -98,6 +98,11 @@ func printVersionEntriesJSON(entries []versionEntry) {
 		out[i] = lvJSONEntry{Version: e.Version.String(), Source: e.Source, Changelog: e.Notes}
 	}
 
-	data, _ := json.MarshalIndent(out, "", constants.JSONIndent)
+	data, err := json.MarshalIndent(out, "", constants.JSONIndent)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal versions to JSON: %v\n", err)
+
+		return
+	}
 	fmt.Println(string(data))
 }
