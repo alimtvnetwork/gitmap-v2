@@ -18,6 +18,7 @@ ld
 | Flag | Default | Description |
 |------|---------|-------------|
 | --stdout | false | Print to stdout instead of writing LLM.md file |
+| --format | markdown | Output format: markdown or json |
 
 ## Prerequisites
 

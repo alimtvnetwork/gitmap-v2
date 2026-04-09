@@ -73,7 +73,11 @@ func generateBash() string {
             COMPREPLY=($(compgen -W "v++ --delete --keep --no-desktop --ssh-key --verbose" -- "$cur"))
             ;;
         llm-docs|ld)
-            COMPREPLY=($(compgen -W "--stdout" -- "$cur"))
+            if [[ "$prev" == "--format" ]]; then
+                COMPREPLY=($(compgen -W "markdown json" -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "--stdout --format" -- "$cur"))
+            fi
             ;;
         help)
             if [[ "$prev" == "--compact" ]]; then

@@ -12,4 +12,7 @@ const (
 const (
 	FlagLLMDocsStdout     = "stdout"
 	FlagDescLLMDocsStdout = "Print to stdout instead of writing LLM.md file"
+	FlagLLMDocsFormat     = "format"
+	FlagDescLLMDocsFormat = "Output format: markdown (default) or json"
+	ErrLLMDocsFormat      = "  ✗ Unknown format %q — use markdown or json\n"
 )
