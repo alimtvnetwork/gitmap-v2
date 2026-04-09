@@ -129,7 +129,9 @@ func writeCSVRow(w *csv.Writer, item gitutil.RemoteBranchInfo, remote string) {
 		gitutil.FormatDisplayDate(item.CommitDate),
 		item.Subject,
 		item.RemoteRef,
-	})
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to write CSV row: %v\n", err)
+	}
 }
 
 // printLatestTerminal outputs the latest branch result as text.
