@@ -336,7 +336,7 @@ var InstallToolCategories = map[string][]string{
 		ToolPython, ToolGo, ToolGit, ToolGitLFS, ToolGHCLI,
 		ToolGitHubDesktop, ToolCPP, ToolPHP, ToolPowerShell,
 		ToolChocolatey, ToolWinget, ToolNpp, ToolNppSettings, ToolNppInstall,
-		ToolScripts,
+		ToolVSCodeSync, ToolOBSSync, ToolScripts,
 	},
 	ToolCategoryDatabase: {
 		ToolMySQL, ToolMariaDB, ToolPostgreSQL, ToolSQLite,
