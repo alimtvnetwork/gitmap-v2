@@ -139,6 +139,13 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "llm-docs" -or $cmd -eq "ld") {
+        $items = @("--stdout")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     if ($prev -eq "-A" -or $prev -eq "--alias") {
         gitmap completion --list-aliases | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
