@@ -301,6 +301,27 @@ install_binary() {
 
 # ── Add to PATH ────────────────────────────────────────────────────
 
+# add_path_to_profile writes an export line to a single profile file (idempotent).
+# Returns 0 if written, 1 if already present.
+add_path_to_profile() {
+    local dir="$1" profile_file="$2" is_fish="$3"
+
+    local path_line
+    if [ "${is_fish}" = true ]; then
+        path_line="fish_add_path ${dir}"
+    else
+        path_line="export PATH=\"\$PATH:${dir}\""
+    fi
+
+    if [ -f "${profile_file}" ] && grep -qF "${dir}" "${profile_file}"; then
+        return 1
+    fi
+
+    mkdir -p "$(dirname "${profile_file}")"
+    printf '\n# Added by gitmap installer\n%s\n' "${path_line}" >> "${profile_file}"
+    return 0
+}
+
 add_to_path() {
     local dir="$1"
     local has_session_path=false
@@ -311,67 +332,103 @@ add_to_path() {
             ;;
     esac
 
-    # Detect shell and profile file
-    local shell_name profile_file=""
+    # Detect primary shell
+    local shell_name
     shell_name="$(basename "${SHELL:-/bin/bash}")"
-
-    case "${shell_name}" in
-        zsh)
-            if [ -f "${HOME}/.zshrc" ]; then
-                profile_file="${HOME}/.zshrc"
-            else
-                profile_file="${HOME}/.zprofile"
-            fi
-            ;;
-        bash)
-            if [ -f "${HOME}/.bashrc" ]; then
-                profile_file="${HOME}/.bashrc"
-            elif [ -f "${HOME}/.bash_profile" ]; then
-                profile_file="${HOME}/.bash_profile"
-            else
-                profile_file="${HOME}/.profile"
-            fi
-            ;;
-        fish)
-            profile_file="${HOME}/.config/fish/config.fish"
-            ;;
-        *)
-            profile_file="${HOME}/.profile"
-            ;;
-    esac
-
     PATH_SHELL="${shell_name}"
-    PATH_TARGET="${profile_file}"
 
-    local path_line
-    if [ "${shell_name}" = "fish" ]; then
-        path_line="fish_add_path ${dir}"
-        PATH_RELOAD="source ${profile_file}"
-    else
-        path_line="export PATH=\"\$PATH:${dir}\""
-        PATH_RELOAD=". ${profile_file}"
+    local primary_profile=""
+    local profiles_written=""
+    local profiles_skipped=""
+
+    # ── Write to all relevant POSIX/bash/zsh profiles ──────────────
+    # This ensures gitmap is available regardless of which shell the user opens.
+
+    # zsh profiles (both, to cover login + interactive shells)
+    if [ "${shell_name}" = "zsh" ] || [ -f "${HOME}/.zshrc" ] || [ -f "${HOME}/.zprofile" ]; then
+        # .zshrc — interactive shells (most terminal emulators)
+        if add_path_to_profile "${dir}" "${HOME}/.zshrc" false; then
+            profiles_written="${profiles_written} ~/.zshrc"
+        else
+            profiles_skipped="${profiles_skipped} ~/.zshrc"
+        fi
+        # .zprofile — login shells (macOS Terminal.app)
+        if add_path_to_profile "${dir}" "${HOME}/.zprofile" false; then
+            profiles_written="${profiles_written} ~/.zprofile"
+        else
+            profiles_skipped="${profiles_skipped} ~/.zprofile"
+        fi
     fi
 
-    PATH_LINE="${path_line}"
+    # bash profiles
+    if [ "${shell_name}" = "bash" ] || [ -f "${HOME}/.bashrc" ] || [ -f "${HOME}/.bash_profile" ]; then
+        if add_path_to_profile "${dir}" "${HOME}/.bashrc" false; then
+            profiles_written="${profiles_written} ~/.bashrc"
+        else
+            profiles_skipped="${profiles_skipped} ~/.bashrc"
+        fi
+        if [ -f "${HOME}/.bash_profile" ]; then
+            if add_path_to_profile "${dir}" "${HOME}/.bash_profile" false; then
+                profiles_written="${profiles_written} ~/.bash_profile"
+            else
+                profiles_skipped="${profiles_skipped} ~/.bash_profile"
+            fi
+        fi
+    fi
 
-    # Check if already added to profile
-    if [ -f "${profile_file}" ] && grep -qF "${dir}" "${profile_file}"; then
-        PATH_STATUS="already present"
-        step "PATH entry already in ${profile_file}"
+    # POSIX ~/.profile — catch-all for sh and other POSIX shells
+    if add_path_to_profile "${dir}" "${HOME}/.profile" false; then
+        profiles_written="${profiles_written} ~/.profile"
     else
-        mkdir -p "$(dirname "${profile_file}")"
-        printf '\n# Added by gitmap installer\n%s\n' "${path_line}" >> "${profile_file}"
+        profiles_skipped="${profiles_skipped} ~/.profile"
+    fi
+
+    # fish (only if fish is installed or is the default shell)
+    if [ "${shell_name}" = "fish" ] || command -v fish >/dev/null 2>&1; then
+        local fish_config="${HOME}/.config/fish/config.fish"
+        if add_path_to_profile "${dir}" "${fish_config}" true; then
+            profiles_written="${profiles_written} ~/.config/fish/config.fish"
+        else
+            profiles_skipped="${profiles_skipped} ~/.config/fish/config.fish"
+        fi
+    fi
+
+    # Determine primary profile for reload instruction
+    case "${shell_name}" in
+        zsh)    primary_profile="${HOME}/.zshrc" ;;
+        bash)   primary_profile="${HOME}/.bashrc" ;;
+        fish)   primary_profile="${HOME}/.config/fish/config.fish" ;;
+        *)      primary_profile="${HOME}/.profile" ;;
+    esac
+
+    PATH_TARGET="${primary_profile}"
+
+    if [ "${shell_name}" = "fish" ]; then
+        PATH_LINE="fish_add_path ${dir}"
+        PATH_RELOAD="source ${primary_profile}"
+    else
+        PATH_LINE="export PATH=\"\$PATH:${dir}\""
+        PATH_RELOAD=". ${primary_profile}"
+    fi
+
+    # Report what was written
+    if [ -n "${profiles_written}" ]; then
+        ok "Added to PATH in:${profiles_written}"
         PATH_STATUS="added"
-        ok "Added to PATH in ${profile_file}"
+    else
+        step "PATH already configured in all profiles"
+        PATH_STATUS="already present"
+    fi
+
+    if [ -n "${profiles_skipped}" ]; then
+        step "Already present in:${profiles_skipped}"
     fi
 
     if [ "${has_session_path}" = true ]; then
-        step "Already in PATH."
-
         return
     fi
 
-    # Update current session
+    # Update current session (only effective when script is sourced, not piped)
     export PATH="${PATH}:${dir}"
 }
 
