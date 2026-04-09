@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"archive/zip"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -23,6 +25,19 @@ func runHelpDashboard(args []string) {
 	binaryDir := resolveBinaryDir()
 	docsDir := filepath.Join(binaryDir, constants.HDDocsDir)
 
+	// Auto-extract docs-site.zip if docs-site/ directory doesn't exist
+	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
+		zipPath := filepath.Join(binaryDir, constants.DocsSiteArchive)
+		if _, zipErr := os.Stat(zipPath); zipErr == nil {
+			fmt.Printf("  Extracting %s...\n", constants.DocsSiteArchive)
+			if extractErr := extractDocsSiteZip(zipPath, binaryDir); extractErr != nil {
+				fmt.Fprintf(os.Stderr, "  ✗ Failed to extract docs-site.zip: %v\n", extractErr)
+				os.Exit(1)
+			}
+			fmt.Printf("  ✓ Docs site extracted to %s\n", docsDir)
+		}
+	}
+
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, constants.ErrHDNoDocsDir, docsDir)
 		os.Exit(1)
@@ -36,6 +51,51 @@ func runHelpDashboard(args []string) {
 		fmt.Print(constants.MsgHDNoDistFallback)
 		serveDev(docsDir, port)
 	}
+}
+
+// extractDocsSiteZip extracts docs-site.zip into the target directory.
+func extractDocsSiteZip(zipPath, targetDir string) error {
+	r, err := zip.OpenReader(zipPath)
+	if err != nil {
+		return fmt.Errorf("open zip: %w", err)
+	}
+	defer r.Close()
+
+	for _, f := range r.File {
+		destPath := filepath.Join(targetDir, f.Name)
+
+		if f.FileInfo().IsDir() {
+			if mkErr := os.MkdirAll(destPath, constants.DirPermission); mkErr != nil {
+				return fmt.Errorf("create dir %s: %w", destPath, mkErr)
+			}
+			continue
+		}
+
+		if mkErr := os.MkdirAll(filepath.Dir(destPath), constants.DirPermission); mkErr != nil {
+			return fmt.Errorf("create parent dir: %w", mkErr)
+		}
+
+		rc, openErr := f.Open()
+		if openErr != nil {
+			return fmt.Errorf("open entry %s: %w", f.Name, openErr)
+		}
+
+		outFile, createErr := os.Create(destPath)
+		if createErr != nil {
+			rc.Close()
+			return fmt.Errorf("create file %s: %w", destPath, createErr)
+		}
+
+		_, copyErr := io.Copy(outFile, rc)
+		outFile.Close()
+		rc.Close()
+
+		if copyErr != nil {
+			return fmt.Errorf("write file %s: %w", destPath, copyErr)
+		}
+	}
+
+	return nil
 }
 
 // parseHelpDashboardFlags parses the --port flag.
