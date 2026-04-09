@@ -144,8 +144,17 @@ func extractOBSSettingsZip(zipPath, target string) {
 	scenesDir := filepath.Join(target, "basic", "scenes")
 	profilesDir := filepath.Join(target, "basic", "profiles")
 
-	os.MkdirAll(scenesDir, 0o755)
-	os.MkdirAll(profilesDir, 0o755)
+	if err := os.MkdirAll(scenesDir, 0o755); err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to create scenes directory: %v\n", err)
+
+		return
+	}
+
+	if err := os.MkdirAll(profilesDir, 0o755); err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to create profiles directory: %v\n", err)
+
+		return
+	}
 
 	entries, err := os.ReadDir(tmpDir)
 	if err != nil {
@@ -205,12 +214,16 @@ func extractOBSZipEntry(target string, file *zip.File) {
 	}
 
 	if file.FileInfo().IsDir() {
-		os.MkdirAll(destPath, 0o755)
+		if mkErr := os.MkdirAll(destPath, 0o755); mkErr != nil {
+			return
+		}
 
 		return
 	}
 
-	os.MkdirAll(filepath.Dir(destPath), 0o755)
+	if mkErr := os.MkdirAll(filepath.Dir(destPath), 0o755); mkErr != nil {
+		return
+	}
 
 	src, err := file.Open()
 	if err != nil {
@@ -224,7 +237,9 @@ func extractOBSZipEntry(target string, file *zip.File) {
 	}
 	defer dst.Close()
 
-	io.Copy(dst, io.LimitReader(src, 50*1024*1024)) // 50 MB limit for OBS files
+	if _, copyErr := io.Copy(dst, io.LimitReader(src, 50*1024*1024)); copyErr != nil {
+		return
+	}
 }
 
 // copyDirRecursive copies all files from src to dst recursively.
