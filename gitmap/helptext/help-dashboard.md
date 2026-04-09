@@ -19,13 +19,15 @@ gitmap help-dashboard [flags]
 ## How It Works
 
 1. Locates the `docs-site/` directory relative to the gitmap binary
-2. If a pre-built `dist/` folder exists, serves it with a built-in HTTP server
-3. If no `dist/` found, falls back to `npm install && npm run dev`
-4. Opens the dashboard in your default browser automatically
+2. If `docs-site/` is missing but `docs-site.zip` exists, extracts it automatically
+3. If a pre-built `dist/` folder exists, serves it with a built-in HTTP server
+4. If no `dist/` found, falls back to `npm install && npm run dev`
+5. Opens the dashboard in your default browser automatically
 
 ## Prerequisites
 
 - **Static mode**: No dependencies — serves pre-built files directly
+- **Auto-extract mode**: `docs-site.zip` is downloaded by the installer and extracted on first run
 - **Dev mode (fallback)**: Requires Node.js and npm on PATH
 
 ## Examples
