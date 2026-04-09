@@ -72,6 +72,9 @@ func generateBash() string {
         clone-next|cn)
             COMPREPLY=($(compgen -W "v++ --delete --keep --no-desktop --ssh-key --verbose" -- "$cur"))
             ;;
+        llm-docs|ld)
+            COMPREPLY=($(compgen -W "--stdout" -- "$cur"))
+            ;;
         help)
             if [[ "$prev" == "--compact" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-help-groups)" -- "$cur"))

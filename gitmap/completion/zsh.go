@@ -97,6 +97,10 @@ _gitmap() {
             local -a hints=("v++" "--delete" "--keep" "--no-desktop" "--ssh-key" "--verbose")
             _describe 'arg' hints
             ;;
+        llm-docs|ld)
+            local -a flags=("--stdout")
+            _describe 'flag' flags
+            ;;
         help)
             if [[ "${words[CURRENT-1]}" == "--compact" ]]; then
                 local -a hgroups=($(gitmap completion --list-help-groups))
