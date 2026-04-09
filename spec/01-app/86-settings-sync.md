@@ -10,13 +10,14 @@ machine.
 
 ## Supported Tools
 
-| Command                        | Alias | Source directory           | Description                          |
-|--------------------------------|-------|---------------------------|--------------------------------------|
-| `gitmap install npp`           | `in`  | `settings/01 - notepad++` | Install Notepad++ **and** sync settings |
-| `gitmap install npp-settings`  | `in`  | `settings/01 - notepad++` | Sync Notepad++ settings only         |
-| `gitmap install install-npp`   | `in`  | --                        | Install Notepad++ only (no settings) |
-| `gitmap install vscode-settings` | `in` | `settings/02 - vscode`   | Sync VS Code settings and extensions |
-| `gitmap install obs-settings`  | `in`  | `settings/03 - obs`       | Sync OBS Studio profiles and scenes  |
+| Command                        | Alias | Source directory              | Description                          |
+|--------------------------------|-------|------------------------------|--------------------------------------|
+| `gitmap install npp`           | `in`  | `settings/01 - notepad++`    | Install Notepad++ **and** sync settings |
+| `gitmap install npp-settings`  | `in`  | `settings/01 - notepad++`    | Sync Notepad++ settings only         |
+| `gitmap install install-npp`   | `in`  | --                           | Install Notepad++ only (no settings) |
+| `gitmap install vscode-settings` | `in` | `settings/02 - vscode`      | Sync VS Code settings and extensions |
+| `gitmap install obs-settings`  | `in`  | `settings/03 - obs`          | Sync OBS Studio profiles and scenes  |
+| `gitmap install wt-settings`   | `in`  | `settings/04 - windows-terminal` | Sync Windows Terminal settings.json |
 
 ## Settings Directory Layout
 
@@ -31,12 +32,14 @@ settings/
     extensions.txt                # one extension ID per line
     readme.txt
   03 - obs/
-    basic/                        # OBS profiles
-    scenes/                       # OBS scene collections
+    25 - Personal 15 Jul 2025 Malaysia.zip   # bundled OBS settings archive
+    readme.txt
+  04 - windows-terminal/
+    settings.json                 # Windows Terminal settings
     readme.txt
 ```
 
-Each subfolder is numbered (`01`, `02`, `03`) for consistent ordering.
+Each subfolder is numbered (`01`, `02`, `03`, `04`) for consistent ordering.
 A `readme.txt` in each folder documents the contents and target paths.
 
 ## Target Paths
@@ -77,8 +80,62 @@ Lines starting with `#` and blank lines are skipped.
 | macOS    | `~/Library/Application Support/obs-studio`       |
 | Linux    | `~/.config/obs-studio`                           |
 
-The entire source directory is copied recursively, preserving the folder
-structure (profiles, scenes, plugins, etc.).
+#### Zip extraction and routing
+
+The OBS sync command looks for a `.zip` file in the source directory. When
+found, it follows a 3-step extraction process:
+
+1. **Extract** the `.zip` to a temporary directory.
+2. **Route `.json` files** to `<target>/basic/scenes/` -- these are OBS
+   scene collections. OBS discovers scene files from this directory on
+   startup.
+3. **Route directories** to `<target>/basic/profiles/` -- these are OBS
+   profile folders (each containing `basic.ini`, `streamEncoder.json`,
+   etc.). OBS discovers profiles from this directory on startup.
+4. **Clean up** the temporary extraction directory.
+
+If no `.zip` file is found, the sync falls back to a recursive directory
+copy from the source folder to the target.
+
+The extraction uses `archive/zip` with path traversal protection and a
+50 MB per-file size limit (OBS scene files and profile configs can be
+larger than typical editor settings).
+
+#### Example
+
+Given a zip containing:
+
+```
+My Stream Profile/
+  basic.ini
+  streamEncoder.json
+My Scenes.json
+```
+
+After `gitmap install obs-settings`:
+
+```
+%APPDATA%\obs-studio\
+  basic\
+    profiles\
+      My Stream Profile\
+        basic.ini
+        streamEncoder.json
+    scenes\
+      My Scenes.json
+```
+
+### Windows Terminal (`wt-settings`)
+
+| Platform | Target                                                          |
+|----------|-----------------------------------------------------------------|
+| Windows  | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_*\LocalState` |
+| Others   | Not supported (Windows-only tool)                               |
+
+The sync copies `settings.json` (and any additional files like theme
+fragments) to the Windows Terminal LocalState directory. The target
+directory is auto-discovered by scanning `%LOCALAPPDATA%\Packages\` for
+a folder matching `Microsoft.WindowsTerminal_*`.
 
 ## Path Resolution
 
@@ -102,43 +159,51 @@ are treated as the canonical source.
 
 ### Cross-platform guards
 
-- NPP settings sync exits early with a clear error on non-Windows platforms.
+- NPP and Windows Terminal settings sync exit early with a clear error on
+  non-Windows platforms.
 - VS Code and OBS settings sync work on Windows, macOS, and Linux.
 
 ### Error handling
 
 - Missing source directory: prints the searched paths and exits.
-- Missing `APPDATA` (Windows): prints a clear error and exits.
+- Missing `APPDATA` / `LOCALAPPDATA` (Windows): prints a clear error and exits.
 - Individual file copy failures: logged per-file, does not abort the batch.
 - Missing `code` CLI (VS Code extensions): skips extension install with a
   warning, settings files are still synced.
+- Windows Terminal package not found: prints error if
+  `Microsoft.WindowsTerminal_*` folder does not exist.
 
-### Zip extraction (NPP)
+### Zip extraction
 
-- Uses `archive/zip` with path traversal protection.
-- Limits extracted file size to 10 MB per file.
-- Falls back to loose-file copy if the zip is missing or corrupt.
+| Tool | Max file size | Traversal protection | Fallback          |
+|------|--------------|----------------------|-------------------|
+| NPP  | 10 MB        | Yes                  | Loose-file copy   |
+| OBS  | 50 MB        | Yes                  | Recursive dir copy |
 
 ## Implementation
 
-| File                          | Purpose                                    |
-|-------------------------------|--------------------------------------------|
-| `gitmap/cmd/installnpp.go`   | NPP settings sync + `resolveSettingsPath`  |
-| `gitmap/cmd/installnppextract.go` | Zip extraction logic                  |
-| `gitmap/cmd/installvscode.go`| VS Code settings and extension sync        |
-| `gitmap/cmd/installobs.go`   | OBS recursive directory copy               |
-| `gitmap/cmd/install.go`      | Command routing (`executeInstall`)         |
-| `gitmap/constants/constants_install.go` | Tool names and messages          |
+| File                               | Purpose                                    |
+|------------------------------------|--------------------------------------------|
+| `gitmap/cmd/installnpp.go`        | NPP settings sync + `resolveSettingsPath`  |
+| `gitmap/cmd/installnppextract.go` | NPP zip extraction logic                   |
+| `gitmap/cmd/installvscode.go`     | VS Code settings and extension sync        |
+| `gitmap/cmd/installobs.go`        | OBS zip extraction + scene/profile routing |
+| `gitmap/cmd/installwt.go`         | Windows Terminal settings sync             |
+| `gitmap/cmd/install.go`           | Command routing (`executeInstall`)         |
+| `gitmap/constants/constants_install.go` | Tool names and messages              |
 
 ## Constraints
 
 1. Settings source files must be committed to the repository under
    `settings/`. They are not downloaded at runtime.
 2. No merge or diff -- sync always overwrites the target.
-3. NPP is Windows-only. VS Code and OBS are cross-platform.
+3. NPP and Windows Terminal are Windows-only. VS Code and OBS are
+   cross-platform.
 4. Extension installs require `code` CLI in PATH.
 5. The `readme.txt` in each settings subfolder is never copied to the target.
-6. Zip extraction enforces a 10 MB per-file limit and rejects path traversal.
+6. NPP zip extraction enforces a 10 MB per-file limit; OBS enforces 50 MB.
+7. OBS `.json` files are routed to `basic/scenes/`; directories are routed
+   to `basic/profiles/`.
 
 ## Related
 
