@@ -628,7 +628,7 @@ npm install && npm run dev     # opens at http://localhost:5173
 
 ### Md. Alim Ul Karim
 
-**Creator & Lead Architect** | Chief Software Engineer, Riseup Asia LLC
+**[Creator & Lead Architect](https://alimkarim.com)** | Chief Software Engineer, [Riseup Asia LLC](https://riseup-asia.com)
 
 </div>
 
