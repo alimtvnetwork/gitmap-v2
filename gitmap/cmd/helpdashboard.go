@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"archive/zip"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -106,7 +107,7 @@ func extractDocsSiteZip(zipPath, targetDir string) error {
 		outFile.Close()
 		rc.Close()
 
-		if copyErr != nil && copyErr != io.EOF {
+		if copyErr != nil && !errors.Is(copyErr, io.EOF) {
 			return fmt.Errorf("write file %s: %w", absDestPath, copyErr)
 		}
 
