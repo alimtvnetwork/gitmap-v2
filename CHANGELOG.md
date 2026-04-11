@@ -1,10 +1,15 @@
 # Changelog
 
-## v2.69.1 — (2026-04-09)
+## v2.69.1 — (2026-04-11)
 
-### Improvements
+### Fixed
 
-- *(pending)*
+- Fixed `errorlint` violation in `cmd/helpdashboard.go`: replaced direct `!= io.EOF` comparison with `errors.Is` to handle wrapped errors correctly.
+
+### Changed
+
+- Linked "Riseup Asia LLC" in the author Role row to [riseup-asia.com](https://riseup-asia.com).
+- Changed Riseup Asia subheading from centered to left-aligned and linked it to [riseup-asia.com](https://riseup-asia.com).
 
 ---
 
