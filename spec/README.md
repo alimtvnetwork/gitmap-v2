@@ -75,7 +75,7 @@ Feature specs, command designs, and refactor documentation for the gitmap CLI.
 | 83 | [future-features.md](01-app/82-future-features.md) | Future features (pending) |
 | 84 | [chocolatey-package.md](01-app/84-chocolatey-package.md) | Chocolatey package distribution (research) |
 | 85 | [winget-package.md](01-app/85-winget-package.md) | Winget package distribution (research) |
-| 86 | [author-section.md](01-app/86-author-section.md) | Author section specification |
+| 86 | [../86-author-section.md](../86-author-section.md) | Author section specification |
 
 ---
 
