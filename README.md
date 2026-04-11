@@ -628,13 +628,13 @@ npm install && npm run dev     # opens at http://localhost:5173
 
 ### [Md. Alim Ul Karim](https://www.google.com/search?q=alim+ul+karim)
 
-**[Creator & Lead Architect](https://alimkarim.com)** | Chief Software Engineer, [Riseup Asia LLC](https://riseup-asia.com)
+**[Creator & Lead Architect](https://alimkarim.com)** | [Chief Software Engineer](https://www.google.com/search?q=alim+ul+karim), [Riseup Asia LLC](https://riseup-asia.com)
 
 </div>
 
 A system architect with **20+ years** of professional software engineering experience across enterprise, fintech, and distributed systems. His technology stack spans **.NET/C# (18+ years)**, **JavaScript (10+ years)**, **TypeScript (6+ years)**, and **Golang (4+ years)**.
 
-Recognized as a **top 1% talent at Crossover** and one of the top software architects globally. He is also the **CEO of Riseup Asia LLC** and maintains an active presence on **Stack Overflow** (2,452+ reputation, member since 2010) and **LinkedIn** (12,500+ followers).
+Recognized as a **top 1% talent at Crossover** and one of the top software architects globally. He is also the **Chief Software Engineer of [Riseup Asia LLC](https://riseup-asia.com)** and maintains an active presence on **Stack Overflow** (2,452+ reputation, member since 2010) and **LinkedIn** (12,500+ followers).
 
 |  |  |
 |---|---|
