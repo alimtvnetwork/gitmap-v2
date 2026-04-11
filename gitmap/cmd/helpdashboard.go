@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"archive/zip"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
