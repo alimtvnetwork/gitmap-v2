@@ -645,11 +645,7 @@ Recognized as a **top 1% talent at Crossover** and one of the top software archi
 
 ### Riseup Asia LLC
 
-<div align="center">
-
-Top Leading Software Company in WY (2026)
-
-</div>
+[Top Leading Software Company in WY (2026)](https://riseup-asia.com)
 
 | | |
 |---|---|
