@@ -626,7 +626,7 @@ npm install && npm run dev     # opens at http://localhost:5173
 
 <div align="center">
 
-### Md. Alim Ul Karim
+### [Md. Alim Ul Karim](https://www.google.com/search?q=alim+ul+karim)
 
 **[Creator & Lead Architect](https://alimkarim.com)** | Chief Software Engineer, [Riseup Asia LLC](https://riseup-asia.com)
 
