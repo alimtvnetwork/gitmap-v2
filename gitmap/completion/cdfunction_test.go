@@ -88,3 +88,44 @@ func TestAppendCDFunctionAppendsManagedWrapperAfterLegacyMarker(t *testing.T) {
 		t.Fatal("expected exactly one managed wrapper marker")
 	}
 }
+
+func TestAppendCDFunctionCreatesProfileDir(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "Documents", "WindowsPowerShell", "profile.ps1")
+
+	err := appendCDFunction(constants.CDFuncPowerShell, path)
+	if err != nil {
+		t.Fatalf("appendCDFunction failed: %v", err)
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read profile failed: %v", err)
+	}
+
+	if !strings.Contains(string(data), constants.CDFuncMarker) {
+		t.Fatal("expected managed wrapper marker in created profile")
+	}
+}
+
+func TestAppendCDFunctionsWritesToMultipleProfiles(t *testing.T) {
+	base := t.TempDir()
+	paths := []string{
+		filepath.Join(base, "Documents", "PowerShell", "profile.ps1"),
+		filepath.Join(base, "Documents", "WindowsPowerShell", "profile.ps1"),
+	}
+
+	err := appendCDFunctions(constants.CDFuncPowerShell, paths)
+	if err != nil {
+		t.Fatalf("appendCDFunctions failed: %v", err)
+	}
+
+	for _, path := range paths {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatalf("read profile failed for %s: %v", path, err)
+		}
+		if !strings.Contains(string(data), constants.CDFuncMarker) {
+			t.Fatalf("expected managed wrapper marker in %s", path)
+		}
+	}
+}
