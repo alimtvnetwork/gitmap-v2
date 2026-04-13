@@ -8,8 +8,8 @@ const (
 
 // CD subcommands.
 const (
-	CmdCDRepos      = "repos"
-	CmdCDSetDefault = "set-default"
+	CmdCDRepos        = "repos"
+	CmdCDSetDefault   = "set-default"
 	CmdCDClearDefault = "clear-default"
 )
 
@@ -43,36 +43,117 @@ const (
 )
 
 // CD shell wrapper functions — installed by setup/completion.
-const CDFuncMarker = "# gitmap cd wrapper"
+const CDFuncMarker = "# gitmap shell wrapper v2"
 
-// CDFuncBash is the gcd wrapper for Bash.
+// CDFuncBash installs gitmap and gcd wrappers for Bash.
 const CDFuncBash = `gcd() {
-  local dest
-  dest="$(gitmap cd "$@")"
-  if [ -n "$dest" ] && [ -d "$dest" ]; then
-    cd "$dest" || return
+  local dest status
+  dest="$(command gitmap cd "$@")"
+  status=$?
+  if [ $status -ne 0 ]; then
+    return $status
   fi
+  if [ -n "$dest" ] && [ -d "$dest" ]; then
+    builtin cd "$dest" || return $?
+  fi
+}
+
+gitmap() {
+  if [ "$1" = "cd" ] || [ "$1" = "go" ]; then
+    local dest status
+    dest="$(command gitmap "$@")"
+    status=$?
+    if [ $status -ne 0 ]; then
+      return $status
+    fi
+    if [ -n "$dest" ] && [ -d "$dest" ]; then
+      builtin cd "$dest" || return $?
+    fi
+    return 0
+  fi
+  command gitmap "$@"
 }`
 
-// CDFuncZsh is the gcd wrapper for Zsh.
+// CDFuncZsh installs gitmap and gcd wrappers for Zsh.
 const CDFuncZsh = `gcd() {
   local dest
-  dest="$(gitmap cd "$@")"
-  if [[ -n "$dest" ]] && [[ -d "$dest" ]]; then
-    cd "$dest" || return
+  local status
+  dest="$(command gitmap cd "$@")"
+  status=$?
+  if (( status != 0 )); then
+    return $status
   fi
+  if [[ -n "$dest" && -d "$dest" ]]; then
+    builtin cd "$dest" || return $?
+  fi
+}
+
+gitmap() {
+  if [[ "$1" == "cd" || "$1" == "go" ]]; then
+    local dest
+    local status
+    dest="$(command gitmap "$@")"
+    status=$?
+    if (( status != 0 )); then
+      return $status
+    fi
+    if [[ -n "$dest" && -d "$dest" ]]; then
+      builtin cd "$dest" || return $?
+    fi
+    return 0
+  fi
+  command gitmap "$@"
 }`
 
-// CDFuncPowerShell is the gcd wrapper for PowerShell.
+// CDFuncPowerShell installs gitmap and gcd wrappers for PowerShell.
 const CDFuncPowerShell = `function gcd {
-  $dest = gitmap cd @args
-  if ($dest -and (Test-Path $dest)) {
-    Set-Location $dest
+  $real = Get-GitmapCommand
+  if (-not $real) {
+    Write-Error "gitmap executable not found"
+    return
   }
+  $dest = & $real cd @args
+  if ($LASTEXITCODE -ne 0) {
+    return
+  }
+  if ($dest -and (Test-Path -LiteralPath $dest)) {
+    Set-Location -LiteralPath $dest
+  }
+}
+
+function Get-GitmapCommand {
+  $cmd = Get-Command gitmap.exe -CommandType Application -ErrorAction SilentlyContinue
+  if ($cmd) {
+    return $cmd.Source
+  }
+  $cmd = Get-Command gitmap -CommandType Application -ErrorAction SilentlyContinue
+  if ($cmd) {
+    return $cmd.Source
+  }
+  return $null
+}
+
+function gitmap {
+  $real = Get-GitmapCommand
+  if (-not $real) {
+    Write-Error "gitmap executable not found"
+    return
+  }
+  if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
+    $dest = & $real @args
+    if ($LASTEXITCODE -ne 0) {
+      return
+    }
+    if ($dest -and (Test-Path -LiteralPath $dest)) {
+      Set-Location -LiteralPath $dest
+    }
+    return
+  }
+  & $real @args
 }`
 
 // CD function messages.
 const (
-	MsgCDFuncInstalled = "Installed 'gcd' shell function — restart your terminal or source your profile\n"
-	MsgCDFuncAlready   = "Shell function 'gcd' already installed\n"
+	MsgCDFuncInstalled = "Installed 'gitmap'/'gcd' shell wrappers — restart your terminal or source your profile\n"
+	MsgCDFuncAlready   = "Shell wrappers for 'gitmap'/'gcd' already installed\n"
 )
