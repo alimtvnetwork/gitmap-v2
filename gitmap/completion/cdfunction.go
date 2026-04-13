@@ -16,9 +16,7 @@ func InstallCDFunction(shell string) error {
 		return fmt.Errorf(constants.ErrCompUnknownShell, shell)
 	}
 
-	profilePath := cdProfilePath(shell)
-
-	return appendCDFunction(snippet, profilePath)
+	return appendCDFunctions(snippet, cdProfilePaths(shell))
 }
 
 // cdSnippet returns the gcd function body for the given shell.
@@ -37,21 +35,45 @@ func cdSnippet(shell string) string {
 
 // cdProfilePath returns the profile path to write the cd function to.
 func cdProfilePath(shell string) string {
+	paths := cdProfilePaths(shell)
+	if len(paths) == 0 {
+		return ""
+	}
+
+	return paths[0]
+}
+
+// cdProfilePaths returns all profile paths to write the cd function to.
+func cdProfilePaths(shell string) []string {
 	switch shell {
 	case constants.ShellPowerShell:
-		_, profile := resolvePowerShellPaths()
-		return profile
+		return resolvePowerShellProfilePaths()
 	case constants.ShellBash:
 		home, _ := os.UserHomeDir()
-		return filepath.Join(home, ".bashrc")
+		return []string{filepath.Join(home, ".bashrc")}
 	default:
 		home, _ := os.UserHomeDir()
-		return filepath.Join(home, ".zshrc")
+		return []string{filepath.Join(home, ".zshrc")}
 	}
+}
+
+// appendCDFunctions appends the managed wrapper to every resolved profile.
+func appendCDFunctions(snippet string, profilePaths []string) error {
+	for _, profilePath := range profilePaths {
+		if err := appendCDFunction(snippet, profilePath); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // appendCDFunction appends the gcd function to the profile if not present.
 func appendCDFunction(snippet, profilePath string) error {
+	if err := os.MkdirAll(filepath.Dir(profilePath), 0o755); err != nil {
+		return fmt.Errorf(constants.ErrCompProfileWrite, profilePath, err)
+	}
+
 	existing, err := os.ReadFile(profilePath)
 	if err == nil && strings.Contains(string(existing), constants.CDFuncMarker) {
 		fmt.Fprintf(os.Stderr, constants.MsgCDFuncAlready)
