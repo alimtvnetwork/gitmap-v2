@@ -14,6 +14,18 @@ terminal.
 
 ---
 
+## Rendering Pipeline
+
+> **Diagram:** [`images/terminal-output-pipeline.mmd`](images/terminal-output-pipeline.mmd)
+
+Data flows through three layers: the **data model** (records, tree nodes,
+metadata) feeds into **section renderers** (one per report section), which
+pass through the **color layer** (TTY detection + ANSI application) before
+writing to **stderr**. Machine-parseable data bypasses rendering and goes
+directly to **stdout**.
+
+---
+
 ## Design Principles
 
 | # | Principle | Detail |
