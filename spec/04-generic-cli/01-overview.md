@@ -32,27 +32,28 @@ concrete examples. Adapt syntax to your target language.
 
 ## Document Index
 
-| File | Topic |
-|------|-------|
-| `01-overview.md` | This document — philosophy, scope, index |
-| `02-project-structure.md` | Package layout, file organization, naming |
-| `03-subcommand-architecture.md` | Routing, dispatch, handler pattern |
-| `04-flag-parsing.md` | Per-command flags, defaults, validation |
-| `05-configuration.md` | Three-layer config (defaults → file → flags) |
-| `06-output-formatting.md` | Terminal, CSV, JSON, Markdown, scripts |
-| `07-error-handling.md` | Exit codes, error messages, batch errors |
-| `08-code-style.md` | Function length, file length, naming, conditionals |
-| `09-help-system.md` | Embedded help files, `--help` interception |
-| `10-database.md` | Local persistence, schema, upsert patterns |
-| `11-build-deploy.md` | Build scripts, deploy, self-update |
-| `12-testing.md` | Test structure, conventions, coverage |
-| `13-checklist.md` | Step-by-step implementation checklist for AI |
-| `14-date-formatting.md` | Centralized date display format |
-| `15-constants-reference.md` | Every constant category with naming patterns |
-| `16-verbose-logging.md` | Verbose/debug logging pattern with `--verbose` flag |
-| `17-progress-tracking.md` | Progress reporting pattern for batch operations |
-| `18-batch-execution.md` | Exec command pattern for running commands across repos |
-| `19-shell-completion.md` | Shell tab-completion for PowerShell, Bash, and Zsh |
+| # | File | Topic |
+|---|------|-------|
+| 01 | [01-overview.md](01-overview.md) | This document — philosophy, scope, index |
+| 02 | [02-project-structure.md](02-project-structure.md) | Package layout, file organization, naming |
+| 03 | [03-subcommand-architecture.md](03-subcommand-architecture.md) | Routing, dispatch, handler pattern |
+| 04 | [04-flag-parsing.md](04-flag-parsing.md) | Per-command flags, defaults, validation |
+| 05 | [05-configuration.md](05-configuration.md) | Three-layer config (defaults → file → flags) |
+| 06 | [06-output-formatting.md](06-output-formatting.md) | Terminal, CSV, JSON, Markdown, scripts |
+| 07 | [07-error-handling.md](07-error-handling.md) | Exit codes, error messages, batch errors |
+| 08 | [08-code-style.md](08-code-style.md) | Function length, file length, naming, conditionals |
+| 09 | [09-help-system.md](09-help-system.md) | Embedded help files, `--help` interception |
+| 10 | [10-database.md](10-database.md) | Local persistence, schema, upsert patterns |
+| 11 | [11-build-deploy.md](11-build-deploy.md) | Build scripts, deploy, self-update |
+| 12 | [12-testing.md](12-testing.md) | Test structure, conventions, coverage |
+| 13 | [13-checklist.md](13-checklist.md) | Step-by-step implementation checklist for AI |
+| 14 | [14-date-formatting.md](14-date-formatting.md) | Centralized date display format |
+| 15 | [15-constants-reference.md](15-constants-reference.md) | Every constant category with naming patterns |
+| 16 | [16-verbose-logging.md](16-verbose-logging.md) | Verbose/debug logging with `--verbose` flag |
+| 17 | [17-progress-tracking.md](17-progress-tracking.md) | Progress reporting for batch operations |
+| 18 | [18-batch-execution.md](18-batch-execution.md) | Exec command for running commands across repos |
+| 19 | [19-shell-completion.md](19-shell-completion.md) | Tab-completion for PowerShell, Bash, Zsh |
+| 20 | [20-terminal-output-design.md](20-terminal-output-design.md) | Rich terminal report formatting and color system |
 
 ---
 
