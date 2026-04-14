@@ -70,4 +70,4 @@ if (Test-Path $lastReleaseScript) {
 
 ## Cross-References
 
-- Generic spec: [04-build-scripts.md](../generic-update/04-build-scripts.md) §Validation
+- Generic spec: [04-build-scripts.md](../08-generic-update/04-build-scripts.md) §Validation

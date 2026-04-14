@@ -248,7 +248,7 @@ If SignPath is unavailable or the project goes private:
 
 | Topic | Spec |
 |-------|------|
-| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) |
+| Release pipeline | [02-release-pipeline.md](../07-generic-release/02-release-pipeline.md) |
 | CI architecture | [release.yml](../../.github/workflows/release.yml) |
 | Icon embedding | [04-windows-icon-embedding.md](04-windows-icon-embedding.md) |
 | Build & deploy | [09-build-deploy.md](../01-app/09-build-deploy.md) |

@@ -25,13 +25,13 @@ tool-agnostic specs provide detailed breakdowns of each mechanism:
 
 | Topic | Generic Spec | Covers |
 |-------|-------------|--------|
-| Build pipeline | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` full pipeline, config loading, ldflags, `--force-pull`, logging helpers |
-| Deploy strategy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Rename-first flow, rollback, PATH sync, retry reduction (20→5) |
-| Self-update orchestration | [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) | Copy-and-handoff, worker launch, UTF-8 BOM, binary-based fallback |
-| Cleanup | [06-cleanup.md](../generic-update/06-cleanup.md) | `.old` lifecycle, `update-cleanup` command, temp directory hygiene |
-| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | Cross-compilation, checksums, version-pinned install scripts |
-| Install scripts | [03-install-scripts.md](../generic-release/03-install-scripts.md) | `install.ps1` / `install.sh` generation, SHA-256 verification |
-| Release metadata | [06-release-metadata.md](../generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, asset maps |
+| Build pipeline | [04-build-scripts.md](../08-generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` full pipeline, config loading, ldflags, `--force-pull`, logging helpers |
+| Deploy strategy | [03-rename-first-deploy.md](../08-generic-update/03-rename-first-deploy.md) | Rename-first flow, rollback, PATH sync, retry reduction (20→5) |
+| Self-update orchestration | [05-handoff-mechanism.md](../08-generic-update/05-handoff-mechanism.md) | Copy-and-handoff, worker launch, UTF-8 BOM, binary-based fallback |
+| Cleanup | [06-cleanup.md](../08-generic-update/06-cleanup.md) | `.old` lifecycle, `update-cleanup` command, temp directory hygiene |
+| Release pipeline | [02-release-pipeline.md](../07-generic-release/02-release-pipeline.md) | Cross-compilation, checksums, version-pinned install scripts |
+| Install scripts | [03-install-scripts.md](../07-generic-release/03-install-scripts.md) | `install.ps1` / `install.sh` generation, SHA-256 verification |
+| Release metadata | [06-release-metadata.md](../07-generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, asset maps |
 
 ### Mapping: Sub-Documents → Generic Specs
 

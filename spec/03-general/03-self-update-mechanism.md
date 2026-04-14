@@ -360,12 +360,12 @@ tool-agnostic specs provide detailed breakdowns of each mechanism:
 
 | Topic | Generic Spec | Covers |
 |-------|-------------|--------|
-| Overall architecture | [01-self-update-overview.md](../generic-update/01-self-update-overview.md) | Platform behavior table, two update strategies (source vs binary), repo resolution tiers, version comparison |
-| Deploy path resolution | [02-deploy-path-resolution.md](../generic-update/02-deploy-path-resolution.md) | 3-tier deploy target resolution (CLI flag → PATH → config) |
-| Rename-first deploy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Full PowerShell + Bash implementations, rollback, PATH sync, retry reduction (20→5) |
-| Build scripts | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline (pull → deps → build → deploy), config loading, ldflags |
-| Handoff mechanism | [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) | Copy-and-handoff flow, worker launch, UTF-8 BOM, binary-based handoff (standalone updater) |
-| Cleanup | [06-cleanup.md](../generic-update/06-cleanup.md) | Artifact inventory, `update-cleanup` command, `.old` lifecycle, auto vs manual cleanup |
+| Overall architecture | [01-self-update-overview.md](../08-generic-update/01-self-update-overview.md) | Platform behavior table, two update strategies (source vs binary), repo resolution tiers, version comparison |
+| Deploy path resolution | [02-deploy-path-resolution.md](../08-generic-update/02-deploy-path-resolution.md) | 3-tier deploy target resolution (CLI flag → PATH → config) |
+| Rename-first deploy | [03-rename-first-deploy.md](../08-generic-update/03-rename-first-deploy.md) | Full PowerShell + Bash implementations, rollback, PATH sync, retry reduction (20→5) |
+| Build scripts | [04-build-scripts.md](../08-generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline (pull → deps → build → deploy), config loading, ldflags |
+| Handoff mechanism | [05-handoff-mechanism.md](../08-generic-update/05-handoff-mechanism.md) | Copy-and-handoff flow, worker launch, UTF-8 BOM, binary-based handoff (standalone updater) |
+| Cleanup | [06-cleanup.md](../08-generic-update/06-cleanup.md) | Artifact inventory, `update-cleanup` command, `.old` lifecycle, auto vs manual cleanup |
 
 ### Mapping: This Document → Generic Specs
 

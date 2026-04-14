@@ -169,6 +169,6 @@ Version parsing lives in `release/semver.go`:
 
 | Topic | Generic Spec | Covers |
 |-------|-------------|--------|
-| Release metadata | [06-release-metadata.md](../generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, version tag verification |
-| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) | CI trigger, stage sequence, prerelease detection |
+| Release metadata | [06-release-metadata.md](../07-generic-release/06-release-metadata.md) | `releases.json` manifest, `baseUrl`, version tag verification |
+| Release pipeline | [02-release-pipeline.md](../07-generic-release/02-release-pipeline.md) | CI trigger, stage sequence, prerelease detection |
 | Release command | [12-release-command.md](12-release-command.md) | CLI commands, version resolution, pending workflows |

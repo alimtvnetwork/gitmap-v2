@@ -36,5 +36,5 @@ if ($Config.copyData) {
 
 ## Cross-References
 
-- Generic spec: [04-build-scripts.md](../generic-update/04-build-scripts.md) §Build
+- Generic spec: [04-build-scripts.md](../08-generic-update/04-build-scripts.md) §Build
 - Icon embedding: [04-windows-icon-embedding.md](04-windows-icon-embedding.md)

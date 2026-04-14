@@ -46,5 +46,5 @@ be run from any terminal without specifying the full path.
 
 ## Cross-References
 
-- Generic spec: [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) §Implementation
-- Deploy path resolution: [02-deploy-path-resolution.md](../generic-update/02-deploy-path-resolution.md)
+- Generic spec: [03-rename-first-deploy.md](../08-generic-update/03-rename-first-deploy.md) §Implementation
+- Deploy path resolution: [02-deploy-path-resolution.md](../08-generic-update/02-deploy-path-resolution.md)
