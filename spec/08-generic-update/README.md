@@ -1,4 +1,4 @@
-# Generic Self-Update Specification
+# 08 — Generic Self-Update Specification
 
 ## Purpose
 
@@ -17,7 +17,7 @@ a complete self-update system from scratch without ambiguity.
 | File | Topic |
 |------|-------|
 | [01-self-update-overview.md](01-self-update-overview.md) | The problem, approach, and platform differences |
-| [02-deploy-path-resolution.md](02-deploy-path-resolution.md) | 3-tier strategy for finding the installed binary |
+| [02-deploy-path-resolution.md](02-deploy-path-resolution.md) | Deploy to running location, PATH registration, data co-location |
 | [03-rename-first-deploy.md](03-rename-first-deploy.md) | Rename-first strategy to bypass file locks |
 | [04-build-scripts.md](04-build-scripts.md) | `run.ps1` and `run.sh` patterns for build + deploy |
 | [05-handoff-mechanism.md](05-handoff-mechanism.md) | Copy-and-handoff for Windows self-replacement |
@@ -25,11 +25,41 @@ a complete self-update system from scratch without ambiguity.
 
 ---
 
-## Core Principle
+## Self-Update Flow Diagram
 
-A running binary **cannot overwrite itself** on Windows. The entire
-update architecture exists to work around this constraint while
-maintaining a seamless user experience.
+See the Mermaid diagram: [`images/self-update-flow.mmd`](images/self-update-flow.mmd)
+
+```
+<binary> update
+    |
+    +-- Resolve deploy target (running location > PATH > config)
+    +-- Source repo available?
+    |   +-- YES: Pull, build, deploy (rename-first)
+    |   +-- NO:  Download pre-built binary from releases
+    |
+    +-- Deploy to running executable's directory
+    |   +-- Rename existing binary to .old
+    |   +-- Copy new binary
+    |   +-- Copy data/ folder alongside binary
+    |
+    +-- Register directory in PATH (if first-time)
+    +-- Reload terminal environment
+    +-- Verify: <binary> version == expected
+    +-- Cleanup temporary files
+```
+
+---
+
+## Core Principles
+
+1. **Deploy to running location** — The binary is always replaced
+   in-place at the directory it is currently running from.
+2. **Data co-location** — The `data/` folder lives alongside the
+   binary at its physical location. Moving the binary moves data too.
+3. **PATH auto-registration** — On first-time install, the deploy
+   directory is added to PATH and the terminal is reloaded.
+4. **Rename-first** — On Windows, rename the locked binary before
+   replacing it. Never rely on overwrite retries alone.
 
 ## Placeholders
 

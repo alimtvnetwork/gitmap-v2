@@ -8,15 +8,31 @@ installs, and explicit overrides.
 
 ---
 
-## 3-Tier Resolution Strategy
+## Core Principle: Deploy to Running Location
 
-The deploy target is resolved with this priority:
+The default deploy target is **the directory from which the currently
+running executable was launched**. This ensures updates always replace
+the active binary in-place, preserving the user's PATH configuration
+and co-located data folder.
+
+```
+Priority 1: CLI flag override       → always wins
+Priority 2: Running executable path → where the binary actually lives
+Priority 3: Global PATH lookup      → binary found elsewhere on PATH
+Priority 4: Interactive prompt      → ask the user (first-time install only)
+Priority 5: Config file default     → fallback from config/JSON
+```
+
+---
+
+## 4-Tier Resolution Strategy
 
 | Priority | Source | When Used |
 |----------|--------|-----------|
 | 1 | **CLI flag** (`--deploy-path`) | User explicitly specifies a path |
-| 2 | **Global PATH lookup** | Binary is already installed and on PATH |
-| 3 | **Config file default** | First-time install or binary not on PATH |
+| 2 | **Running executable location** | Binary is running; deploy to its own directory |
+| 3 | **Global PATH lookup** | Binary is on PATH but invoked differently |
+| 4 | **Interactive prompt / Config default** | First-time install or binary not found |
 
 ### Tier 1 — CLI Flag Override
 
@@ -37,13 +53,14 @@ if [[ -n "$DEPLOY_PATH" ]]; then
 fi
 ```
 
-### Tier 2 — Global PATH Lookup
+### Tier 2 — Running Executable Location
 
-If the binary is already installed and accessible via `PATH`, detect
-its current location and deploy there:
+Resolve the **physical location** of the currently running binary. This
+is the primary default — the build script deploys back to where the
+tool is already installed:
 
 ```powershell
-# PowerShell
+# PowerShell — resolve the active binary's physical directory
 $activeCmd = Get-Command <binary> -ErrorAction SilentlyContinue
 if ($activeCmd) {
     $activePath = $activeCmd.Source
@@ -56,26 +73,24 @@ if ($activeCmd) {
         return Split-Path $activeDir -Parent
     }
 
-    # Binary is directly in a folder
-    return Split-Path $activeDir -Parent
+    return $activeDir
 }
 ```
 
 ```bash
-# Bash
+# Bash — resolve the active binary's physical directory
 active_cmd=$(command -v <binary> 2>/dev/null || true)
 if [[ -n "$active_cmd" ]] && [[ -f "$active_cmd" ]]; then
     resolved=$(readlink -f "$active_cmd" 2>/dev/null || echo "$active_cmd")
     active_dir=$(dirname "$resolved")
     dir_name=$(basename "$active_dir")
 
-    # Binary lives in <deploy-target>/<binary>/<binary>
     if [[ "$dir_name" == "<binary>" ]]; then
         echo "$(dirname "$active_dir")"
         return
     fi
 
-    echo "$(dirname "$active_dir")"
+    echo "$active_dir"
     return
 fi
 ```
@@ -86,7 +101,6 @@ On Linux/macOS, the PATH binary may be a symlink. Always resolve
 symlinks before extracting the directory:
 
 ```bash
-# readlink -f follows all symlinks to the final target
 resolved=$(readlink -f "$active_cmd")
 ```
 
@@ -107,14 +121,32 @@ Most CLI deploy structures use a nested folder:
     └── data/
 ```
 
-When detecting the PATH location, check if the binary's parent
+When detecting the running location, check if the binary's parent
 directory matches the binary name. If so, the deploy target is the
 **grandparent** directory.
 
-### Tier 3 — Config File Default
+### Tier 3 — Interactive Prompt (First-Time Only)
 
-If the binary is not on PATH (first-time install), read from the
-config file:
+If the binary is not currently installed anywhere and no PATH entry
+exists, prompt the user:
+
+```
+No existing installation found.
+Where should <binary> be installed?
+
+Default: C:\Users\<user>\bin-run (press Enter to accept)
+> _
+```
+
+After the user provides a path:
+1. Create the directory if it does not exist.
+2. Deploy the binary into it.
+3. Register the directory in the system PATH (see PATH Registration below).
+4. Reload the terminal environment so the binary is immediately accessible.
+
+### Tier 4 — Config File Default
+
+If running non-interactively (CI, scripts), fall back to the config file:
 
 **Windows default** (from `powershell.json`):
 ```json
@@ -126,6 +158,104 @@ config file:
 **Linux/macOS default**:
 ```bash
 DEPLOY_TARGET="$HOME/bin-run"
+```
+
+---
+
+## PATH Registration
+
+When deploying to a new directory (first-time install or changed path),
+the directory **must** be added to the system PATH:
+
+### Windows (User Environment Variable)
+
+```powershell
+$currentPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($currentPath -notlike "*$deployDir*") {
+    [Environment]::SetEnvironmentVariable("Path", "$currentPath;$deployDir", "User")
+    Write-Success "Added $deployDir to User PATH"
+}
+```
+
+### Linux/macOS (Shell Profiles)
+
+```bash
+add_to_path() {
+    local dir="$1"
+    local profiles=("$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile")
+
+    for profile in "${profiles[@]}"; do
+        if [[ -f "$profile" ]] && ! grep -q "$dir" "$profile"; then
+            echo "export PATH=\"$dir:\$PATH\"  # <binary>-path" >> "$profile"
+        fi
+    done
+}
+```
+
+### Terminal Reload
+
+After PATH registration, refresh the current session:
+
+```powershell
+# PowerShell — refresh PATH in the current session
+$env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+            [Environment]::GetEnvironmentVariable("Path", "User")
+```
+
+```bash
+# Bash — source the profile or export directly
+export PATH="$deploy_dir:$PATH"
+```
+
+---
+
+## Data Folder Co-Location
+
+The data folder (`data/`) is **always co-located with the binary** at
+its physical location. This means:
+
+```
+<binary-dir>/
+├── <binary>.exe        ← the executable
+└── data/
+    ├── config.db       ← SQLite database
+    └── ...             ← other data files
+```
+
+### Resolution in Code
+
+```go
+func BinaryDataDir() string {
+    exe, err := os.Executable()
+    if err != nil {
+        return filepath.Join(".", "data")
+    }
+
+    resolved, err := filepath.EvalSymlinks(exe)
+    if err != nil {
+        resolved = exe
+    }
+
+    return filepath.Join(filepath.Dir(resolved), "data")
+}
+```
+
+### Why Co-Location Matters
+
+- The data folder is **always discoverable** — no config file needed.
+- Moving the binary moves the data too.
+- `run.ps1` / `run.sh` copies the data folder alongside the binary
+  during deploy:
+
+```powershell
+# Copy data folder to deploy target alongside the binary
+if ($Config.copyData) {
+    $srcData = Join-Path $BuildOutput "data"
+    $destData = Join-Path $appDir "data"
+    if (Test-Path $srcData) {
+        Copy-Item $srcData $destData -Recurse -Force
+    }
+}
 ```
 
 ---
@@ -144,7 +274,7 @@ function Resolve-DeployTarget {
         return $OverridePath
     }
 
-    # 2) PATH detection
+    # 2) Running executable / PATH detection
     $activeCmd = Get-Command <binary> -ErrorAction SilentlyContinue
     if ($activeCmd) {
         $activePath = (Resolve-Path $activeCmd.Source).Path
@@ -154,10 +284,10 @@ function Resolve-DeployTarget {
         if ($dirName -eq "<binary>") {
             $target = Split-Path $activeDir -Parent
         } else {
-            $target = Split-Path $activeDir -Parent
+            $target = $activeDir
         }
 
-        Write-Info "Deploy target: detected from PATH -> $target"
+        Write-Info "Deploy target: detected from running location -> $target"
         return $target
     }
 
@@ -177,7 +307,7 @@ resolve_deploy_target() {
         return
     fi
 
-    # 2) PATH detection
+    # 2) Running executable / PATH detection
     local active_cmd
     active_cmd=$(command -v <binary> 2>/dev/null || true)
     if [[ -n "$active_cmd" ]] && [[ -f "$active_cmd" ]]; then
@@ -191,7 +321,7 @@ resolve_deploy_target() {
         if [[ "$dir_name" == "<binary>" ]]; then
             echo "$(dirname "$active_dir")"
         else
-            echo "$(dirname "$active_dir")"
+            echo "$active_dir"
         fi
         return
     fi
@@ -214,34 +344,10 @@ Provide a utility command for users to check where the binary is installed:
 Output:
 
 ```
-  📂 Installed directory
+  Installed directory
 
   Binary:    /home/user/.local/bin/<binary>
   Directory: /home/user/.local/bin/
-```
-
-Implementation:
-
-```go
-func runInstalledDir() {
-    selfPath, err := os.Executable()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "  ✗ Could not resolve executable path: %v\n", err)
-        os.Exit(1)
-    }
-
-    resolved, err := filepath.EvalSymlinks(selfPath)
-    if err != nil {
-        resolved = selfPath
-    }
-
-    absPath, _ := filepath.Abs(resolved)
-    dir := filepath.Dir(absPath)
-
-    fmt.Printf("\n  📂 Installed directory\n\n")
-    fmt.Printf("  Binary:    %s\n", absPath)
-    fmt.Printf("  Directory: %s\n\n", dir)
-}
 ```
 
 ---
@@ -249,11 +355,14 @@ func runInstalledDir() {
 ## Constraints
 
 - CLI flag always takes highest priority — no exceptions.
+- Default deploy target is the running executable's own directory.
 - PATH detection must resolve symlinks before extracting directories.
 - The config file default is only used when the binary is not found
-  on PATH (first-time installs).
-- Never prompt the user for a deploy path during the build script —
-  resolution must be fully automatic.
+  on PATH (first-time installs or CI environments).
+- On first-time install, register the deploy directory in the system
+  PATH and reload the terminal so the binary is immediately usable.
+- Data folder is always co-located with the binary at its physical
+  location — never stored in a separate global directory.
 - Log which tier was used so the user can see where the binary will
   be deployed.
 
