@@ -28,6 +28,8 @@ file, so it does not conflict with the original binary's lock.
 
 ### Flow
 
+![Handoff Mechanism Flow](images/handoff-mechanism-flow.mmd)
+
 ```
 <binary>.exe update
     │
