@@ -7,6 +7,12 @@ including Windows where running executables cannot be overwritten.
 
 ---
 
+## Flow Diagram
+
+See [`images/rename-first-deploy-flow.mmd`](images/rename-first-deploy-flow.mmd)
+
+---
+
 ## The Problem
 
 On Windows, copying a file over a running `.exe` fails with:

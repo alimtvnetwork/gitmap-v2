@@ -8,6 +8,12 @@ installs, and explicit overrides.
 
 ---
 
+## Flow Diagram
+
+See [`images/deploy-path-resolution-flow.mmd`](images/deploy-path-resolution-flow.mmd)
+
+---
+
 ## Core Principle: Deploy to Running Location
 
 The default deploy target is **the directory from which the currently
