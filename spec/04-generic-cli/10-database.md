@@ -1,5 +1,10 @@
 # Local Database
 
+> **Related specs:**
+> - [05-configuration.md](05-configuration.md) — config layer that coexists with DB persistence
+> - [18-batch-execution.md](18-batch-execution.md) — DB-based repo loading for batch operations
+> - [02-project-structure.md](02-project-structure.md) — `store/` package placement for DB code
+
 ## Overview
 
 Use a local SQLite database for persistence. This enables slug-based

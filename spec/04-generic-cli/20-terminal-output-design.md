@@ -1,5 +1,11 @@
 # Terminal Output Design — Rich CLI Report Formatting
 
+> **Related specs:**
+> - [06-output-formatting.md](06-output-formatting.md) — multi-format output strategy this spec details for terminal
+> - [15-constants-reference.md](15-constants-reference.md) — format string and color constants
+> - [17-progress-tracking.md](17-progress-tracking.md) — progress counters following the `[current/total]` pattern
+> - [18-batch-execution.md](18-batch-execution.md) — batch exec output using these terminal patterns
+
 ## Purpose
 
 This spec defines a **generic, reusable terminal output architecture** for any

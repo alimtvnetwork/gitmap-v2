@@ -1,5 +1,10 @@
 # Shell Completion — Generic CLI Spec
 
+> **Related specs:**
+> - [03-subcommand-architecture.md](03-subcommand-architecture.md) — subcommand registry that completion draws from
+> - [09-help-system.md](09-help-system.md) — help metadata used by completion generators
+> - [04-flag-parsing.md](04-flag-parsing.md) — flags that completion must enumerate
+
 ## Overview
 
 Shell tab-completion provides autocomplete for subcommand names, repo

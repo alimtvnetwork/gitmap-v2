@@ -1,5 +1,11 @@
 # Generic CLI Creation Guidelines — Overview
 
+> **Related specs:**
+> - [02-project-structure.md](02-project-structure.md) — package layout and file organization
+> - [03-subcommand-architecture.md](03-subcommand-architecture.md) — dispatch pattern and entry point
+> - [13-checklist.md](13-checklist.md) — phased implementation plan referencing all specs
+> - [20-terminal-output-design.md](20-terminal-output-design.md) — terminal rendering architecture
+
 ## Purpose
 
 This specification is a **complete, self-contained blueprint** for
