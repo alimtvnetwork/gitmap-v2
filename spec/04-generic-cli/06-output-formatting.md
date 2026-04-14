@@ -29,6 +29,15 @@ target-dir/
 
 ## Terminal Output
 
+> **Full spec:** [20-terminal-output-design.md](20-terminal-output-design.md) — complete
+> reference for banners, item lists, tree views, emoji, color system, spacing
+> rules, `NO_COLOR` support, and multi-domain examples (repos, movies, servers).
+> The rendering pipeline diagram is at
+> [`images/terminal-output-pipeline.mmd`](images/terminal-output-pipeline.mmd).
+
+This section summarizes the key patterns. See the full spec for implementation
+details, constants, and generic examples.
+
 ### ANSI Color Codes
 
 All color codes live in `constants`:
@@ -53,12 +62,13 @@ const (
 
 ### Terminal Report Sections
 
-1. **Banner** — tool name + version + item count
-2. **Item list** — each item with icon, path, key data
-3. **Tree visualization** — hierarchical folder structure
-4. **Output file list** — what files were generated
-5. **Action instructions** — step-by-step next actions
-6. **Related commands** — other commands the user can run
+1. **Banner** — tool name + version (framed with box-drawing characters)
+2. **Summary** — checkmark + item count
+3. **Item list** — counter/total + emoji + two-line blocks
+4. **Tree view** — hierarchical Unicode tree
+5. **Output file list** — generated artifacts with descriptions
+6. **Action guide** — numbered next steps with copy-pasteable commands
+7. **File confirmations** — plain path-based write confirmations
 
 ### Banner Pattern
 
