@@ -28,6 +28,13 @@ a complete release pipeline from scratch without ambiguity.
 
 See the Mermaid diagram: [`images/release-pipeline-flow.mmd`](images/release-pipeline-flow.mmd)
 
+## Unified Architecture Diagram
+
+See the Mermaid diagram: [`images/unified-architecture.mmd`](images/unified-architecture.mmd)
+
+Shows how all six specs connect — from cross-compilation through packaging,
+checksums, install scripts, and metadata into the final GitHub Release.
+
 ---
 
 ## Shared Conventions
