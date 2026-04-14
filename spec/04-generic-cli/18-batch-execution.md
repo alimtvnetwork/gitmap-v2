@@ -7,6 +7,17 @@ in a single invocation. It eliminates the need to `cd` into each repo
 manually, providing consistent output formatting and a summary of
 success/failure across the entire batch.
 
+> **Related specs:**
+> - [20-terminal-output-design.md](20-terminal-output-design.md) — full terminal
+>   formatting reference (banner, item list, color system, `NO_COLOR` support).
+>   Exec banners and per-repo result lines follow the same section patterns.
+> - [06-output-formatting.md](06-output-formatting.md) — multi-format output strategy
+>   and formatter package structure.
+> - [17-progress-tracking.md](17-progress-tracking.md) — progress counter pattern
+>   (`[current/total]`) used by batch operations.
+> - Rendering pipeline diagram:
+>   [`images/terminal-output-pipeline.mmd`](images/terminal-output-pipeline.mmd)
+
 ---
 
 ## Design Rules
