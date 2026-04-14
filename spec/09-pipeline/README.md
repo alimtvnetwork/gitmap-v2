@@ -1,4 +1,4 @@
-# Pipeline Specifications
+# 09 — Pipeline Specifications
 
 Generic, portable documentation for the project's CI/CD pipeline architecture. These specs describe **what** each pipeline does, **why** each pattern exists, and **how** to implement it — in enough detail for any AI or engineer to reproduce the workflows from scratch.
 
@@ -17,6 +17,12 @@ Generic, portable documentation for the project's CI/CD pipeline architecture. T
 | [07-environment-variable-setup.md](./07-environment-variable-setup.md) | `env` command: persistent variables, PATH registration, auto-home, drive setup |
 | [08-terminal-output-standards.md](./08-terminal-output-standards.md) | Output formatting conventions: icons, tables, progress, errors, CI summaries |
 | [09-binary-icon-branding.md](./09-binary-icon-branding.md) | Windows binary icon embedding via `go-winres`: icon, manifest, version info |
+
+---
+
+## CI/CD Pipeline Diagram
+
+See the Mermaid diagram: [`images/ci-pipeline-flow.mmd`](images/ci-pipeline-flow.mmd)
 
 ---
 

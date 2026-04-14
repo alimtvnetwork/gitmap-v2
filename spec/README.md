@@ -145,3 +145,63 @@ A production-quality CLI implementation blueprint usable as a starting point for
 | 17 | [progress-tracking.md](04-generic-cli/17-progress-tracking.md) | Progress tracking |
 | 18 | [batch-execution.md](04-generic-cli/18-batch-execution.md) | Batch execution |
 | 19 | [shell-completion.md](04-generic-cli/19-shell-completion.md) | Shell completion |
+
+---
+
+## 05-coding-guidelines/ — Coding Standards
+
+Coding conventions and style rules.
+
+---
+
+## 06-design-system/ — Design System
+
+UI and design guidelines.
+
+---
+
+## 07-07-generic-release/ — Generic Release Pipeline
+
+A reusable blueprint for cross-compiled CLI binary releases via CI/CD.
+
+| # | File | Topic |
+|---|------|-------|
+| 01 | [cross-compilation.md](07-07-generic-release/01-cross-compilation.md) | Static binaries for 6+ targets |
+| 02 | [release-pipeline.md](07-07-generic-release/02-release-pipeline.md) | CI/CD workflow structure |
+| 03 | [install-scripts.md](07-07-generic-release/03-install-scripts.md) | Version-pinned installers |
+| 04 | [checksums-verification.md](07-07-generic-release/04-checksums-verification.md) | SHA-256 verification |
+| 05 | [release-assets.md](07-07-generic-release/05-release-assets.md) | Asset naming & packaging |
+| 06 | [release-metadata.md](07-07-generic-release/06-release-metadata.md) | Version resolution & tagging |
+
+Diagram: [`07-07-generic-release/images/release-pipeline-flow.jpg`](07-07-generic-release/images/release-pipeline-flow.jpg)
+
+---
+
+## 08-08-generic-update/ — Generic Self-Update
+
+A reusable blueprint for CLI self-update: deploy-to-running-location, rename-first, handoff, cleanup.
+
+| # | File | Topic |
+|---|------|-------|
+| 01 | [self-update-overview.md](08-08-generic-update/01-self-update-overview.md) | Problem, approach, platform differences |
+| 02 | [deploy-path-resolution.md](08-08-generic-update/02-deploy-path-resolution.md) | Deploy to running location, PATH registration, data co-location |
+| 03 | [rename-first-deploy.md](08-08-generic-update/03-rename-first-deploy.md) | Rename-first to bypass file locks |
+| 04 | [build-scripts.md](08-08-generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` build + deploy |
+| 05 | [handoff-mechanism.md](08-08-generic-update/05-handoff-mechanism.md) | Copy-and-handoff for Windows |
+| 06 | [cleanup.md](08-08-generic-update/06-cleanup.md) | Post-update artifact removal |
+
+Diagram: [`08-08-generic-update/images/self-update-flow.jpg`](08-08-generic-update/images/self-update-flow.jpg)
+
+---
+
+## 09-pipeline/ — Pipeline Specifications
+
+CI/CD pipeline architecture: CI, release, vulnerability scanning, installation, changelog, help, env, output, branding.
+
+Diagram: [`09-pipeline/images/ci-pipeline-flow.jpg`](09-pipeline/images/ci-pipeline-flow.jpg)
+
+---
+
+## 86-author-section.md — Author Section Specification
+
+Precise spec for author attribution blocks across all spec documents.

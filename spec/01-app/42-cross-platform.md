@@ -133,7 +133,7 @@ Triggers on tags matching `v*`.
 
 | Topic | Generic Spec | Covers |
 |-------|-------------|--------|
-| Build scripts | [04-build-scripts.md](../generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline, config loading, platform detection |
+| Build scripts | [04-build-scripts.md](../08-generic-update/04-build-scripts.md) | `run.ps1` / `run.sh` pipeline, config loading, platform detection |
 | PowerShell patterns | [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Script architecture, step-based execution |
-| Deploy strategy | [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) | Rename-first on Windows, `mv` on Unix |
-| Cross-compilation | [01-cross-compilation.md](../generic-release/01-cross-compilation.md) | Multi-platform Go build targets |
+| Deploy strategy | [03-rename-first-deploy.md](../08-generic-update/03-rename-first-deploy.md) | Rename-first on Windows, `mv` on Unix |
+| Cross-compilation | [01-cross-compilation.md](../07-generic-release/01-cross-compilation.md) | Multi-platform Go build targets |

@@ -197,10 +197,10 @@ GitHub Releases with SHA256 checksums.
 
 For detailed, portable pipeline implementation guides (suitable for sharing with any AI or engineer), see:
 
-- [spec/pipeline/README.md](../pipeline/README.md) — Index and quick reference
-- [spec/pipeline/01-ci-pipeline.md](../pipeline/01-ci-pipeline.md) — CI patterns (SHA dedup, test matrix, builds)
-- [spec/pipeline/02-release-pipeline.md](../pipeline/02-release-pipeline.md) — Release automation (versioning, install scripts)
-- [spec/pipeline/03-vulnerability-scanning.md](../pipeline/03-vulnerability-scanning.md) — Vulnerability scanning
+- [spec/pipeline/README.md](../09-pipeline/README.md) — Index and quick reference
+- [spec/pipeline/01-ci-pipeline.md](../09-pipeline/01-ci-pipeline.md) — CI patterns (SHA dedup, test matrix, builds)
+- [spec/pipeline/02-release-pipeline.md](../09-pipeline/02-release-pipeline.md) — Release automation (versioning, install scripts)
+- [spec/pipeline/03-vulnerability-scanning.md](../09-pipeline/03-vulnerability-scanning.md) — Vulnerability scanning
 
 ---
 

@@ -36,6 +36,6 @@ When a CLI updates itself from a PATH-managed executable, use a two-phase handof
 
 ## Cross-References
 
-- Generic spec: [05-handoff-mechanism.md](../generic-update/05-handoff-mechanism.md) §Solution: Copy-and-Handoff
-- Generic spec: [06-cleanup.md](../generic-update/06-cleanup.md) §Cleanup Command
+- Generic spec: [05-handoff-mechanism.md](../08-generic-update/05-handoff-mechanism.md) §Solution: Copy-and-Handoff
+- Generic spec: [06-cleanup.md](../08-generic-update/06-cleanup.md) §Cleanup Command
 - Self-update mechanism: [03-self-update-mechanism.md](03-self-update-mechanism.md)

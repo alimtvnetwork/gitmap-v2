@@ -84,5 +84,5 @@ function Load-Config {
 
 ## Cross-References
 
-- Generic spec: [04-build-scripts.md](../generic-update/04-build-scripts.md) §PowerShell, §Config Loading
-- Generic spec: [03-rename-first-deploy.md](../generic-update/03-rename-first-deploy.md) §Rollback
+- Generic spec: [04-build-scripts.md](../08-generic-update/04-build-scripts.md) §PowerShell, §Config Loading
+- Generic spec: [03-rename-first-deploy.md](../08-generic-update/03-rename-first-deploy.md) §Rollback

@@ -213,8 +213,8 @@ Add to `.gitignore` only if you want to force regeneration every build.
 |-------|------|
 | Build pipeline | [09-build-deploy.md](../01-app/09-build-deploy.md) |
 | PowerShell build patterns | [02-powershell-build-deploy.md](02-powershell-build-deploy.md) |
-| Build scripts (generic) | [04-build-scripts.md](../generic-update/04-build-scripts.md) |
-| Release pipeline | [02-release-pipeline.md](../generic-release/02-release-pipeline.md) |
+| Build scripts (generic) | [04-build-scripts.md](../08-generic-update/04-build-scripts.md) |
+| Release pipeline | [02-release-pipeline.md](../07-generic-release/02-release-pipeline.md) |
 
 ## Contributors
 

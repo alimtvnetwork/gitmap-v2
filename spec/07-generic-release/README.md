@@ -1,4 +1,4 @@
-# Generic Release Pipeline Specification
+# 07 — Generic Release Pipeline Specification
 
 ## Purpose
 
@@ -21,6 +21,12 @@ a complete release pipeline from scratch without ambiguity.
 | [04-checksums-verification.md](04-checksums-verification.md) | SHA-256 checksum generation and verification |
 | [05-release-assets.md](05-release-assets.md) | Asset naming, compression, and packaging conventions |
 | [06-release-metadata.md](06-release-metadata.md) | Version resolution, tagging, and changelog extraction |
+
+---
+
+## Release Pipeline Diagram
+
+See the Mermaid diagram: [`images/release-pipeline-flow.mmd`](images/release-pipeline-flow.mmd)
 
 ---
 
