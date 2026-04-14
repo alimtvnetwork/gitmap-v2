@@ -1,5 +1,10 @@
 # Implementation Checklist
 
+> **Related specs:**
+> - [01-overview.md](01-overview.md) — design philosophy guiding each phase
+> - [02-project-structure.md](02-project-structure.md) — scaffold phase package layout
+> - [11-build-deploy.md](11-build-deploy.md) — build and deploy phase details
+
 ## Instructions for AI
 
 This is a sequenced implementation plan. Execute each phase in order.

@@ -1,5 +1,9 @@
 # Date Display Format
 
+> **Related specs:**
+> - [06-output-formatting.md](06-output-formatting.md) — output formats that display dates
+> - [15-constants-reference.md](15-constants-reference.md) — date format layout constants
+
 ## Principle
 
 All date/time output passes through a single centralized formatting
