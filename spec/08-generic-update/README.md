@@ -25,6 +25,10 @@ a complete self-update system from scratch without ambiguity.
 
 ---
 
+## Unified Architecture Diagram
+
+See how all specs connect: [`images/unified-architecture.mmd`](images/unified-architecture.mmd)
+
 ## Self-Update Flow Diagram
 
 See the Mermaid diagram: [`images/self-update-flow.mmd`](images/self-update-flow.mmd)
