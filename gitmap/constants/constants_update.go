@@ -66,11 +66,30 @@ Set-Location "%s"
 	UpdatePSDeployDetect = `
 $configPath = Join-Path "%s" "gitmap\powershell.json"
 $deployedBinary = $null
+$configDeployedBinary = $null
 if (Test-Path $configPath) {
     $cfg = Get-Content $configPath | ConvertFrom-Json
     if ($cfg.deployPath) {
-        $deployedBinary = Join-Path $cfg.deployPath "gitmap\gitmap.exe"
+	    $configDeployedBinary = Join-Path $cfg.deployPath "gitmap\gitmap.exe"
     }
+}
+
+$activeCmdForDeploy = Get-Command gitmap -ErrorAction SilentlyContinue
+if ($activeCmdForDeploy -and (Test-Path $activeCmdForDeploy.Source)) {
+    $resolvedActiveBinary = (Resolve-Path $activeCmdForDeploy.Source).Path
+    $resolvedActiveDir = Split-Path $resolvedActiveBinary -Parent
+    if ((Split-Path $resolvedActiveDir -Leaf) -eq "gitmap") {
+        $effectiveDeployTarget = Split-Path $resolvedActiveDir -Parent
+    } else {
+        $effectiveDeployTarget = Split-Path $resolvedActiveDir -Parent
+    }
+    if ($effectiveDeployTarget) {
+        $deployedBinary = Join-Path $effectiveDeployTarget "gitmap\gitmap.exe"
+    }
+}
+
+if ((-not $deployedBinary) -and $configDeployedBinary) {
+    $deployedBinary = $configDeployedBinary
 }
 `
 	UpdatePSVersionBefore = `
@@ -118,6 +137,9 @@ Write-Host "  Version active:   $activeAfter" -ForegroundColor DarkGray
 Write-Host "  Version deployed: $deployedAfter" -ForegroundColor DarkGray
 Write-Host "  Active binary:    $activeBinary" -ForegroundColor DarkGray
 Write-Host "  Deployed binary:  $(if ($deployedBinary) { $deployedBinary } else { '(not resolved)' })" -ForegroundColor DarkGray
+if ($configDeployedBinary -and $deployedBinary -and ($configDeployedBinary -ne $deployedBinary)) {
+    Write-Host "  Config binary:    $configDeployedBinary" -ForegroundColor DarkGray
+}
 
 $lastReleaseScript = Join-Path (Join-Path (Join-Path "%s" "gitmap") "scripts") "Get-LastRelease.ps1"
 if (Test-Path $lastReleaseScript) {
@@ -128,8 +150,12 @@ if ($activeAfter -ne "unknown" -and $deployedAfter -eq "unknown") {
     Write-Host ""
     Write-Host "  [WARN] Deployed binary could not be verified (not resolved or missing)." -ForegroundColor Yellow
     Write-Host "  [TRACE] activeAfter=$activeAfter  deployedAfter=$deployedAfter" -ForegroundColor DarkGray
-    Write-Host "  [HINT] Check that powershell.json 'deployPath' points to the correct directory" -ForegroundColor Yellow
-    Write-Host "         and that the binary exists at: $deployedBinary" -ForegroundColor Yellow
+    if ($configDeployedBinary -and $deployedBinary -and ($configDeployedBinary -ne $deployedBinary)) {
+        Write-Host "  [HINT] powershell.json points to an older deploy location; using PATH-derived target for verification." -ForegroundColor Yellow
+    } else {
+        Write-Host "  [HINT] Check that powershell.json 'deployPath' points to the correct directory" -ForegroundColor Yellow
+        Write-Host "         and that the binary exists at: $deployedBinary" -ForegroundColor Yellow
+    }
     Write-Host "  [OK] Active PATH binary updated successfully: $activeAfter" -ForegroundColor Green
 } elseif (($activeAfter -eq "unknown") -or ($activeAfter -ne $deployedAfter)) {
     Write-Host ""
@@ -137,6 +163,8 @@ if ($activeAfter -ne "unknown" -and $deployedAfter -eq "unknown") {
     Write-Host "  [TRACE] activeAfter=$activeAfter  deployedAfter=$deployedAfter" -ForegroundColor DarkGray
     if ($activeAfter -eq "unknown") {
         Write-Host "  [HINT] Active binary not found in PATH." -ForegroundColor Yellow
+    } elseif ($configDeployedBinary -and $deployedBinary -and ($configDeployedBinary -ne $deployedBinary)) {
+        Write-Host "  [HINT] powershell.json still references a different deploy location than the active PATH binary." -ForegroundColor Yellow
     }
     exit 1
 } else {
