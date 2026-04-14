@@ -24,6 +24,14 @@ Generic, portable documentation for the project's CI/CD pipeline architecture. T
 
 See the Mermaid diagram: [`images/ci-pipeline-flow.mmd`](images/ci-pipeline-flow.mmd)
 
+## Unified Architecture Diagram
+
+See the Mermaid diagram: [`images/unified-architecture.mmd`](images/unified-architecture.mmd)
+
+Shows how all nine pipeline specs connect — from CI validation through
+release automation, installation, changelog, versioning, environment setup,
+terminal standards, and binary branding.
+
 ---
 
 ## Quick Reference
