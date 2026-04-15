@@ -138,3 +138,20 @@ No circular dependencies. All calls are within the same package.
 3. Zero functional changes — identical binary output.
 4. All imports minimal and correctly scoped per file.
 5. `go test ./...` passes.
+
+---
+
+## See Also
+
+**Same package (`release/`) refactors:**
+
+- [60-refactor-ziparchive.md](60-refactor-ziparchive.md) — zip I/O, dry-run, archive building
+- [61-refactor-autocommit.md](61-refactor-autocommit.md) — auto-commit, git operations
+- [63-refactor-workflowbranch.md](63-refactor-workflowbranch.md) — branch workflow, pending releases
+- [64-refactor-workflow.md](64-refactor-workflow.md) — main workflow, validation
+- [65-refactor-assets.md](65-refactor-assets.md) — cross-compilation, build helpers
+- [78-refactor-compress.md](78-refactor-compress.md) — zip and tar.gz compression
+
+**Related `cmd/` refactors:**
+- [70-refactor-listreleases.md](70-refactor-listreleases.md) — release listing
+- [71-refactor-listversions.md](71-refactor-listversions.md) — version listing

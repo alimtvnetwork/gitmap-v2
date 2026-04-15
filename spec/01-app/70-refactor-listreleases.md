@@ -39,3 +39,15 @@ Imports: `fmt`, `os`, `sort`, `strings`, `constants`, `model`, `release`
 - Both files ≤ 200 lines.
 - `go build ./...` succeeds.
 - All existing tests pass unchanged.
+
+---
+
+## See Also
+
+**Same package (`release/cmd/`) refactors:**
+
+- [71-refactor-listversions.md](71-refactor-listversions.md) — version listing
+
+**Related `release/` refactors:**
+- [58-refactor-workflowfinalize.md](58-refactor-workflowfinalize.md) — pipeline, metadata, zip, GitHub upload
+- [63-refactor-workflowbranch.md](63-refactor-workflowbranch.md) — branch workflow, pending releases
