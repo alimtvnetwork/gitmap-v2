@@ -177,9 +177,9 @@ The following app-level specs apply this generic overview:
 
 | App Spec | Covers |
 |----------|--------|
-| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Full build pipeline, config, deploy, and run patterns |
-| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Handoff, skip-if-current, version verification, rollback |
-| [09-build-deploy.md](../../01-app/09-build-deploy.md) | gitmap-specific build, deploy, and `-R` flag behavior |
+| [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Full build pipeline, config, deploy, and run patterns |
+| [03-self-update-mechanism.md](../03-general/03-self-update-mechanism.md) | Handoff, skip-if-current, version verification, rollback |
+| [09-build-deploy.md](../01-app/09-build-deploy.md) | gitmap-specific build, deploy, and `-R` flag behavior |
 
 ## Contributors
 

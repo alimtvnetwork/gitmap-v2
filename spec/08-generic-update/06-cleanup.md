@@ -178,8 +178,8 @@ prefix pattern for your tool.
 
 | App Spec | Covers |
 |----------|--------|
-| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | `.old` artifact lifecycle during deploy |
-| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Post-update cleanup of handoff and `.old` files |
+| [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | `.old` artifact lifecycle during deploy |
+| [03-self-update-mechanism.md](../03-general/03-self-update-mechanism.md) | Post-update cleanup of handoff and `.old` files |
 
 ## Contributors
 
