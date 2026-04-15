@@ -118,3 +118,23 @@ No circular dependencies. All calls are within the same package.
 3. Zero functional changes — identical binary output.
 4. All imports minimal and correctly scoped per file.
 5. `go test ./...` passes.
+
+---
+
+## See Also
+
+**Same package (`cmd/`) refactors:**
+
+- [59-refactor-root-dispatch.md](59-refactor-root-dispatch.md) — dispatch splitting
+- [66-refactor-zipgroupops.md](66-refactor-zipgroupops.md) — zip group CRUD and display
+- [68-refactor-aliasops.md](68-refactor-aliasops.md) — alias CRUD and suggest
+- [69-refactor-tempreleaseops.md](69-refactor-tempreleaseops.md) — temp release branch ops
+- [72-refactor-sshgen.md](72-refactor-sshgen.md) — SSH key generation
+- [73-refactor-scanprojects.md](73-refactor-scanprojects.md) — project detection
+- [74-refactor-amendexec.md](74-refactor-amendexec.md) — git amend operations
+- [75-refactor-status.md](75-refactor-status.md) — status display
+- [76-refactor-exec.md](76-refactor-exec.md) — batch execution
+
+**Related `release/` refactors:**
+- [58-refactor-workflowfinalize.md](58-refactor-workflowfinalize.md) — pipeline, metadata, zip, GitHub upload
+- [64-refactor-workflow.md](64-refactor-workflow.md) — main workflow, validation

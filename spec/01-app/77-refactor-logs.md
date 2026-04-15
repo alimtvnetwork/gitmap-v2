@@ -33,3 +33,15 @@ Imports: `fmt`, `strings`, `constants`
 - Both files ≤ 200 lines.
 - `go build ./...` succeeds.
 - All existing tests pass unchanged.
+
+---
+
+## See Also
+
+**Same package (`tui/`) refactors:**
+
+- [67-refactor-tui.md](67-refactor-tui.md) — model, update, view rendering
+
+**Related `cmd/` refactors:**
+- [75-refactor-status.md](75-refactor-status.md) — status display
+- [76-refactor-exec.md](76-refactor-exec.md) — batch execution

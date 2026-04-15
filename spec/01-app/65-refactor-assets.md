@@ -39,3 +39,20 @@ Imports: `fmt`, `os`, `os/exec`, `path/filepath`, `strings`
 - Both files ≤ 200 lines.
 - `go build ./...` succeeds.
 - All existing tests pass unchanged.
+
+---
+
+## See Also
+
+**Same package (`release/`) refactors:**
+
+- [58-refactor-workflowfinalize.md](58-refactor-workflowfinalize.md) — pipeline, metadata, zip, GitHub upload
+- [60-refactor-ziparchive.md](60-refactor-ziparchive.md) — zip I/O, dry-run, archive building
+- [61-refactor-autocommit.md](61-refactor-autocommit.md) — auto-commit, git operations
+- [63-refactor-workflowbranch.md](63-refactor-workflowbranch.md) — branch workflow, pending releases
+- [64-refactor-workflow.md](64-refactor-workflow.md) — main workflow, validation
+- [78-refactor-compress.md](78-refactor-compress.md) — zip and tar.gz compression
+
+**Related `cmd/` refactors:**
+- [70-refactor-listreleases.md](70-refactor-listreleases.md) — release listing
+- [71-refactor-listversions.md](71-refactor-listversions.md) — version listing

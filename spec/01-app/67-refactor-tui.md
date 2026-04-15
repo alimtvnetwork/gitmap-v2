@@ -34,3 +34,15 @@ Imports: `strings`, `constants`
 - Both files ≤ 200 lines.
 - `go build ./...` succeeds.
 - All existing tests pass unchanged.
+
+---
+
+## See Also
+
+**Same package (`tui/`) refactors:**
+
+- [77-refactor-logs.md](77-refactor-logs.md) — log model, search, view
+
+**Related `cmd/` refactors:**
+- [75-refactor-status.md](75-refactor-status.md) — status display
+- [76-refactor-exec.md](76-refactor-exec.md) — batch execution
