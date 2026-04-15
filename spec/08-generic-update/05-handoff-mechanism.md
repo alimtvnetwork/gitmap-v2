@@ -250,8 +250,8 @@ When the source repo is not available, use a standalone updater binary:
 
 | App Spec | Covers |
 |----------|--------|
-| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Self-update orchestration (Windows-safe handoff) |
-| [03-self-update-mechanism.md](../../03-general/03-self-update-mechanism.md) | Two-phase handoff, worker launch, foreground blocking |
+| [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Self-update orchestration (Windows-safe handoff) |
+| [03-self-update-mechanism.md](../03-general/03-self-update-mechanism.md) | Two-phase handoff, worker launch, foreground blocking |
 
 ## Contributors
 
