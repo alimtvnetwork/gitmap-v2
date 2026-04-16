@@ -65,11 +65,18 @@ func runCloneNext(args []string) {
 
 	targetName := clonenext.TargetRepoName(parsed.BaseName, targetVersion)
 	targetURL := clonenext.ReplaceRepoInURL(remoteURL, repoName, targetName)
-	targetPath := filepath.Join(parentDir, targetName)
 
+	// Flatten by default: clone into base name folder (no version suffix).
+	flattenedFolder := parsed.BaseName
+	targetPath := filepath.Join(parentDir, flattenedFolder)
+
+	// If the flattened folder already exists, remove it for fresh clone.
 	if _, statErr := os.Stat(targetPath); statErr == nil {
-		fmt.Fprintf(os.Stderr, constants.ErrCloneNextExists, targetPath)
-		os.Exit(1)
+		fmt.Printf(constants.MsgFlattenRemoving, flattenedFolder)
+		if removeErr := os.RemoveAll(targetPath); removeErr != nil {
+			fmt.Fprintf(os.Stderr, constants.WarnCloneNextRemoveFailed, flattenedFolder, removeErr)
+			os.Exit(1)
+		}
 	}
 
 	// Optionally check and create the target GitHub repo when --create-remote is set.
@@ -97,19 +104,28 @@ func runCloneNext(args []string) {
 		}
 	}
 
-	fmt.Printf(constants.MsgCloneNextCloning, targetName, parentDir)
+	fmt.Printf(constants.MsgFlattenCloning, targetName, flattenedFolder)
 	cloneResult := runGitClone(targetURL, targetPath)
 	if !cloneResult {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneNextFailed, targetName)
 		os.Exit(1)
 	}
-	fmt.Printf(constants.MsgCloneNextDone, targetName)
+	fmt.Printf(constants.MsgFlattenDone, targetName, flattenedFolder)
+
+	// Record version history in DB.
+	recordVersionHistory(targetPath, parsed.CurrentVersion, targetVersion, flattenedFolder)
 
 	if !noDesktop {
 		registerCloneNextDesktop(targetName, targetPath)
 	}
 
-	handleCloneNextRemoval(currentFolder, cwd, targetPath, deleteFlag, keepFlag)
+	// Handle removal of the old versioned folder (only if different from flattened path).
+	if currentFolder != flattenedFolder {
+		handleCloneNextRemoval(currentFolder, cwd, targetPath, deleteFlag, keepFlag)
+	}
+
+	// Set GITMAP_SHELL_HANDOFF for the shell wrapper to cd into the new folder.
+	os.Setenv("GITMAP_SHELL_HANDOFF", targetPath)
 }
 
 // extractRepoName extracts the repository name from a remote URL.
