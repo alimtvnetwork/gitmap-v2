@@ -111,14 +111,16 @@ The update PowerShell script is assembled from template constants in this order:
 
 ## Error Scenarios
 
-| Scenario                         | Behavior                                              |
-|----------------------------------|-------------------------------------------------------|
-| Paths identical (same binary)    | Sync skipped silently                                 |
-| Versions already match           | Sync skipped silently                                 |
-| Copy succeeds                    | `[OK] Synced successfully.`                           |
-| Copy fails (lock/permissions)    | `[WARN]` with hint to run `gitmap doctor --fix-path`  |
-| Deployed binary not found        | Sync skipped (nothing to copy from)                   |
-| Active binary not in PATH        | Sync skipped (no target to copy to)                   |
+| Scenario                         | Behavior                                                     |
+|----------------------------------|--------------------------------------------------------------|
+| Paths identical (same binary)    | Sync skipped silently                                        |
+| Versions already match           | Sync skipped silently                                        |
+| Copy succeeds (Step 2)           | `[OK] Synced successfully.`                                  |
+| Copy fails, rename succeeds      | `[OK] Synced via rename fallback.`                           |
+| Rename fails, kill+copy succeeds | `[OK] Synced after killing stale processes.`                 |
+| All strategies fail              | `[WARN]` with hint to run `gitmap doctor --fix-path`         |
+| Deployed binary not found        | Sync skipped (nothing to copy from)                          |
+| Active binary not in PATH        | Sync skipped (no target to copy to)                          |
 
 ---
 
