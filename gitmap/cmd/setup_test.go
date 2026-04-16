@@ -36,10 +36,12 @@ func TestResolveDefaultSetupConfigPathFallsBackToRepoPath(t *testing.T) {
 	}
 }
 
-func TestResolveDefaultSetupConfigPathKeepsLegacyPathAsFallback(t *testing.T) {
-	got := resolveDefaultSetupConfigPath(constants.DefaultSetupConfigPath, t.TempDir(), "")
-	if got != constants.DefaultSetupConfigPath {
-		t.Errorf("expected %q, got %q", constants.DefaultSetupConfigPath, got)
+func TestResolveDefaultSetupConfigPathUsesBinaryFallbackWhenMissing(t *testing.T) {
+	binaryDataDir := t.TempDir()
+	want := filepath.Join(binaryDataDir, filepath.Base(constants.DefaultSetupConfigPath))
+	got := resolveDefaultSetupConfigPath(constants.DefaultSetupConfigPath, binaryDataDir, "")
+	if got != want {
+		t.Errorf("expected %q, got %q", want, got)
 	}
 }
 
