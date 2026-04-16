@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.76.0 — (2026-04-16)
+
+### Added
+
+- New `gitmap version-history` (`vh`) command displays all version transitions for the current repo with `--limit N` and `--json` flags.
+- Full database ERD (Mermaid) added to `spec/01-app/gitmap-database-erd.mmd` covering all 22 tables including `RepoVersionHistory`.
+- Updated `spec/01-app/59-clone-next.md` and `spec/01-app/87-clone-next-flatten.md` to reflect flatten-by-default behavior (no `--flatten` flag required).
+
+---
+
 ## v2.75.0 — (2026-04-16)
 
 ### Added
