@@ -444,3 +444,4 @@ Each GitHub release body includes:
 | Release assets | [05-release-assets.md](../07-generic-release/05-release-assets.md) | Asset naming, compression, checksums |
 | Cross-compilation | [01-cross-compilation.md](../07-generic-release/01-cross-compilation.md) | Multi-platform Go build targets |
 | Release data model | [13-release-data-model.md](13-release-data-model.md) | Per-release metadata, `latest.json`, semver rules |
+| Clone-next flatten | [87-clone-next-flatten.md](87-clone-next-flatten.md) | `--flatten` flag, version tracking in DB, RepoVersionHistory |
