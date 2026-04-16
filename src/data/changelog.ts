@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.74.0",
+    date: "2026-04-16",
+    items: [
+      "`gitmap doctor setup` checks: verifies `git-setup.json` resolution from the installed binary location and warns when the shell wrapper is not loaded.",
+      "Shell wrapper scripts now export `GITMAP_WRAPPER=1` to detect raw binary vs. wrapper invocation at runtime.",
+      "`gitmap setup` resolves `git-setup.json` relative to the binary path instead of CWD, fixing 'file not found' errors when run from other directories.",
+      "Post-setup verification step checks whether the shell function is loaded and prints reload instructions if not.",
+      "`gitmap cd` prints a stderr warning when called without the shell wrapper, guiding users to run `gitmap setup` or reload their profile.",
+    ],
+  },
+  {
     version: "v2.72.0",
     date: "2026-04-16",
     items: [
