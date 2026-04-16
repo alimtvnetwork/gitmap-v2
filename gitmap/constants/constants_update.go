@@ -110,6 +110,30 @@ if (($runExit -ne 0) -and ($runExit -ne $null)) {
     exit $runExit
 }
 `
+	UpdatePSSync = `
+# Auto-sync deployed binary to active PATH binary if they differ.
+if ($activeBinary -and $deployedBinary -and (Test-Path $deployedBinary)) {
+    $resolvedActive = (Resolve-Path $activeBinary -ErrorAction SilentlyContinue).Path
+    $resolvedDeployed = (Resolve-Path $deployedBinary -ErrorAction SilentlyContinue).Path
+    if ($resolvedActive -and $resolvedDeployed -and ($resolvedActive -ne $resolvedDeployed)) {
+        $deployedVer = & $deployedBinary version 2>&1
+        $activeVer = & $activeBinary version 2>&1
+        if ($deployedVer -ne $activeVer) {
+            Write-Host ""
+            Write-Host "  Syncing deployed binary to active PATH location..." -ForegroundColor Cyan
+            Write-Host "    From: $resolvedDeployed" -ForegroundColor DarkGray
+            Write-Host "    To:   $resolvedActive" -ForegroundColor DarkGray
+            try {
+                Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+                Write-Host "  [OK] Synced successfully." -ForegroundColor Green
+            } catch {
+                Write-Host "  [WARN] Could not sync: $_" -ForegroundColor Yellow
+                Write-Host "  [HINT] Run 'gitmap doctor --fix-path' manually." -ForegroundColor Yellow
+            }
+        }
+    }
+}
+`
 	UpdatePSVersionAfter = `
 $activeAfter = "unknown"
 $deployedAfter = "unknown"
