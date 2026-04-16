@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/cloner"
+	"github.com/user/gitmap/clonenext"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/model"
