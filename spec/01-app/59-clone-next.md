@@ -299,3 +299,10 @@ Retrying folder removal...
 4. ~~Lock detection and process termination~~ — done (v2.52.0)
 5. Help, completion, and automated test updates
 
+## See Also
+
+- [Clone-Next Flatten](87-clone-next-flatten.md) — `--flatten` flag for version iteration with DB tracking
+- [Cloner](05-cloner.md) — File-based and direct URL clone behavior
+- [Clone Direct URL](88-clone-direct-url.md) — Single repo clone from Git URL
+- [Clone Progress](34-clone-progress.md) — Progress tracking for batch clone operations
+
