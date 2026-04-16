@@ -2,7 +2,7 @@
 
 ## Status
 
-Pending behavior correction after spec approval.
+Implemented (v2.75.0). Flatten-by-default behavior active.
 
 ## Command
 
@@ -20,10 +20,27 @@ cn
 
 From inside an existing Git repository, derive the source repository from
 `remote.origin.url`, resolve the next or explicit versioned target repository,
-clone it into the
-parent directory, register it with GitHub Desktop, and optionally remove the
-current local folder. If `--create-remote` is passed, the command will also
-create the target GitHub repository before cloning when it does not exist.
+clone it into the parent directory using the **base name folder** (version
+suffix stripped), register it with GitHub Desktop, record the version
+transition in the database, and optionally remove the current local folder.
+If `--create-remote` is passed, the command will also create the target
+GitHub repository before cloning when it does not exist.
+
+## Flatten-by-Default Behavior
+
+Starting from v2.75.0, `clone-next` always flattens:
+
+1. The target clone folder is the **base name** without version suffix
+   (e.g., `macro-ahk` instead of `macro-ahk-v16`).
+2. If the base name folder already exists, it is **removed entirely** and
+   re-cloned fresh (no prompt).
+3. The remote URL still points to the versioned repo (e.g., `macro-ahk-v16`).
+4. Version columns (`CurrentVersionTag`, `CurrentVersionNum`) are updated
+   on the `Repos` row.
+5. A `RepoVersionHistory` row is inserted tracking the transition.
+6. `GITMAP_SHELL_HANDOFF` is set to the flattened path.
+
+The previous `--flatten` flag is no longer required — this is the default.
 
 ## Source of Truth
 
@@ -50,6 +67,7 @@ are not perfectly aligned.
 | Current version | Version implied by the current remote repo name |
 | Target version | Version requested by the user |
 | Target repo | New repo name in the form `<base>-vN` |
+| Flattened folder | Local folder using base name only |
 
 ## Version Arguments
 
@@ -69,11 +87,11 @@ are not perfectly aligned.
 
 ### No-Suffix Behavior
 
-| Current repo | Argument | Target repo |
-|--------------|----------|-------------|
-| `macro-ahk` | `v++` | `macro-ahk-v2` |
-| `macro-ahk` | `v+1` | `macro-ahk-v2` |
-| `macro-ahk` | `v15` | `macro-ahk-v15` |
+| Current repo | Argument | Target repo | Local folder |
+|--------------|----------|-------------|--------------|
+| `macro-ahk` | `v++` | `macro-ahk-v2` | `macro-ahk/` |
+| `macro-ahk` | `v+1` | `macro-ahk-v2` | `macro-ahk/` |
+| `macro-ahk` | `v15` | `macro-ahk-v15` | `macro-ahk/` |
 
 ## Target Resolution
 
@@ -81,17 +99,16 @@ After parsing the current remote:
 
 1. Compute the target version.
 2. Build the target repo name: `<base-name>-v<target-version>`.
-3. Build the target local path: `<parent-of-current-working-directory>/<target-repo-name>`.
+3. Build the target local path: `<parent-directory>/<base-name>` (flattened).
 4. Build the target remote URL by preserving the same host, owner/org, and URL
    scheme as the current remote.
 
 ### URL Examples
 
-| Current remote | Target remote |
-|----------------|---------------|
-| `https://github.com/alimtvnetwork/macro-ahk-v11.git` | `https://github.com/alimtvnetwork/macro-ahk-v12.git` |
-| `git@github.com:alimtvnetwork/macro-ahk-v11.git` | `git@github.com:alimtvnetwork/macro-ahk-v12.git` |
-| `https://github.com/alimtvnetwork/coding-guidelines-v7.git` | `https://github.com/alimtvnetwork/coding-guidelines-v8.git` |
+| Current remote | Target remote | Local folder |
+|----------------|---------------|--------------|
+| `https://github.com/alimtvnetwork/macro-ahk-v11.git` | `https://github.com/alimtvnetwork/macro-ahk-v12.git` | `macro-ahk/` |
+| `git@github.com:alimtvnetwork/macro-ahk-v11.git` | `git@github.com:alimtvnetwork/macro-ahk-v12.git` | `macro-ahk/` |
 
 ## Optional GitHub Creation (`--create-remote`)
 
@@ -123,62 +140,53 @@ instead of guessing.
 2. Resolve `remote.origin.url`.
 3. Parse the current remote repo name and current version.
 4. Resolve the target version from `v++`, `v+1`, or `vN`.
-5. Compute the target repo name and target local path in the parent directory.
-6. Check that the local target directory does not already exist.
+5. Compute the target repo name and flattened local path (base name only).
+6. If the flattened folder already exists, remove it entirely.
 7. If `--create-remote` is set, check whether the target remote exists and
    create it if missing.
-8. Clone the target repo into the parent directory.
-9. Register the cloned repo with GitHub Desktop unless `--no-desktop` is set.
-10. Change to the parent directory to release file locks on the current folder.
-11. If clone succeeds, either:
-    - remove the current folder automatically with `--delete`
-    - keep it automatically with `--keep`
-    - otherwise prompt the user interactively
-12. If removal fails, scan for processes locking the folder:
-    - On Windows: use Sysinternals `handle.exe` or PowerShell WMI query.
-    - On Unix/macOS: use `lsof +D <path>`.
-    - Display the list of locking processes with name and PID.
-    - Prompt the user to terminate them.
-    - If confirmed, kill each process and retry `RemoveAll` after a brief delay.
-13. If the current folder was removed, change into the newly cloned directory
-    and print a confirmation (`→ Now in <target>`).
+8. Clone the target repo into the flattened folder.
+9. Record version transition in database (`RepoVersionHistory`).
+10. Update `Repos` row with `CurrentVersionTag` and `CurrentVersionNum`.
+11. Register the cloned repo with GitHub Desktop unless `--no-desktop` is set.
+12. If `--delete` is set and the current folder differs from the flattened path,
+    remove the current versioned folder.
+13. Set `GITMAP_SHELL_HANDOFF` to the flattened path.
 
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--delete` | false | Remove the current folder automatically after successful clone |
+| `--delete` | false | Remove the current versioned folder after clone (when different from flattened path) |
 | `--keep` | false | Keep the current folder and skip the removal prompt |
 | `--no-desktop` | false | Skip GitHub Desktop registration |
 | `--create-remote` | false | Create the target GitHub repo if it does not exist (requires `GITHUB_TOKEN`) |
 | `--ssh-key <name>` / `-K <name>` | (none) | Use a named SSH key for Git operations |
 | `--verbose` | false | Show detailed clone-next diagnostics |
 
-If neither `--delete` nor `--keep` is provided, the command must prompt after a
-successful clone.
-
 ## Examples
 
-### Example 1: Simple clone with `v+1`
-
-```text
-D:\wp-work\riseup-asia\coding-guidelines-v7> gitmap cn v+1
-
-Cloning coding-guidelines-v8 into D:\wp-work\riseup-asia...
-✓ Cloned coding-guidelines-v8
-✓ Registered coding-guidelines-v8 with GitHub Desktop
-Remove current folder coding-guidelines-v7? [y/N] n
-```
-
-### Example 2: Simple clone with `v++`
+### Example 1: Simple clone with `v++` (flattened)
 
 ```text
 D:\wp-work\riseup-asia\macro-ahk-v11> gitmap cn v++
 
-Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v12
+Removing existing macro-ahk for fresh clone...
+Cloning macro-ahk-v12 into macro-ahk (flattened)...
+✓ Cloned macro-ahk-v12 into macro-ahk
+✓ Recorded version transition v11 -> v12
 ✓ Registered macro-ahk-v12 with GitHub Desktop
-Remove current folder macro-ahk-v11? [y/N] n
+```
+
+### Example 2: Jump to a specific version with auto-delete
+
+```text
+D:\wp-work\riseup-asia\macro-ahk-v12> gitmap cn v15 --delete
+
+Cloning macro-ahk-v15 into macro-ahk (flattened)...
+✓ Cloned macro-ahk-v15 into macro-ahk
+✓ Recorded version transition v12 -> v15
+✓ Registered macro-ahk-v15 with GitHub Desktop
+✓ Removed macro-ahk-v12
 ```
 
 ### Example 3: Repo without an existing suffix
@@ -186,47 +194,36 @@ Remove current folder macro-ahk-v11? [y/N] n
 ```text
 D:\wp-work\riseup-asia\macro-ahk> gitmap cn v++
 
-Cloning macro-ahk-v2 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v2
+Removing existing macro-ahk for fresh clone...
+Cloning macro-ahk-v2 into macro-ahk (flattened)...
+✓ Cloned macro-ahk-v2 into macro-ahk
+✓ Recorded version transition v1 -> v2
 ✓ Registered macro-ahk-v2 with GitHub Desktop
-Remove current folder macro-ahk? [y/N] y
-✓ Removed macro-ahk
-→ Now in macro-ahk-v2
 ```
 
-### Example 4: Jump to an exact version with auto-delete
-
-```text
-D:\wp-work\riseup-asia\macro-ahk-v12> gitmap cn v15 --delete
-
-Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v15
-✓ Registered macro-ahk-v15 with GitHub Desktop
-✓ Removed macro-ahk-v12
-→ Now in macro-ahk-v15
-```
-
-### Example 5: Create remote repo before clone
+### Example 4: Create remote repo before clone
 
 ```text
 D:\wp-work\riseup-asia\macro-ahk-v12> gitmap cn v15 --create-remote --delete
 
 Creating GitHub repo macro-ahk-v15...
 ✓ Created GitHub repo macro-ahk-v15
-Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v15
+Cloning macro-ahk-v15 into macro-ahk (flattened)...
+✓ Cloned macro-ahk-v15 into macro-ahk
+✓ Recorded version transition v12 -> v15
 ✓ Registered macro-ahk-v15 with GitHub Desktop
 ✓ Removed macro-ahk-v12
-→ Now in macro-ahk-v15
 ```
 
-### Example 6: Lock detection during folder removal
+### Example 5: Lock detection during folder removal
 
 ```text
 D:\wp-work\riseup-asia\macro-ahk-v11> gitmap cn v++ --delete
 
-Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
-✓ Cloned macro-ahk-v12
+Removing existing macro-ahk for fresh clone...
+Cloning macro-ahk-v12 into macro-ahk (flattened)...
+✓ Cloned macro-ahk-v12 into macro-ahk
+✓ Recorded version transition v11 -> v12
 ✓ Registered macro-ahk-v12 with GitHub Desktop
 Warning: could not remove macro-ahk-v11: unlinkat: access denied
 Checking for processes locking macro-ahk-v11...
@@ -240,7 +237,6 @@ Terminating explorer.exe (PID 5928)...
 ✓ Terminated explorer.exe
 Retrying folder removal...
 ✓ Removed macro-ahk-v11
-→ Now in macro-ahk-v12
 ```
 
 ## Error Handling
@@ -251,58 +247,58 @@ Retrying folder removal...
 | `remote.origin.url` missing | Print a clear error and exit 1 |
 | Remote URL cannot be parsed | Print a clear error and exit 1 |
 | Invalid version argument | Print a clear error and exit 1 |
-| Local target directory already exists | Print a clear error and suggest `cd` into it |
+| Flattened folder removal fails | Print error and exit 1 |
 | Target GitHub repo creation fails (`--create-remote`) | Print a clear error and stop before clone |
-| Clone fails | Print a clear error and do not delete current folder |
+| Clone fails | Print a clear error and do not update DB |
+| DB version tracking fails | Warn to stderr, do not exit (clone succeeded) |
 | GitHub Desktop registration fails | Warn, but keep clone success |
-| Folder deletion fails (no locks found) | Warn, but keep clone success |
-| Folder deletion fails (locks found) | List locking processes, prompt to kill, retry removal |
-| Process termination fails | Warn per-process, continue with remaining, retry removal |
-| Lock scan fails (`lsof`/`handle.exe` unavailable) | Warn, skip lock detection, keep clone success |
+| Old folder deletion fails (no locks found) | Warn, but keep clone success |
+| Old folder deletion fails (locks found) | List locking processes, prompt to kill, retry removal |
 
 ## Implementation Scope
 
 | Component | File |
 |-----------|------|
 | Command handler | `cmd/clonenext.go` |
+| Version history recording | `cmd/clonenexthistory.go` |
+| Flag parser | `cmd/clonenextflags.go` |
 | Version parser | `clonenext/version.go` |
 | Lock detection (shared) | `lockcheck/lockcheck.go` |
 | Lock detection (Windows) | `lockcheck/lockcheck_windows.go` |
 | Lock detection (Unix) | `lockcheck/lockcheck_unix.go` |
-| Completion hints | `completion/*` and command completion sources |
+| Version history store | `store/version_history.go` |
+| Version history model | `model/version_history.go` |
+| Constants | `constants/constants_clonenext.go`, `constants/constants_version_history.go` |
 | Help text | `helptext/clone-next.md` |
-| Command usage output | `cmd/rootusage.go` and constants |
 | Spec | `spec/01-app/59-clone-next.md` |
 
 ## Acceptance Criteria
 
-1. `gitmap cn v++` increments the current version correctly.
+1. `gitmap cn v++` clones into the base name folder (flattened) by default.
 2. `gitmap cn v+1` behaves exactly like `v++`.
-3. `gitmap cn v15` clones the exact target version.
-4. The source repo name is derived from the Git remote, not guessed from the
-   local folder name.
-5. The local clone target is always the parent directory of the current repo.
-6. `--create-remote` creates missing target GitHub repos before clone.
-7. GitHub Desktop registration happens by default after a successful clone.
-8. Current-folder removal happens only after a successful clone.
-9. `--delete` and `--keep` override the interactive removal prompt.
-10. Help text, completion hints, and tests cover `v++`, `v+1`, and `vN`.
-11. When folder removal fails, locking processes are detected and listed.
-12. User is prompted to terminate locking processes before retry.
-13. Lock detection works cross-platform (Windows via handle.exe/WMI, Unix via lsof).
+3. `gitmap cn v15` clones the exact target version into the flattened folder.
+4. The source repo name is derived from the Git remote, not the local folder.
+5. If the flattened folder exists, it is removed and re-cloned fresh.
+6. `Repos.CurrentVersionTag` and `CurrentVersionNum` are updated after clone.
+7. A `RepoVersionHistory` row is inserted for each transition.
+8. `--create-remote` creates missing target GitHub repos before clone.
+9. GitHub Desktop registration happens by default after a successful clone.
+10. `--delete` removes the old versioned folder when it differs from the flattened path.
+11. `GITMAP_SHELL_HANDOFF` is set to the flattened path.
+12. Lock detection works cross-platform for folder removal.
 
 ## Deferred Implementation Phases
 
 1. ~~Version parsing and resolution fixes~~ — done
-2. ~~Target GitHub repo existence check and creation~~ — done (opt-in via `--create-remote`)
-3. ~~Clone workflow hardening~~ — done (auto-cd before removal)
+2. ~~Target GitHub repo existence check and creation~~ — done
+3. ~~Clone workflow hardening~~ — done
 4. ~~Lock detection and process termination~~ — done (v2.52.0)
-5. Help, completion, and automated test updates
+5. ~~Flatten-by-default with version tracking~~ — done (v2.75.0)
+6. Help, completion, and automated test updates
 
 ## See Also
 
-- [Clone-Next Flatten](87-clone-next-flatten.md) — `--flatten` flag for version iteration with DB tracking
+- [Clone-Next Flatten](87-clone-next-flatten.md) — Flatten mode DB schema and version tracking
 - [Cloner](05-cloner.md) — File-based and direct URL clone behavior
 - [Clone Direct URL](88-clone-direct-url.md) — Single repo clone from Git URL
 - [Clone Progress](34-clone-progress.md) — Progress tracking for batch clone operations
-
