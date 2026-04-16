@@ -24,23 +24,31 @@
 - ✅ PascalCase for all DB table/column names
 - ✅ `seo-write` command with templates, CSV, rotation, and dry-run
 - ✅ Unit test infrastructure with PowerShell runner (`run.ps1 -t`)
-- ✅ `--compress` flag for release assets (.zip/.tar.gz)
-- ✅ `--checksums` flag for SHA256 checksums.txt generation
-- ✅ Go cross-compilation pipeline (6 targets, auto-detect, GitHub upload)
-- ✅ `--no-assets` and `--targets` flags for release customization
-- ✅ Shell completion for all release flags (bash/zsh/powershell)
-- ✅ Enhanced `list` output with labeled fields and inline cd hints
-- ✅ Spec 41: Go Release Assets specification document
-- ✅ Config-driven release targets: `release.targets` in `config.json` overrides default matrix
-- ✅ Config-driven `release.checksums` and `release.compress` booleans
-- ✅ `--list-targets` flag: prints resolved target matrix with source label
-
-## Completed (Recent)
-
-- ✅ **Build documentation site**: Replace placeholder React frontend with actual gitmap docs (commands, examples, architecture)
-- ✅ **Add Linux/macOS support**: Shell scripts alongside PowerShell, cross-compile binary, GitHub Actions CI/CD
-- ✅ **Add progress bar for clone**: Real-time `[current/total]` counter with repo name, duration, and success/failure summary
+- ✅ `--compress`, `--checksums`, Go cross-compilation pipeline
+- ✅ Config-driven release targets, checksums, and compress booleans
+- ✅ Build documentation site with actual gitmap docs
+- ✅ Add Linux/macOS support with cross-compile binary and CI/CD
+- ✅ Add progress bar for clone
+- ✅ **`--flatten` for `clone-next`** → Promoted to default behavior in v2.75.0 (no flag needed)
+- ✅ **`gitmap clone <url>` auto-flatten** versioned URLs (v2.75.0)
+- ✅ **`RepoVersionHistory` table** for tracking version transitions (v2.75.0)
+- ✅ **`gitmap version-history` (`vh`) command** with `--limit`/`--json` (v2.76.0)
+- ✅ **Database ERD** covering all 22 tables as Mermaid diagram (v2.76.0)
+- ✅ **Spec updates** for flatten-by-default behavior (v2.76.0)
+- ✅ **Tab completion** for `version-history`/`vh` (v2.76.0)
+- ✅ **Docs site page** for version-history with terminal previews (v2.76.0)
+- ✅ **`gitmap doctor setup`** checks: config resolution + wrapper detection (v2.74.0)
+- ✅ **Shell wrapper `GITMAP_WRAPPER=1`** for raw binary vs wrapper detection (v2.74.0)
+- ✅ **Post-setup verification** warns if shell function not loaded (v2.74.0)
+- ✅ **VS Code admin-mode bypass** with 3-tier launch strategy (v2.72.0)
 
 ## Pending Suggestions
 
-- 🔲 **`--flatten` flag for `clone-next`**: Clone into base-name folder (no version suffix), remove existing folder, track version history in DB with `CurrentVersionTag`/`CurrentVersionNum` columns on Repos + `RepoVersionHistory` table. See [mem://features/clone-next-flatten](../features/clone-next-flatten.md).
+- 🔲 Add `version-history` to docs site sidebar/commands navigation
+- 🔲 Add `clone` page to docs site (file-based + URL clone documentation)
+- 🔲 Add `--dry-run` flag to `clone-next` for previewing actions without executing
+- 🔲 Expand `install` command with database tools (MySQL, PostgreSQL, Redis, etc.)
+- 🔲 Add `gitmap uninstall <tool>` command
+- 🔲 Enhanced `install --list` grouped by category with installed status
+- 🔲 Unit tests for task, env, and install commands
+- 🔲 Update `helptext/env.md` with `--shell` flag usage examples
