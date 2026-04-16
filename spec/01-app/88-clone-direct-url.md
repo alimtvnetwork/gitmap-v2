@@ -35,10 +35,12 @@ gitmap clone <url> --github-desktop         # auto-register (no prompt)
    using the absolute path as the key.
 6. **Enqueue pending task** — create a `Clone` pending task before cloning,
    mark complete/failed after.
-7. **GitHub Desktop prompt** — after a successful clone:
-   - If `--github-desktop` flag is set, register automatically.
-   - Otherwise, prompt: `Add to GitHub Desktop? (y/n)`.
-8. **Print summary** — single-repo success/failure message.
+7. **GitHub Desktop** — auto-register with GitHub Desktop (default behavior
+   for direct URL clones; no prompt).
+8. **VS Code** — if the `code` CLI is on PATH, open the cloned folder in
+   VS Code using `--reuse-window`. Falls back to `--new-window` if reuse
+   fails (handles admin-mode conflicts).
+9. **Print summary** — single-repo success/failure message.
 
 ## URL Detection
 
@@ -121,9 +123,10 @@ gitmap clone git@github.com:alimtvnetwork/wp-alim.git
 |-----------|------|--------|
 | URL detection | `cmd/clone.go` | `isDirectURL()` function |
 | Direct clone flow | `cmd/clone.go` | `executeDirectClone()` function |
+| VS Code open | `cmd/clonevscode.go` | `openInVSCode()`, `isVSCodeAvailable()` |
 | Flag parsing | `cmd/rootflags.go` | Return `folderName` from `parseCloneFlags` |
 | Record builder | `cloner/cloner.go` | `CloneSingleURL()` public function |
-| Constants | `constants/constants_messages.go` | New message constants |
+| Constants | `constants/constants_messages.go` | Clone + VS Code message constants |
 | Constants | `constants/constants_cli.go` | Updated `ErrCloneUsage` |
 | Help text | `helptext/clone.md` | Add URL examples |
 | DB upsert | `store/repo.go` | Existing `UpsertRepos` (no change) |

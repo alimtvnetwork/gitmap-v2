@@ -292,3 +292,14 @@ const (
 	MsgCloneDesktopPrompt  = "Add to GitHub Desktop? (y/n): "
 	ErrCloneURLExists      = "Error: target folder already exists: %s\n"
 )
+
+// VS Code integration messages.
+const (
+	VSCodeBin              = "code"
+	VSCodeFlagReuseWindow  = "--reuse-window"
+	VSCodeFlagNewWindow    = "--new-window"
+	MsgVSCodeOpening       = "  Opening %s in VS Code...\n"
+	MsgVSCodeOpened        = "  VS Code opened."
+	MsgVSCodeNotFound      = "  VS Code not found on PATH — skipping editor open.\n"
+	ErrVSCodeOpenFailed    = "  Warning: could not open VS Code: %v\n"
+)
