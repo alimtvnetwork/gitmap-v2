@@ -6,6 +6,26 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.72.0",
+    date: "2026-04-16",
+    items: [
+      "VS Code admin-mode bypass: `runVSCodeCommand` now captures `CombinedOutput` and waits for the process exit code, ensuring CLI errors are detected before falling through.",
+      "`tryVSCodeDetached` launches `Code.exe` with an isolated `--user-data-dir` to bypass the elevated single-instance lock.",
+      "Added `resolveVSCodeExecutable` with multi-path discovery (`LookPath`, CLI sibling, `LocalAppData`, `Program Files`).",
+      "Extracted all VS Code constants into `constants/constants_vscode.go`.",
+    ],
+  },
+  {
+    version: "v2.71.0",
+    date: "2026-04-16",
+    items: [
+      "VS Code admin mode bypass: 3-tier launch strategy (`--reuse-window` → `--new-window` → `cmd /C start` detached).",
+      "Added `tryVSCodeReuse`, `tryVSCodeNewWindow`, and `tryVSCodeDetached` helpers.",
+      "`gitmap update` PATH sync now includes full 3-step fallback: direct copy, rename-then-copy, and kill stale processes.",
+      "Updated `UpdatePSSync` PowerShell block with rename and kill-process recovery strategies.",
+    ],
+  },
+  {
     version: "v2.67.0",
     date: "2026-04-08",
     items: [
