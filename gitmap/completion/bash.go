@@ -72,6 +72,9 @@ func generateBash() string {
         clone-next|cn)
             COMPREPLY=($(compgen -W "v++ --delete --keep --no-desktop --ssh-key --verbose" -- "$cur"))
             ;;
+        version-history|vh)
+            COMPREPLY=($(compgen -W "--limit --json" -- "$cur"))
+            ;;
         llm-docs|ld)
             if [[ "$prev" == "--format" ]]; then
                 COMPREPLY=($(compgen -W "markdown json" -- "$cur"))

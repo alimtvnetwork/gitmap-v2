@@ -139,6 +139,13 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "version-history" -or $cmd -eq "vh") {
+        $items = @("--limit", "--json")
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     if ($cmd -eq "llm-docs" -or $cmd -eq "ld") {
         if ($prev -eq "--format") {
             $items = @("markdown", "json")
