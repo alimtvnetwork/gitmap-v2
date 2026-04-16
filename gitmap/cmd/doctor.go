@@ -36,6 +36,8 @@ func runDoctorChecks() int {
 	issues += checkGo()
 	issues += checkChangelogFile()
 	issues += checkConfigFile()
+	issues += checkSetupConfig()
+	issues += checkShellWrapper()
 	issues += checkDatabase()
 	issues += checkLockFile()
 	issues += checkNetwork()

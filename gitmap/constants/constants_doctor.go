@@ -134,3 +134,16 @@ const (
 const (
 	DoctorLegacyDirsOK = "No legacy directories (.release/, gitmap-output/, .deployed/)"
 )
+
+// Doctor setup config messages.
+const (
+	DoctorSetupConfigMissing = "git-setup.json not found (setup will fail without --config)"
+	DoctorSetupConfigOKFmt   = "Setup config: %s"
+)
+
+// Doctor shell wrapper messages.
+const (
+	DoctorWrapperOK        = "Shell wrapper active (gitmap cd will change directory)"
+	DoctorWrapperNotLoaded = "Shell wrapper not loaded — gitmap cd prints path but cannot change directory"
+	DoctorWrapperFix       = "Run: gitmap setup, then restart terminal or reload profile (. $PROFILE / source ~/.bashrc / source ~/.zshrc)"
+)
