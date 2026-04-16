@@ -302,4 +302,5 @@ const (
 	MsgVSCodeOpened        = "  VS Code opened."
 	MsgVSCodeNotFound      = "  VS Code not found on PATH — skipping editor open.\n"
 	ErrVSCodeOpenFailed    = "  Warning: could not open VS Code: %v\n"
+	ErrVSCodeAdminLock     = "  Warning: VS Code may be running as administrator — could not open automatically.\n"
 )
