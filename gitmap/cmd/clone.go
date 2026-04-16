@@ -127,8 +127,11 @@ func executeDirectClone(url, folderName string, ghDesktopFlag bool) {
 	// Upsert to database.
 	upsertDirectClone(url, repoName, folderName, absPath)
 
-	// GitHub Desktop registration.
-	promptOrRegisterDesktop(repoName, absPath, ghDesktopFlag)
+	// GitHub Desktop registration (auto-register by default for direct URL).
+	registerSingleDesktop(repoName, absPath)
+
+	// Open in VS Code if available.
+	openInVSCode(absPath)
 
 	completePendingTask(taskDB, taskID)
 }
