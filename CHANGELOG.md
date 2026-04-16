@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.70.0 — (2026-04-16)
+
+### Added
+
+- `gitmap clone <url>` now auto-registers cloned repositories with GitHub Desktop by default (no manual prompt).
+- `gitmap clone <url>` automatically opens the cloned folder in VS Code (`code --reuse-window`), with `--new-window` fallback for admin-mode conflicts.
+- Added `isVSCodeAvailable()` detection via `exec.LookPath` in `cmd/clonevscode.go`.
+
+### Fixed
+
+- `gitmap update` now auto-syncs the active PATH binary when it differs from the deployed binary, resolving the `[FAIL] Active PATH version does not match deployed version` error.
+- Added `Copy-Item` sync step with rename and kill-process fallbacks in the update PowerShell script.
+
+---
+
 ## v2.69.1 — (2026-04-11)
 
 ### Fixed
