@@ -3,6 +3,7 @@ package cmd
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/user/gitmap/completion"
