@@ -147,8 +147,8 @@ const (
 
 // CLI error messages.
 const (
-	ErrSourceRequired         = "Error: source file is required"
-	ErrCloneUsage             = "Usage: gitmap clone <source|json|csv|text> [--target-dir <dir>] [--safe-pull]"
+	ErrSourceRequired         = "Error: source file or URL is required"
+	ErrCloneUsage             = "Usage: gitmap clone <url|source|json|csv|text> [folder] [--target-dir <dir>] [--safe-pull]"
 	ErrShorthandNotFound      = "Error: %s not found.\nRun 'gitmap scan' first to generate output files.\n"
 	ErrConfigLoad             = "Error: failed to load config from %s: %v (operation: read)\n"
 	ErrScanFailed             = "Error: scan failed on directory %s: %v (operation: resolve)\n"
@@ -282,4 +282,13 @@ const (
 const (
 	MsgLegacyIDMigrationStart = "Migrating database from legacy UUID IDs to integer IDs..."
 	MsgLegacyIDMigrationDone  = "Database migration complete. Group-repo associations have been reset."
+)
+
+// Direct URL clone messages.
+const (
+	MsgCloneURLCloning     = "Cloning %s into %s...\n"
+	MsgCloneURLDone        = "Cloned %s successfully.\n"
+	ErrCloneURLFailed      = "Error: clone failed for %s: %v (operation: git-clone)\n"
+	MsgCloneDesktopPrompt  = "Add to GitHub Desktop? (y/n): "
+	ErrCloneURLExists      = "Error: target folder already exists: %s\n"
 )

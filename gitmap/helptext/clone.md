@@ -1,6 +1,7 @@
 # gitmap clone
 
-Re-clone repositories from a structured output file (JSON, CSV, or text).
+Clone repositories from a structured output file (JSON, CSV, or text),
+or clone a single repository directly from a Git URL.
 
 ## Alias
 
@@ -8,7 +9,7 @@ c
 
 ## Usage
 
-    gitmap clone <source|json|csv|text> [flags]
+    gitmap clone <source|json|csv|text|url> [folder] [flags]
 
 ## Flags
 
@@ -16,15 +17,38 @@ c
 |------|---------|-------------|
 | --target-dir \<dir\> | current directory | Base directory for clones |
 | --safe-pull | false | Pull existing repos with retry + diagnostics |
+| --github-desktop | false | Auto-register with GitHub Desktop (no prompt) |
 | --verbose | false | Write detailed debug log |
 
 ## Prerequisites
 
-- Run `gitmap scan` first to generate output files (see scan.md)
+- For file-based clone: run `gitmap scan` first to generate output files
+- For URL clone: just provide the HTTPS or SSH URL
 
 ## Examples
 
-### Example 1: Clone from JSON output
+### Example 1: Clone from a direct URL
+
+    gitmap clone https://github.com/alimtvnetwork/wp-alim.git
+
+**Output:**
+
+    Cloning wp-alim into wp-alim...
+    Cloned wp-alim successfully.
+    Add to GitHub Desktop? (y/n): y
+      + wp-alim registered with GitHub Desktop.
+
+### Example 2: Clone URL into a custom folder
+
+    gitmap clone https://github.com/alimtvnetwork/wp-alim.git "my-project"
+
+**Output:**
+
+    Cloning wp-alim into my-project...
+    Cloned wp-alim successfully.
+    Add to GitHub Desktop? (y/n): n
+
+### Example 3: Clone from JSON output
 
     gitmap clone json --target-dir D:\projects
 
@@ -33,25 +57,22 @@ c
     Cloning from .gitmap/output/gitmap.json...
     [1/12] Cloning my-api... done
     [2/12] Cloning web-app... done
-    [3/12] Cloning billing-svc... done
-    [4/12] Cloning auth-gateway... done
     ...
-    ✓ 12 repositories cloned to D:\projects
+    Clone complete: 12 succeeded, 0 failed
 
-### Example 2: Clone with safe-pull for existing repos
+### Example 4: Clone with safe-pull for existing repos
 
     gitmap c csv --safe-pull
 
 **Output:**
 
-    [1/8] my-api exists → pulling... Already up to date.
-    [2/8] web-app exists → pulling... Updated (3 new commits)
+    [1/8] my-api exists -> pulling... Already up to date.
+    [2/8] web-app exists -> pulling... Updated (3 new commits)
     [3/8] Cloning billing-svc... done
-    [4/8] Cloning auth-gateway... done
     ...
-    ✓ 8 repositories processed (2 pulled, 6 cloned)
+    Clone complete: 8 succeeded, 0 failed
 
-### Example 3: Clone from text file with verbose logging
+### Example 5: Clone from text file with verbose logging
 
     gitmap clone text --verbose
 
@@ -60,13 +81,12 @@ c
     [verbose] Log file: gitmap-debug-2025-03-10T14-30.log
     Cloning from .gitmap/output/gitmap.txt...
     [1/5] Cloning https://github.com/user/my-api.git... done
-    [2/5] Cloning https://github.com/user/web-app.git... done
     ...
-    ✓ 5 repositories cloned
-    [verbose] Debug log written to gitmap-debug-2025-03-10T14-30.log
+    Clone complete: 5 succeeded, 0 failed
 
 ## See Also
 
 - [scan](scan.md) — Scan directories to generate output files
 - [pull](pull.md) — Pull individual or grouped repos
 - [desktop-sync](desktop-sync.md) — Sync repos to GitHub Desktop
+- [clone-next](clone-next.md) — Clone next version of a repo

@@ -41,7 +41,7 @@ func resolveScanDir(fs *flag.FlagSet) string {
 }
 
 // parseCloneFlags parses flags for the clone command.
-func parseCloneFlags(args []string) (source, targetDir, sshKeyName string, safePull, ghDesktop, verbose bool) {
+func parseCloneFlags(args []string) (source, folderName, targetDir, sshKeyName string, safePull, ghDesktop, verbose bool) {
 	fs := flag.NewFlagSet(constants.CmdClone, flag.ExitOnError)
 	targetFlag := fs.String("target-dir", constants.DefaultDir, constants.FlagDescTargetDir)
 	safePullFlag := fs.Bool("safe-pull", false, constants.FlagDescSafePull)
@@ -52,14 +52,24 @@ func parseCloneFlags(args []string) (source, targetDir, sshKeyName string, safeP
 	fs.Parse(args)
 
 	source = resolveCloneSource(fs)
+	folderName = resolveCloneFolderName(fs)
 
-	return source, *targetFlag, *sshKeyFlag, *safePullFlag, *ghDesktopFlag, *verboseFlag
+	return source, folderName, *targetFlag, *sshKeyFlag, *safePullFlag, *ghDesktopFlag, *verboseFlag
 }
 
 // resolveCloneSource returns the clone source from positional args.
 func resolveCloneSource(fs *flag.FlagSet) string {
 	if fs.NArg() > 0 {
 		return fs.Arg(0)
+	}
+
+	return ""
+}
+
+// resolveCloneFolderName returns the optional folder name (second positional arg).
+func resolveCloneFolderName(fs *flag.FlagSet) string {
+	if fs.NArg() > 1 {
+		return fs.Arg(1)
 	}
 
 	return ""

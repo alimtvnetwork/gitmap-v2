@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -40,7 +41,7 @@ func applySSHKey(name string) {
 // runClone handles the "clone" subcommand.
 func runClone(args []string) {
 	checkHelp("clone", args)
-	source, targetDir, sshKeyName, safePull, ghDesktop, verboseMode := parseCloneFlags(args)
+	source, folderName, targetDir, sshKeyName, safePull, ghDesktop, verboseMode := parseCloneFlags(args)
 	if len(source) == 0 {
 		fmt.Fprintln(os.Stderr, constants.ErrSourceRequired)
 		fmt.Fprintln(os.Stderr, constants.ErrCloneUsage)
@@ -49,8 +50,142 @@ func runClone(args []string) {
 	initCloneVerbose(verboseMode)
 	requireOnline()
 	applySSHKey(sshKeyName)
+
+	if isDirectURL(source) {
+		executeDirectClone(source, folderName, ghDesktop)
+
+		return
+	}
+
 	source = resolveCloneShorthand(source)
 	executeClone(source, targetDir, safePull, ghDesktop)
+}
+
+// isDirectURL returns true when source is a git URL (not a file path).
+func isDirectURL(source string) bool {
+	lower := strings.ToLower(source)
+
+	return strings.HasPrefix(lower, constants.PrefixHTTPS) ||
+		strings.HasPrefix(lower, "http://") ||
+		strings.HasPrefix(lower, constants.PrefixSSH)
+}
+
+// repoNameFromURL derives the repository name from a clone URL.
+func repoNameFromURL(url string) string {
+	name := strings.TrimSuffix(url, ".git")
+	if idx := strings.LastIndex(name, "/"); idx >= 0 {
+		name = name[idx+1:]
+	}
+	if idx := strings.LastIndex(name, ":"); idx >= 0 {
+		name = name[idx+1:]
+	}
+
+	return name
+}
+
+// executeDirectClone clones a single repo from a direct URL.
+func executeDirectClone(url, folderName string, ghDesktopFlag bool) {
+	repoName := repoNameFromURL(url)
+	if len(folderName) == 0 {
+		folderName = repoName
+	}
+
+	absPath, err := filepath.Abs(folderName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not resolve absolute path for %s: %v\n", folderName, err)
+		absPath = folderName
+	}
+
+	// Check if target folder already exists.
+	if _, statErr := os.Stat(absPath); statErr == nil {
+		fmt.Fprintf(os.Stderr, constants.ErrCloneURLExists, absPath)
+		os.Exit(1)
+	}
+
+	// Enqueue pending task.
+	workDir, _ := os.Getwd()
+	cmdArgs := buildCommandArgs(append([]string{"clone"}, os.Args[2:]...))
+	taskID, taskDB := createPendingTask(constants.TaskTypeClone, absPath, workDir, "clone", cmdArgs)
+	if taskDB != nil {
+		defer taskDB.Close()
+	}
+
+	// Clone.
+	fmt.Printf(constants.MsgCloneURLCloning, repoName, folderName)
+	cmd := exec.Command(constants.GitBin, constants.GitClone, url, absPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cloneErr := cmd.Run()
+	if cloneErr != nil {
+		failPendingTask(taskDB, taskID, fmt.Sprintf(constants.ErrCloneURLFailed, url, cloneErr))
+		fmt.Fprintf(os.Stderr, constants.ErrCloneURLFailed, url, cloneErr)
+		os.Exit(1)
+	}
+
+	fmt.Printf(constants.MsgCloneURLDone, repoName)
+
+	// Upsert to database.
+	upsertDirectClone(url, repoName, folderName, absPath)
+
+	// GitHub Desktop registration.
+	promptOrRegisterDesktop(repoName, absPath, ghDesktopFlag)
+
+	completePendingTask(taskDB, taskID)
+}
+
+// upsertDirectClone persists the cloned repo in the database.
+func upsertDirectClone(url, repoName, folderName, absPath string) {
+	rec := model.ScanRecord{
+		Slug:         strings.ToLower(repoName),
+		RepoName:     repoName,
+		RelativePath: folderName,
+		AbsolutePath: absPath,
+	}
+	if strings.HasPrefix(url, constants.PrefixSSH) {
+		rec.SSHUrl = url
+	} else {
+		rec.HTTPSUrl = url
+	}
+
+	db, err := openDB()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not open database: %v\n", err)
+
+		return
+	}
+	defer db.Close()
+
+	if upsertErr := db.UpsertRepos([]model.ScanRecord{rec}); upsertErr != nil {
+		fmt.Fprintf(os.Stderr, "  Warning: could not save repo to database: %v\n", upsertErr)
+	}
+}
+
+// promptOrRegisterDesktop handles GitHub Desktop registration.
+func promptOrRegisterDesktop(repoName, absPath string, autoRegister bool) {
+	if autoRegister {
+		registerSingleDesktop(repoName, absPath)
+
+		return
+	}
+
+	fmt.Print(constants.MsgCloneDesktopPrompt)
+	var answer string
+	_, _ = fmt.Scanln(&answer)
+	if strings.ToLower(strings.TrimSpace(answer)) == "y" {
+		registerSingleDesktop(repoName, absPath)
+	}
+}
+
+// registerSingleDesktop registers a single repo with GitHub Desktop.
+func registerSingleDesktop(name, absPath string) {
+	records := []model.ScanRecord{{
+		RepoName:     name,
+		AbsolutePath: absPath,
+	}}
+	result := desktop.AddRepos(records)
+	if result.Added > 0 {
+		fmt.Printf(constants.MsgDesktopSummary, result.Added, result.Failed)
+	}
 }
 
 // initCloneVerbose sets up verbose logging if enabled.
@@ -98,12 +233,12 @@ func executeClone(source, targetDir string, safePull, ghDesktop bool) {
 	// Enqueue clone as a pending task before execution.
 	absTarget, absErr := filepath.Abs(targetDir)
 	if absErr != nil {
-		fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", targetDir, absErr)
+		fmt.Fprintf(os.Stderr, "  Warning: could not resolve absolute path for %s: %v\n", targetDir, absErr)
 		absTarget = targetDir
 	}
 	workDir, wdErr := os.Getwd()
 	if wdErr != nil {
-		fmt.Fprintf(os.Stderr, "  ⚠ Could not determine working directory: %v\n", wdErr)
+		fmt.Fprintf(os.Stderr, "  Warning: could not determine working directory: %v\n", wdErr)
 	}
 	cmdArgs := buildCommandArgs(append([]string{"clone"}, os.Args[2:]...))
 	taskID, taskDB := createPendingTask(constants.TaskTypeClone, absTarget, workDir, "clone", cmdArgs)
@@ -144,7 +279,7 @@ func registerCloned(s model.CloneSummary, targetDir string, enabled bool) {
 	if enabled {
 		absTarget, absErr := filepath.Abs(targetDir)
 		if absErr != nil {
-			fmt.Fprintf(os.Stderr, "  ⚠ Could not resolve absolute path for %s: %v\n", targetDir, absErr)
+			fmt.Fprintf(os.Stderr, "  Warning: could not resolve absolute path for %s: %v\n", targetDir, absErr)
 			absTarget = targetDir
 		}
 		records := make([]model.ScanRecord, 0, s.Succeeded)
