@@ -6,6 +6,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.76.0",
+    date: "2026-04-16",
+    items: [
+      "New `gitmap version-history` (`vh`) command: displays all version transitions for the current repo with `--limit N` and `--json` support.",
+      "Full database ERD (Mermaid) covering all 22 tables added to spec folder, including the new `RepoVersionHistory` table.",
+      "Specs `59-clone-next.md` and `87-clone-next-flatten.md` updated to reflect flatten-by-default behavior — `--flatten` flag no longer required.",
+    ],
+  },
+  {
     version: "v2.75.0",
     date: "2026-04-16",
     items: [
