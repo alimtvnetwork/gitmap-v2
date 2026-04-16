@@ -46,6 +46,7 @@ import DesignSystemPage from "./pages/DesignSystem";
 import InstallPage from "./pages/Install";
 import HelpDashboardPage from "./pages/HelpDashboard";
 import PostMortemsPage from "./pages/PostMortems";
+import VersionHistoryPage from "./pages/VersionHistory";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,7 @@ const App = () => (
           <Route path="/release-self" element={<ReleaseSelfPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/clone-next" element={<CloneNextPage />} />
+          <Route path="/version-history" element={<VersionHistoryPage />} />
           <Route path="/spec" element={<SpecIndexPage />} />
           <Route path="/cd" element={<CdPage />} />
           <Route path="/setup" element={<SetupPage />} />
