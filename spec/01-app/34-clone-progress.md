@@ -80,3 +80,9 @@ Changes to existing files:
 
 - Progress must not interfere with `--verbose` debug logging.
 - All files under 200 lines, all functions 8–15 lines.
+
+## See Also
+
+- [Cloner](05-cloner.md) — File-based and direct URL clone behavior
+- [Clone Next](59-clone-next.md) — Version iteration cloning workflow
+- [Clone-Next Flatten](87-clone-next-flatten.md) — `--flatten` flag with DB version tracking
