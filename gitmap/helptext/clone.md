@@ -35,8 +35,9 @@ c
 
     Cloning wp-alim into wp-alim...
     Cloned wp-alim successfully.
-    Add to GitHub Desktop? (y/n): y
-      + wp-alim registered with GitHub Desktop.
+      + 1 repo(s) added to GitHub Desktop, 0 failed.
+      Opening wp-alim in VS Code...
+      VS Code opened.
 
 ### Example 2: Clone URL into a custom folder
 
@@ -46,7 +47,9 @@ c
 
     Cloning wp-alim into my-project...
     Cloned wp-alim successfully.
-    Add to GitHub Desktop? (y/n): n
+      + 1 repo(s) added to GitHub Desktop, 0 failed.
+      Opening my-project in VS Code...
+      VS Code opened.
 
 ### Example 3: Clone from JSON output
 
