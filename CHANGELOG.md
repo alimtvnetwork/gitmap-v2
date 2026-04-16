@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.75.0 — (2026-04-16)
+
+### Added
+
+- `gitmap clone-next` now flattens by default: clones into the base name folder (no version suffix) instead of the versioned folder name. For example, `gitmap cn v++` inside `macro-ahk-v15` clones `macro-ahk-v16` into `macro-ahk/`.
+- `gitmap clone <url>` auto-flattens versioned URLs when no custom folder is given. `gitmap clone https://github.com/user/wp-onboarding-v13` clones into `wp-onboarding/`.
+- New `RepoVersionHistory` SQLite table tracks every version transition (from/to version tags, numbers, and flattened path) with timestamps.
+- `Repos` table gains `CurrentVersionTag` and `CurrentVersionNum` columns, updated on each clone-next operation.
+- Version transitions are printed to terminal: `Recorded version transition v15 -> v16`.
+- If the flattened target folder already exists during clone-next, it is automatically removed and re-cloned fresh.
+
+---
+
 ## v2.74.0 — (2026-04-16)
 
 ### Added

@@ -6,6 +6,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v2.75.0",
+    date: "2026-04-16",
+    items: [
+      "`gitmap clone-next` now flattens by default: clones into the base name folder (no version suffix). `gitmap cn v++` inside `macro-ahk-v15` clones into `macro-ahk/`.",
+      "`gitmap clone <url>` auto-flattens versioned URLs when no custom folder is given (e.g., `wp-onboarding-v13` clones into `wp-onboarding/`).",
+      "New `RepoVersionHistory` SQLite table tracks every version transition with from/to version tags, numbers, flattened path, and timestamps.",
+      "`Repos` table gains `CurrentVersionTag` and `CurrentVersionNum` columns, updated on each clone-next operation.",
+      "Existing flattened target folder is automatically removed and re-cloned fresh during clone-next.",
+    ],
+  },
+  {
     version: "v2.74.0",
     date: "2026-04-16",
     items: [
