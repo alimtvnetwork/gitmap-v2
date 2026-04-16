@@ -123,11 +123,59 @@ if ($activeBinary -and $deployedBinary -and (Test-Path $deployedBinary)) {
             Write-Host "  Syncing deployed binary to active PATH location..." -ForegroundColor Cyan
             Write-Host "    From: $resolvedDeployed" -ForegroundColor DarkGray
             Write-Host "    To:   $resolvedActive" -ForegroundColor DarkGray
+            $syncOK = $false
+
+            # Step 1: Try direct Copy-Item.
             try {
                 Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+                $syncOK = $true
                 Write-Host "  [OK] Synced successfully." -ForegroundColor Green
             } catch {
-                Write-Host "  [WARN] Could not sync: $_" -ForegroundColor Yellow
+                Write-Host "  [WARN] Copy-Item failed: $_" -ForegroundColor Yellow
+            }
+
+            # Step 2: Rename-then-copy fallback.
+            if (-not $syncOK) {
+                Write-Host "  Trying rename-then-copy fallback..." -ForegroundColor Cyan
+                $backupPath = "$resolvedActive.old"
+                try {
+                    if (Test-Path $backupPath) { Remove-Item $backupPath -Force -ErrorAction SilentlyContinue }
+                    Move-Item -Path $resolvedActive -Destination $backupPath -Force
+                    Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+                    $syncOK = $true
+                    Write-Host "  [OK] Synced via rename fallback." -ForegroundColor Green
+                } catch {
+                    Write-Host "  [WARN] Rename fallback failed: $_" -ForegroundColor Yellow
+                    # Restore backup if rename succeeded but copy failed.
+                    if ((Test-Path $backupPath) -and (-not (Test-Path $resolvedActive))) {
+                        Move-Item -Path $backupPath -Destination $resolvedActive -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+
+            # Step 3: Kill stale processes and retry.
+            if (-not $syncOK) {
+                Write-Host "  Killing stale gitmap processes..." -ForegroundColor Cyan
+                $currentPID = $PID
+                $stale = Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" -ErrorAction SilentlyContinue |
+                    Where-Object { $_.ProcessId -ne $currentPID }
+                foreach ($proc in $stale) {
+                    try {
+                        Stop-Process -Id $proc.ProcessId -Force -ErrorAction SilentlyContinue
+                        Write-Host "    Stopped PID $($proc.ProcessId)" -ForegroundColor DarkGray
+                    } catch {}
+                }
+                if ($stale) { Start-Sleep -Milliseconds 500 }
+                try {
+                    Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+                    $syncOK = $true
+                    Write-Host "  [OK] Synced after killing stale processes." -ForegroundColor Green
+                } catch {
+                    Write-Host "  [WARN] Still could not sync: $_" -ForegroundColor Yellow
+                }
+            }
+
+            if (-not $syncOK) {
                 Write-Host "  [HINT] Run 'gitmap doctor --fix-path' manually." -ForegroundColor Yellow
             }
         }

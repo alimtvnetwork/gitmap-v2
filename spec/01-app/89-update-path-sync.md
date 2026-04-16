@@ -39,18 +39,44 @@ Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
 
 This is the default sync method. It overwrites the stale PATH binary with the freshly built one. Works in most cases where the file is not locked.
 
-### Step 3 — Fallback Hint
+### Step 3 — Rename-Then-Copy Fallback
 
-If `Copy-Item` fails (file lock, permission denied, admin-mode conflict):
+If `Copy-Item` fails (file lock, permission denied):
+
+1. Rename the locked active binary to `gitmap.exe.old` via `Move-Item`.
+2. Copy the deployed binary to the active path via `Copy-Item`.
+3. If the copy fails after rename, restore the `.old` backup automatically.
+
+```powershell
+Move-Item -Path $resolvedActive -Destination "$resolvedActive.old" -Force
+Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+```
+
+### Step 4 — Kill Stale Processes and Retry
+
+If the rename fallback also fails:
+
+1. Query `Win32_Process` for all `gitmap.exe` processes except the current PID.
+2. Terminate each stale process via `Stop-Process -Force`.
+3. Wait 500ms for handles to release.
+4. Retry `Copy-Item`.
+
+```powershell
+Get-CimInstance Win32_Process -Filter "Name='gitmap.exe'" |
+    Where-Object { $_.ProcessId -ne $PID } |
+    ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+Start-Sleep -Milliseconds 500
+Copy-Item -Path $resolvedDeployed -Destination $resolvedActive -Force
+```
+
+### Step 5 — Manual Hint
+
+If all automated strategies fail:
 
 ```
-[WARN] Could not sync: <error>
+[WARN] Still could not sync: <error>
 [HINT] Run 'gitmap doctor --fix-path' manually.
 ```
-
-The user is directed to `gitmap doctor --fix-path` for manual resolution.
-
-> **Future enhancement**: Add a rename-then-copy fallback (`Move-Item` the locked file to `gitmap.exe.old`, then `Copy-Item` the new binary) and a kill-process fallback (`Stop-Process`) before resorting to the manual hint. These are not yet implemented.
 
 ---
 
@@ -85,14 +111,16 @@ The update PowerShell script is assembled from template constants in this order:
 
 ## Error Scenarios
 
-| Scenario                         | Behavior                                              |
-|----------------------------------|-------------------------------------------------------|
-| Paths identical (same binary)    | Sync skipped silently                                 |
-| Versions already match           | Sync skipped silently                                 |
-| Copy succeeds                    | `[OK] Synced successfully.`                           |
-| Copy fails (lock/permissions)    | `[WARN]` with hint to run `gitmap doctor --fix-path`  |
-| Deployed binary not found        | Sync skipped (nothing to copy from)                   |
-| Active binary not in PATH        | Sync skipped (no target to copy to)                   |
+| Scenario                         | Behavior                                                     |
+|----------------------------------|--------------------------------------------------------------|
+| Paths identical (same binary)    | Sync skipped silently                                        |
+| Versions already match           | Sync skipped silently                                        |
+| Copy succeeds (Step 2)           | `[OK] Synced successfully.`                                  |
+| Copy fails, rename succeeds      | `[OK] Synced via rename fallback.`                           |
+| Rename fails, kill+copy succeeds | `[OK] Synced after killing stale processes.`                 |
+| All strategies fail              | `[WARN]` with hint to run `gitmap doctor --fix-path`         |
+| Deployed binary not found        | Sync skipped (nothing to copy from)                          |
+| Active binary not in PATH        | Sync skipped (no target to copy to)                          |
 
 ---
 
