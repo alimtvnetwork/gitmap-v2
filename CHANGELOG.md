@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.74.0 — (2026-04-16)
+
+### Added
+
+- `gitmap doctor` now checks setup config resolution from the installed binary location and warns when `git-setup.json` cannot be found.
+- `gitmap doctor` now verifies the shell wrapper is loaded by checking the `GITMAP_WRAPPER` environment variable, with fix instructions when missing.
+- Post-setup verification step warns users if the shell wrapper is not active after `gitmap setup` completes, with reload instructions.
+- Shell wrapper scripts (Bash, Zsh, PowerShell) now export `GITMAP_WRAPPER=1` so the binary can detect wrapper-vs-raw invocation.
+- `gitmap cd` prints a stderr warning when called without the shell wrapper, guiding users to run `gitmap setup` or reload their profile.
+
+### Fixed
+
+- `gitmap setup` now resolves `git-setup.json` relative to the binary's installation path instead of the current working directory, fixing "file not found" errors when running from arbitrary directories.
+
+---
+
 ## v2.72.0 — (2026-04-16)
 
 ### Fixed
