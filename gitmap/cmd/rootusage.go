@@ -127,6 +127,7 @@ func printGroupHistory() {
 	fmt.Println(constants.HelpGroupHistory)
 	fmt.Println(constants.HelpHistory)
 	fmt.Println(constants.HelpHistoryReset)
+	fmt.Println(constants.HelpVersionHistory)
 	fmt.Println(constants.HelpStats)
 }
 
