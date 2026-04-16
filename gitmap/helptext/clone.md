@@ -27,16 +27,16 @@ c
 
 ## Examples
 
-### Example 1: Clone from a direct URL
+### Example 1: Clone from a direct URL (versioned — auto-flattened)
 
-    gitmap clone https://github.com/alimtvnetwork/wp-alim.git
+    gitmap clone https://github.com/alimtvnetwork/wp-onboarding-v13.git
 
 **Output:**
 
-    Cloning wp-alim into wp-alim...
-    Cloned wp-alim successfully.
+    Cloning wp-onboarding-v13 into wp-onboarding...
+    Cloned wp-onboarding-v13 successfully.
       + 1 repo(s) added to GitHub Desktop, 0 failed.
-      Opening wp-alim in VS Code...
+      Opening wp-onboarding in VS Code...
       VS Code opened.
 
 ### Example 2: Clone URL into a custom folder
