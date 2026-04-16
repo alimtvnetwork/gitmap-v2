@@ -83,7 +83,8 @@ const CloneNextPage = () => {
           <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded">cn</span>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
-          Clone the next or a specific versioned iteration of the current repository into the parent directory.
+          Clone the next or a specific versioned iteration of the current repository. Automatically flattens
+          into the base name folder (no version suffix) and tracks version history in the database.
         </p>
 
         {/* Usage */}
@@ -101,7 +102,7 @@ const CloneNextPage = () => {
             {[
               { icon: FolderGit2, title: "Detect", desc: "Reads remote origin URL and folder name from the current repo" },
               { icon: ArrowRight, title: "Compute", desc: "Parses version suffix and applies v++ or vN to build target" },
-              { icon: GitBranch, title: "Clone", desc: "Clones the target repo into the parent directory" },
+              { icon: GitBranch, title: "Clone", desc: "Removes existing base folder and clones target into flattened path" },
               { icon: Monitor, title: "Register", desc: "Adds the new clone to GitHub Desktop automatically" },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="border border-border rounded-lg p-4 bg-card">
@@ -187,15 +188,27 @@ const CloneNextPage = () => {
             ]}
           />
 
-          <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Jump to specific version with auto-delete</h3>
+          <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Increment version (flattened)</h3>
+          <TerminalPreview
+            title="gitmap cn v++"
+            lines={[
+              "Removing existing macro-ahk for fresh clone...",
+              "Cloning macro-ahk-v12 into macro-ahk (flattened)...",
+              "✓ Cloned macro-ahk-v12 into macro-ahk",
+              "✓ Recorded version transition v11 -> v12",
+              "✓ Registered macro-ahk-v12 with GitHub Desktop",
+            ]}
+          />
+
+          <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Jump to specific version</h3>
           <TerminalPreview
             title="gitmap cn v15 --delete"
             lines={[
-              "Cloning macro-ahk-v15 into D:\\wp-work\\riseup-asia...",
-              "✓ Cloned macro-ahk-v15",
+              "Cloning macro-ahk-v15 into macro-ahk (flattened)...",
+              "✓ Cloned macro-ahk-v15 into macro-ahk",
+              "✓ Recorded version transition v12 -> v15",
               "✓ Registered macro-ahk-v15 with GitHub Desktop",
               "✓ Removed macro-ahk-v12",
-              "→ Now in macro-ahk-v15",
             ]}
           />
 
@@ -203,12 +216,10 @@ const CloneNextPage = () => {
           <TerminalPreview
             title="gitmap clone-next v++"
             lines={[
-              "Cloning macro-ahk-v2 into D:\\wp-work\\riseup-asia...",
-              "✓ Cloned macro-ahk-v2",
+              "Cloning macro-ahk-v2 into macro-ahk (flattened)...",
+              "✓ Cloned macro-ahk-v2 into macro-ahk",
+              "✓ Recorded version transition v1 -> v2",
               "✓ Registered macro-ahk-v2 with GitHub Desktop",
-              "Remove current folder macro-ahk? [y/N] y",
-              "✓ Removed macro-ahk",
-              "→ Now in macro-ahk-v2",
             ]}
           />
 
@@ -218,11 +229,11 @@ const CloneNextPage = () => {
             lines={[
               "Creating GitHub repo macro-ahk-v15...",
               "✓ Created GitHub repo macro-ahk-v15",
-              "Cloning macro-ahk-v15 into D:\\wp-work\\riseup-asia...",
-              "✓ Cloned macro-ahk-v15",
+              "Cloning macro-ahk-v15 into macro-ahk (flattened)...",
+              "✓ Cloned macro-ahk-v15 into macro-ahk",
+              "✓ Recorded version transition v12 -> v15",
               "✓ Registered macro-ahk-v15 with GitHub Desktop",
               "✓ Removed macro-ahk-v12",
-              "→ Now in macro-ahk-v15",
             ]}
           />
 
@@ -230,8 +241,10 @@ const CloneNextPage = () => {
           <TerminalPreview
             title="gitmap cn v++ --delete"
             lines={[
-              "Cloning macro-ahk-v12 into D:\\wp-work\\riseup-asia...",
-              "✓ Cloned macro-ahk-v12",
+              "Removing existing macro-ahk for fresh clone...",
+              "Cloning macro-ahk-v12 into macro-ahk (flattened)...",
+              "✓ Cloned macro-ahk-v12 into macro-ahk",
+              "✓ Recorded version transition v11 -> v12",
               "✓ Registered macro-ahk-v12 with GitHub Desktop",
               "",
               "Error: remove macro-ahk-v11: access denied",
@@ -246,7 +259,6 @@ const CloneNextPage = () => {
               "✓ Terminated Code.exe (PID 14320)",
               "✓ Terminated explorer.exe (PID 8412)",
               "✓ Removed macro-ahk-v11",
-              "→ Now in macro-ahk-v12",
             ]}
           />
         </section>
