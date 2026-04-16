@@ -43,4 +43,4 @@
 
 ## Pending Suggestions
 
-(none)
+- 🔲 **`--flatten` flag for `clone-next`**: Clone into base-name folder (no version suffix), remove existing folder, track version history in DB with `CurrentVersionTag`/`CurrentVersionNum` columns on Repos + `RepoVersionHistory` table. See [mem://features/clone-next-flatten](../features/clone-next-flatten.md).
