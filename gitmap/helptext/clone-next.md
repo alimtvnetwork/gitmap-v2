@@ -1,6 +1,6 @@
 # gitmap clone-next
 
-Clone the next or a specific versioned iteration of the current repository into the parent directory.
+Clone the next or a specific versioned iteration of the current repository into the parent directory, using the base name (no version suffix) as the local folder.
 
 ## Alias
 
@@ -14,7 +14,7 @@ cn
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| --delete | false | Auto-remove current folder after clone |
+| --delete | false | Auto-remove current versioned folder after clone |
 | --keep | false | Keep current folder without prompting |
 | --no-desktop | false | Skip GitHub Desktop registration |
 | --ssh-key \<name\> | (none) | Use a named SSH key for the clone |
@@ -25,6 +25,15 @@ cn
 
 - Must be run inside a Git repository with a remote origin configured
 
+## Flatten Behavior
+
+By default, clone-next clones into the base name folder (without version suffix).
+For example, running `gitmap cn v++` inside `macro-ahk-v11` will:
+1. Clone `macro-ahk-v12` into `macro-ahk/` (not `macro-ahk-v12/`)
+2. If `macro-ahk/` already exists, remove it first
+3. The remote URL still points to `macro-ahk-v12` on GitHub
+4. Record the version transition (v11 -> v12) in the database
+
 ## Examples
 
 ### Example 1: Increment version by one
@@ -33,10 +42,11 @@ cn
 
 **Output:**
 
-    Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
-    ✓ Cloned macro-ahk-v12
+    Removing existing macro-ahk for fresh clone...
+    Cloning macro-ahk-v12 into macro-ahk (flattened)...
+    ✓ Cloned macro-ahk-v12 into macro-ahk
+    ✓ Recorded version transition v11 -> v12
     ✓ Registered macro-ahk-v12 with GitHub Desktop
-    Remove current folder macro-ahk-v11? [y/N] n
 
 ### Example 2: Jump to a specific version with auto-delete
 
@@ -44,11 +54,11 @@ cn
 
 **Output:**
 
-    Cloning macro-ahk-v15 into D:\wp-work\riseup-asia...
-    ✓ Cloned macro-ahk-v15
+    Cloning macro-ahk-v15 into macro-ahk (flattened)...
+    ✓ Cloned macro-ahk-v15 into macro-ahk
+    ✓ Recorded version transition v12 -> v15
     ✓ Registered macro-ahk-v15 with GitHub Desktop
     ✓ Removed macro-ahk-v12
-    → Now in macro-ahk-v15
 
 ### Example 3: Lock detection when folder is in use
 
@@ -56,8 +66,10 @@ cn
 
 **Output:**
 
-    Cloning macro-ahk-v12 into D:\wp-work\riseup-asia...
-    ✓ Cloned macro-ahk-v12
+    Removing existing macro-ahk for fresh clone...
+    Cloning macro-ahk-v12 into macro-ahk (flattened)...
+    ✓ Cloned macro-ahk-v12 into macro-ahk
+    ✓ Recorded version transition v11 -> v12
     ✓ Registered macro-ahk-v12 with GitHub Desktop
     Warning: could not remove macro-ahk-v11: unlinkat: access denied
     Checking for processes locking macro-ahk-v11...
@@ -71,7 +83,6 @@ cn
     ✓ Terminated explorer.exe
     Retrying folder removal...
     ✓ Removed macro-ahk-v11
-    → Now in macro-ahk-v12
 
 ## See Also
 

@@ -99,6 +99,7 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateTaskType,
 		constants.SQLCreatePendingTask,
 		constants.SQLCreateCompletedTask,
+		constants.SQLCreateRepoVersionHistory,
 	}
 
 	for _, stmt := range statements {
@@ -112,6 +113,7 @@ func (db *DB) Migrate() error {
 	db.migrateZipGroupItemPaths()
 	db.migrateTRCommitSha()
 	db.migratePendingTaskColumns()
+	db.migrateRepoVersionColumns()
 
 	if err := db.SeedProjectTypes(); err != nil {
 		return err
@@ -149,6 +151,12 @@ func (db *DB) migrateSourceColumn() {
 // migrateNotesColumn adds the Notes column to existing Releases tables.
 func (db *DB) migrateNotesColumn() {
 	db.addColumnIfNotExists(constants.SQLAddNotesColumn)
+}
+
+// migrateRepoVersionColumns adds CurrentVersionTag and CurrentVersionNum to Repos.
+func (db *DB) migrateRepoVersionColumns() {
+	db.addColumnIfNotExists(constants.SQLAddCurrentVersionTag)
+	db.addColumnIfNotExists(constants.SQLAddCurrentVersionNum)
 }
 
 // migrateZipGroupItemPaths adds RepoPath, RelativePath, FullPath columns

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/user/gitmap/cloner"
+	"github.com/user/gitmap/clonenext"
 	"github.com/user/gitmap/constants"
 	"github.com/user/gitmap/desktop"
 	"github.com/user/gitmap/model"
@@ -84,10 +85,17 @@ func repoNameFromURL(url string) string {
 }
 
 // executeDirectClone clones a single repo from a direct URL.
+// When no folder name is given, versioned URLs are auto-flattened
+// (e.g., wp-onboarding-v13 clones into wp-onboarding/).
 func executeDirectClone(url, folderName string, ghDesktopFlag bool) {
 	repoName := repoNameFromURL(url)
 	if len(folderName) == 0 {
-		folderName = repoName
+		parsed := clonenext.ParseRepoName(repoName)
+		if parsed.HasVersion {
+			folderName = parsed.BaseName
+		} else {
+			folderName = repoName
+		}
 	}
 
 	absPath, err := filepath.Abs(folderName)
