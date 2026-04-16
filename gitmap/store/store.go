@@ -99,6 +99,7 @@ func (db *DB) Migrate() error {
 		constants.SQLCreateTaskType,
 		constants.SQLCreatePendingTask,
 		constants.SQLCreateCompletedTask,
+		constants.SQLCreateRepoVersionHistory,
 	}
 
 	for _, stmt := range statements {
@@ -112,6 +113,7 @@ func (db *DB) Migrate() error {
 	db.migrateZipGroupItemPaths()
 	db.migrateTRCommitSha()
 	db.migratePendingTaskColumns()
+	db.migrateRepoVersionColumns()
 
 	if err := db.SeedProjectTypes(); err != nil {
 		return err
