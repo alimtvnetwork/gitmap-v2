@@ -23,6 +23,7 @@ func runSetup(args []string) {
 	installShellCompletion(dryRun)
 	installCDFunction(dryRun)
 	ensureGitignoreStep(dryRun)
+	verifyShellWrapper(dryRun)
 	printSetupSummary(result)
 }
 
