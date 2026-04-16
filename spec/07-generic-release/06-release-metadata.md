@@ -171,8 +171,8 @@ git tag -d v1.2.0
 
 | App Spec | Covers |
 |----------|--------|
-| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | `releases.json` manifest and `baseUrl` asset maps |
-| [13-release-data-model.md](../../01-app/13-release-data-model.md) | Per-release metadata, `latest.json`, semver rules |
+| [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | `releases.json` manifest and `baseUrl` asset maps |
+| [13-release-data-model.md](../01-app/13-release-data-model.md) | Per-release metadata, `latest.json`, semver rules |
 
 ## Contributors
 
