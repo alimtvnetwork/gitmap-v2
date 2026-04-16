@@ -345,7 +345,7 @@ specific version, not "latest".
 
 | App Spec | Covers |
 |----------|--------|
-| [02-powershell-build-deploy.md](../../03-general/02-powershell-build-deploy.md) | Version-pinned install scripts in release pipeline |
+| [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Version-pinned install scripts in release pipeline |
 
 ## Contributors
 
