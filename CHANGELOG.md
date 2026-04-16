@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.72.0 — (2026-04-16)
+
+### Fixed
+
+- VS Code admin-mode bypass: `runVSCodeCommand` now captures `CombinedOutput` and waits for the process exit code instead of fire-and-forget, ensuring CLI errors are properly detected before falling through to the next strategy.
+- `tryVSCodeDetached` launches `Code.exe` with an isolated `--user-data-dir` (`%TEMP%\gitmap-vscode-user-data`) so the new instance does not attempt to hand off to an elevated single-instance, fully bypassing the "Another instance of Code is already running as administrator" lock.
+- Added `resolveVSCodeExecutable` with multi-path discovery (`LookPath`, CLI sibling, `LocalAppData`, `Program Files`, `Program Files (x86)`) to reliably find the desktop binary when the CLI wrapper is unavailable.
+- Extracted all VS Code constants (binary names, flags, paths, messages) into `constants/constants_vscode.go`.
+
+---
+
 ## v2.71.0 — (2026-04-16)
 
 ### Added
