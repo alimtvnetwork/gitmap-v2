@@ -14,7 +14,7 @@ None
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| --config \<path\> | ./data/git-setup.json | Path to git-setup.json config file |
+| --config \<path\> | data/git-setup.json beside gitmap | Path to git-setup.json config file |
 | --dry-run | false | Preview changes without applying them |
 
 ## Prerequisites

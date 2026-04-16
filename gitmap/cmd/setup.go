@@ -15,13 +15,9 @@ import (
 // runSetup handles the "setup" subcommand.
 func runSetup(args []string) {
 	checkHelp("setup", args)
-	configPath, dryRun := parseSetupFlags(args)
-	cfg, err := setup.LoadConfig(configPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSetupLoadFailed, configPath, err)
-		os.Exit(1)
-	}
-
+	configPath, dryRun, hasConfig := parseSetupFlags(args)
+	configPath = resolveSetupConfigPath(configPath, hasConfig)
+	cfg := mustLoadSetupConfig(configPath)
 	printSetupBanner(dryRun)
 	result := setup.Apply(cfg, dryRun)
 	installShellCompletion(dryRun)
@@ -86,13 +82,16 @@ func ensureGitignoreStep(dryRun bool) {
 }
 
 // parseSetupFlags parses flags for the setup command.
-func parseSetupFlags(args []string) (configPath string, dryRun bool) {
+func parseSetupFlags(args []string) (configPath string, dryRun, hasConfig bool) {
 	fs := flag.NewFlagSet(constants.CmdSetup, flag.ExitOnError)
 	cfgFlag := fs.String("config", constants.DefaultSetupConfigPath, constants.FlagDescSetupConfig)
 	dryRunFlag := fs.Bool("dry-run", false, constants.FlagDescDryRun)
 	fs.Parse(args)
+	fs.Visit(func(f *flag.Flag) {
+		hasConfig = hasConfig || f.Name == "config"
+	})
 
-	return *cfgFlag, *dryRunFlag
+	return *cfgFlag, *dryRunFlag, hasConfig
 }
 
 // printSetupBanner shows the setup header.
