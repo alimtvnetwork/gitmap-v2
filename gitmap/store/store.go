@@ -153,6 +153,12 @@ func (db *DB) migrateNotesColumn() {
 	db.addColumnIfNotExists(constants.SQLAddNotesColumn)
 }
 
+// migrateRepoVersionColumns adds CurrentVersionTag and CurrentVersionNum to Repos.
+func (db *DB) migrateRepoVersionColumns() {
+	db.addColumnIfNotExists(constants.SQLAddCurrentVersionTag)
+	db.addColumnIfNotExists(constants.SQLAddCurrentVersionNum)
+}
+
 // migrateZipGroupItemPaths adds RepoPath, RelativePath, FullPath columns
 // to existing ZipGroupItems tables and copies Path into FullPath.
 func (db *DB) migrateZipGroupItemPaths() {
