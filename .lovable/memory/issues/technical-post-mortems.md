@@ -20,11 +20,13 @@ Recent critical issues and their resolutions:
 16. **Redundant Newline**: Switched to `fmt.Fprint` for constants with trailing newlines.
 17. **Constant Redeclaration**: Resolved by centralizing all command IDs in `constants_cli.go`.
 18. **Unchecked Errors**: Added lint-compliant error checking for `db.RemoveInstalledTool`, `dev.Process.Kill()`, and `cmd.Start()`.
-19. **Release Pipeline Directory Error**: Resolved `cd: dist` failure by setting explicit `working-directory: gitmap/dist` for compression and checksums. See `spec/02-app-issues/13-release-pipeline-dist-directory.md`.
-20. **G305 Zip Path Traversal**: Fixed `installnpp.go` to validate extracted file paths stay within target directory. See `spec/02-app-issues/14-security-hardening-gosec-fixes.md`.
-21. **G110 Decompression Bomb**: Replaced `io.Copy` with `io.LimitReader` capped at 10 MB. See `spec/02-app-issues/14-security-hardening-gosec-fixes.md`.
-22. **Format Verb Mismatch**: Fixed `fmt.Fprintf` argument count at `tasksync.go:138`; audited ~140 call sites. See `spec/02-app-issues/14-security-hardening-gosec-fixes.md`.
-23. **Code Red Error Audit**: Standardized 35+ error constants with mandatory path, operation, and reason context. See `spec/02-app-issues/error-management-file-path-and-missing-file-code-red-rule.md`.
-24. **CI Passthrough Gate Pattern**: Job-level `if` skipping caused cached SHA runs to show grey "Skipped" in GitHub UI. Replaced with step-level conditionals so every job reports ✅ Success. See `spec/02-app-issues/16-ci-passthrough-gate-pattern.md`.
-25. **Go Flag Ordering — Silent Flag Drop**: Go's `flag` package stops parsing at the first positional argument, silently dropping flags like `-y`. Fixed with `reorderFlagsBeforeArgs()`. See `spec/02-app-issues/17-go-flag-ordering-silent-drop.md`.
-26. **CI Release Branch Cancellation Protection**: Unconditional `cancel-in-progress: true` cancelled release branch runs on rapid pushes. Fixed with conditional expression protecting `release/**` branches. See `spec/02-app-issues/18-ci-release-branch-cancellation-protection.md`.
+19. **Release Pipeline Directory Error**: Resolved `cd: dist` failure by setting explicit `working-directory: gitmap/dist`.
+20. **G305 Zip Path Traversal**: Fixed `installnpp.go` to validate extracted file paths stay within target directory.
+21. **G110 Decompression Bomb**: Replaced `io.Copy` with `io.LimitReader` capped at 10 MB.
+22. **Format Verb Mismatch**: Fixed `fmt.Fprintf` argument count at `tasksync.go:138`; audited ~140 call sites.
+23. **Code Red Error Audit**: Standardized 35+ error constants with mandatory path, operation, and reason context.
+24. **CI Passthrough Gate Pattern**: Replaced job-level `if` skipping with step-level conditionals.
+25. **Go Flag Ordering — Silent Flag Drop**: Fixed with `reorderFlagsBeforeArgs()` helper.
+26. **CI Release Branch Cancellation Protection**: Protected `release/**` branches from `cancel-in-progress`.
+27. **Setup Config Path Resolution** (v2.74.0): `gitmap setup` failed with "file not found" when run from non-binary directories. Fixed by resolving `git-setup.json` relative to the binary's installation path via `filepath.EvalSymlinks`.
+28. **Shell Wrapper Detection** (v2.74.0): `gitmap cd` silently failed when called as raw binary without shell wrapper. Added `GITMAP_WRAPPER=1` env var export in shell scripts and stderr warning in `gitmap cd` when wrapper not detected.
