@@ -281,7 +281,7 @@ function remainingBudgetMinutes(slo: SLO, currentErrorRate: number): number {
 
 ### Offline / Self-Contained Dashboards
 
-For CLI-generated dashboards (see [Dashboard Command](../01-app/dashboard.md)):
+For CLI-generated dashboards (see [Dashboard Command](../01-app/60-help-dashboard.md)):
 
 | Rule | Detail |
 |---|---|

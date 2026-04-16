@@ -233,7 +233,7 @@ The flattened path is used for the `GITMAP_SHELL_HANDOFF` environment
 variable, ensuring the parent shell navigates to the correct folder
 after clone-next completes.
 
-See the [navigation helper](./09-go-to.md) spec for the shell wrapper
+See the [navigation helper](31-cd.md) spec for the shell wrapper
 mechanism.
 
 ---
@@ -365,7 +365,7 @@ gitmap cn v+1 --flatten
 
 | Document | Relevance |
 |----------|-----------|
-| [09-go-to.md](./09-go-to.md) | Shell handoff via `GITMAP_SHELL_HANDOFF` |
+| [31-cd.md](31-cd.md) | Shell handoff via `GITMAP_SHELL_HANDOFF` |
 | [13-release-data-model.md](./13-release-data-model.md) | Migration pattern, version parsing reference |
 | [12-release-command.md](./12-release-command.md) | Version resolution logic, `--dry-run` pattern |
 
