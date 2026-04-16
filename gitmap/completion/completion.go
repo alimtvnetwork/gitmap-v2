@@ -78,6 +78,7 @@ func AllCommands() []string {
 		"clone-next", "cn",
 		"uninstall", "un",
 		"help",
+		"version-history", "vh",
 		"llm-docs", "ld",
 	}
 }

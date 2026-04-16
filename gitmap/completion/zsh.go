@@ -97,6 +97,10 @@ _gitmap() {
             local -a hints=("v++" "--delete" "--keep" "--no-desktop" "--ssh-key" "--verbose")
             _describe 'arg' hints
             ;;
+        version-history|vh)
+            local -a hints=("--limit" "--json")
+            _describe 'arg' hints
+            ;;
         llm-docs|ld)
             if [[ "${words[CURRENT-1]}" == "--format" ]]; then
                 local -a formats=("markdown" "json")
