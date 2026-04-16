@@ -98,6 +98,11 @@ func dispatchData(command string) bool {
 
 		return true
 	}
+	if command == constants.CmdVersionHistory || command == constants.CmdVersionHistoryAlias {
+		runVersionHistory(os.Args[2:])
+
+		return true
+	}
 
 	return false
 }
